@@ -1,0 +1,15 @@
+doc/build/*
+*.pyc 
+*.swp
+**.pyc
+**__pycache__
+schemes/*.pyc
+toolbox/*.pyc
+.project
+.pydevproject
+toolbox/__pycache__
+config.log
+config.mk
+MANIFEST
+dist/
+build/

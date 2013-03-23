@@ -1,0 +1,54 @@
+# hess + chch
+name := case2 
+N := 100
+
+BEGIN :: types
+S1h := GT
+S2h := G1
+S1c := G1; S2c := G1
+pk := G1
+ah := ZR; ac := ZR
+P := G2
+g2 := G2
+END :: types
+
+BEGIN :: precompute
+ah_z := H(M_z | S1h_z, ZR)
+ac_z := H(M_z | S1c_z, ZR)
+END :: precompute
+
+BEGIN :: constant
+P, g2
+END :: constant
+
+BEGIN :: public
+pk
+END :: public
+
+BEGIN :: signature
+S1h, S2h, S1c, S2c
+END :: signature
+
+BEGIN :: message
+a
+END :: message
+
+# different messages/sigs under different signers
+message := N
+public := N
+signature := N
+
+#verify := { (((e(pk, P)^ah ) * S1h) * ((e(S2h, g2)^-1) * ((e(S1c * pk^ac, P)^-1) * e(S2c, g2)))) == 1 }
+# original
+verify := { e(S2h, g2) == ( e(pk, P)^ah ) * S1h } and { e(S2c, g2) == (e(S1c * pk^ac, P)) }
+
+BEGIN :: latex
+S1h := Sh_1
+S2h := Sh_2
+S1c := Sc_1
+S2c := Sc_2
+g2 := g_2
+P := P_{pub}
+ah := ah
+ac := ac
+END :: latex

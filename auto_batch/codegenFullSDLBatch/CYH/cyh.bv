@@ -1,0 +1,128 @@
+name := cyh
+setting := asymmetric
+N := 100
+l := 3
+secparam := 80
+
+BEGIN :: types
+M := str
+ID := str
+L := str
+ID_list := list{str}
+Lt := str
+u := list{G1}
+h := list{ZR}
+s := int
+pklist := list{G1}
+pk := G1
+sk := G1
+P := G2
+S := G1
+g := G2
+r := ZR
+END :: types
+
+BEGIN :: precompute
+h := H(concat{M, Lt, u}, ZR)
+END :: precompute
+
+constant := list{P, g, Lt}
+public := pklist
+signature := list{S, u}
+message := list{h, M}
+
+BEGIN :: count
+message_count := N
+public_count := l
+signature_count := N
+END :: count
+
+verify := { e((prod{y := 0, l} on (u_y * (pklist_y^h_y))) , P) == e(S, g) }
+
+BEGIN :: func:setup
+ input := None
+ g := random(G2)
+ alpha := random(ZR)
+ P := g ^ alpha
+ output := list{P, g, alpha}
+END :: func:setup
+
+#BEGIN :: func:concat
+# input := ID_list
+# L := init(str)
+# l := len(ID_list)
+#BEGIN :: for
+#for{y := 0, l}
+# L := strconcat{L, ID_list#y}
+#END :: for
+#output := L
+#END :: func:concat
+
+BEGIN :: func:keygen
+ input := list{alpha, ID}
+ sk := H(ID, G1) ^ alpha
+ pk := H(ID, G1)
+ output := list{pk, sk}
+END :: func:keygen
+
+BEGIN :: func:sign
+ input := list{ID, ID_list, pk, sk, M}
+ Lt := concat(ID_list)
+
+BEGIN :: for
+for{i := 0, l}
+BEGIN :: if
+ if { ID != ID_list#i }
+    u#i := random(G1)
+    h#i := H(concat{M, Lt, u#i}, ZR)
+ else
+    s := i
+END :: if
+END :: for
+
+ r := random(ZR)
+BEGIN :: for
+for{y := 0, l}
+   pklist#y := H(ID_list#y, G1)
+END :: for
+
+dotProd := init(G1)
+
+BEGIN :: for
+for{i := 0, l}
+BEGIN :: if
+if {ID != ID_list#i}
+   dotProd := dotProd * (u#i * (pklist#i ^ h#i))
+END :: if
+END :: for
+
+  u#s? := (pk ^ r) * (dotProd ^ -1)
+  h#s? := H(concat{M, Lt, u#s}, ZR)
+  S := sk ^ (h#s + r)
+output := list{Lt, pklist, u, S}
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{Lt, pklist, P, g, M, u, S}
+
+BEGIN :: for
+for{y := 0, l}
+ h#y := H(concat{M, Lt, u#y}, ZR)
+END :: for
+
+dotProd := init(G1)
+
+BEGIN :: for
+for{y := 0, l}
+   dotProd := dotProd * (u#y * (pklist#y ^ h#y))
+END :: for
+
+BEGIN :: if
+if {e(dotProd, P) == e(S, g)}
+   output := True
+else
+   output := False
+END :: if
+END :: func:verify
+
+

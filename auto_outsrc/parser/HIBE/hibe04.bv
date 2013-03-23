@@ -1,0 +1,108 @@
+name := hibe_bb04
+setting := asymmetric
+
+l := 5
+z := 32
+
+BEGIN :: types
+l := int
+z := int
+d := list{G2}
+id := str
+M := GT
+END :: types
+
+BEGIN :: func:setup
+input := list{l, z}
+
+alpha := random(ZR) 
+beta := random(ZR)
+g := random(G1)
+gb := random(G2)
+g1 := g ^ alpha
+g1b := gb ^ alpha
+
+BEGIN :: for
+for{y := 0, l}
+delta#y := random(ZR)
+h#y := g ^ delta#y
+hb#y := gb ^ delta#y
+END :: for
+
+g0b := gb ^ (alpha * beta)
+v := e(g, g0b)
+    
+mpk := list{g, g1, h, gb, g1b, hb, v}
+#mk := list{g0b, None}
+mk := list{g0b}
+output := list{mpk, mk}
+END :: func:setup
+
+
+BEGIN :: func:keygen
+#input := list{mpk, mk, id, j}
+input := list{mpk, mk, id}
+mpk := expand{g, g1, h, gb, g1b, hb, v}
+mk := expand{g0b}
+
+#Id := stringToID(z, 5, id)
+Id := stringToInt(id, 5, 32)
+BEGIN :: for
+for{y := 0, 5}
+r#y := random(ZR)
+d#y := gb ^ r#y
+END :: for
+
+#d0DotProdCalc := { prod{y := 1, j} on { (((g1b ^ Id#y) * hb#y) ^ r#y) }}
+d0DotProdCalc := { prod{y := 0, 5} on { (((g1b ^ Id#y) * hb#y) ^ r#y) }}
+d0 := g0b * d0DotProdCalc
+pk := list{id}
+sk := list{d0, d}
+output := list{pk, sk}
+END :: func:keygen
+
+
+BEGIN :: func:encrypt
+input := list{mpk, pk, M}        
+mpk := expand{g, g1, h, gb, g1b, hb, v}
+#pk := expand{id, j}
+pk := expand{id}
+s := random(ZR)
+A := M * (v ^ s)
+B :=  g ^ s
+
+Id := stringToInt(id, 5, 32)
+
+BEGIN :: for
+for{y := 0, 5}
+C#y := (((g1 ^ Id#y) * h#y) ^ s)
+END :: for
+            
+#ct := list{A, B, C, j}
+ct := list{A, B, C}
+output := ct
+END :: func:encrypt
+
+
+BEGIN :: func:decrypt
+input := list{pk, sk, ct}
+sk := expand{d0, d}
+#ct := expand{A, B, C, j}
+ct := expand{A, B, C}
+
+#D := {prod{y := 1, j} on { e(C#y, d#y) }}
+#D := {prod{y := 0, 5} on { e(C#y, d#y) }}
+
+finalLoopVar := init(GT)
+BEGIN :: for
+for{y := 0, 5}
+intermedLoopVar := e(C#y,d#y)
+finalLoopVar := finalLoopVar * intermedLoopVar
+END :: for
+D := finalLoopVar
+
+denominator := e(B, d0)
+fraction := (D / denominator)
+M := A * fraction
+output := M
+END :: func:decrypt

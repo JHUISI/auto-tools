@@ -1,0 +1,42 @@
+# chch batch inputs
+# variables
+name := chch
+setting := asymmetric
+N := 100
+
+BEGIN ::types
+M := str
+P := G2
+pk := G1
+S1 := G1
+S2 := G1
+g2 := G2
+a := ZR
+END :: types
+
+#sig := (S1, S2)
+BEGIN :: precompute
+a_z := H(M_z | S1_z, ZR)
+END :: precompute
+
+constant := list{P, g2}
+public := pk
+signature := list{S1, S2}
+message := a
+
+# different messages/sigs under different signers
+BEGIN :: count
+message_count := N
+public_count := N
+signature_count := N
+END :: count
+
+verify := { e(S2, g2) == e(S1 * pk^a, P) }
+
+BEGIN :: latex
+S1 := S_1
+S2 := S_2
+g2 := g_2
+P := P_{pub}
+END :: latex
+

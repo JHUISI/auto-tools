@@ -1,0 +1,404 @@
+name := vrf
+N := 100
+setting := asymmetric
+l := 8 
+secparam := 80
+
+BEGIN :: types
+pi := list{G1}
+g1 := G1
+g2 := G2
+x := list{int}
+Ub := G2
+U0 := G2
+U1 := G1
+U := list{G2}
+y0 := GT
+h := G2
+ut := ZR
+u := list{ZR}
+result0 := GT
+delta1 := list{ZR}
+delta2 := list{ZR}
+delta3 := list{ZR}
+delta4 := list{ZR}
+delta5 := list{ZR}
+delta6 := list{ZR}
+delta7 := list{ZR}
+delta8 := list{ZR}
+delta9 := list{ZR}
+startSigNum := int
+endSigNum := int
+incorrectIndices := list{int}
+dotCLoopVal := G1
+dotILoopVal := G1
+dotKLoopVal := G1
+dotGLoopVal := G1
+dotBLoopVal := G1
+dotDLoopVal := GT
+dotJLoopVal := G1
+dotLLoopVal := G1
+dotELoopVal := G1
+dotFLoopVal := G1
+dotHLoopVal := G1
+dotALoopVal := G1
+dotLCache := list{G1}
+dotKCache := list{G1}
+dotFCache := list{G1}
+dotECache := list{G1}
+dotDCache := list{GT}
+dotCCache := list{G1}
+dotJCache := list{G1}
+dotICache := list{G1}
+dotHCache := list{G1}
+dotGCache := list{G1}
+dotBCache := list{G1}
+dotACache := list{G1}
+pilink := list{G1}
+pilist := list{pilink}
+xlist := list{xlink}
+xlink := list{int}
+y0list := list{GT}
+END :: types
+
+constant := list{g1, g2, h}
+message := list{x#0?, x#t?}
+public := list{U0, U1, U, U#0?, U#t?, Ub}
+signature := list{pi#0?, pi#1?, pi#l?, pi#t?, pi#t-1?, y0}
+
+# same signer
+BEGIN :: count
+message_count := N
+public_count := one
+signature_count := N
+END :: count
+
+#2, 6, 5, 3, 2
+#transform := list{2, 3, 5, 3, 6}
+
+#verify1 := { e(pi#1?, g2) == e((g1^(1 - x#0?)) * (U1#0?^x#0?), Ut) } and {{ e(pi#0?, g2) == e(pi#l?, U2#0?) } and { e(pi#0?, h) == y0 }}
+
+verify1 := { e(pi#1?, g2) == e((g1^(1 - x#1?)) * (U1^x#1?), Ub) } and {{ e(pi#0?, g2 * (h^-1)) == (e(pi#l?, U0) * (y0^-1)) }}
+
+# l + 1
+BEGIN :: for
+for{t := 2, l+1}
+verify2 := { e(pi#t?, g2) == (e((pi#t-1?^(1 - x#t?)), g2) * e(pi#t-1?^x#t?, U#t?)) }
+END :: for
+
+
+BEGIN :: func:setup
+input := list{n}
+g1 := random(G1)
+g2 := random(G2)
+hExp := random(ZR)
+ub := random(ZR)
+h := g2 ^ hExp
+Ub := g2 ^ ub
+
+BEGIN :: for
+for{i := 0, n+1}
+u#i := random(ZR)
+END :: for
+
+U0 := (g2 ^ u#0)
+U1 := (g1 ^ u#1)
+
+BEGIN :: for
+for{i := 1, n+1}
+U#i := g2 ^ u#i
+END :: for
+
+pk := list{Ub, g1, g2, h}
+sk := list{ub, g1, h}
+output := list{pk, U0, U1, U, sk, u}
+END :: func:setup
+
+
+
+BEGIN :: func:polyF
+input := list{sk, u, x}
+
+sk := expand{ut, g1, h}
+
+dotProd := init(ZR)
+BEGIN :: for
+for{i:= 1, l+1}
+dotProd := dotProd * (u#i ^ x#i)
+END :: for
+
+result0 := e((g1 ^ ((ut * u#0) * dotProd)), h)
+
+output := result0
+END :: func:polyF
+
+
+
+BEGIN :: func:prove
+input := list{sk, u, x}
+
+sk := expand{ut, g1, h}
+
+BEGIN :: for
+for{i := 1, l+1}
+dotProd0 := init(ZR)
+BEGIN :: forinner
+forinner{j := 1, i+1}
+   dotProd0 := dotProd0 * (u#j ^ x#j)
+END :: forinner
+pi#i? := g1 ^ (ut * dotProd0)
+END :: for
+
+dotProd1 := init(ZR)
+BEGIN :: for
+for{i := 1, l+1}
+   dotProd1 := dotProd1 * (u#i ^ x#i)
+END :: for
+pi#0 := g1 ^ (ut * u#0 * dotProd1)
+y0 := polyF(sk, u, x)
+output := list{y0, pi}
+END :: func:prove
+
+
+BEGIN :: func:verify
+input := list{U0, U1, U, Ub, g1, g2, h, y0, pi, x}
+
+proof0 := e(pi#1?, g2)
+
+BEGIN :: if
+if { { x#1? == 0} and {proof0 != e(g1, Ub)} }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#1? == 1} and {proof0 != e(U1, Ub) } }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#1? != 0 } and { x#1? != 1 } }
+   output := False
+END :: if 
+
+BEGIN :: for
+for{i := 2, l+1}
+
+proof1 := e(pi#i?, g2)
+BEGIN :: if
+if { { x#i? == 0 } and { proof1 != e(pi#i-1?, g2) } }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#i? == 1 } and { proof1 != e(pi#i-1?, U#i?) } } 
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#i? != 0 } and { x#i? != 1 } }
+   output := False
+END :: if 
+END :: for
+
+BEGIN :: if
+if { (e(pi#0, g2) != e(pi#l?, U0)) } 
+   output := False
+END :: if
+
+BEGIN :: if
+if { (e(pi#0, h) != y0) }
+   output := False
+END :: if
+
+output := True
+END :: func:verify
+
+
+BEGIN :: latex
+pi#0? := \pi_0
+pi#1? := \pi_1
+pi#2? := \pi_2
+pi#3? := \pi_3
+pi#4? := \pi_4
+pi#5? := \pi_5
+pi#6? := \pi_6
+pi#7? := \pi_7
+pi#8? := \pi_8
+pi#l? := \pi_l
+pi#t? := \pi_t
+pi#t-1? := \pi_{t-1}
+y0 := y
+g1 := g_1
+g2 := g_2
+x#1? := x_1
+x#2? := x_2
+x#3? := x_3
+x#4? := x_4
+x#5? := x_5
+x#6? := x_6
+x#7? := x_7
+x#8? := x_8
+x#t? := x_t
+Ub := \hat{U}
+U0 := U_0
+U1 := U_1
+U#2? := U_2
+U#3? := U_3
+U#4? := U_4
+U#5? := U_5
+U#6? := U_6
+U#7? := U_7
+U#8? := U_8
+U#t? := U_t
+END :: latex
+
+BEGIN :: func:membership
+ input := list{U, U0, U1, Ub, g1, g2, h, pilist, y0list}
+
+
+BEGIN :: if
+if { ismember(U) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(U0) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(U1) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(Ub) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(g1) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(g2) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(h) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(pilist) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(y0list) == False }
+    output := False
+END :: if
+
+ output := True
+END :: func:membership
+
+
+BEGIN :: func:dividenconquer
+ input := list{delta1, delta2, delta3, delta4, delta5, delta6, delta7, delta8, delta9, startSigNum, endSigNum, incorrectIndices, dotACache, dotBCache, dotCCache, dotDCache, dotECache, dotFCache, dotGCache, dotHCache, dotICache, dotJCache, dotKCache, dotLCache, Ub, g2, U0, h, U}
+dotALoopVal := init(G1)
+dotBLoopVal := init(G1)
+dotCLoopVal := init(G1)
+dotDLoopVal := init(GT)
+dotELoopVal := init(G1)
+dotFLoopVal := init(G1)
+dotGLoopVal := init(G1)
+dotHLoopVal := init(G1)
+dotILoopVal := init(G1)
+dotJLoopVal := init(G1)
+dotKLoopVal := init(G1)
+dotLLoopVal := init(G1)
+
+BEGIN :: for
+for{z := startSigNum, endSigNum}
+dotALoopVal := dotALoopVal * dotACache#z
+dotBLoopVal := dotBLoopVal * dotBCache#z
+dotCLoopVal := dotCLoopVal * dotCCache#z
+dotDLoopVal := dotDLoopVal * dotDCache#z
+dotELoopVal := dotELoopVal * dotECache#z
+dotFLoopVal := dotFLoopVal * dotFCache#z
+dotGLoopVal := dotGLoopVal * dotGCache#z
+dotHLoopVal := dotHLoopVal * dotHCache#z
+dotILoopVal := dotILoopVal * dotICache#z
+dotJLoopVal := dotJLoopVal * dotJCache#z
+dotKLoopVal := dotKLoopVal * dotKCache#z
+dotLLoopVal := dotLLoopVal * dotLCache#z
+END :: for
+BEGIN :: if
+ if { (e(dotALoopVal,Ub) * e(dotBLoopVal,g2)) == ((e(dotCLoopVal,U0) * (dotDLoopVal * e(dotELoopVal,(g2 * (h^-1))))) * ((((((e(dotFLoopVal,U#2?) * e(dotGLoopVal,U#3?)) * e(dotHLoopVal,U#4?)) * e(dotILoopVal,U#5?)) * e(dotJLoopVal,U#6?)) * e(dotKLoopVal,U#7?)) * e(dotLLoopVal,U#8?))) }
+    return := None
+ else
+    midwayFloat := ((endSigNum - startSigNum) / 2)
+    midway := integer(midwayFloat)
+END :: if
+
+
+BEGIN :: if
+ if { midway == 0 } 
+    addToList(incorrectIndices, startSigNum)
+    output := None
+ else
+    midSigNum := startSigNum + midway
+    dividenconquer(delta1, delta2, delta3, delta4, delta5, delta6, delta7, delta8, delta9, startSigNum, midSigNum, incorrectIndices, dotACache, dotBCache, dotCCache, dotDCache, dotECache, dotFCache, dotGCache, dotHCache, dotICache, dotJCache, dotKCache, dotLCache, Ub, g2, U0, h, U)
+    dividenconquer(delta1, delta2, delta3, delta4, delta5, delta6, delta7, delta8, delta9, midSigNum, endSigNum, incorrectIndices, dotACache, dotBCache, dotCCache, dotDCache, dotECache, dotFCache, dotGCache, dotHCache, dotICache, dotJCache, dotKCache, dotLCache, Ub, g2, U0, h, U)
+END :: if
+
+
+ output := None
+END ::func:dividenconquer
+
+
+BEGIN :: func:batchverify
+input := list{U, U0, U1, Ub, g1, g2, h, pilist, xlist, y0list, incorrectIndices}
+
+BEGIN :: for
+for{z := 0, N}
+ delta1#z := SmallExp(secparam)
+delta2#z := SmallExp(secparam)
+delta3#z := SmallExp(secparam)
+delta4#z := SmallExp(secparam)
+delta5#z := SmallExp(secparam)
+delta6#z := SmallExp(secparam)
+delta7#z := SmallExp(secparam)
+delta8#z := SmallExp(secparam)
+delta9#z := SmallExp(secparam)
+END :: for
+
+BEGIN :: if
+ if {(membership(U, U0, U1, Ub, g1, g2, h, pilist, y0list) == False)}
+     output := False
+END :: if
+
+
+BEGIN :: for
+for{z := 0, N}
+dotACache#z := ((g1^((1 - xlist#z#1?) * delta1#z)) * (U1^(xlist#z#1? * delta1#z)))
+dotBCache#z := ((pilist#z#1?^-delta1#z) * ((((((((pilist#z#2?^delta3#z) * (pilist#z#1?^((1 - xlist#z#2?) * -delta3#z))) * ((pilist#z#3?^-delta4#z) * (pilist#z#2?^(((1 - xlist#z#3?) * -delta4#z) * -1)))) * ((pilist#z#4?^-delta5#z) * (pilist#z#3?^(((1 - xlist#z#4?) * -delta5#z) * -1)))) * ((pilist#z#5?^-delta6#z) * (pilist#z#4?^(((1 - xlist#z#5?) * -delta6#z) * -1)))) * ((pilist#z#6?^-delta7#z) * (pilist#z#5?^(((1 - xlist#z#6?) * -delta7#z) * -1)))) * ((pilist#z#7?^-delta8#z) * (pilist#z#6?^(((1 - xlist#z#7?) * -delta8#z) * -1)))) * ((pilist#z#8?^-delta9#z) * (pilist#z#7?^(((1 - xlist#z#8?) * -delta9#z) * -1)))))
+dotCCache#z := (pilist#z#l?^delta2#z)
+dotDCache#z := (y0list#z^-delta2#z)
+dotECache#z := (pilist#z#0?^-delta2#z)
+dotFCache#z := (pilist#z#1?^(xlist#z#2? * delta3#z))
+dotGCache#z := ((pilist#z#2?^(xlist#z#3? * delta4#z))^-1)
+dotHCache#z := ((pilist#z#3?^(xlist#z#4? * delta5#z))^-1)
+dotICache#z := ((pilist#z#4?^(xlist#z#5? * delta6#z))^-1)
+dotJCache#z := ((pilist#z#5?^(xlist#z#6? * delta7#z))^-1)
+dotKCache#z := ((pilist#z#6?^(xlist#z#7? * delta8#z))^-1)
+dotLCache#z := ((pilist#z#7?^(xlist#z#8? * delta9#z))^-1)
+END :: for
+ dividenconquer(delta1, delta2, delta3, delta4, delta5, delta6, delta7, delta8, delta9, 0, N, incorrectIndices, dotACache, dotBCache, dotCCache, dotDCache, dotECache, dotFCache, dotGCache, dotHCache, dotICache, dotJCache, dotKCache, dotLCache, Ub, g2, U0, h, U)
+
+ output := incorrectIndices
+END ::func:batchverify
+
+

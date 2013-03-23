@@ -1,0 +1,146 @@
+name := hve08
+setting := symmetric
+
+n := 5
+
+BEGIN :: types
+Msg := GT
+Msg2 := GT
+n := int
+xVector := list{int}
+yVector := list{int}
+END :: types
+
+BEGIN :: func:setup
+input := n
+
+g := random(G1)
+egg := e(g, g)
+y := random(ZR)
+Y := egg ^ y
+
+BEGIN :: for
+for{i := 0, n}
+t#i := random(ZR)
+v#i := random(ZR)
+r#i := random(ZR)
+m#i := random(ZR)
+T#i := g ^ t#i
+V#i := g ^ v#i
+R#i := g ^ r#i
+M#i := g ^ m#i
+END :: for
+
+pk := list{g, Y, T, V, R, M, n}
+msk := list{y, t, v, r, m}
+output := list{pk, msk}
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{pk, msk, yVector}
+pk := expand{g, Y, T, V, R, M, n}
+msk := expand{y, t, v, r, m}
+
+numDC := init(0)
+BEGIN :: for
+for{i := 0, n}
+BEGIN :: if
+if { yVector#i != 2 }
+numDC := numDC + 1
+END :: if
+END :: for
+
+sum := init(0)
+
+endForLoop := numDC - 1
+BEGIN :: for
+for{i := 0, endForLoop}
+a#i := random(ZR)
+sum := sum + a#i
+END :: for
+
+a#numDC-1? := (y - sum)
+
+index := init(0)
+
+BEGIN :: for
+for{i := 0, n}
+BEGIN :: if
+if { yVector#i == 2 }
+YVector#i := init(G1)
+LVector#i := init(G1)
+END :: if
+BEGIN :: if
+if { yVector#i == 0 }
+YVector#i := g ^ (a#index / r#i)
+LVector#i := g ^ (a#index / m#i)
+index := index + 1
+END :: if
+BEGIN :: if
+if { yVector#i == 1 }
+YVector#i := g ^ (a#index / t#i)
+LVector#i := g ^ (a#index / v#i)
+index := index + 1
+END :: if
+END :: for
+
+sk := list{YVector, LVector}
+output := sk
+END :: func:keygen
+
+
+BEGIN :: func:encrypt
+input := list{Msg, xVector, pk}
+pk := expand{g, Y, T, V, R, M, n}
+
+s := random(ZR)
+
+BEGIN :: for
+for{i := 0, n}
+s2#i := random(ZR)
+END :: for
+
+omega := Msg * (Y ^ (-s))
+C0 := g ^ s
+
+BEGIN :: for
+for{i := 0, n}
+BEGIN :: if
+if { xVector#i == 0 }
+XVector#i := R#i ^ (s - s2#i)
+WVector#i := M#i ^ (s2#i)
+END :: if
+
+BEGIN :: if
+if { xVector#i == 1 }
+XVector#i := T#i ^ (s - s2#i)
+WVector#i := V#i ^ (s2#i)
+END :: if
+END :: for
+
+ct := list{omega, C0, XVector, WVector}
+output := ct
+END :: func:encrypt
+
+
+BEGIN :: func:decrypt
+input := list{ct, sk}
+ct := expand{omega, C0, XVector, WVector}
+sk := expand{YVector, LVector}
+
+dotProd := init(GT)
+gId := init(G1)
+n2 := len(YVector)
+
+BEGIN :: for
+for{i := 0, n2}
+BEGIN :: if
+if { ((YVector#i != gId) and (LVector#i != gId)) }
+resVarName := e(XVector#i, YVector#i) * e(WVector#i, LVector#i)
+dotProd := dotProd * resVarName
+END :: if
+END :: for
+
+Msg := omega * dotProd
+output := Msg
+END :: func:decrypt

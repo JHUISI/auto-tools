@@ -1,0 +1,37 @@
+# bls batch inputs
+# variables
+name := bls
+N := 100
+L := 10
+setting := asymmetric
+
+BEGIN :: types
+  sig := G1
+  M := str
+  g := G2
+  pk := G2
+  h := G1
+END :: types
+
+BEGIN :: precompute
+  h_z := H(M_z, G1)
+END :: precompute
+
+constant := g
+signature := sig
+public := pk
+message := h
+
+# different messages/sigs under a single signer
+BEGIN :: count
+message_count := N
+public_count := one
+signature_count := N
+END :: count
+
+# same message. different signatures/signers
+#message := one
+#public := L
+#signature := N
+
+verify := { e(h, pk) == e(sig, g) }

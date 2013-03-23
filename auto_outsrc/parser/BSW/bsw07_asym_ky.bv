@@ -1,0 +1,88 @@
+name := bsw07
+setting := asymmetric
+
+BEGIN :: types
+policyUSstr := str
+attrs := list{str}
+sh := symmap
+coeff := list
+S := list{str}
+M := GT
+END :: types
+
+BEGIN :: func:setup
+input := None
+gG1 := random(G1)
+gG2 := random(G2)
+alpha := random(ZR)
+beta := random(ZR)
+hG1 := (gG1^beta)
+hG2 := (gG2^beta)
+i := (gG1^alpha)
+egg := (e(gG1,gG2)^alpha)
+mk := list{beta, i}
+pk := list{gG1, gG2, hG1, hG2, egg}
+output := list{mk, pk}
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{pk, mk, S}
+pk := expand{gG1, gG2, hG1, hG2, egg}
+mk := expand{beta, i}
+r := random(ZR)
+p0 := (hG1^r)
+D := ((i * p0)^(1 / beta))
+Y := len(S)
+BEGIN :: for
+for{y := 0,Y}
+sUSy := random(ZR)
+y0 := S#y
+Dj#y0 := (p0 * (H(y0,G1)^sUSy))
+Djp#y0 := (gG2^sUSy)
+END :: for
+sk := list{D, Dj, Djp}
+output := sk
+END :: func:keygen
+
+BEGIN :: func:encrypt
+input := list{pk, M, policyUSstr}
+pk := expand{gG1, gG2, hG1, hG2, egg}
+policy := createPolicy(policyUSstr)
+attrs := getAttributeList(policy)
+s := random(ZR)
+sh := calculateSharesDict(s, policy)
+Y := len(sh)
+Ctl := (M * (egg^s))
+C := (hG2^s)
+BEGIN :: for
+for{y := 0,Y}
+y1 := attrs#y
+Cr#y1 := (gG2^sh#y1)
+Cpr#y1 := (H(y1,G1)^sh#y1)
+END :: for
+ct := list{policyUSstr, Ctl, C, Cr, Cpr}
+output := ct
+END :: func:encrypt
+
+BEGIN :: func:decrypt
+input := list{pk, sk, S, ct}
+ct := expand{policyUSstr, Ctl, C, Cr, Cpr}
+sk := expand{D, Dj, Djp}
+policy := createPolicy(policyUSstr)
+attrs := prune(policy, S)
+coeff := getCoefficients(policy)
+Y := len(attrs)
+reservedVarName0 := init(GT)
+BEGIN :: for
+for{y := 0,Y}
+yGetStringSuffix := GetString(attrs#y)
+reservedVarName1 := ((e(Cr#yGetStringSuffix,Dj#yGetStringSuffix) / e(Djp#yGetStringSuffix,Cpr#yGetStringSuffix))^coeff#yGetStringSuffix)
+reservedVarName0 := (reservedVarName0 * reservedVarName1)
+END :: for
+A := reservedVarName0
+result0 := e(C,D)
+result1 := (result0 / A)
+M := (Ctl / result1)
+output := M
+END :: func:decrypt
+

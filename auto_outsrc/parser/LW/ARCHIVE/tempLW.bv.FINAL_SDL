@@ -1,0 +1,147 @@
+name := lw10
+setting := asymmetric
+
+N := 2
+secparam := 80
+
+BEGIN :: types
+msk := list
+pk1 := list{GT, G2}
+pk := list{pk1, None}
+sk := list
+ct := list
+policyusstr := str
+policy := object
+attrs := list
+sussh := list
+wussh := list
+coeff := list
+share := list
+authS := list
+userS := list
+M := GT
+K := list
+C1 := list
+C2 := list
+C3 := list
+gid := str
+KBlinded := list
+blindingFactorKBlinded := list
+transformOutputList := list
+END :: types
+
+BEGIN :: func:setup
+input := None
+g := random(G1)
+gus2 := random(G2)
+gpk := list{g, gus2}
+
+output := gpk
+END :: func:setup
+
+BEGIN :: func:authsetup
+input := list{gpk, authS}
+gpk := expand{g, gus2}
+
+Y := len(authS)
+BEGIN :: for
+for{i := 0, Y}
+alpha := random(ZR)
+y := random(ZR)
+z := authS#i
+eggalph := e(g, gus2)^alpha
+g2y := gus2^y
+msk#z := list{alpha, y}
+pk#z := list{eggalph, g2y}
+END :: for
+
+output := list{msk, pk}
+END :: func:authsetup
+
+BEGIN :: func:keygen
+input := list{gpk, msk, gid, userS}
+userSBlinded := userS
+gidBlinded := gid
+zz := random(ZR)
+gpk := expand{g, gus2}
+h := H(gidBlinded,G1)
+
+Y := len(userS)
+BEGIN :: for
+for{i := 0,Y}
+z := userS#i
+K#z := ((g^msk#z#0) * (h^msk#z#1))
+END :: for
+
+BEGIN :: forall
+forall{y := K}
+blindingFactorKBlinded#y := random(ZR)
+KBlinded#y := K#y ^ (1/blindingFactorKBlinded#y)
+END :: forall
+sk := list{gidBlinded, userSBlinded, KBlinded}
+skBlinded := list{gidBlinded, userSBlinded, KBlinded}
+output := list{blindingFactorKBlinded, skBlinded}
+END :: func:keygen
+
+BEGIN :: func:encrypt
+input := list{pk, gpk, M, policyusstr}
+gpk := expand{g, gus2}
+
+policy := createPolicy(policyusstr)
+attrs := getAttributeList(policy)
+s := random(ZR)
+w := 0
+sussh := calculateSharesDict(s, policy)
+wussh := calculateSharesDict(w, policy)
+Y := len(sussh)
+egg := e(g,gus2)
+C0 := (M * (egg^s))
+
+BEGIN :: for
+for{y := 0, Y}
+r := random(ZR)
+k := attrs#y
+C1#k := (egg ^ sussh#k) * (pk#k#0 ^ r)
+C2#k := gus2^r
+C3#k := (pk#k#1 ^ r) * (gus2 ^ wussh#k)
+END :: for
+
+ct := list{policyusstr, C0, C1, C2, C3}
+output := ct
+END :: func:encrypt
+
+BEGIN :: func:transform
+input := list{gpk, sk, ct}
+gpk := expand{g, gus2}
+ct := expand{policyusstr, C0, C1, C2, C3}
+sk := expand{gid, userS, K}
+transformOutputList#0 := createPolicy(policyusstr)
+policy := transformOutputList#0
+transformOutputList#1 := prune(policy, userS)
+attrs := transformOutputList#1
+transformOutputList#2 := getCoefficients(policy)
+coeff := transformOutputList#2
+transformOutputList#3 := H(gid,G1)
+husgid := transformOutputList#3
+transformOutputList#4 := len(attrs)
+Y := transformOutputList#4
+output := transformOutputList
+END :: func:transform
+
+BEGIN :: func:decout
+input := list{gpk, sk, ct, transformOutputList, blindingFactorKBlinded}
+gpk := expand{g, gus2}
+ct := expand{policyusstr, C0, C1, C2, C3}
+sk := expand{gid, userS, K}
+policy := transformOutputList#0
+attrs := transformOutputList#1
+coeff := transformOutputList#2
+husgid := transformOutputList#3
+Y := transformOutputList#4
+A := (prod{y := attrs#1,Y} on (((C1#y^coeff#y) * e((husgid^coeff#y),C3#y)) * (e((K#y^coeff#y),C3#y) * e((K#y^-coeff#y),C2#y))))
+M := (C0 * (A^-1))
+output := M
+END :: func:decout
+
+
+# change rule for moving exp into a variable : only if it's a negative exponent! nothing else!

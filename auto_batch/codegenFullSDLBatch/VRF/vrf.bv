@@ -1,0 +1,212 @@
+name := vrf
+N := 100
+setting := asymmetric
+l := 8 
+secparam := 80
+
+BEGIN :: types
+ pi := list{G1} 
+ g1 := G1
+ g2 := G2
+ x := list{int}
+ Ub := G2
+ U0 := G2
+ U1 := G1
+ U := list{G2}
+ y0 := GT
+ h := G2
+ ut := ZR
+ u := list{ZR}
+ result0 := GT
+END :: types
+
+constant := list{g1, g2, h}
+message := list{x#0?, x#t?}
+public := list{U0, U1, U, U#0?, U#t?, Ub}
+signature := list{pi#0?, pi#1?, pi#l?, pi#t?, pi#t-1?, y0}
+
+# same signer
+BEGIN :: count
+message_count := N
+public_count := one
+signature_count := N
+END :: count
+
+#2, 6, 5, 3, 2
+#transform := list{2, 3, 5, 3, 6}
+
+verify1 := { e(pi#1?, g2) == e((g1^(1 - x#1?)) * (U1^x#1?), Ub) } and {{ e(pi#0?, g2) == e(pi#l?, U0) } and { e(pi#0?, h) == y0 }}
+
+#verify1 := { e(pi#1?, g2) == e((g1^(1 - x#1?)) * (U1^x#1?), Ub) } and {{ e(pi#0?, g2 * (h^-1)) == (e(pi#l?, U0) * (y0^-1)) }}
+
+# l + 1
+BEGIN :: for
+for{t := 2, l+1}
+verify2 := { e(pi#t?, g2) == (e((pi#t-1?^(1 - x#t?)), g2) * e(pi#t-1?^x#t?, U#t?)) }
+END :: for
+
+
+BEGIN :: func:setup
+input := list{n}
+g1 := random(G1)
+g2 := random(G2)
+hExp := random(ZR)
+ub := random(ZR)
+h := g2 ^ hExp
+Ub := g2 ^ ub
+
+BEGIN :: for
+for{i := 0, n+1}
+u#i := random(ZR)
+END :: for
+
+U0 := (g2 ^ u#0)
+U1 := (g1 ^ u#1)
+
+BEGIN :: for
+for{i := 1, n+1}
+U#i := g2 ^ u#i
+END :: for
+
+pk := list{Ub, g1, g2, h}
+sk := list{ub, g1, h}
+output := list{pk, U0, U1, U, sk, u}
+END :: func:setup
+
+
+
+BEGIN :: func:polyF
+input := list{sk, u, x}
+
+sk := expand{ut, g1, h}
+
+dotProd := init(ZR)
+BEGIN :: for
+for{i:= 1, l+1}
+dotProd := dotProd * (u#i ^ x#i)
+END :: for
+
+result0 := e((g1 ^ ((ut * u#0) * dotProd)), h)
+
+output := result0
+END :: func:polyF
+
+
+
+BEGIN :: func:prove
+input := list{sk, u, x}
+
+sk := expand{ut, g1, h}
+
+BEGIN :: for
+for{i := 1, l+1}
+dotProd0 := init(ZR)
+BEGIN :: forinner
+forinner{j := 1, i+1}
+   dotProd0 := dotProd0 * (u#j ^ x#j)
+END :: forinner
+pi#i? := g1 ^ (ut * dotProd0)
+END :: for
+
+dotProd1 := init(ZR)
+BEGIN :: for
+for{i := 1, l+1}
+   dotProd1 := dotProd1 * (u#i ^ x#i)
+END :: for
+pi#0 := g1 ^ (ut * u#0 * dotProd1)
+y0 := polyF(sk, u, x)
+output := list{y0, pi}
+END :: func:prove
+
+
+BEGIN :: func:verify
+input := list{U0, U1, U, Ub, g1, g2, h, y0, pi, x}
+
+proof0 := e(pi#1?, g2)
+
+BEGIN :: if
+if { { x#1? == 0} and {proof0 != e(g1, Ub)} }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#1? == 1} and {proof0 != e(U1, Ub) } }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#1? != 0 } and { x#1? != 1 } }
+   output := False
+END :: if 
+
+BEGIN :: for
+for{i := 2, l+1}
+
+proof1 := e(pi#i?, g2)
+BEGIN :: if
+if { { x#i? == 0 } and { proof1 != e(pi#i-1?, g2) } }
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#i? == 1 } and { proof1 != e(pi#i-1?, U#i?) } } 
+   output := False
+END :: if
+
+BEGIN :: if
+if { { x#i? != 0 } and { x#i? != 1 } }
+   output := False
+END :: if 
+END :: for
+
+BEGIN :: if
+if { (e(pi#0, g2) != e(pi#l?, U0)) } 
+   output := False
+END :: if
+
+BEGIN :: if
+if { (e(pi#0, h) != y0) }
+   output := False
+END :: if
+
+output := True
+END :: func:verify
+
+
+BEGIN :: latex
+pi#0? := \pi_0
+pi#1? := \pi_1
+pi#2? := \pi_2
+pi#3? := \pi_3
+pi#4? := \pi_4
+pi#5? := \pi_5
+pi#6? := \pi_6
+pi#7? := \pi_7
+pi#8? := \pi_8
+pi#l? := \pi_l
+pi#t? := \pi_t
+pi#t-1? := \pi_{t-1}
+y0 := y
+g1 := g_1
+g2 := g_2
+x#1? := x_1
+x#2? := x_2
+x#3? := x_3
+x#4? := x_4
+x#5? := x_5
+x#6? := x_6
+x#7? := x_7
+x#8? := x_8
+x#t? := x_t
+Ub := \hat{U}
+U0 := U_0
+U1 := U_1
+U#2? := U_2
+U#3? := U_3
+U#4? := U_4
+U#5? := U_5
+U#6? := U_6
+U#7? := U_7
+U#8? := U_8
+U#t? := U_t
+END :: latex
