@@ -1290,7 +1290,7 @@ class PairInstanceFinderImproved:
         pairDict = self.checkForMultiple()     
         equation2 = BinaryNode.copy(equation)
         if pairDict != None:
-#            print("Pair =>", pairDict, "\n\n\n")
+#            print("\nPair =>", pairDict, "\n\n\n")
 #            for i in pairDict.keys():
 #                if type(pairDict[i]) == list:
 #                    print("list: ", i)
@@ -1327,17 +1327,21 @@ class SubstitutePairs2:
         self.node_side = pairDict['keyside']
         self.extra_side = pairDict['side']
         self.extra_index = pairDict['pair_index']
-        self.parentExpNode = pairDict.get(ParentExpNode) # TODO: come back to this                                                         
         self.keyParentExp  = pairDict.get(keyParentExp)        
         self.index = 0        
         if self.key == 'rnode': # if right, then extras will be on the left
             self.extra = pairDict['lnode1']
             self.extra_parent = pairDict['lnode1_parent']
             self.extra_inverted = pairDict.get('lnode1_' + InvertedPairing)
+            self.parentExpNode = pairDict.get('lnode1_' + ParentExpNode) # TODO: come back to this                                                         
         elif self.key == 'lnode':
             self.extra = pairDict['rnode1']
             self.extra_parent = pairDict['rnode1_parent']
             self.extra_inverted = pairDict.get('rnode1_' + InvertedPairing)
+            self.parentExpNode = pairDict.get('rnode1_' + ParentExpNode) # TODO: come back to this                                                         
+        if self.parentExpNode != None:
+            if len(self.extra) > 0:
+                self.extra[0] = BinaryNode(ops.EXP, BinaryNode(str(self.extra[0])), BinaryNode(str(self.parentExpNode)))
 #        print("DEBUG: ", self.extra_inverted)
             
         self.deleteOtherPair = self.pruneCheck = False
@@ -1368,11 +1372,11 @@ class SubstitutePairs2:
         
     def visit_pair(self, node, data):
 #        print("complete list: ", self.extra_side)
-        if self.key == 'rnode':
+        if self.key == 'rnode': # means the right side of the pairing is fixed and thus, must combining lhs variables
             # find the attribute node on the right
             if self.debug: 
                 print("DEBUG: ", node.right, " =?= ", self.right, "left type:", Type(self.left), node.left, self.left)
-            if str(node.right) == str(self.right) and Type(node.right) == ops.ATTR:
+            if str(node.right) == str(self.right) and Type(node.right) == ops.ATTR: 
                 #print("Found a right match: ", node, self.left, self.right)
                 if node.left == self.left and Type(self.left) == ops.ON:                    
                     if self.debug: print("combine other nodes with ON node: ", self.left)
@@ -1401,7 +1405,7 @@ class SubstitutePairs2:
                     #print("new pairing node: ", muls[0], self.right) # MUL nodes absorb the exponent
                     self.deleteOtherPair = True                    
 
-                elif node.left in self.extra: # foudn the other nodes we want to delete                    
+                elif node.left in self.extra: # found the other nodes we want to delete                    
                     del node.left, node.right
                     node.left = None
                     node.right = None
@@ -1639,6 +1643,32 @@ class GetPairings:
     
     def getList(self):
         return self._list
+
+class TestForMultipleEq:
+    def __init__(self):
+        self.multiple = False
+    
+    def visit_and(self, node, data):
+        if Type(node.left) == Type(node.right) and Type(node.left) == ops.EQ_TST:
+            self.multiple = True
+            
+    def visit(self, node, data):
+        pass
+
+class GetEquqlityNodes:
+    def __init__(self):
+        self._list = []
+    
+    def visit(self, node, data):
+        return
+    
+    def visit_eq_tst(self, node, data):
+        self._list.append(node)
+        return
+    
+    def getNodes(self):
+        return self._list
+
 
 class CheckForPairing:
     def __init__(self):

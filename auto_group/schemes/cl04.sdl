@@ -1,0 +1,51 @@
+name := cl04
+setting := symmetric
+
+BEGIN :: types
+ M := str
+END :: types
+
+BEGIN :: func:setup
+input := list{None}
+ g := random(G1)
+output := g
+END :: func:setup
+
+
+BEGIN :: func:keygen
+input := list{g}
+ x := random(ZR)
+ y := random(ZR)
+ X := g^x
+ Y := g^y
+ sk := list{x, y}
+ pk := list{X, Y}
+output := list{pk, sk}
+END :: func:keygen
+
+
+BEGIN :: func:sign
+input := list{sk, M}
+ sk := expand{x, y}
+ a := random(G1)
+ m := H(M, ZR)
+ b := a^y
+ c := a^(x + (m * x * y))
+ sig := list{a, b, c}
+output := sig
+END :: func:sign
+
+
+BEGIN :: func:verify
+input := list{pk, g, M, sig}
+ sig := expand{a, b, c}
+ pk := expand{X, Y}
+ m := H(M, ZR)
+BEGIN :: if
+if {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
+   output := True
+else
+   output := False
+END :: if
+END :: func:verify
+

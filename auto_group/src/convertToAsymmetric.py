@@ -13,7 +13,7 @@
 import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes
 
 assignInfo = None
 SHORT_SECKEYS = "secret_keys" # for
@@ -1184,6 +1184,20 @@ def updateForLists(varInfo, assignVar, info):
 
 def updateForPairing(varInfo, info):
     node = BinaryNode.copy(varInfo.getAssignNode())
+    tme = TestForMultipleEq()
+    sdl.ASTVisitor(tme).preorder(node)
+    if tme.multiple:
+        gen = GetEquqlityNodes()
+        sdl.ASTVisitor( gen ).preorder(node)
+        listOfNodes = gen.getNodes()
+        for i in listOfNodes:
+            tmp = applyPairingUpdate(info, i) # pass reference to eq_tst nodes
+        print("\n\t Final: ", node)
+        return str(node)
+    
+    return applyPairingUpdate(info, node)
+
+def applyPairingUpdate(info, node):
     sdl.ASTVisitor( SubstitutePairings(info) ).preorder( node )
     print("\n\t Pre techs: ", node, end="")
     sdl.ASTVisitor( MaintainOrder(info) ).preorder( node )    
