@@ -4,6 +4,8 @@ import SDLParser as sdl
 from SDLang import *
 from src.convertToAsymmetric import * #runAutoGroup
 
+verboseFlag = "-v"
+
 def configAutoGroup(sdl_file, cm, sdlVerbose):
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
@@ -23,12 +25,16 @@ def configAutoGroup(sdl_file, cm, sdlVerbose):
     runAutoGroup(sdl_file, cm, sdlVerbose)
 
 if __name__ == "__main__":
-    print(sys.argv)
-    sdl_file = sys.argv[1]
-    sdlVerbose = False
-    if len(sys.argv) > 2: # and sys.argv[3] == "-v":  sdlVerbose = True
+    if len(sys.argv) > 2:
+        print(sys.argv)
+        sdl_file = sys.argv[1]
+        if verboseFlag in sys.argv: sdlVerbose = True
+        else: sdlVerbose = False
         config = sys.argv[2]
         config = config.split('.')[0]
 
-        configModule = importlib.import_module("schemes." + config)#__import__(config)
+        configModule = importlib.import_module("schemes." + config)
         configAutoGroup(sdl_file, configModule, sdlVerbose)
+    else:
+        print("python %s [ SDL file ] [ SDL config name ]" % sys.argv[0])
+        sys.exit(-1)        
