@@ -10,18 +10,15 @@ from charm.core.engine.util import objectToBytes, bytesToObject
 from charm.toolbox.symcrypto import AuthenticatedCryptoAbstraction
 from charm.toolbox.conversion import Conversion
 from charm.toolbox.bitstring import Bytes
-#import hashlib
 
-groupObjBuiltInFuncs = None
-utilBuiltInFuncs = None
+groupObj = None
+utilObj = None
 
 listIndexNoOfN_StrToId = 9
 listIndexNoOfl_StrToId = 10
 
-Params = "MNT224"
-
 def stringToInt(strID, zz, ll):
-    getUserGlobals()
+    checkUserGlobals()
 
     '''Hash the identity string and break it up in to l bit pieces'''
     h = hashlib.new('sha1')
@@ -34,7 +31,7 @@ def stringToInt(strID, zz, ll):
     for i in range(zz):  #z must be greater than or equal to 1
         binsubstr = bstr[ll*i : ll*(i+1)]
         intval = int(binsubstr, 2)
-        intelement = groupObjBuiltInFuncs.init(ZR, intval)
+        intelement = groupObj.init(ZR, intval)
         v.append(intelement)
     return v
 
@@ -44,7 +41,7 @@ def isList(object):
     try:
         objectTypeName = type(object).__name__
     except:
-        sys.exit("builtInFuncs.py:  could not obtain type/name of object passed in to isList.")
+        assert False, "builtInFuncs.py:  could not obtain type/name of object passed in to isList."
 
     if (objectTypeName == 'list'):
         return 1
@@ -52,7 +49,7 @@ def isList(object):
     return 0
 
 def objectOut(group, d):
-	getUserGlobals()
+	checkUserGlobals()
 	s = ""
 	keys = d.keys()
 	for i in keys:
@@ -63,70 +60,53 @@ def objectOut(group, d):
 	return s
 
 def writeToFile(name, s):
-	getUserGlobals()
+	checkUserGlobals()
 	fd = open(name, 'w')
 	fd.write(s)
 	fd.close()
 
 def GetString(GetString_Arg):
-    getUserGlobals()
+    checkUserGlobals()
     return GetString_Arg.getAttribute()
 
 def createPolicy(policy_str):
-	getUserGlobals()
-	return utilBuiltInFuncs.createPolicy(policy_str)
+	checkUserGlobals()
+	return utilObj.createPolicy(policy_str)
 
 def getAttributeList(policy):
-	getUserGlobals()
-	return utilBuiltInFuncs.getAttributeList(policy)
+	checkUserGlobals()
+	return utilObj.getAttributeList(policy)
 
 def calculateSharesDict(s, policy):
-	getUserGlobals()
-	return utilBuiltInFuncs.calculateSharesDict(s, policy)
+	checkUserGlobals()
+	return utilObj.calculateSharesDict(s, policy)
 
 def calculateSharesList(s, policy):
-	getUserGlobals()
-	return utilBuiltInFuncs.calculateSharesList(s, policy)
+	checkUserGlobals()
+	return utilObj.calculateSharesList(s, policy)
 
 def prune(policy, S):
-	getUserGlobals()
-	return utilBuiltInFuncs.prune(policy, S)
+	checkUserGlobals()
+	return utilObj.prune(policy, S)
 
 def getCoefficients(policy):
-	getUserGlobals()
-	return utilBuiltInFuncs.getCoefficients(policy)
+	checkUserGlobals()
+	return utilObj.getCoefficients(policy)
 
 def sha1(message):
-	getUserGlobals()
+	checkUserGlobals()
 	hashObj = hashlib.new('sha1') 
 	h = hashObj.copy()
 	h.update(bytes(message, 'utf-8'))
 	return Bytes(h.digest())
 
-def strToId(pk, strID):
-	getUserGlobals()
-	hash = sha1(strID)
-	val = Conversion.OS2IP(hash)
-	bstr = bin(val)[2:]
+def checkUserGlobals():
+    global groupObj, utilObj
+    
+    if (groupObj == None):
+        assert False, "groupObj (PairingGroup class) not defined in builtInFuncs.py"
 
-	v=[]
-
-	for i in range(pk[listIndexNoOfN_StrToId]):
-		binsubstr = bstr[pk[listIndexNoOfl_StrToId]*i : pk[listIndexNoOfl_StrToId]*(i+1)]
-		print(binsubstr)
-		intval = int(binsubstr, 2)
-		intelement = groupObjBuiltInFuncs.init(ZR, intval)
-		v.append(intelement)
-
-	return v
-
-def getUserGlobals():
-	global groupObjBuiltInFuncs, utilBuiltInFuncs
-
-	if (groupObjBuiltInFuncs == None):
-		pass
-		#groupObjBuiltInFuncs = PairingGroup(Params)
-
-	if (utilBuiltInFuncs == None):
-		pass
-		#utilBuiltInFuncs = SecretUtil(groupObjBuiltInFuncs, verbose=False)
+    if (utilObj == None):
+        #assert False, "utilObj (SecretUtil class) not defined in builtInFuncs.py"
+        pass
+    return

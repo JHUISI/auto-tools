@@ -44,37 +44,29 @@ def writeCurrentNumTabsIn(outputFile):
 
     outputFile.write(outputString)
 
-def removeDirectoryName(path):
-    pathSplit = path.split('/')
-
-    lenPathSplit = len(pathSplit)
-    return pathSplit[lenPathSplit - 1]
+#def removeDirectoryName(path):
+#    pathSplit = path.split('/')
+#    lenPathSplit = len(pathSplit)
+#    return pathSplit[lenPathSplit - 1]
 
 def addImportLines(userFuncsFileArg, incNumSig):
-    global setupFile, userFuncsFile
-
-    userFuncsLibName = userFuncsFileArg
-    if (userFuncsLibName.endswith(pySuffix) == True):
-        userFuncsLibName = userFuncsLibName[0:(len(userFuncsLibName) - len(pySuffix))]
-        userFuncsLibName = removeDirectoryName(userFuncsLibName)
-
-    pythonImportLines = ""
-    pythonImportLines += "from " + str(userFuncsLibName) + " import *\n\n"
-
-    setupFile.write(pythonImportLines)
-
-    pythonImportLines = ""
-    #for charmImportFunc in charmImportFuncs:
-        #pythonImportLines += charmImportFunc + "\n"
-
-    #pythonImportLines += "\n\n"
-
-    setupFile.write(pythonImportLines)
+    global setupFile#, userFuncsFile
+    #userFuncsLibName = userFuncsFileArg
+    #if (userFuncsLibName.endswith(pySuffix) == True):
+    #    userFuncsLibName = userFuncsLibName[0:(len(userFuncsLibName) - len(pySuffix))]
+    #    userFuncsLibName = removeDirectoryName(userFuncsLibName)
+    #pythonImportLines = ""
+    #pythonImportLines += "from " + str(userFuncsLibName) + " import *\n\n"
+    #setupFile.write(pythonImportLines)
+    #pythonImportLines = ""
+    #setupFile.write(pythonImportLines)
+    setupFile.write("import builtInFuncs\n")
+    setupFile.write("from builtInFuncs import *\n")
     setupFile.write("from charm.toolbox.pairinggroup import PairingGroup,ZR,G1,G2,GT,pair\n")
     #setupFile.write("from charm.core.engine.util import *\n")
     if incNumSig != None: setupFile.write("from charm.core.math.integer import randomBits\n\n")
 
-    userFuncsFile.write("from builtInFuncs import *\n\n")
+    #userFuncsFile.write("from builtInFuncs import *\n\n")
 
 def addGroupObjGlobalVar():
     global setupFile, userFuncsFile
@@ -116,7 +108,6 @@ def addNumSigners():
     outputString = numSignersVarName + " = " + str(numSigners) + "\n\n"
     setupFile.write(outputString)
 
-# TODO: clean this up
 def addSecParamValue():
     global setupFile
 
@@ -1318,6 +1309,7 @@ def codegen_PY_main(SDL_Scheme, setupFileArg, userFuncsFileArg, codegenOpts={}):
 
     setupFile.close()
     userFuncsFile.close()
+    os.system("rm -f " + userFuncsFileArg)
 
 if __name__ == "__main__":
     lenSysArgv = len(sys.argv)

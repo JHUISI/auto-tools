@@ -1,0 +1,80 @@
+name := waters05
+setting := symmetric
+l := 5
+zz := 32
+
+
+BEGIN :: types
+alpha := ZR
+m := list{ZR}
+M := str
+u := list{G1}
+zz := int
+END :: types
+
+BEGIN :: func:setup
+input := None
+ alpha := random(ZR) 
+ g := random(G1)
+ g1 := g ^ alpha
+ g2 := random(G1)
+ ut := random(G1)
+BEGIN :: for
+for{i := 0, l}
+ y#i := random(ZR)
+ u#i := g ^ y#i
+END :: for
+
+ sk := g2 ^ alpha
+ pk := list{g, g1, g2, u, ut} 
+output := list{pk, sk}
+END :: func:setup
+
+BEGIN :: func:sign
+input := list{pk, sk, M}
+ pk := expand{g, g1, g2, u, ut} 
+
+ m := stringToInt(M, l, zz)
+ r  := random(ZR)
+ dotProd1 := init(G1)
+BEGIN :: for
+for{i := 0, l}
+ dotProd1 := dotProd1 * (u#i ^ m#i)
+END :: for
+ S1 := (sk * (ut * dotProd1)^r)
+ S2 := g ^ r 
+
+ sig := list{S1, S2}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+ input := list{pk, M, sig}
+ pk := expand{g, g1, g2, u, ut}
+ sig := expand{S1, S2}
+
+ m := stringToInt(M, l, zz)
+ dotProd2 := init(G1)
+ 
+BEGIN :: for
+for{i := 0, l}
+  dotProd2 := dotProd2 * (u#i ^ m#i)
+END :: for
+
+BEGIN :: if
+if { (e(S1, g) / e(S2, ut * dotProd2)) == e(g1, g2) }
+   output := True
+else
+   output := False
+END :: if
+END :: func:verify
+
+BEGIN :: latex
+S1 := S_1
+S2 := S_2
+g2 := g_2
+u1b := \hat{u_1\prime}
+u2b := \hat{u_2\prime}
+ut := \hat{u}
+END :: latex
+
