@@ -313,6 +313,20 @@ class SDLParser:
                         sys.exit("SDLParser.py found multiple TYPES_HEADER end token declarations.")
                     endLineNos_Functions[currentFuncName] = line_number
                     currentFuncName = NONE_FUNC_NAME
+            elif (op1 == FORALL_LOOP_HEADER):
+                if (op == START_TOKEN):
+                    startLineNo_ForLoop = line_number
+                elif (op == END_TOKEN):
+                    startLineNo_ForLoop = None
+                    lenForLoops = len(forLoops[currentFuncName])
+                    if (forLoops[currentFuncName][lenForLoops - 1].getEndLineNo() != None):
+                        sys.exit("Ending line number of one of the forall loops was set prematurely.")
+                    forLoops[currentFuncName][lenForLoops - 1].setEndLineNo(int(line_number))
+                    viForLoopEnd = VarInfo()
+                    viForLoopEnd.setLineNo(line_number)
+                    viForLoopEnd.isForLoopEnd = True
+                    viForLoopEnd.assignNode = createTree(op, op1, None)
+                    assignVarInfo[currentFuncName][line_number] = viForLoopEnd
             elif (op1 == FOR_LOOP_HEADER):
                 if (op == START_TOKEN):
                     startLineNo_ForLoop = line_number
@@ -1768,6 +1782,7 @@ def updateForLoops(node, lineNo):
     viForBegin = VarInfo()
     viForBegin.setLineNo(startLineNo_ForLoop)
     viForBegin.isForLoopBegin = True
+    viForBegin.for_type = node.type
     viForBegin.assignNode = BinaryNode.copy(node)
     assignVarInfo[currentFuncName][startLineNo_ForLoop] = viForBegin
     
@@ -2275,7 +2290,7 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
                     strOfNode = line.rstrip() # for debugging purposes
                 else:
                     updateAssignInfo(node, lineNumberInCode)
-            elif (node.type == ops.FOR):
+            elif (node.type == ops.FOR) or (node.type == ops.FORALL):
                 updateForLoops(node, lineNumberInCode)
             elif (node.type == ops.FORINNER):
                 updateForLoopsInner(node, lineNumberInCode)                

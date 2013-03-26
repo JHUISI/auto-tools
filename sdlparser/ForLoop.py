@@ -6,6 +6,7 @@ class ForLoop:
         self.startVal = None
         self.endVal = None
         self.loopVar = None
+        self.for_type = None
         self.startLineNo = None
         self.endLineNo = None
         self.funcName = None
@@ -50,9 +51,10 @@ class ForLoop:
         return self.topLevelNode
 
     def updateForLoopStruct(self, node, startLineNo, funcName):
-        if (node.type != ops.FOR):
-            sys.exit("updateForLoopStruct in ForLoop was passed a node that is not of type " + str(ops.FOR))
-
+        if (node.type != ops.FOR) and (node.type != ops.FORALL):
+            print("updateForLoopStruct in ForLoop was passed a node that is not of type FOR or FORALL")
+            return
+        self.for_type = node.type
         if ( (type(startLineNo) is not int) or (startLineNo < 1) ):
             sys.exit("Problem with start line number passed to updateForLoopStruct in ForLoop.")
         self.startLineNo = startLineNo
@@ -61,13 +63,14 @@ class ForLoop:
             sys.exit("Problem with function name passed to updateForLoopStruct in ForLoop.")
         self.funcName = funcName
 
-        loopVar = node.left.left.attr
-        if ( (type(loopVar) is not str) or (len(loopVar) == 0) ):
-            sys.exit("Problem with loop variable extracted in updateForLoopStruct method in ForLoop.")
-        self.loopVar = loopVar
-
-        self.startVal = node.left.right.attr
-        self.endVal = node.right.attr
+        if node.type == ops.FOR:
+            loopVar = node.left.left.attr
+            if ( (type(loopVar) is not str) or (len(loopVar) == 0) ):
+                sys.exit("Problem with loop variable extracted in updateForLoopStruct method in ForLoop.")
+            self.loopVar = loopVar
+    
+            self.startVal = node.left.right.attr
+            self.endVal = node.right.attr
         self.assignNode = BinaryNode.copy(node)
 
     def setInnerLoop(self, forLoopInnerStruct):

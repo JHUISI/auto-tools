@@ -27,6 +27,7 @@ class VarInfo:
         self.isSymmap = False
         self.listNodesList = []
         # new var info fields
+        self.for_type = ops.NONE
         self.isForLoopBegin = False
         self.isForLoopEnd = False
         self.isForLoopInnerBegin = False
@@ -72,6 +73,7 @@ class VarInfo:
         v.isList      = obj.isList
         v.isSymmap    = obj.isSymmap
         v.listNodesList = list(obj.listNodesList)
+        v.for_type       = obj.for_type
         v.isForLoopBegin = obj.isForLoopBegin
         v.isForLoopEnd = obj.isForLoopEnd
         v.isForLoopInnerBegin = obj.isForLoopInnerBegin
@@ -553,3 +555,13 @@ class VarInfo:
                 sys.exit("setListNodesList in VarInfo.py:  problem with one of the list members of the newListNodesList parameter passed in.")
 
         self.listNodesList = copy.deepcopy(newListNodesList)
+
+    def getIsForType(self):
+        if self.for_type == ops.FOR:
+            return True
+        return False
+    
+    def getIsForAllType(self):
+        if self.for_type == ops.FORALL:
+            return True
+        return False

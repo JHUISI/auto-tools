@@ -134,7 +134,8 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
     for index, i in enumerate(lines):
         assert type(blockStmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
         if blockStmts[i].getIsForLoopBegin():
-            newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+            if blockStmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+            elif blockStmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
             newLines.append(str(blockStmts[i].getAssignNode()))
         elif blockStmts[i].getIsForLoopEnd():
             newLines.append(str(blockStmts[i].getAssignNode()))
@@ -206,7 +207,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
             print(" :-> update pairing.", end="")
             noChangeList.append(str(assignVar))
-            newLine = updateForPairing(blockStmt, info)
+            newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
             print(" :-> updating list...", end="")
             newLine = updateForLists(blockStmt, assignVar, info)
@@ -1026,7 +1027,7 @@ def handleListTypeRefs(varTypes, ref, info, isForBoth, groupType):
         refName = refDetails[0]
         refStr  = refDetails[1]
         if refStr.isdigit(): refNum = int(refDetails[1])
-        else: return False
+        else: return ref.replace(refName, refName + str(groupType))
     elif length == 3: # two level of indirection...var#*#<int>
         refName = refDetails[0]
         refStr  = refDetails[-1]
@@ -1182,7 +1183,7 @@ def updateForLists(varInfo, assignVar, info):
     newListTypeRefs[ str(assignVar) ] = list(newList) # record the updates
     return str(new_node)
 
-def updateForPairing(varInfo, info):
+def updateForPairing(varInfo, info, noChangeList):
     node = BinaryNode.copy(varInfo.getAssignNode())
     tme = TestForMultipleEq()
     sdl.ASTVisitor(tme).preorder(node)
@@ -1191,14 +1192,14 @@ def updateForPairing(varInfo, info):
         sdl.ASTVisitor( gen ).preorder(node)
         listOfNodes = gen.getNodes()
         for i in listOfNodes:
-            tmp = applyPairingUpdate(info, i) # pass reference to eq_tst nodes
+            tmp = applyPairingUpdate(info, i, noChangeList) # pass reference to eq_tst nodes
         print("\n\t Final: ", node)
         return str(node)
     
-    return applyPairingUpdate(info, node)
+    return applyPairingUpdate(info, node, noChangeList)
 
-def applyPairingUpdate(info, node):
-    sdl.ASTVisitor( SubstitutePairings(info) ).preorder( node )
+def applyPairingUpdate(info, node, noChangeList):
+    sdl.ASTVisitor( SubstitutePairings(info, noChangeList) ).preorder( node )
     print("\n\t Pre techs: ", node, end="")
     sdl.ASTVisitor( MaintainOrder(info) ).preorder( node )    
     # combining pairing logic a bit.
