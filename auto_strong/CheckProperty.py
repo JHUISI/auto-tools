@@ -84,24 +84,47 @@ verify2_1 = (((e(x, t) + (e(x, b) * m))) == e(1, cc))
 
 t1 = Tactic("qfnra-nlsat")
 t2 = Tactic("ctx-simplify")
+t3 = Tactic("horn") #"horn-simplify") 
 
-s  = Then(t1, t2)
+s  = Then(t1, t3)
 
-g1 = Goal()
 g2 = Goal()
+g3 = Goal()
 ##g.add(And(t*x + m*x*t*y == t*(xx + yy*m*xx), t > 1, y > 1, m > 1, x > 1, xx > 1, yy > 1, x != xx, y == yy) )
-g1.add(And( M.evaluate(verify1), t > 1, y > 1, yy > 1, y != yy) )
-g2.add(And( M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc) ) #, t > 1, m > 1, x > 1, xx > 1, yy > 1, x != xx) )
+#g1.add(And( M.evaluate(verify1), t > 1, y > 1, yy > 1, y != yy) )
+g2.add( And(M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc) ) #, t > 1, m > 1, x > 1, xx > 1, yy > 1, x != xx) )
 
 
 #print("Goal 1: ", g1)
 #print("Result for G1: ",  s(g1) ) 
 #print()
-#print("Goal 2: ", g2)
-#print("Result for G2: ",  s(g2) ) 
+print("Goal 2: ", g2)
+print("Result for G2: ",  s(g2) ) 
+print("")
 
-print("EQ1: ", And(Or(M.evaluate(verify2_0), cc == 1), c != cc) )
-solve(And(Or(M.evaluate(verify2_0), cc == 1), c != cc, c > 0, cc > 0, t > 0, m > 0, x > 0, xx > 0, yy > 0))
+alpha, r = Ints('alpha r')
+alpha1, r1, t1 = Ints('alpha1 r1 t1')
 
-print("EQ2: ", M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc)
-solve(And( M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc, c > 0, cc > 0, t > 0, m > 0, x > 0, xx > 0, yy > 0))
+#s1, s1pr = Ints('s1 s1pr') # alpha * m * r
+s1 = alpha * m * r
+s1pr = alpha1 * m * r1
+s2 = r
+
+verify3_0 = ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t)
+verify3_1 = ((e(t1*alpha1, 1) + e(m*r1, 1)) - e(s2, m)) == e(alpha, t)
+#verify3_1 = (e(t*s1pr, 1) - e(s2, m)) == e(alpha, t)
+g3.add( And(M.evaluate(verify3_0), M.evaluate(verify3_1), alpha1 != alpha, r1 != r, t1 != t) ) # , r > 1, r1 > 1, t > 1, m > 1, alpha > 1, alpha1 > 1) )
+print("Goal 3: ", g3)
+print("Result for G3: ",  s(g3) )
+
+#t3 = Tactic("horn-simplify") 
+#s1 = Then(t2, t3)
+#
+#print("New Goal 3: ", g3)
+#print("Result for G3: ",  s1(g3) )
+
+#print("EQ1: ", And(Or(M.evaluate(verify2_0), cc == 1), c != cc) )
+#solve(And(Or(M.evaluate(verify2_0), cc == 1), c != cc, c > 0, cc > 0, t > 0, m > 0, x > 0, xx > 0, yy > 0))
+
+#print("EQ2: ", M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc)
+#solve(And( M.evaluate(verify2_0), M.evaluate(verify2_1), c != cc, c > 0, cc > 0, t > 0, m > 0, x > 0, xx > 0, yy > 0))
