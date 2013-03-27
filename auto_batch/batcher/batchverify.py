@@ -3,18 +3,18 @@
 # and message. Finally, an optional transform section to describe the specific order in which
 # to apply the techniques 2, 3a, 3b and 4.
 
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batchtechniques import *
-from batchproof import *
-from batchconfig import *
-from batchorder import BatchOrder
-from batchcomboeq import TestForMultipleEq,CombineMultipleEq,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
-from batchsyntax import BasicTypeExist,PairingTypeCheck
-from batchoptimizer import PairInstanceFinderImproved
-from loopunroll import *
-from benchmark_interface import getBenchmarkInfo
-from constructbatch import *
+from batcher.batchtechniques import *
+from batcher.batchproof import *
+from batcher.batchconfig import *
+from batcher.batchorder import BatchOrder
+from batcher.batchcomboeq import TestForMultipleEq,CombineMultipleEq,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
+from batcher.batchsyntax import BasicTypeExist,PairingTypeCheck
+from batcher.batchoptimizer import PairInstanceFinderImproved
+from batcher.loopunroll import *
+from batcher.benchmark_interface import getBenchmarkInfo
+from batcher.constructbatch import *
 import time
 
 debug = False

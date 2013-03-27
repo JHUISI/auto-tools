@@ -1,12 +1,12 @@
 # batch parser provides majority of the functionality for parsing bv files and the mechanics of the 
 # techniques for generating an optimized batch equation (tech 2, 3, 4 and simplifying products, etc.)
 
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
 from pyparsing import *
-from batchgen import *
-from batchstats import *
-from batchoptimizer import *
+from batcher.batchgen import *
+from batcher.batchstats import *
+from batcher.batchoptimizer import *
 import string,sys
 
 objStack = []

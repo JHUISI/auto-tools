@@ -1,8 +1,6 @@
 
-from batchlang import *
-from batchparser import *
-#import sdlpath
-#from sdlparser.SDLParser import *
+from batcher.batchlang import *
+from batcher.batchparser import *
 
 Tech_db = Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing', 'ProductToSum', 'CombinePairing', 'SplitPairing', 'ConstantPairing', 'MoveExpOutPairing', 'ConstantSizeLoop')
 

@@ -1,7 +1,7 @@
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batchtechniques import *
-from batchcomboeq import ApplyEqIndex,UpdateDeltaIndex
+from batcher.batchtechniques import *
+from batcher.batchcomboeq import ApplyEqIndex,UpdateDeltaIndex
 tech10 = Tech_db
 
 # performs step 1 from above. Replaces 't' (target variables) with integer values in each attribute

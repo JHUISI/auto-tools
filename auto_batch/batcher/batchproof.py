@@ -1,5 +1,5 @@
 # This class generates the latex macros for the batch verification proofs of security
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
 
 header = """\n

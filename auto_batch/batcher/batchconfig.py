@@ -1,4 +1,4 @@
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
 
 

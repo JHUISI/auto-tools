@@ -1,7 +1,7 @@
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batchoptimizer import SubstituteSigDotProds, SubstituteAttr, DropIndexForPrecomputes, GetVarsInEq, GetDeltaIndex
-from batchconfig import *
+from batcher.batchoptimizer import SubstituteSigDotProds, SubstituteAttr, DropIndexForPrecomputes, GetVarsInEq, GetDeltaIndex
+from batcher.batchconfig import *
 
 membership_check = """\n
 BEGIN :: if

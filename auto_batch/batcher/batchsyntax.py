@@ -1,7 +1,7 @@
 
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batchtechniques import AbstractTechnique
+from batcher.batchtechniques import AbstractTechnique
 
 pairing = Enum('Asymmetric', 'Symmetric')
 # post-order traversal needed here?

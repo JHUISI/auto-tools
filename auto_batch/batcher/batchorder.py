@@ -1,9 +1,9 @@
-import sdlpath
+import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batchtechniques import Tech_db,Technique2,Technique3,Technique4,Technique7,Technique8
-from batchoptimizer import *
-from batchstats import *
-from benchmark_interface import getBenchmarkInfo
+from batcher.batchtechniques import Tech_db,Technique2,Technique3,Technique4,Technique7,Technique8
+from batcher.batchoptimizer import *
+from batcher.batchstats import *
+from batcher.benchmark_interface import getBenchmarkInfo
 import random
 
 #try:
