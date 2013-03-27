@@ -1,25 +1,22 @@
 
 from batchlang import *
 from batchparser import *
-#import sdlpath
-#from sdlparser.SDLParser import *
 
-Tech_db = Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing', 'ProductToSum', 'CombinePairing', 'SplitPairing', 'ConstantPairing', 'MoveExpOutPairing', 'ConstantSizeLoop')
+Tech_db = Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing', 'ProductToSum', 'CombinePairing', 'SplitPairing', 'ConstantPairing', 'MoveExpOutPairing')
 
 #TODO: code up reverse 2 : pull values from pairing outside, 
-delta_word = "delta"
+#TODO: code up precompute pair : precomputing pairings where both sides are constant.
 
 class AbstractTechnique:
-    def __init__(self, sdl_data, variables):
-        if sdl_data != None:
-            self.consts = sdl_data['constant']
-            self.public = sdl_data['public']
-            self.message = sdl_data['message']
-            self.setting = sdl_data['setting']
-        else:
-            self.consts = self.public = self.message = self.setting = None
+    def __init__(self, sdl_data, variables, meta):
+        self.consts = sdl_data['constant']
+        self.public = sdl_data['public']
+        self.message = sdl_data['message']
+        self.setting = sdl_data['setting']
+        
         self.vars   = variables
-        self.debug  = False
+        self.meta   = meta
+        self.debug  = None
 
     def visit(self, node, data):
         return
@@ -57,11 +54,6 @@ class AbstractTechnique:
             return True
         return False
 
-    def varDefineValue(self, var_name):
-        var = self.vars.get(str(var_name))
-        return var
-        
-
     def getNodes(self, tree, parent_type, _list):
         if tree == None: return None
         elif parent_type == ops.MUL:
@@ -80,88 +72,6 @@ class AbstractTechnique:
             if subtree.type in target_type: _list.append(subtree); return
         if subtree.left: self.getMulTokens(subtree.left, subtree.type, target_type, _list)
         if subtree.right: self.getMulTokens(subtree.right, subtree.type, target_type, _list)
-        return
-    
-    @classmethod
-    def addATTRToList(self, node, _list_dups, _list_unique):
-        _list_dups.append(node)
-        for i in _list_unique:
-            if str(node) == str(i): return            
-        _list_unique.append(node)
-        return
-
-    def findManyExpWithIndex(self, node, index, _list, _list2):
-        node_type = Type(node)
-        #print("node_type = ", node_type)
-        if node == None: return None
-        elif node_type == ops.EXP:
-            # look for a^b_z or a^(b_z * s) where if z appears in right then return
-            # the EXP right node as a acceptable candidate
-            print("node.right type =>", Type(node.right))
-            if Type(node.right) == ops.MUL:
-                my_list = []
-                self.getMulTokens(node.right, node_type, [ops.ATTR], my_list) # we are just interested in ATTR ndoes for this side
-                for i in my_list:
-                    if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: self.addATTRToList(i, _list, _list2) # _list.append(i)
-                my_list2 = []
-                self.getMulTokens(node.left, Type(node.left), [ops.EXP, ops.ATTR], my_list2) # interested in EXP and ATTR nodes here
-#                print("should test left?: ", node.left, len(my_list2))
-                for i in my_list2:
-                    if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: _list.append(i) # standard x_z case
-                    elif Type(i) == ops.EXP and not i.right.isAttrIndexEmpty() and index in i.right.attr_index: self.addATTRToList(i.right, _list, _list2) # handle a^x_z case
-            
-            if Type(node.left) == ops.MUL:
-                print("JAA: in this case now.")
-                my_list = []; my_list2 = []
-                self.getMulTokens(node.left, node_type, [ops.EXP, ops.ATTR], my_list) # we are just interested in ATTR ndoes for this side
-                for i in my_list:
-                    print("i: ", i)
-                    if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: _list.append(i)
-                    elif Type(i) == ops.EXP and not i.right.isAttrIndexEmpty() and index in i.right.attr_index: self.addATTRToList(i.right, _list, _list2) # handle a^x_z case                    
-                if Type(node.right) == ops.ATTR:
-                    print("i2: ", node.right)
-                    if not node.right.isAttrIndexEmpty() and index in node.right.attr_index: self.addATTRToList(node.right, _list, _list2)
-                else:
-                    self.getMulTokens(node.right, node_type, [ops.ATTR], my_list2) # interested in EXP and ATTR nodes here                    
-                    for i in my_list2:
-                        if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: self.addATTRToList(i, _list, _list2) # standard x_z case
-                
-
-        elif node_type == ops.MUL:
-            my_list = []; my_list2 = []
-            if Type(node.left) == ops.MUL:
-                self.getMulTokens(node.left, ops.MUL, [ops.ATTR], my_list)
-                #print("\t\tCONSIDER THIS CASE 1: ", len(my_list))
-                for i in my_list:
-                    if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: self.addATTRToList(i, _list, _list2)
-            else:
-                print("JAA: missing case: ", )
-            
-            if Type(node.right) == ops.MUL:
-                self.getMulTokens(node.right, ops.MUL, [ops.ATTR], my_list2)
-                print("\t\tCONSIDER THIS CASE 2: ", len(my_list2))
-                for i in my_list2:
-                    if Type(i) == ops.ATTR and not i.isAttrIndexEmpty() and index in i.attr_index: self.addATTRToList(i, _list, _list2)
-                
-        else:
-            result = self.findManyExpWithIndex(node.left, index, _list)
-            result = self.findManyExpWithIndex(node.right, index, _list)
-            return
-    
-    @classmethod
-    def findManyExpWithIndex2(self, node, index, _list, _list2):
-        debug = False
-        if node.left: self.findManyExpWithIndex2(node.left, index, _list, _list2)
-        if node.right: self.findManyExpWithIndex2(node.right, index, _list, _list2)
-        if debug: print("visiting child node: ", node)
-        if Type(node) == ops.ATTR:
-            if debug: print("does node matche? :=> ", node)
-            if not node.isAttrIndexEmpty() and index in node.attr_index:
-               if debug:  print("add this node: ", node)
-               self.addATTRToList(node, _list, _list2)
-        else:
-            if debug: print("continue...", node)
-            pass
         return
 
     def findExpWithIndex(self, node, index):
@@ -205,14 +115,8 @@ class AbstractTechnique:
             if result: return result
             result = self.isAttrIndexInNode(node.right, index)
             return result
-    
-    @classmethod
-    def createPair2(self, left, right):
-        pair = BinaryNode(ops.PAIR)
-        pair.left = BinaryNode.copy(left)
-        pair.right = BinaryNode.copy(right)
-        return pair
-        
+
+
     def createPair(self, left, right):
         pair = BinaryNode(ops.PAIR)
         pair.left = left
@@ -285,56 +189,8 @@ class AbstractTechnique:
 #            print("handle case 2.")
             return self.createExp(new, inv_node)
         return new
-    
-    @classmethod    
-    def createInvExpImproved(self, left):
-        inv_node = BinaryNode("-1")
-        new = BinaryNode.copy(left)
-        if Type(new) == ops.EXP:
-            if Type(new.right) == ops.ATTR:
-                new.right.negated = not new.right.negated
-            elif Type(new.right) == ops.MUL:
-                # JAA: fix the logic below and swap all calls to prior function to use this one. (TODO)
-                # case 1: a^(b * c) transforms to a^(-b * -c)
-                # case 2: a^((x + y) * b) transforms to a^((x + y) * -b) 
-                subnodes = []
-                getListNodes(new.right, ops.EXP, subnodes)
-                if len(subnodes) > 0:
-                    for i in subnodes: 
-                        if Type(i) == ops.ATTR: i.negated = not i.negated
-                else:
-                    return self.createMul(new, inv_node)
-#                print("Result: ", new)
-                return new
-            else: # ADD, DIV, SUB, etc
-                print("warning: not tested yet in createInvExp():", Type(new), 
-                      self.createMul(new, inv_node))
-                return new
-        elif Type(new) == ops.ON:
-            new.right = self.createInvExp(new.right)
-        else:
-#            print("handle case 2.")
-            return self.createExpImproved(new, inv_node)
-        return new
         
-    
-    def createMulFromList(self, _list):
-        if len(_list) > 1:
-            muls = [ BinaryNode(ops.MUL) for i in range(len(_list)-1) ]
-            for i in range(len(muls)):
-                muls[i].left = BinaryNode.copy(_list[i])
-                if i < len(muls)-1: muls[i].right = muls[i+1]
-                else: muls[i].right = BinaryNode.copy(_list[i+1])
-            return muls[0] # MUL nodes absorb the exponent
-        else:
-            return BinaryNode.copy(_list[0]) # don't bother creating a MUL node for this
-
-    @classmethod
-    def negateThis(self, node):
-        if Type(node) == ops.ATTR:
-            node.negated = True
-        if node.left: self.negateThis(node.left)
-        if node.right: self.negateThis(node.right)
+        
     
     # TODO: turn EXP and Pair into classmethods
     @classmethod
@@ -344,27 +200,18 @@ class AbstractTechnique:
             if Type(left.right) == ops.ATTR:
                 value = left.right.getAttribute()
                 if value.isdigit() and int(value) <= 1:  
-                    #print("createExp: ", value, " => AYO!!!!!!! right :=> ", right, "...negated: ", right.negated)
 #                    exp.left = left.left
                     if right.negated: left.right.negated = False; right.negated = False 
-                    #left.right.setAttribute(str(right))
-                    self.negateThis(right)
-                    BinaryNode.setNodeAs(left.right, right)
-                    #print("adjusted negation nodes: ", left.right)
+                    left.right.setAttribute(str(right))
 # JAA commented out to avoid extra index, for example, 'delta_z_z' for VRF 
 #                    print("original: ", left.right.attr_index)
 #                    left.right.attr_index = right.attr_index                    
 #                    print("post: ", left.right.attr_index)
                     mul = left.right
                 else:
-                    value = right.getAttribute()
-                    if value and value.isdigit() and int(value) <= 1: # attr => -1 * ATTR => negate(left.right)
-                        left.right.negated = not left.right.negated
-                        mul = left.right
-                    else: # build a mul node with MUL.left = left.right and MUL.right = right 
-                        mul = BinaryNode(ops.MUL)
-                        mul.left = left.right
-                        mul.right = right         
+                    mul = BinaryNode(ops.MUL)
+                    mul.left = left.right
+                    mul.right = right                    
             else:
                 mul = BinaryNode(ops.MUL)
                 mul.left = left.right
@@ -378,9 +225,9 @@ class AbstractTechnique:
             exp.right = right
         elif left.type == ops.MUL:
             nodes = []
-            self.getMulTokens(left, ops.NONE, [ops.EXP, ops.PAIR, ops.HASH, ops.ATTR], nodes)
+            self.getMulTokens(left, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], nodes)
             #getListNodes(left, ops.NONE, nodes)
-#            print("JAA: createExp sub nodes:")
+#            print("createExp sub nodes:")
 #            for i in nodes:
 #                print("subnodes: ", i)
             if len(nodes) > 2: # only distribute exponent when there are 
@@ -399,76 +246,6 @@ class AbstractTechnique:
             exp.left = left
             exp.right = right
         return exp
-
-    @classmethod
-    def createExpImproved(self, left, right):
-#        print("createExpImproved: ", left, "^", right)
-        if left.type == ops.EXP: # left => a^b , then => a^(b * c)
-#            exp = BinaryNode(ops.EXP)
-            if Type(left.right) == ops.ATTR:
-#                print("handle EXP case: ", left.right.getAttribute(), " ^ ", right)
-                value = left.right.getAttribute()                
-                if str(left.right) == str(right) and str(left.right) == "-1": # in other words ((left ^ -1) ^ -1)
-                    # by negation rule we are left with left node without an EXP node
-                    return BinaryNode.copy(left.left)                    
-                elif value.isdigit() and int(value) <= 1:  
-#                    exp.left = left.left
-                    if right.negated: 
-                        left.right.negated = False 
-                        right.negated = False 
-                    #left.right.setAttribute(str(right))
-                    self.negateThis(right)
-                    BinaryNode.setNodeAs(left.right, right)
-                    #print("adjusted negation nodes: ", left.right)
-# JAA commented out to avoid extra index, for example, 'delta_z_z' for VRF 
-#                    print("original: ", left.right.attr_index)
-#                    left.right.attr_index = right.attr_index                    
-#                    print("post: ", left.right.attr_index)
-                    mul = left.right
-                else:
-                    value = right.getAttribute()
-                    if value and value.isdigit() and int(value) <= 1: # attr => -1 * ATTR => negate(left.right)
-                        left.right.negated = not left.right.negated
-                        mul = left.right
-                    else: # build a mul node with MUL.left = left.right and MUL.right = right 
-                        mul = BinaryNode(ops.MUL)
-                        mul.left = left.right
-                        mul.right = right         
-            else:
-                mul = BinaryNode(ops.MUL)
-                mul.left = left.right
-                mul.right = right
-            exp = BinaryNode(ops.EXP)
-            exp.left = left.left
-            exp.right = mul                
-        elif left.type in [ops.ATTR, ops.PAIR, ops.HASH]: # left: attr ^ right
-            exp = BinaryNode(ops.EXP)
-            exp.left = left
-            exp.right = right
-        elif left.type == ops.MUL:
-            nodes = []
-            self.getMulTokens(left, ops.NONE, [ops.EXP, ops.PAIR, ops.HASH, ops.ATTR], nodes)
-            #getListNodes(left, ops.NONE, nodes)
-#            print("JAA: createExp sub nodes:")
-#            for i in nodes:
-#                print("subnodes: ", i)
-            if len(nodes) > 2: # only distribute exponent when there are 
-                muls = [ BinaryNode(ops.MUL) for i in range(len(nodes)-1) ]
-                for i in range(len(muls)):
-                    muls[i].left = self.createExpImproved(nodes[i], BinaryNode.copy(right))
-                    if i < len(muls)-1: muls[i].right = muls[i+1]
-                    else: muls[i].right = self.createExpImproved(nodes[i+1], BinaryNode.copy(right))
-                exp = muls[0] # MUL nodes absorb the exponent
-            else:
-                exp = BinaryNode(ops.EXP)
-                exp.left = left
-                exp.right = right
-        else:
-            exp = BinaryNode(ops.EXP)
-            exp.left = left
-            exp.right = right
-        return exp
-
 
     @classmethod
     def createExp2(self, left, right, _listIFMul=None):
@@ -541,36 +318,11 @@ class AbstractTechnique:
             self.deleteFromTree(node.left, node, target, side.left)
             self.deleteFromTree(node.right, node, target, side.right)
 
-    def deleteNodesFromTree(self, node, parent, targets, branch=None):
-        if node.left: self.deleteNodesFromTree(node.left, node, targets, side.left)
-        if node.right: self.deleteNodesFromTree(node.right, node, targets, side.right)
-        if self.debug: print("visiting child node: ", node)
-        if node.left == None and node.right == None:
-            if self.debug: print(node, " in target? ", node in targets)
-            if node in targets:
-               if self.debug:  print("delete myself: ", node) # delete myself 
-               BinaryNode.clearNode(node)
-        elif Type(node.left) != ops.NONE and Type(node.right) == ops.NONE: 
-            if self.debug: print("left is there and right NOT there! action: delete right and move up left")
-            BinaryNode.setNodeAs(node, node.left)
-        elif Type(node.left) == ops.NONE and Type(node.right) != ops.NONE:
-            if self.debug: print("left is NOT there and right is there. action: delete left and move up right")
-            BinaryNode.setNodeAs(node, node.right)
-        elif Type(node.left) == ops.NONE and Type(node.right) == ops.NONE:
-            if self.debug: print("left is NOT there and right is NOT there. action: delete root node and move on")
-            BinaryNode.clearNode(node)
-        elif Type(node.left) != ops.NONE and Type(node.right) != ops.NONE:
-            if self.debug: print("left and right BOTH there. action: do nothing and continue")
-            pass
-        else:
-            if self.debug: print("continue...", node)
-            pass
-        
 tech2 = Tech_db # Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing')
 
 class Technique2(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables)
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)
         self.rule    = "Move the exponent(s) into the pairing (technique 2)"
         self.applied = False 
         self.score   = tech2.NoneApplied
@@ -581,7 +333,7 @@ class Technique2(AbstractTechnique):
     # find: 'e(g, h)^d_i' transform into ==> 'e(g^d_i, h)' iff g or h is constant
     # move exponent towards the non-constant attribute
     def visit_exp(self, node, data):
-#        print("left node =>", node.left.type,"target right node =>", node.right)
+        #print("left node =>", node.left.type,"target right node =>", node.right)
         if(Type(node.left) == ops.PAIR):   # and (node.right.attr_index == 'i'): # (node.right.getAttribute() == 'delta'):
             pair_node = node.left
                                   # make cur node the left child of pair node
@@ -641,6 +393,9 @@ class Technique2(AbstractTechnique):
 #                        print("MUL on right: ", pair_node.right)
                         _subnodes = []
                         getListNodes(pair_node.right, ops.NONE, _subnodes)
+                        #print("len: ", len(_subnodes))
+                        #for i in _subnodes:
+                        #    print("found: ", i)
                         if len(_subnodes) > 2:
                             # basically call createExp to distribute the exponent to each
                             # MUL node in pair_node.right
@@ -674,9 +429,6 @@ class Technique2(AbstractTechnique):
 #                        print("T2: missing case - pair_node.left and MUL node.")
                         _subnodes = []
                         getListNodes(pair_node.left, ops.NONE, _subnodes)
-#                        print("len: ", len(_subnodes))
-#                        for i in _subnodes:
-#                            print("found: ", i)
                         if len(_subnodes) > 2:
                             new_mul_node = self.createExp(pair_node.left, node.right)
                             pair_node.left = new_mul_node
@@ -704,27 +456,16 @@ class Technique2(AbstractTechnique):
         elif(Type(node.left) == ops.MUL):    
             # distributing exponent over a MUL node (which may have more MUL nodes)        
             #print("Consider: node.left.type =>", node.left.type)
-            #print("left node: ", node.left, "\tleft type =>", node.left.type, "\ttarget right =>", node.right)                
+                
+                
             mul_node = node.left
-            if self.debug: 
-                print("distribute exp correctly =>")
-                print("left: ", mul_node.left)
-                print("right: ", mul_node.right, Type(mul_node.right))
+            #print("distribute exp correctly =>")
+            #print("left: ", mul_node.left)
+            #print("right: ", mul_node.right)
             if Type(data['parent']) != ops.PAIR: 
                 mul_node.left = self.createExp(mul_node.left, BinaryNode.copy(node.right))
                 mul_node.right = self.createExp(mul_node.right, BinaryNode.copy(node.right))
-#                print("result for right: ", mul_node.right, "\n\n")
-                addAsChildNodeToParent(data, mul_node)
-                
-                self.applied = True
-                self.score   = tech2.DistributeExpToPairing
-            elif Type(node.right) == ops.ATTR and node.right.getAttribute() == delta_word: 
-                # JAA ADDED 10/12/12: attr node and is a delta we should probably distribute it
-                mul_node.left = self.createExp(mul_node.left, BinaryNode.copy(node.right))
-                mul_node.right = self.createExp(mul_node.right, BinaryNode.copy(node.right))
-#                print("result for right: ", mul_node.right, "\n\n")
-                addAsChildNodeToParent(data, mul_node)
-                
+                addAsChildNodeToParent(data, mul_node)            
                 self.applied = True
                 self.score   = tech2.DistributeExpToPairing
             #else:
@@ -748,120 +489,75 @@ class Technique2(AbstractTechnique):
         elif target_attr_str == side.right: target_node.right = tmp_node
         else: return None
         return True
-    
-#    def visit_attr(self, node, data):
-        #d = None
-        #d = { 'pair_index':node.getDeltaIndex() }
-        #return d
         
 tech3 = Tech_db # Enum('NoneApplied', 'ProductToSum','CombinePairing', 'SplitPairing')
 
 class Technique3(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables)
-        self.rule    = "Move dot products inside pairings to reduce $\\numsigs$ pairings to 1 (technique 3)"
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)
+        self.rule    = "Move dot products inside pairings to reduce N pairings to 1 (technique 3)"
         self.applied = False
         self.score   = tech3.NoneApplied
         self.debug   = False
-        self.tech_list = set()
 
-    def checkSubtreeForSameBase(self, node, parent, data):
-        if node.left: 
-            result = self.checkSubtreeForSameBase(node.left, node, data)
-            if not result: return False
-        if node.right: 
-            result = self.checkSubtreeForSameBase(node.right, node, data)
-            if not result: return False
-        if Type(node) == ops.ATTR and Type(parent) == ops.EXP and node == parent.left: 
-            if self.debug: print("T3: JAA - this check may not be SOUND. Please re-inspect!!!  =>", parent)
-            exp_node = parent.right
-            if not exp_node.isAttrIndexEmpty() and len(exp_node.attr_index) > 1: return False # Is this sound?!?
-            if len(data) == 0: data.append(str(node)); return True
-            else:
-                if str(node) in data: return True
-                else: return False
-        return True
-        
+    # once a     
     def visit_pair(self, node, data):
-        if self.debug: 
-            print("Current state: ", node)
-            print("left type: ", Type(node.left))
-            print("right type: ", Type(node.right))
+        if self.debug: print("Current state: ", node)
         left = node.left
         right = node.right
         if Type(left) == ops.ON:
             # assume well-formed prod node construct
             # prod {var := 1, N} on v : to get var => left.left.left.left
             index = str(left.left.left.left)
- #           print("left ON node =>", right, index)
-            _listNodes = []; _listNodes_uniq = []
-            self.findManyExpWithIndex2(right, index, _listNodes, _listNodes_uniq)
-#            for i in _listNodes_uniq:
-#                print("found: ", i)
+#            print("left ON node =>", right, index)
+            exp_node = self.findExpWithIndex(right, index)
 #            print("T3: before =>", node)
-            if len(_listNodes_uniq) == 0: return # nothing to do here
-            exp_node = self.createMulFromList(_listNodes_uniq)
-#            print("left := ON => moving EXP node: ", exp_node, "\n\n")
-            if exp_node != None:
+#            print("left := ON => moving EXP node: ", exp_node)
+            if exp_node:
                 base_node = left.right
                 left.right = self.createExp(base_node, exp_node)
-                self.deleteNodesFromTree(right, node, _listNodes, side.right) # cleanup right side tree?
+                self.deleteFromTree(right, node, exp_node, side.right) # cleanup right side tree?
 #                self.applied = True
+#                print("T3: result =>", node)
         elif Type(right) == ops.ON:
             index = str(right.left.left.left)
-#            print("right ON node =>", index)
-#            exp_node = self.findExpWithIndex(left, index)
-            _listNodes = []; _listNodes_uniq = []
-            self.findManyExpWithIndex2(left, index, _listNodes, _listNodes_uniq)
-#            for i in _listNodes_uniq:
-#                print("found: ", i)
-            if len(_listNodes_uniq) == 0: return # nothing to do here            
-            exp_node = self.createMulFromList(_listNodes_uniq)
-#            print("\t NEW RESULT: ", exp_node)
+            #print("right ON node =>", index)
+            exp_node = self.findExpWithIndex(left, index)
 #            print("T3: before =>", node)
-#            print("right := ON => moving EXP node: ", exp_node, "\n\n")
-            if exp_node != None:
+#            print("right := ON => moving EXP node: ", exp_node)
+            if exp_node:
                 base_node = right.right
                 right.right = self.createExp(base_node, exp_node)
-                self.deleteNodesFromTree(left, node, _listNodes, side.left)
- #               self.deleteFromTree(left, node, exp_node, side.left)
+                self.deleteFromTree(left, node, exp_node, side.left)
 #                self.applied = True
 #                print("T3: result right =>", node)
             else: pass
 #                print("T3: result w/o transform =>", node)
-        
-        if Type(left) == ops.MUL:
+        elif Type(left) == ops.MUL:
             if self.debug:
                 print("T3: visit pair - Do nothing.")
                 print("OK because we want to move as many operations as possible into the smallest group G1.")
                 print("left: ", left)
                 print("right: ", right, "\n")
             pass
-            
         elif Type(right) == ops.MUL:
             if self.debug: print("T3: visit pair - Node =", right, " type:", Type(right))
-#            child_node1 = right.left
-#            child_node2 = right.right
-#            if Type(child_node1) == ops.ON:
-#                if self.debug: print("child type 1 =>", Type(child_node1))
-#            elif Type(child_node2) == ops.ON:
-#                mul = BinaryNode(ops.MUL)
-#                mul.left = self.createPair(left, child_node1)                
-#                mul.right = self.createPair(left, child_node2)
-#                #print("new node =+>", mul)
-#                addAsChildNodeToParent(data, mul)
-#                self.applied = True
-#                self.score   = tech3.SplitPairing
-##                self.rule += "split one pairing into two pairings. "
-            r = []
-            self.getMulTokens(right, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR, ops.ON], r)
-            # count # of nodes in list. criteria: len(r) >= 2                                
-            if len(r) < 2: return
-            n = [ self.createPair2(left, i) for i in r ]
-            addAsChildNodeToParent(data, self.createMulFromList(n))
-            self.applied = True
-            self.score   = tech3.SplitPairing
-            self.tech_list.update([9])
+            child_node1 = right.left
+            child_node2 = right.right
+            if Type(child_node1) == ops.ON:
+                if self.debug: print("child type 1 =>", Type(child_node1))
+            elif Type(child_node2) == ops.ON:
+                mul = BinaryNode(ops.MUL)
+                mul.left = self.createPair(left, child_node1)                
+                mul.right = self.createPair(left, child_node2)
+                #print("new node =+>", mul)
+                addAsChildNodeToParent(data, mul)
+                self.applied = True
+                self.score   = tech3.SplitPairing
+#                self.rule += "split one pairing into two pairings. "            
+            else:
+                if self.debug: 
+                    print("TODO: T3 - missing case: ", Type(child_node1), " and ", Type(child_node2))
         else:
             return
 
@@ -901,7 +597,6 @@ class Technique3(AbstractTechnique):
                 node.right = self.createSplitPairings(left, pair_node.right, r)
                 self.applied = True
                 self.score   = tech3.SplitPairing
-                self.tech_list.update([9])                
                 #self.rule += "split one pairing into two or three."
                 #addAsChildNodeToParent(data, muls[0])
             else:                        
@@ -916,7 +611,7 @@ class Technique3(AbstractTechnique):
                     if self.canRearrange(target, pair_node) == False:
                         if self.debug: print("Cannot rearrange, therefore, BAIL!")
                         return # bail, no dice!
-                    if self.debug: print("can supposedly rearrange. Is that true? ", pair_node)
+                                    
                 #addAsChildNodeToParent(data, pair_node) # move pair one level up  
                 left_check = not self.isConstInSubtreeT(pair_node.left)
                 right_check = not self.isConstInSubtreeT(pair_node.right)
@@ -925,7 +620,7 @@ class Technique3(AbstractTechnique):
                     # thus far, we've determined that both side are candidates for dot product.
                     # so we need another indicator to determine which side.
 #                    print("T3: this case not fully explored. There maybe other corner cases!!!")
-                    if self.debug: print("index of interest: ", target)
+#                    print("index of interest: ", target)
                     loop_left_check = self.isLoopOverTarget(pair_node.left, target)
                     loop_right_check = self.isLoopOverTarget(pair_node.right, target)
                     if self.debug: print("loop on left: ", loop_left_check, ", loop on right: ", loop_right_check)
@@ -937,7 +632,6 @@ class Technique3(AbstractTechnique):
                         self.visit_pair(pair_node, data) # organize exponents that maybe in the wrong side
                         self.applied    = True
                         self.score      = tech3.CombinePairing
-                        self.tech_list.update([3])
                     elif loop_right_check:
                         #print("move dot prod to right: ", pair_node.right)                        
                         addAsChildNodeToParent(data, pair_node) # move pair one level up                          
@@ -946,7 +640,6 @@ class Technique3(AbstractTechnique):
                         self.visit_pair(pair_node, data)
                         self.applied    = True
                         self.score      = tech3.CombinePairing
-                        self.tech_list.update([3])
                     
                 elif left_check: # if F, then can apply prod node to left child of pair node  
                     addAsChildNodeToParent(data, pair_node) # move pair one level up                                  
@@ -958,7 +651,6 @@ class Technique3(AbstractTechnique):
 #                    print("T3: after _pair left: combinepair: ", pair_node, "\n") 
                     self.applied = True
                     self.score   = tech3.CombinePairing  
-                    self.tech_list.update([3])
                 elif right_check:
                     addAsChildNodeToParent(data, pair_node) # move pair one level up                                                      
 #                    print("T3: before _pair right: combinepair: ", node)                                      
@@ -968,7 +660,6 @@ class Technique3(AbstractTechnique):
                     self.visit_pair(pair_node, data)
                     self.applied = True
                     self.score   = tech3.CombinePairing
-                    self.tech_list.update([3])
 #                    print("T3: after _pair right: combinepair: ", node,"\n")                                                          
                 else:
                     if self.debug: print("did nothing here.") # do nothing if previous criteria isn't met.
@@ -982,7 +673,7 @@ class Technique3(AbstractTechnique):
             exp = node.right
             isattr = exp.left
             if Type(isattr) == ops.ATTR and isattr.attr_index == None and self.isConstant(isattr):
-                bp = SDLParser()
+                bp = BatchParser()
                 prod = node.left
                 sumOf = bp.parse("sum{x,y} of z")
                 sumOf.left = node.left
@@ -993,7 +684,6 @@ class Technique3(AbstractTechnique):
                 addAsChildNodeToParent(data, exp)
                 self.applied = True
                 self.score   = tech3.ProductToSum
-                self.tech_list.update([7])
         else:
             if self.debug: print("T3: missing type check :=>", Type(node.right))
             pass
@@ -1027,7 +717,7 @@ class Technique3(AbstractTechnique):
                 # this effectively gives us the same condition as delta_z.
                 # otherwise, false b/c we most likley cannot rearrange the variable in question due to
                 # a dependency (from the other index) that belongs to another dot product loop.
-                    if self.debug: print("attr_index len is 1 : ", node.attr_index)
+                    if self.debug: print("attr_index len is 1!")
                     return True
                 elif len(node.attr_index) > 1 and another_index == None:
                 # TODO: must check whether that loop is within the pairing or outside? 
@@ -1048,16 +738,6 @@ class Technique3(AbstractTechnique):
                 #print("visiting next: ", node.right)
                 result = self.canRearrange(index, node.right, another_index)
                 return result
-        elif node_type == ops.MUL:
-            # call external function to traverse the subtrees
-            #print("JAA: Checking whether we can rearrange when visiting MUL nodes...")
-            _list = []
-            result = self.checkSubtreeForSameBase(node , None, _list)
-            if self.debug:
-                for i in _list:
-                    print("nodes after checkSubtreeForSameBase: ", i)
-            if result: return True
-            else: return False
         else:
             #print("Visiting else: ", Type(node), node, another_index)
             result1 = self.canRearrange(index, node.left, another_index)
@@ -1081,43 +761,55 @@ class Technique3(AbstractTechnique):
         return False
 
 tech4 = Tech_db # Enum('NoneApplied', 'ConstantPairing')
-
+        
 class Technique4(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables)
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)
         self.rule = "Applied waters hash technique (technique 4)"
         self.applied = False
         self.score   = tech4.NoneApplied
         self.debug   = False
-    
-    # need to handle cases where there are more than one dot product nodes that need to be switched!
+        #print("Metadata =>", meta)
+        
     def visit_on(self, node, data):
         # if see our parent is a PAIR node. if so, BAIL no point applying waters hash
         if Type(data['parent']) == ops.PAIR:            
             return
         
         prod = node.left
-        var_index = int(self.vars[str(prod.right)])
         my_val = str(prod.right)
         # check right subnode for another prod node
-        node_tuple = []
-        self.searchProd(node.right, node, node_tuple)
-        if self.debug: print("T4: node_tuple =>", len(node_tuple))
-        if node_tuple != None and len(node_tuple) >= 1:
-            for i in node_tuple:
-                node2 = i[0]
-                parent = i[1]
-                prod2 = node2.left
-                if self.debug:
-                    print("node: ", node2)
-                    print("parent: ", parent, "\n")
-                if var_index > int(self.vars[str(prod2.right)]):
-                    node.left = BinaryNode.copy(prod2)
-                    node2.left = BinaryNode.copy(prod)
-                    if Type(parent) == ops.PAIR:
-                        self.adjustProdNodes(parent)
+        node_tuple = self.searchProd(node.right, node, None)
+        if node_tuple: node2 = node_tuple[0]; node2_parent = node_tuple[1]; node2_grand = node_tuple[2]
+        else: node2 = None; node2_parent = None
+
+        if node2 != None:
+            # can apply technique 4 optimization
+            prod2 = node2.left
+            # N > x then we need to switch x with N
+            if int(self.meta[str(prod.right)]) > int(self.meta[str(prod2.right)]):
+                # switch nodes between prod nodes of x (constant) and N
+                node.left = prod2
+                node2.left = prod
+                #self.rule += " waters hash technique. "
+                # check if we need to redistribute or simplify?
+                #print("node2 =>", node2)
+                #print("parent =>", node2_parent, ":", Type(node2_parent))
+                #print("grandpa =>", node2_grand, ":", Type(node2_grand))
+                if Type(node2_parent) == ops.PAIR:
+                    if self.debug: print("applied a transformation for technique 4")
+                    self.adjustProdNodes( node2_parent )
                     self.applied = True
                     self.score   = tech4.ConstantPairing
+                else:
+                    self.applied = True                    
+                    self.score   = tech4.ConstantPairing
+#                    self.adjustProdNodes( node2_grand )
+                    if self.debug: 
+                        print("No other transformation necessary since not a PAIR node instead:", Type(node2_parent))
+        else:
+            pass
+            #print("No transformation applied.")
 
     def adjustProdNodes(self, node): 
         if Type(node.left) == ops.ON:
@@ -1171,23 +863,25 @@ class Technique4(AbstractTechnique):
         result = self.allNodesWithIndex(index, subtree.right)
         return result
     
-    # JAA: consider building as a list rather than a single element?
-    def searchProd(self, node, parent, _listProds):
+    def searchProd(self, node, parent, grandpa=None):
         if node == None: return None
         elif node.type == ops.ON:
-            _listProds.append( (node, parent) )
+            return (node, parent, grandpa)
 #        elif node.type == ops.EXP:
 #            exp = node.right
 #            if Type(exp) == ops.MUL: pass
 #            elif Type(exp) == ops.ATTR and 'z' in exp.attr_index: 
         else:
-            self.searchProd(node.left, node, _listProds)
-            self.searchProd(node.right, node, _listProds)    
+            result = self.searchProd(node.left, node, parent)
+            if result: return result            
+            result = self.searchProd(node.right, node, parent)
+            return result
+    
     
 class Technique7(AbstractTechnique):
     """ looks for e( a^c_z, b^d_z ) where a and b are constants and c and d are variable"""
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables)        
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
         self.rule    = "Reverse technique 2. Move exponents outside pairing"
@@ -1210,8 +904,8 @@ class Technique7(AbstractTechnique):
                     
     
 class Technique8(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables)        
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
         self.rule    = "Precompute pairings with constant first and second elements."
@@ -1242,8 +936,8 @@ class Technique8(AbstractTechnique):
         return keyNode
     
 class ASTIndexForIndiv(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
-        AbstractTechnique.__init__(self, sdl_data, variables) 
+    def __init__(self, sdl_data, variables, meta):
+        AbstractTechnique.__init__(self, sdl_data, variables, meta)        
         
     def visit_attr(self, node, data):
         if data['parent'].type in [ops.PROD, ops.EQ, ops.FOR, ops.SUM]:
@@ -1251,19 +945,3 @@ class ASTIndexForIndiv(AbstractTechnique):
         if not self.isConstant(node) and not str(node) in ['1', '-1']:
             node.setAttrIndex('z') # add index to each attr that isn't constant
     
-
-tech10 = Tech_db
-
-            
-#    # need a function that can replace variables with integers from 1 until X. 
-#    def checkExistenceOfAttribute(self, node, var):
-#        if self.for_end == None: return False
-#        attr = node.getAttribute()
-#        s = attr.split('#') 
-#        if( len(s) > 1):
-#            print("attr: ", node, s)
-#            match = False
-#            for i in s:
-#                if var in i: match = True; break            
-#            return False
-#        return False 

@@ -1,17 +1,14 @@
 # This class generates the latex macros for the batch verification proofs of security
-import sdlpath
-from sdlparser.SDLParser import *
+from batchlang import *
+from batchparser import *
+import sys
 
 header = """\n
-\\catcode`\^ = 13 \def^#1{\sp{#1}{}}
-\\newcommand{\\newln}{\\\&\quad\quad{}}
+
 \\newcommand{\schemename}{{\sf %s}}
-\\newcommand{\schemeref}{%s_proof}
-\\newcommand{\schemecite}{\cite{REF}}
 \\newcommand{\pkvariables}{ %s }
 \\newcommand{\sigvariables}{ %s }
 \\newcommand{\indivverificationeqn}{ %s }
-
 \\newcommand{\\batchverificationeqn}{ %s  }
 
 \\newcommand{\gutsoftheproof}{
@@ -23,7 +20,7 @@ header = """\n
 # needs => delta = {\delta_j}, \prod{j=1}^\numsigs == prod{j:=1, N}, 
 
 basic_step = """\medskip \\noindent
-{\\bf %s Step %d:} %s:
+{\\bf Step %d:} %s:
 \\begin{equation}
 %s
 \end{equation}
@@ -32,8 +29,6 @@ basic_step = """\medskip \\noindent
 small_exp_label = "\label{eqn:smallexponents}\n"
 final_batch_eq  = "\label{eqn:finalequation}\n"
 footer = "\n}\n"
-
-main_proof_header_standalone = """\n"""
 
 class PrintLambdaStatement:
     def __init__(self, constants):
@@ -149,7 +144,7 @@ class LatexCodeGenerator:
             return self.latex[ name ]
         return name
     
-    def print_statement(self, node, parent=None):
+    def print_statement(self, node):
         if node == None:
             return None
         elif(node.type == ops.ATTR):
@@ -162,9 +157,6 @@ class LatexCodeGenerator:
                 msg = self.getLatexVersion(str(msg))
 #                if msg.find('_') != -1: msg = "{" + msg + "}" # prevent subscript
 #            print("msg : ", msg)
-            if node.delta_index != None and 'delta' in node.attr:
-#                print("Found IT!!!")
-                msg = msg + '_{' + node.delta_index[0] + '}'
             if node.attr_index != None:
                 keys = ""
                 if msg.find('_') != -1:
@@ -191,8 +183,8 @@ class LatexCodeGenerator:
         elif(node.type == ops.TYPE):
             return str(node.attr)
         else:
-            left = self.print_statement(node.left, node)
-            right = self.print_statement(node.right, node)
+            left = self.print_statement(node.left)
+            right = self.print_statement(node.right)
 
             if debug >= levels.some:
                print("Operation: ", node.type)
@@ -210,14 +202,9 @@ class LatexCodeGenerator:
             elif(node.type == ops.MUL):
                 return ( left + ' \cdot ' + right)
             elif(node.type == ops.ADD):
-                return ("("+ left + ' + ' + right + ")")
-            elif(node.type == ops.SUB):
-                return ("("+ left + ' - ' + right + ")")
+                return ("("+ left + '' + right + ")")
             elif(node.type == ops.EQ):
-                if parent != None and parent.type == ops.PROD:
-                    return (left + ' = ' + str(right).replace("0", "1"))
-                else:
-                    return (left + ' = ' + str(right))
+                return (left + ' = ' + str(int(right) + 1)) 
             elif(node.type == ops.EQ_TST):
                 return (left + ' \stackrel{?}{=} ' + right)
             elif(node.type == ops.PAIR):
@@ -238,134 +225,9 @@ class LatexCodeGenerator:
                 return ('\\text{for }' + left + '\\text{ to }  ' + right)
             elif(node.type == ops.DO):
                  return ( left + ' \\text{ it holds: }  ' + right)
-            elif(node.type == ops.AND):
-                 return ( left + " \mbox{ and } " + right )
-        return None
+        return None    
 
 
-# 1. Finish rewriting proof generator for single equation sig schemes
-# 2. Rewrite proof generator for multiple equation sig schemes and steps
-# 3. Add index #s to delta when dealing with multiple delta exponents 
-# 4. What else?
-class GenerateProof:
-    def __init__(self, single=True):
-        self.single_mode = single
-        self.lcg_data = {} 
-        self.__lcg_steps = 0
-        self.lcg = None
-        self.stepPrefix = ''
-    
-    def setPrefix(self, prefixStr):
-        assert type(prefixStr) == str, "expecting string for the step prefix."
-        self.stepPrefix = prefixStr
-        return
-        
-    def initLCG(self, constants, vars, sig_vars, latex_vars):
-        if self.lcg == None:
-            self.lcg = LatexCodeGenerator(constants, vars, latex_vars)
-            self.constants = constants
-            self.vars      = vars
-            self.sig_vars  = sig_vars            
-            return True
-        else:
-            # init'ed already
-            return False
-        
-    def setIndVerifyEq(self, equation):
-        if self.lcg_data.get('indiv') == None:
-            self.lcg_data['indiv'] = self.lcg.print_statement( equation )
-            self.lcg_data['indiv_original'] = equation
-        else: # update
-            andOp = BinaryNode(ops.AND, self.lcg_data['indiv_original'], equation)
-            self.lcg_data['indiv_original'] = andOp
-            self.lcg_data['indiv'] = self.lcg.print_statement( andOp )
-        return
-    
-#    def setBatchVerifyEq(self, equation):
-#        self.lcg_data['batch'] = self.lcg.print_statement( equation )
-#        return
-    def setStepOne(self, equation):
-        if not self.single_mode: self.setNextStep('step1', equation)
-        return
-    
-    def changeMode(self, truthValue):
-        self.single_mode = truthValue
-        return
-    
-#    def setBreakPoint(self):
-#        self.lcg_data[ self.__lcg_steps ] = {} # how should this work?
-#        self.__lcg_steps += 1
-#        return
-    
-    def setNextStep(self, msg, equation):
-        preq = None
-        if self.single_mode:
-            if msg == 'consolidate':
-                msg = 'Consolidate the verification equations (technique 0)'
-            elif msg == 'smallexponents':
-                msg = 'Apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$'
-                preq = small_exp_label
-            elif msg == 'finalbatcheq':                
-                self.lcg_data[ self.__lcg_steps-1 ]['preq'] = final_batch_eq
-                self.lcg_data['batch'] = self.lcg_data[ self.__lcg_steps-1 ]['eq']
-                return
-        else: # need to handle multiple equations mode differently!
-            if msg in ['consolidate', 'smallexponents']:
-                return
-            elif msg == 'step1':
-                msg = 'Consolidate the verification equations (technique 0), merge pairings with common first or second element (technique 6), and apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$ for each equation'
-            elif msg == "Move the exponent(s) into the pairing (technique 2)" and self.__lcg_steps == 1:
-                msg = 'Combine $\\numsigs$ signatures (technique 1), move the exponent(s) in pairing (technique 2)'
-            elif msg == 'finalbatcheq':                
-                self.lcg_data[ self.__lcg_steps-1 ]['preq'] = final_batch_eq
-                self.lcg_data['batch'] = self.lcg_data[ self.__lcg_steps-1 ]['eq']
-                return
-                
-        self.lcg_data[ self.__lcg_steps ] = {'msg': msg, 'eq': self.lcg.print_statement( equation ), 'preq':preq, 'stepPrefix':self.stepPrefix }
-#        if new_msg != None: self.lcg_data[ self.__lcg_steps ]['new_msg'] = new_msg
-        self.__lcg_steps += 1
-        return
-    
-    def proofHeader(self, title, const, sigs, indiv_eq, batch_eq):
-        const_str = ""; sig_str = ""
-        for i in const:
-            const_str += self.lcg.getLatexVersion(i) + ","
-        const_str = const_str[:len(const_str)-1]
-        for i in sigs:
-            sig_str += self.lcg.getLatexVersion(i) + ","
-        sig_str = sig_str[:len(sig_str)-1]
-        result = header % (title, title, const_str, sig_str, indiv_eq, batch_eq)
-        #print("header =>", result)
-        return result
-
-    def proofBody(self, step, data):
-        pre_eq = data.get('preq')
-        cur_eq = data['eq']
-        step_prefix = data.get('stepPrefix')
-        if pre_eq != None:
-            result_eq = pre_eq + cur_eq
-        else: result_eq = cur_eq
-        result = basic_step % (step_prefix, step, data['msg'], result_eq)
-        #print('[STEP', step, ']: ', result)
-        return result
-
-    def writeConfig(self, latex_file):
-        #f = open('verification_gen' + latex_file + '.tex', 'w')
-        title = latex_file.upper()
-        outputStr = self.proofHeader(title, self.constants, self.sig_vars, self.lcg_data['indiv'], self.lcg_data['batch'])
-        for i in range(self.__lcg_steps):
-            outputStr += self.proofBody(i+1, self.lcg_data[i])
-        outputStr += footer
-        #f.write(outputStr)
-        #f.close()
-        return outputStr
-    
-    def compileProof(self, latex_file):
-        f = open('verification_gen' + latex_file + '.tex', 'w')
-        output = self.writeConfig(latex_file)
-        f.write(output)
-        f.close()
-        return True
 
 #if __name__ == "__main__":
 #    file = sys.argv[1]

@@ -1,8 +1,8 @@
 # Used for benchmarking operations of intermediate representation
 # and providing routines to determine when independent verification 
 # is more efficient than batch verification.
-import sdlpath
-from sdlparser.SDLParser import *
+
+from batchlang import *
 
 SmallExp = 'delta'
 
@@ -20,7 +20,7 @@ class RecordOperations:
     def __init__(self, vars):
         if debug >= levels.some:
             print("vars =>", vars)
-        self.debug = True
+        self.debug = False
         self.vars_def = vars
         N = self.vars_def.get('N')
         if N == None:
@@ -39,7 +39,7 @@ class RecordOperations:
                print("Left operand: ", node.left)
                print("Right operand: ", node.right)            
             if(node.type == ops.EXP):
-                base_type = self.map(self.deriveNodeType(node.left))
+                base_type = self.deriveNodeType(node.left)
                 # check if node.right ==> 'delta' keyword, modify cost to half of full exp
                 right = node.right
                 if right != None and right.getAttribute() == SmallExp:
@@ -59,7 +59,7 @@ class RecordOperations:
                 self.visit(node.right, data.copy(), node)
 
             elif(node.type == ops.MUL):
-                base_type = self.map(self.deriveNodeType(node.left))
+                base_type = self.deriveNodeType(node.left)
                 keys = data.get('key')
 
                 if keys != None:
@@ -100,7 +100,6 @@ class RecordOperations:
                 else: # incase there are 
                     data['key'].append(key)
 
-                key = key.split(LIST_INDEX_SYMBOL)[0]
                 assert self.vars_def.get(key) != None, "key = '%s' not found in vars db." % key
                 data[key] = int(self.vars_def.get(key)) # need to handle error
 
@@ -120,7 +119,7 @@ class RecordOperations:
                     return self.visit(node.right, Copy(data), node)
                 else:
                     return
-                right_type = self.map(self.deriveNodeType(node.right))
+                right_type = self.deriveNodeType(node.right)
                 _for = data[key] * cost
                 print("Looping over '%s' node in '%s' => %s" % (op, right_type, _for))
                 if right_type: self.ops[ op ][ right_type ] += _for
@@ -134,14 +133,13 @@ class RecordOperations:
                 else: # incase there are 
                     data['key'].append(key)
 
-                key = key.split(LIST_INDEX_SYMBOL)[0]
                 assert self.vars_def.get(key) != None, "key = '%s' not found in vars db." % key
                 data[key] = int(self.vars_def.get(key)) # need to handle error
 
                 if debug >= levels.some:
                    print("ON key => ", data['key'], data[key])
 
-                right_type = self.map(self.deriveNodeType(node.right))
+                right_type = self.deriveNodeType(node.right)
 #                print("Doing ", right_type, " of dot products to ", data[key])
                 _prod = int(data[key])
 #                print("Dot prod count =>", _prod, "in", right_type)
@@ -171,13 +169,6 @@ class RecordOperations:
     def __str__(self):
         return str(self.ops)
     
-    def map(self, node_type):
-        if node_type in ['listZR', 'listG1', 'listG2', 'listGT']:
-            return node_type.strip('list')
-        elif node_type in ['int', 'listInt']:
-            return 'ZR'
-        return node_type
-    
     def deriveNodeType(self, node):
         if node.type == ops.ATTR:
             _type = node.attr
@@ -197,8 +188,7 @@ class RecordOperations:
             return self.deriveNodeType(node.left)
         #print("printing type =>", _type)
         #print("node =>", node)
-        _type = _type.split(LIST_INDEX_SYMBOL)[0] # get rid of "#" if present
         if _type == 'delta': return 'ZR'
         if _type == '1': return 'ZR' # probably computing an inverse here 
-        assert self.vars_def.get(_type) != None, "Key error in vars db! => '%s'" % _type
+        assert self.vars_def.get(_type) != None, "Key error in vars db => '%s'" % _type
         return self.vars_def[_type]

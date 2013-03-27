@@ -84,9 +84,9 @@ verify2_1 = (((e(x, t) + (e(x, b) * m))) == e(1, cc))
 
 t1 = Tactic("qfnra-nlsat")
 t2 = Tactic("ctx-simplify")
-t3 = Tactic("horn") #"horn-simplify") 
+t3 = Tactic("horn") #horn-simplify")
 
-s  = Then(t1, t3)
+s  = Then(t1, t2)
 
 g2 = Goal()
 g3 = Goal()
@@ -106,16 +106,27 @@ alpha, r = Ints('alpha r')
 alpha1, r1, t1 = Ints('alpha1 r1 t1')
 
 #s1, s1pr = Ints('s1 s1pr') # alpha * m * r
-s1 = alpha * m * r
-s1pr = alpha1 * m * r1
+s1 = Int('s1') #alpha * t + m * r
+s1pr = Int('s1pr') #alpha1 * t1 + m * r1
 s2 = r
 
-verify3_0 = ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t)
-verify3_1 = ((e(t1*alpha1, 1) + e(m*r1, 1)) - e(s2, m)) == e(alpha, t)
-#verify3_1 = (e(t*s1pr, 1) - e(s2, m)) == e(alpha, t)
-g3.add( And(M.evaluate(verify3_0), M.evaluate(verify3_1), alpha1 != alpha, r1 != r, t1 != t) ) # , r > 1, r1 > 1, t > 1, m > 1, alpha > 1, alpha1 > 1) )
+#verify3_0 = ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t) 
+#verify3_1 = ((e(t1*alpha1, 1) + e(m*r1, 1)) - e(s2, m)) == e(alpha, t)
+verify3_0 = (e(s1, 1) == (e(alpha, t) + e(s2, m))) 
+verify3_1 = (e(s1pr, 1) == (e(alpha, t) + e(s2, m)))
+
+g3.add( And(M.evaluate(verify3_0), M.evaluate(verify3_1), s1 != s1pr) )#alpha1 != alpha, r1 != r, t1 != t) ) # , r > 1, r1 > 1, t > 1, m > 1, alpha > 1, alpha1 > 1) )
 print("Goal 3: ", g3)
 print("Result for G3: ",  s(g3) )
+print("")
+
+verify3 = M.evaluate( ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t) )
+print("verify3 : ", verify3)
+g4 = Goal()
+g4.add( And(verify3) ) #, t1 == t) )
+
+print("Result G4: ", s(g4))
+
 
 #t3 = Tactic("horn-simplify") 
 #s1 = Then(t2, t3)

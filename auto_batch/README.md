@@ -9,7 +9,19 @@ We tested AutoBatch on over a dozen pairing-based schemes to demonstrate that a 
 
 AutoBatch is a useful tool for cryptographic designers and implementors, and to our knowledge, it is the first attempt to outsource to machines the design, proof writing and implementation of signature batch verification schemes.
 
+Full Version: http://eprint.iacr.org/2013/1** (coming soon)
+
 AutoBatch Toolkit
 =================
+
+[ More coming soon ]
+
+Installation
+============
+
+[ More coming soon ]
+
+Running The Tool
+================
 
 [ More coming soon ]

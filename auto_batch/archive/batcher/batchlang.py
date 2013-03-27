@@ -21,7 +21,7 @@ AST simple rules
 * support batch for different messages/signers/public keys.
 '''
 
-from charm.toolbox.enum import *
+from toolbox.enum import *
 import string
 
 types = Enum('G1', 'G2', 'GT', 'ZR', 'str')
@@ -149,10 +149,8 @@ class BinaryNode:
 				self.type = ops.TYPE
 				self.attr = types[value]
 				self.attr_index = None
-				self.delta_index = None
 			else:
 				self.type = ops.ATTR
-				self.delta_index = None
 				arr = value.split('_')
 				attr = arr[0]
 				# test for negation in attribute
@@ -169,30 +167,21 @@ class BinaryNode:
 			self.type = value
 			self.attr = None
 			self.attr_index = None
-			self.delta_index = None
 		else:
 			self.type = ops.NONE
 			self.attr = None
 			self.attr_index = None
-			self.delta_index = None
 		self.left = left
 		self.right = right
-#		self.delta_index = None
-		
+
 	def __str__(self):
 		if self == None: return None
 		elif(self.type == ops.ATTR):
 			# check for negation
-#			if self.delta_index: print("Delta index: ", self.delta_index, self.attr)
 			if self.negated:
 				msg = "-" + self.attr
 			else:
 				msg = self.attr
-			if self.delta_index != None and type(self.delta_index) == list and self.attr == "delta":
-				token = ""
-				for t in self.delta_index:
-					token += t + "#"
-				msg += token[:len(token)-1]
 			if self.attr_index != None and type(self.attr_index) == list:
 				token = ""
 				for t in self.attr_index:
@@ -262,19 +251,9 @@ class BinaryNode:
 		if self.attr_index != None:
 			if len(self.attr_index) > 0: return False
 		return True
-
-	def getAttrIndex(self):
-		return self.attr_index
-	
-	def setAttrIndexFromSet(self, value):
-		if type(value) != set: return
-		if value == None: return
-		# clean contents of attr_index
-		self.attr_index = list(value)
-		return
 	
 	def setAttrIndex(self, value):
-		if(self.type in [ops.ATTR, ops.HASH, ops.PAIR]):
+		if(self.type in [ops.ATTR, ops.HASH]):
 			if self.attr_index == None: # could be a list of indices
 				self.attr_index = [value]
 			else:
@@ -282,33 +261,7 @@ class BinaryNode:
 					self.attr_index.append(value)
 			return True
 		return False
-
-	def isDeltaIndexEmpty(self):
-		if self.delta_index != None:
-			if len(self.delta_index) > 0: return False
-		return True
-
-	def getDeltaIndex(self):
-		return self.delta_index
 	
-	def setDeltaIndexFromSet(self, value):
-		if type(value) not in [set, list]: return
-		if value == None: return
-		value2 = [str(i) for i in sorted(value)]
-		self.delta_index = value2
-		return
-	
-	def setDeltaIndex(self, value):
-		if(self.type in [ops.ATTR, ops.HASH, ops.PAIR]):
-			value2 = str(value)
-			if self.delta_index == None: # could be a list of indices
-				self.delta_index = [value2]
-			else:
-				if not value2 in self.delta_index:
-					self.delta_index.append(value2)
-			return True
-		return False
-
 	def getAttribute(self):
 		if (self.type == ops.ATTR):
 			return self.attr
@@ -354,7 +307,7 @@ class BinaryNode:
 		new_node.negated = this.negated
 		new_node.attr = this.attr
 		new_node.attr_index = this.attr_index
-		new_node.delta_index = this.delta_index		
+		
 		# recursively call copy on left 
 		new_node.left = self.copy(this.left)
 		new_node.right = self.copy(this.right)		
@@ -370,12 +323,6 @@ class BinaryNode:
 			dest.attr_index = list(src.attr_index)
 		else:
 			dest.attr_index = None
-		if src.delta_index:
-			dest.delta_index = list(src.delta_index)
-		else:
-			dest.delta_index = None		
-		dest.left = src.left
-		dest.right = src.right
 		return
 
 	@classmethod
@@ -384,7 +331,6 @@ class BinaryNode:
 		dest.attr = None
 		dest.negated = False
 		dest.attr_index = None
-		dest.delta_index = None
 #		del dest.left, dest.right
 		dest.left = None
 		dest.right = None

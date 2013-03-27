@@ -1,17 +1,19 @@
-from batchparser import *
+import sdlpath
+from sdlparser.SDLParser import *
 from batchtechniques import Tech_db,Technique2,Technique3,Technique4,Technique7,Technique8
 from batchoptimizer import *
+from batchstats import *
+from benchmark_interface import getBenchmarkInfo
 import random
 
-try:
+#try:
     #import benchmarks
-    import miraclbench
-    curves = miraclbench.benchmarks
-    c_key = 'mnt160'
-except:
-    print("Could not find the 'benchmarks' file that has measurement results! Generate and re-run.")
-    exit(0)
-
+#    import miraclbench2_relic
+#    curves = miraclbench2_relic.benchmarks
+#    c_key = 'mnt160'
+#except:
+#    print("Could not find the 'benchmarks' file that has measurement results! Generate and re-run.")
+#    exit(0)
 
 def fact(n):
     if n == 0:
@@ -27,15 +29,16 @@ def score(eq):
 # Class for pre-processing SDL to determine the order in which the optimization techniques
 # are applied to the batch equation.
 class BatchOrder:
-    def __init__(self, sdl, vars, metadata, equation):
+    def __init__(self, sdl, vars, equation, library):
         self.sdl_data = sdl
         self.vars  = vars
-        self.meta  = metadata
         self.verify = equation
         self.debug  = False
         self.techMap = { 2:Technique2, 3:Technique3, 4:Technique4, 7:Technique7, 8:Technique8 }
         # a quick way to test that a particular technique will transform the equation (pre-check)
         self.techMap2 = { 5:DotProdInstanceFinder, 6:PairInstanceFinder }
+        global curve, param_id
+        curve, param_id = getBenchmarkInfo(library)
 
     def testSequence(self, combo):
         eq = BinaryNode.copy(self.verify)
@@ -55,7 +58,7 @@ class BatchOrder:
         
         tech = None
         if tech_option in self.techMap.keys():
-            tech = self.techMap[tech_option](self.sdl_data, self.vars, self.meta)
+            tech = self.techMap[tech_option](self.sdl_data, self.vars)
         elif tech_option in self.techMap2.keys():
             tech = self.techMap2[tech_option]()
         else:
@@ -63,15 +66,14 @@ class BatchOrder:
         
         # traverse equation with the specified technique
         ASTVisitor(tech).preorder(eq2)
-
         # to apply tools if indeed technique applied
         if tech_option in self.techMap2.keys():
             # this makes sure that the technique actually applied
             tech.testForApplication()
             # this applies just to technique 6 (pair instance finder - which combines pairings)
             if getattr(tech, "makeSubstitution", None):
-                tech.makeSubstitution(eq2)
-
+                test = tech.makeSubstitution(eq2)
+                if test != None: eq2 = test
         # return the results
         return (tech, eq2)
     
@@ -90,8 +92,9 @@ class BatchOrder:
         min_index = 0
         min_time = self.batch_time[min_index]
         for i in self.batch_time.keys():
-            if not all_paths[i] in remove_list:
-                print("unique path:", i, ", time:", self.batch_time[i], ", path: ", all_paths[i])
+#            if not all_paths[i] in remove_list:
+             if True:
+                if self.debug: print("unique path:", i, ", time:", self.batch_time[i], ", path: ", all_paths[i])
                 if self.batch_time[i] <= min_time:
                     min_index = i; 
                     min_time = self.batch_time[i]
@@ -125,13 +128,14 @@ class BatchOrder:
                     # measure
                     rop_batch = RecordOperations(self.vars)
                     rop_batch.visit(verify_eq, {})
-                    (msmt, avg) = calculate_times(rop_batch.ops, curves[c_key], N)
+                    (msmt, avg) = calculate_times(rop_batch.ops, curve[param_id], N)
                     batch_time.append(avg)
                 i += 1 # breaks permutation loop
 
         index = batch_time.index(min(batch_time))
-        if self.debug: print("Final list: ", final_list)
-        print("Technique order: ", final_list[index], ": avg batch time: ", batch_time[index])
+        if self.debug: 
+           print("Final list: ", final_list)
+           print("Technique order: ", final_list[index], ": avg batch time: ", batch_time[index])
         return final_list[index]
 
     # recognized patterns of techniques that lead to the optimized batch algorithm 
@@ -140,8 +144,14 @@ class BatchOrder:
         # db = loadDB() # list of orderings 
         pass
     
+    def checkForTechniqueComboInPath(self, tech1, tech2, path):
+        for i in range(len(path)):
+            if tech1 == path[i]:
+                if i + 1 < len(path) and tech2 == path[i+1]: return True
+        return False
+    
     # take the current 
-    def possibleTechniques(self, tech_applied, tech_obj):
+    def possibleTechniques(self, tech_applied, tech_obj, history):
         suggest = None
         if tech_obj.applied:
             if tech_applied == 2:
@@ -150,21 +160,24 @@ class BatchOrder:
             elif tech_applied == 3:
                 if tech_obj.score in [Tech_db.CombinePairing, Tech_db.ProductToSum, Tech_db.SplitPairing]:
                     suggest = [4, 7, 5, 2]
+                    # if history already does not have 3 to 6, then it is ok to suggest
+                    if not self.checkForTechniqueComboInPath(3, 6, history): suggest.insert(0, 6)
             elif tech_applied == 4:
                 if tech_obj.score == Tech_db.ConstantPairing:
-                    suggest = [6, 5, 3]
+                    suggest = [2, 6, 5, 3]
             elif tech_applied == 5: # distribute products
                 if tech_obj.testForApplication:
                     suggest = [2, 4, 3]
             elif tech_applied == 6: # combine pairings
                 if tech_obj.testForApplication:
-                    suggest = [5, 4, 3, 6]
-            elif tech_applied == 7:
-                if tech_obj.score == Tech_db.MoveExpOutPairing:
-                    suggest = [8]
-            elif tech_applied == 8:
-                if tech_obj.score == Tech_db.ConstantPairing:
-                    suggest = [7, 3, 2]
+                    suggest = [2, 5, 4, 3, 6]
+            #        suggest = [5, 4, 3, 6]
+            #elif tech_applied == 7:
+            #    if tech_obj.score == Tech_db.MoveExpOutPairing:
+            #        suggest = [8]
+            #elif tech_applied == 8:
+            #    if tech_obj.score == Tech_db.ConstantPairing:
+            #        suggest = [7, 3, 2]
             else:
                 return
         else:
@@ -199,7 +212,7 @@ class BatchOrder:
             # check score and get next option
             #excl_list = []
             # 2. get next techniques to try
-            next_tech_list = self.possibleTechniques(cur_tech, tech)
+            next_tech_list = self.possibleTechniques(cur_tech, tech, path)
             if self.debug: print("Try these techs next: ", next_tech_list, "\n")
             # 3. recursively test other schemes and paths
             if next_tech_list:
@@ -221,8 +234,9 @@ class BatchOrder:
                     N = int(self.vars['N'])
                     rop_batch = RecordOperations(self.vars)
                     rop_batch.visit(equation, {})
-                    (msmt, avg) = calculate_times(rop_batch.ops, curves[c_key], N)
+                    (msmt, avg) = calculate_times(rop_batch.ops, curve[param_id], N)
                     self.batch_time[ cnt ] = avg
+#                    print("Final equation: ", equation, "\n\n")
                     if self.debug:
                         print("Saving path: ", path)
                         print("Measure batch time: ", avg)
