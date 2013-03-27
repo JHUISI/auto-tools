@@ -1,0 +1,107 @@
+name := bbs
+setting := symmetric
+
+BEGIN :: types
+ n := int
+ x := list{ZR}
+ A := list{G1}
+ Aind := G1
+ xind := ZR
+ r := list{ZR}
+ M := str
+END :: types
+
+
+BEGIN :: func:keygen
+input := n
+ g := random(G1)
+ h := random(G1)
+ xi1 := random(ZR)
+ xi2 := random(ZR)
+ u := h ^ (1 / xi1)
+ v := h ^ (1 / xi2)
+ gamma := random(ZR)
+ w := g ^ gamma
+ gpk := list{g, h, u, v, w}
+ gmsk := list{xi1, xi2}
+ 
+BEGIN :: for
+for{y := 0, n}
+ x#y := random(ZR)
+ A#y := g ^ (1 / (gamma + x#y))
+END :: for
+
+ output := list{gpk, gmsk, A, x}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{gpk, Aind, xind, M}
+gpk := expand{g, h, u, v, w}
+
+ alpha := random(ZR)
+ beta := random(ZR)
+ T1 := u ^ alpha
+ T2 := v ^ beta
+ T3 := Aind * (h ^ (alpha + beta))
+ gamma1 := xind * alpha
+ gamma2 := xind * beta
+
+ r#0 := random(ZR)
+ r#1 := random(ZR)
+ r#2 := random(ZR)
+ r#3 := random(ZR)
+ r#4 := random(ZR)
+ r#5 := random(ZR)
+
+ R1 := u ^ r#0
+ R2 := v ^ r#1
+ R3 := (e(T3, g) ^ r#2) * (e(h, w) ^ (-r#0 - r#1)) * (e(h, g) ^ (-r#3 - r#4))
+ R4 := (T1 ^ r#2) * (u ^ -r#3)
+ R5 := (T2 ^ r#2) * (v ^ -r#4)
+
+ c := H(concat{M, T1, T2, T3, R1, R2, R3, R4, R5}, ZR)
+ salpha := r#0 + c * alpha
+ sbeta := r#1 + c * beta
+ sx := r#2 + c * xind
+ sgamma1 := r#3 + c * gamma1
+ sgamma2 := r#4 + c * gamma2
+ sig := list{T1, T2, T3, c, salpha, sbeta, sx, sgamma1, sgamma2, R3}
+ output := sig
+END :: func:sign
+
+
+BEGIN :: func:verify
+input := list{gpk, M, sig}
+ gpk := expand{g, h, u, v, w}
+ sig := expand{T1, T2, T3, c, salpha, sbeta, sx, sgamma1, sgamma2, R3}
+
+ R1ver := (u ^ salpha) * (T1 ^ -c)
+ R2ver := (v ^ sbeta) * (T2 ^ -c)
+ R4ver := (T1 ^ sx) * (u ^ -sgamma1)
+ R5ver := (T2 ^ sx) * (v ^ -sgamma2)
+
+BEGIN :: if
+ if { c != H(concat{M, T1, T2, T3, R1ver, R2ver, R3, R4ver, R5ver}, ZR) }
+   output := False
+ else
+   output := True
+END :: if
+
+BEGIN :: if
+ if { ((e(T3, g) ^ sx) * (e(h, w) ^ (-salpha - sbeta)) * (e(h, g) ^ (-sgamma1 - sgamma2)) * ((e(T3, w)^c) * (e(g, g) ^ -c))) == R3}
+    output := True
+ else
+    output := False
+END :: if
+END :: func:verify
+
+BEGIN :: latex
+T3 := T_3
+g := g
+R3 := R_3
+sx := s_x
+salpha := s_\alpha
+sbeta := s_\beta
+sgamma1 := s_\gamma1
+sgamma2 := s_\gamma2
+END :: latex

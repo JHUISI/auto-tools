@@ -235,7 +235,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
                     assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G2, noChangeList)
             #print("TODO: Not a good sign. how do we handle this case for ", assignVar, "in", assign)
         else: # pairing case
-            assign2 = updateForPairing(blockStmt, info)
+            assign2 = updateForPairing(blockStmt, info, noChangeList)
             
         if str(assign2) == str(assign):
             newLines.append(str(assign))
@@ -298,6 +298,7 @@ def getAssignmentForName(var, varTypes):
         funcStmts = sdl.getVarInfoFuncStmts( funcName )
         Stmts = funcStmts[0]
         StmtTypes = funcStmts[1]
+    resultVars = []
     if varInfo.getIsList():
         assignNode = varInfo.getAssignNode()
         varList = assignNode.getRight().listNodes
@@ -459,7 +460,7 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
     if not hasattr(config, 'schemeType'):
         sys.exit("'schemeType' option missing in specified config file.")
-        
+    pairingSearch = []
     if config.schemeType == PKENC:
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
         (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
@@ -470,18 +471,19 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         varTypes.update(typesE)
         varTypes.update(typesD)
         # TODO: expand search to encrypt and potentially setup
-        pairingSearch = [stmtS, stmtD] # aka start with decrypt.
+        pairingSearch += [stmtS, stmtD] # aka start with decrypt.
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName'): 
             (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
             varTypes.update(typesS)
+            pairingSearch += [stmtS]
         (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
         (stmtSi, typesSi, depListSi, depListNoExpSi, infListSi, infListNoExpSi) = sdl.getVarInfoFuncStmts( config.signFuncName )    
         (stmtV, typesV, depListV, depListNoExpV, infListV, infListNoExpV) = sdl.getVarInfoFuncStmts( config.verifyFuncName )
         varTypes.update(typesK)
         varTypes.update(typesSi)
         varTypes.update(typesV)
-        pairingSearch = [stmtS, stmtV] # aka start with verify
+        pairingSearch += [stmtV] # aka start with verify
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
         
@@ -495,8 +497,9 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         varTypes.update(typesSe)
     
     if hasattr(config, 'setupFuncName'):
-        #genLists = extractGeneratorList(stmtS, typesS, generators) # extract generators from setup if defined
         gen.extractGens(stmtS, typesS)
+    elif hasattr(config, 'keygenFuncName'):
+        gen.extractGens(stmtK, typesK)
     else:
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     
@@ -611,12 +614,18 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         print("<===== processing %s =====>" % config.setupFuncName)
         newLinesS = transformFunction(entireSDL, config.setupFuncName, stmtS, groupInfo, noChangeList, generatorLines)
         print("<===== processing %s =====>" % config.setupFuncName)
+    elif hasattr(config, 'keygenFuncName'):
+        print("<===== processing %s =====>" % config.keygenFuncName)
+        newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList, generatorLines)
+        print("<===== processing %s =====>" % config.keygenFuncName)
         
-    print("<===== processing %s =====>" % config.keygenFuncName) 
-    newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList)
-    print("<===== processing %s =====>" % config.keygenFuncName)
-
+    
+    # transform body of SDL scheme
     if config.schemeType == PKENC:
+        print("<===== processing %s =====>" % config.keygenFuncName) 
+        newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList)
+        print("<===== processing %s =====>" % config.keygenFuncName)
+
         print("<===== processing %s =====>" % config.encryptFuncName)
         newLines2 = transformFunction(entireSDL, config.encryptFuncName, stmtE, groupInfo, noChangeList)
         print("<===== processing %s =====>" % config.encryptFuncName)
@@ -625,6 +634,11 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         newLines3 = transformFunction(entireSDL, config.decryptFuncName, stmtD, groupInfo, noChangeList)
         print("<===== processing %s =====>" % config.decryptFuncName)
     elif config.schemeType == PKSIG:
+        if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
+            print("<===== processing %s =====>" % config.keygenFuncName) 
+            newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList)
+            print("<===== processing %s =====>" % config.keygenFuncName)
+        
         print("<===== processing %s =====>" % config.signFuncName)
         newLines2 = transformFunction(entireSDL, config.signFuncName, stmtSi, groupInfo, noChangeList)
         print("<===== processing %s =====>" % config.signFuncName)
