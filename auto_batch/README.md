@@ -1,5 +1,5 @@
-Abstract
-========
+AutoBatch
+=========
 
 As devices everywhere increasingly communicate with each other, many security applications will require low-bandwidth signatures that can be processed quickly. Pairing-based signatures can be very short, but are often costly to verify. Fortunately, they also tend to have efficient batch verification algorithms. Finding these batching algorithms by hand, however, can be tedious and error prone.
 
@@ -11,17 +11,55 @@ AutoBatch is a useful tool for cryptographic designers and implementors, and to 
 
 Full Version of ACM CCS 2012 publication: http://eprint.iacr.org/2013/ (coming soon)
 
-AutoBatch Toolkit
-=================
-
-[ More coming soon ]
-
 Installation
 ============
 
-[ More coming soon ]
+To use our toolkit, we require the Charm-Crypto framework (v0.42 or newer) to execute the automatically generated batch verification algorithm in Python and/or C++ code.
 
 Running The Tool
 ================
 
-[ More coming soon ]
+For the help menu, execute the following:
+
+	python runAutoBatch.py --help
+	Batcher, 1.0 
+	
+	Arguments: 
+	
+		-f, --sdl  [ filename ]
+			: input SDL file description of signature scheme.
+	
+		-o, --outfile  [ filename ]
+			: output file for SDL batch verifier.
+	
+		-p, --proof [ no-argument ]
+			: generate proof of security for batch verification algorithm
+	
+		-v, --verbose   [ no-argument ]
+			: enable verbose output to highest level for Batcher.
+	
+		-t, --threshold [ no-argument ]
+			: measure the "cross-over" point between batch and individual verification from 0 to N.
+	
+		-d, --precompute [ no-argument ]
+			: determine if there are additional variables that can be precomputed in verification equation
+	
+		-c, --partial-codegen  [ no-argument ]
+			: output internal format for partial SDL required codegen (backwards compatibility).
+	
+		-s, --strategy [ no-argument ]
+			: select a technique search strategy for Batcher. Pruned-BFS is only search supported.
+	
+		-l, --library [ miracl or relic ]
+			: underlying crypto library being used.
+	
+		-q, --query [ no-argument ]
+			: takes a test statement for debugging SDL parser
+	
+
+An example for how to execute AutoBatch on the BLS scheme without additional options:
+
+	python runAutoBatch.py --sdl schemes/BLS/bls.sdl --outfile schemes/BLS/bls-full-batch.sdl
+
+For comments/questions and other inquires, email us at akinyelj [AT] cs.jhu.edu OR mpagano [ AT ] cs.jhu.edu.
+
