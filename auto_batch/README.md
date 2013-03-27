@@ -57,7 +57,7 @@ For the help menu, execute the following:
 			: takes a test statement for debugging SDL parser
 	
 
-An example for how to execute AutoBatch on the BLS scheme without additional options:
+An example for how to execute AutoBatch on the BLS signature scheme without additional options:
 
 	python runAutoBatch.py --sdl schemes/BLS/bls.sdl --outfile schemes/BLS/bls-full-batch.sdl
 

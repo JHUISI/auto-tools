@@ -1,0 +1,58 @@
+name := bls
+# number of signatures in a batch
+N := 100
+setting := asymmetric
+
+# types for variables used in verification.
+# all other variable types are inferred by SDL parser
+BEGIN :: types
+ M := str
+END :: types
+
+# description of key generation and signing algorithms
+BEGIN :: func:keygen
+input := None
+ g := random(G2)
+ x := random(ZR)
+ pk := g^x
+ sk := x
+output := list{pk, sk, g}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{sk, M}
+ sig := (H(M, G1)^sk)
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+ input := list{pk, M, sig, g}
+ h := H(M, G1)
+ BEGIN :: if
+ if {e(h, pk) == e(sig, g)}
+ output := True
+ else
+ output := False
+ END :: if
+END :: func:verify
+
+# Batcher SDL input
+constant := g
+public :=  pk
+signature :=  sig
+message :=  h
+
+# single signer
+BEGIN :: count
+message_count := N
+public_count := one
+signature_count := N
+END :: count
+
+# variables computed before each signature verification
+BEGIN :: precompute
+  h := H(M, G1)
+END :: precompute
+
+# individual verification check
+verify := {e(h, pk) == e(sig, g)}
