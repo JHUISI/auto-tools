@@ -342,7 +342,7 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
         (indiv_msmt, indiv_avg_msmt) = benchIndivVerification(N, verify, sdl_data, types, indiv_precompute, VERBOSE)
         print("Result N =",N, ":", indiv_avg_msmt)
 
-        outfile = file.split('.bv')[0]
+        outfile = file.split('.sdl')[0]
         indiv, batch = outfile + "_indiv.dat", outfile + "_batch.dat"
         if filePrefix: indiv = filePrefix + indiv; batch = filePrefix + batch # redirect output file
     

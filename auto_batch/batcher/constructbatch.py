@@ -135,7 +135,7 @@ signatureSum = "sum{%s := %s,%s}" % sigIteratorTuple
 signerProd = "prod{%s := %s,%s}" % signerIteratorTuple
 dotPrefix = "dot"
 sumPrefix = "sum"
-
+sdlSuffix = ".sdl"
 
 def Filter(node):
     return node.sdl_print()
@@ -519,7 +519,7 @@ class SDLBatch:
         appendToLinesOfCode(outputBatchVerifyLinesFinal, lastLineSDL)        
         parseLinesOfCode(getLinesOfCode(), self.debug, True)
         
-        if ".bv" not in self.sdlOutfile: self.sdlOutfile += ".bv" # add appropriate extension to filename
+        if sdlSuffix not in self.sdlOutfile: self.sdlOutfile += sdlSuffix # add appropriate extension to filename
         # 4. write the file to 
         writeLinesOfCodeToFileOnly(self.sdlOutfile)
         print("SDL batch verifier file written to filename: ", self.sdlOutfile)
