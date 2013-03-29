@@ -192,7 +192,8 @@ def solveBooleanCircuit(filename, optionDict): # variables, clauses, constraints
                 print(i, ":", optionDict.get(i))
             elif vars.get(i) != None: # ground truth that we can't change
                 _origConstraints.append(i)
-        
+       
+        print("constraintLists = ", constraintLists, len(constraintLists)) 
         assert len(constraintLists) == 2, "With this option, can only have (keys and (ciphertext or signatures))"
         key1 = list(set(constraintLists[0][1]).difference(_origConstraints))
         key1name = str(constraintLists[0][0])

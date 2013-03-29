@@ -955,7 +955,7 @@ class SubstituteVar:
         if node.left != None and self.initChange:
             if self.new_var in types.getList():
                 node.left.attr = types[self.new_var]
-    
+
 """SubstitutePairings assumes pairings have been split already. """
 class SubstitutePairings:
     def __init__(self, info, noChangeList):
@@ -974,11 +974,39 @@ class SubstitutePairings:
         if varName.find(LIST_INDEX_SYMBOL) != -1:
             return varName.split(LIST_INDEX_SYMBOL)[0]
         return varName
+
+    def retrieveNode(self, node):
+        if Type(node) == ops.EXP:
+            return node.left
+        #elif Type(node) == ops.MUL:
+        #    pass
+        return node
+    
+    def updateNode(self, node, var, new_var):
+        if Type(node) == ops.ATTR:
+            new_var = str(node).replace(var, new_var)
+            node.setAttribute(new_var)
+            return new_var
+        elif Type(node) == ops.EXP:
+            new_var = str(node.left).replace(var, new_var)
+            node.left.setAttribute(new_var)
+            return new_var
+        print("updateNode: could not update Node due to unexpected type: ", node.type)
+        return ""
     
     def visit_pair(self, node, data):
         # TODO: may not be ATTR nodes: look for other cases
-        lhs = self.strip_index(node.left.getRefAttribute())
-        rhs = self.strip_index(node.right.getRefAttribute())
+        lhs = ""
+        rhs = ""
+        if Type(node.left) == ops.ATTR:
+            lhs = self.strip_index(node.left.getRefAttribute())
+        else:
+            lhs = str(self.retrieveNode(node.left).getRefAttribute())
+            
+        if Type(node.right) == ops.ATTR:
+            rhs = self.strip_index(node.right.getRefAttribute())
+        else:
+            rhs = str(self.retrieveNode(node.right).getRefAttribute())
         if self.verbose: print("\nDEBUG: lhs=", lhs, ", rhs=", rhs)
         if lhs in self.generators and rhs in self.generators: # covers lhs == rhs OR lhs != rhs
             node.left.setAttribute( self.mapG1.get(lhs) )
@@ -989,26 +1017,30 @@ class SubstitutePairings:
             new_rhs = str(node.right).replace(rhs, rhs + G2Prefix)
             node.left.setAttribute( new_lhs )
             node.right.setAttribute( new_rhs )
-            return        
+            return 
         # if e(g, X \in G2) => e(gG1, X) and vice versa
         if lhs in self.generators and rhs not in self.generators:
             if rhs in self.pairingInfo[G1Prefix]:
-                node.left.setAttribute( self.mapG2.get(lhs) )
-                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = self.mapG2.get(lhs)
+#                node.left.setAttribute( self.mapG2.get(lhs) )
+                new_lhs = self.updateNode(node.left, lhs, self.mapG2.get(lhs))
+                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs # self.mapG2.get(lhs)
                 return
             elif rhs in self.pairingInfo[G2Prefix]:
-                node.left.setAttribute( self.mapG1.get(lhs) )
-                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = self.mapG1.get(lhs)
+#                node.left.setAttribute( self.mapG1.get(lhs) )
+                new_lhs = self.updateNode(node.left, lhs, self.mapG1.get(lhs))
+                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = new_lhs # self.mapG1.get(lhs)
                 return
         # if e(X \in G1, g) => e(X, gG2) and vice versa                
         elif lhs not in self.generators and rhs in self.generators:
             if lhs in self.pairingInfo[G1Prefix]:
-                node.right.setAttribute( self.mapG2.get(rhs) )
-                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = self.mapG2.get(rhs)
+#                node.right.setAttribute( self.mapG2.get(rhs) )
+                new_rhs = self.updateNode(node.right, rhs, self.mapG2.get(rhs))
+                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs # self.mapG2.get(rhs)
                 return
             elif lhs in self.pairingInfo[G2Prefix]:
-                node.right.setAttribute( self.mapG1.get(rhs) )                
-                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = self.mapG1.get(rhs)
+#                node.right.setAttribute( self.mapG1.get(rhs) )                
+                new_rhs = self.updateNode(node.right, rhs, self.mapG1.get(rhs))
+                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs # self.mapG1.get(rhs)
                 return
         else:
             pass # we leave other cases untouched
@@ -1016,25 +1048,22 @@ class SubstitutePairings:
         # similar to previous cases of occursInG1 or occursInG2
         if lhs in self.pairingInfo[G1Prefix] and lhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G1 lhs=", lhs)
-            new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)
-            node.left.setAttribute( new_lhs )
+            # new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)
+            new_lhs = self.updateNode(node.left, lhs, lhs + G1Prefix) # node.left.setAttribute( new_lhs )
             self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = new_lhs
         elif lhs in self.pairingInfo[G2Prefix] and lhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G2 lhs=", lhs)
-            new_lhs = str(node.left).replace(lhs, lhs + G2Prefix)
-            node.left.setAttribute( new_lhs )
-            self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs            
+            new_lhs = self.updateNode(node.left, lhs, lhs + G2Prefix) # node.left.setAttribute( new_lhs )
+            self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs
 
         if rhs in self.pairingInfo[G1Prefix] and rhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G1 rhs=", rhs)
-            new_rhs = str(node.right).replace(rhs, rhs + G1Prefix)
-            node.right.setAttribute( new_rhs )
+            new_rhs = self.updateNode(node.right, rhs, rhs + G1Prefix) # node.right.setAttribute( new_rhs )
             self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs            
         elif rhs in self.pairingInfo[G2Prefix] and rhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G2 rhs=", rhs)
-            new_rhs = str(node.right).replace(rhs, rhs + G2Prefix)
-            node.right.setAttribute( new_rhs )
-            self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs            
+            new_rhs = self.updateNode(node.right, rhs, rhs + G2Prefix) # node.right.setAttribute( new_rhs )
+            self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs
             
         return
         
@@ -1750,9 +1779,20 @@ class MaintainOrder:
     def visit(self, node, data):
         pass
     
+    def getAttrNode(self, node):
+        if Type(node) == ops.ATTR:
+            return str(node.getRefAttribute())
+        elif Type(node) == ops.EXP:
+            return str(node.left.getRefAttribute())
+        elif Type(node) == ops.HASH:
+            print("DEBUG: handle HASH case.")
+        else:
+            print("getAttrNode: unexpected type: ", node.type)
+        return ""
+    
     def visit_pair(self, node, data):
-        lhs = node.left.getRefAttribute()
-        rhs = node.right.getRefAttribute()
+        lhs = self.getAttrNode(node.left) # node.left.getRefAttribute()
+        rhs = self.getAttrNode(node.right) # node.right.getRefAttribute()
         
         if lhs in self.pairingInfo[G2Prefix] and rhs in self.pairingInfo[G1Prefix]:
             # need to swap pointers

@@ -1,15 +1,3 @@
-# TODO: automatically convert SDL from symmetric to aymmetric 
-# 
-# Approach: 
-# 1. parse the scheme (start from the pairing operations)
-# 2. identify variables that must be in different groups. e.g., pair(a, b) means a <- G1 and b <- G2
-# 3. values that have type G2 -> work backwards to change them into G2 
-#    - should invoke our type inference to verify that we haven't violated rules.
-#    - spit out types at the end of all variables that have changed assignments - note that 
-#    - this doesn't consider the ciphertext reduction problem.
-
-# 4. Label ciphertext elements and identify all the variables that can be moved to G1 vs. G2: 
-#     - must verify that we don't compromise on the security
 import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
@@ -44,6 +32,13 @@ class GetPairingVariables:
         assert type(list1) == type(list2) and type(list1) == list, "GetPairingVariables: invalid input type"
         self.listLHS = list1
         self.listRHS = list2
+    
+    def retrieveNode(self, node):
+        if Type(node) == ops.EXP:
+            return node.left
+        #elif Type(node) == ops.MUL:
+        #    pass
+        return
         
     def visit(self, node, data):
         pass
@@ -56,9 +51,16 @@ class GetPairingVariables:
             self.listLHS.append(str(node.left.getRefAttribute()))
             self.listRHS.append(str(node.right.getRefAttribute()))
         elif Type(node.left) == ops.ATTR and Type(node.right) != ops.ATTR:
-            pass
+            self.listLHS.append(str(node.left.getRefAttribute()))
+            self.listRHS.append(str(self.retrieveNode(node.right)))
         elif Type(node.left) != ops.ATTR and Type(node.right) == ops.ATTR:
-            pass
+            self.listLHS.append(str(self.retrieveNode(node.left)))
+            self.listRHS.append(str(node.right.getRefAttribute()))
+        elif Type(node.left) != ops.ATTR and Type(node.right) != ops.ATTR:
+            self.listLHS.append(str(self.retrieveNode(node.left)))
+            self.listRHS.append(str(self.retrieveNode(node.right)))
+        else:
+            pass            
 
 class transformXOR:
     def __init__(self, fixedValues):
@@ -400,7 +402,7 @@ def searchForSolution(short, constraintList, txor, varTypes, conf):
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints
-        elif short == SHORT_FORALL:
+        elif short == SHORT_FORALL and conf.schemeType == PKENC:
             fileSuffix = 'both' #default
             _constraintList = [xorVarMap.get(i) for i in constraintList]
             print("default constraints: ", _constraintList)
@@ -413,7 +415,23 @@ def searchForSolution(short, constraintList, txor, varTypes, conf):
             constraints = list(_constraintList) + [conf.keygenSecVar, conf.ciphertextVar]
             bothConstraints[ conf.keygenSecVar ] = constraints_ky
             bothConstraints[ conf.ciphertextVar ] = constraints_ct
-            
+        elif short == SHORT_FORALL and conf.schemeType == PKSIG:
+            fileSuffix = 'both' #default
+            _constraintList = [xorVarMap.get(i) for i in constraintList]
+            print("default constraints: ", _constraintList)
+            constraints_ky = getConstraintList([], conf.keygenPubVar, xorVarMap, varTypes, returnList=True)
+            constraints_ky = list(set(constraints_ky).difference(_constraintList))
+            print("Constraints for ky: ", constraints_ky)
+            constraints_sig = getConstraintList([], conf.signatureVar, xorVarMap, varTypes, returnList=True)
+            constraints_sig = list(set(constraints_sig).difference(_constraintList))
+            print("Constraints for sig: ", constraints_sig)
+            constraints = list(_constraintList) + [conf.keygenPubVar, conf.signatureVar]
+            bothConstraints[ conf.keygenPubVar ] = constraints_ky
+            bothConstraints[ conf.signatureVar ] = constraints_sig
+        else:
+            print("Unexpected configuration. Run python runAutoGroup.py --help-config")
+            sys.exit(-1)
+        
         print("<===== Generate Constraints =====>\n")
         
         print("<===== Generate SAT solver input =====>")
