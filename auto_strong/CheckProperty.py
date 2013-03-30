@@ -127,6 +127,10 @@ g4.add( And(verify3) ) #, t1 == t) )
 
 print("Result G4: ", s(g4))
 
+g5 = Goal()
+g5.add( And( r + b == c, t + b == c, t == 0, m != s2 ))
+
+print("Bogus: ", s(g5))
 
 #t3 = Tactic("horn-simplify") 
 #s1 = Then(t2, t3)

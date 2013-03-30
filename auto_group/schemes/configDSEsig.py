@@ -1,7 +1,7 @@
 schemeType = "PKSIG"
-#short = "public_keys"
+short = "public_keys"
 #short = "signature"
-short = "both"
+#short = "both"
 
 keygenFuncName = "keygen"
 signFuncName = "sign"
