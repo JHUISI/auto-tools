@@ -460,6 +460,81 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
 
     return fileSuffix, resultDict
 
+def convertType(v, i):
+    if i == types.int:
+        return "int"
+    elif i == types.listInt:
+        return "list{int}"
+    elif i == types.str:
+        return "str"
+    elif i == types.listStr:
+        return "list{str}"
+    elif i == types.GT:
+        return "GT"
+    elif i == types.listGT:
+        return "list{GT}"
+    elif i == types.pol:
+        return "pol"
+    elif i == types.list:
+        return "list"
+    print("DEBUG: convertType error: ", v, " = ", i)
+    return False
+
+def newTypeFrom(t, suffix):
+    if suffix == G1Prefix:
+        if t == types.G1:
+            return "G1"
+        elif t == types.listG1:
+            return "list{G1}"
+    elif suffix == G2Prefix:
+        if t == types.G1:
+            return "G2"
+        elif t == types.listG1:
+            return "list{G2}"
+    return str(t) # not sure here
+    
+def transformTypes(typesH, info):
+    typesHeadBegin = "BEGIN :: " + sdl.TYPES_HEADER
+    typesHeadEnd = "END :: " + sdl.TYPES_HEADER
+    newLines = [typesHeadBegin]
+    typeLines = {}
+    # extract line numbers
+    for i, j in typesH.items():
+        typeLines[ j.getLineNo() ] = (i, j)
+    
+    # sort based on line number, then process each type
+    typeKeysList = list(typeLines.keys())
+    typeKeysList.sort() # sort the line numbers
+    for k in typeKeysList:
+        (i, j) = typeLines[k]
+        t = j.getType()
+        if t in [types.G1, types.listG1]: #, types.int, types.listInt, types.str, types.listStr, types.GT]:
+            if assignVarOccursInBoth(i, info):
+                print(i, " :-> split computation in G1 & G2")
+                newLines.append( i + G1Prefix + " := " + newTypeFrom(t, G1Prefix) )
+                newLines.append( i + G2Prefix + " := " + newTypeFrom(t, G2Prefix) )
+            elif assignVarOccursInG1(i, info):
+                print(i, " :-> just in G1.")
+                newLines.append( i + " := " + newTypeFrom(t, G1Prefix) )
+            elif assignVarOccursInG2(i, info):
+                print(i, " :-> just in G2.")
+                newLines.append( i + " := " + newTypeFrom(t, G2Prefix) )
+            elif i in info['generators']:
+                if i in info['generatorMapG1']:
+                    newLines.append(info['generatorMapG1'][i] + " := " + newTypeFrom(t, G1Prefix) )
+                if i in info['generatorMapG2']:
+                    newLines.append(info['generatorMapG2'][i] + " := " + newTypeFrom(t, G2Prefix) )
+        else:
+            resType = convertType(i, t)
+            if resType != False:
+                newLines.append( i + " := " + resType )
+            else:
+                # keep the original SDL type line
+                newLines.append( j.getSrcLine() )
+    
+    newLines.append(typesHeadEnd)
+    return newLines
+
 
 def runAutoGroup(sdlFile, config, sdlVerbose=False):
     sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
@@ -559,10 +634,6 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
-#                    assignNode = eachStmt[i].getAssignNode()
-#                    sdl.ASTVisitor( cfp ).preorder( assignNode )
-#                    if cfp.getHasPairings():
-#                        sdl.ASTVisitor( gpv ).preorder( assignNode )
                 
     constraintList = []
     # determine if any hashed values in decrypt show up in a pairing
@@ -596,14 +667,14 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     xorList = []
     for i in range(varsLen):
         xor = BinaryNode(ops.XOR)
-        if pair_vars_G1_lhs[i] in generators and pair_vars_G1_lhs.count(pair_vars_G1_lhs[i]) >= 2:
-            xor.left = BinaryNode(pair_vars_G1_lhs[i]) # + "#l") 
-        else:
-            xor.left = BinaryNode(pair_vars_G1_lhs[i])
-        if pair_vars_G1_rhs[i] in generators and pair_vars_G1_rhs.count(pair_vars_G1_rhs[i]) >= 2:
-            xor.right = BinaryNode(pair_vars_G1_rhs[i]) # + "#r")
-        else:
-            xor.right = BinaryNode(pair_vars_G1_rhs[i])
+#        if pair_vars_G1_lhs[i] in generators and pair_vars_G1_lhs.count(pair_vars_G1_lhs[i]) >= 2:
+#            xor.left = BinaryNode(pair_vars_G1_lhs[i]) # + "#l") 
+#        else:
+#        if pair_vars_G1_rhs[i] in generators and pair_vars_G1_rhs.count(pair_vars_G1_rhs[i]) >= 2:
+#            xor.right = BinaryNode(pair_vars_G1_rhs[i]) # + "#r")
+#        else:
+        xor.left = BinaryNode(pair_vars_G1_lhs[i])
+        xor.right = BinaryNode(pair_vars_G1_rhs[i])
         xorList.append(xor)
     
     ANDs = [ BinaryNode(ops.AND) for i in range(len(xorList)-1) ]
@@ -643,64 +714,75 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     groupInfo['varTypes'].update(varTypes)
     
     noChangeList = []
-    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)
+    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
     for i, j in typesH.items():
         t = j.getType()
-        #print(i, " : ", t)
         if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
             noChangeList.append(i)
     print("Initial noChangeList: ", noChangeList)
     
     newLinesSe = []
     newLinesS = []
+    newLinesK = []
     entireSDL = sdl.getLinesOfCode()
+    transFuncGen = {}
+    transFuncRes = {}
+    transFunc = {}
     if hasattr(config, "extraSetupFuncName"):
-        print("<===== processing %s =====>" % config.extraSetupFuncName)
-        newLinesSe = transformFunction(entireSDL, config.extraSetupFuncName, stmtSe, groupInfo, noChangeList, generatorLines)
-        print("<===== processing  %s =====>" % config.extraSetupFuncName)
-
+        transFuncGen[ config.extraSetupFuncName ] = stmtSe
     if hasattr(config, 'setupFuncName'):    
-        print("<===== processing %s =====>" % config.setupFuncName)
-        newLinesS = transformFunction(entireSDL, config.setupFuncName, stmtS, groupInfo, noChangeList, generatorLines)
-        print("<===== processing %s =====>" % config.setupFuncName)
+        transFuncGen[ config.setupFuncName ] = stmtS
     elif hasattr(config, 'keygenFuncName'):
-        print("<===== processing %s =====>" % config.keygenFuncName)
-        newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList, generatorLines)
-        print("<===== processing %s =====>" % config.keygenFuncName)
-        
+        transFuncGen[ config.keygenFuncName ] = stmtK
+
+    for funcName in config.functionOrder:
+        if funcName in transFuncGen.keys():
+            print("<===== processing %s =====>" % funcName)
+            transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFuncGen[ funcName ], groupInfo, noChangeList, generatorLines)
+            print("<===== processing %s =====>" % funcName)
+            
+    # obtain results
+    newLinesT = transformTypes(typesH, groupInfo)
+    if hasattr(config, "extraSetupFuncName"):
+        newLinesSe = transFuncRes.get( config.extraSetupFuncName )
+    if hasattr(config, 'setupFuncName'):   
+        newLinesS  = transFuncRes.get( config.setupFuncName )
+    elif hasattr(config, 'keygenFuncName'):
+        newLinesK  = transFuncRes.get( config.keygenFuncName )
     
     # transform body of SDL scheme
     if config.schemeType == PKENC:
-        print("<===== processing %s =====>" % config.keygenFuncName) 
-        newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList)
-        print("<===== processing %s =====>" % config.keygenFuncName)
-
-        print("<===== processing %s =====>" % config.encryptFuncName)
-        newLines2 = transformFunction(entireSDL, config.encryptFuncName, stmtE, groupInfo, noChangeList)
-        print("<===== processing %s =====>" % config.encryptFuncName)
-    
-        print("<===== processing %s =====>" % config.decryptFuncName)
-        newLines3 = transformFunction(entireSDL, config.decryptFuncName, stmtD, groupInfo, noChangeList)
-        print("<===== processing %s =====>" % config.decryptFuncName)
+        transFunc[ config.keygenFuncName ]  = stmtK
+        transFunc[ config.encryptFuncName ] = stmtE
+        transFunc[ config.decryptFuncName ] = stmtD
+        for funcName in config.functionOrder:
+            if funcName in transFunc.keys():
+                print("<===== processing %s =====>" % funcName)
+                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList)
+                print("<===== processing %s =====>" % funcName)
+        newLinesK = transFuncRes.get( config.keygenFuncName )
+        newLines2 = transFuncRes.get( config.encryptFuncName )
+        newLines3 = transFuncRes.get( config.decryptFuncName )
+            
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
-            print("<===== processing %s =====>" % config.keygenFuncName) 
-            newLinesK = transformFunction(entireSDL, config.keygenFuncName, stmtK, groupInfo, noChangeList)
-            print("<===== processing %s =====>" % config.keygenFuncName)
-        
-        print("<===== processing %s =====>" % config.signFuncName)
-        newLines2 = transformFunction(entireSDL, config.signFuncName, stmtSi, groupInfo, noChangeList)
-        print("<===== processing %s =====>" % config.signFuncName)
-    
-        print("<===== processing %s =====>" % config.verifyFuncName)
-        newLines3 = transformFunction(entireSDL, config.verifyFuncName, stmtV, groupInfo, noChangeList)
-        print("<===== processing %s =====>" % config.verifyFuncName)
-        
+            transFunc[ config.keygenFuncName ] = stmtK
+        transFunc[ config.signFuncName ] = stmtSi
+        transFunc[ config.verifyFuncName ] = stmtV
+        for funcName in config.functionOrder:
+            if funcName in transFunc.keys():
+                print("<===== processing %s =====>" % funcName)
+                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList) 
+                print("<===== processing %s =====>" % funcName)
+            
+        newLinesK = transFuncRes.get( config.keygenFuncName )
+        newLines2 = transFuncRes.get( config.signFuncName )
+        newLines3 = transFuncRes.get( config.verifyFuncName )
     # debug 
     print_sdl(False, newLinesS, newLinesK, newLines2, newLines3)
     
     outputFile = sdl_name + "_asym_" + fileSuffix
-    writeConfig(outputFile + ".sdl", newLines0, newLines1, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
+    writeConfig(outputFile + ".sdl", newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
 
 # temporary placement

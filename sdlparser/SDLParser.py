@@ -789,6 +789,7 @@ def updateVarTypes(node, i, newType=types.NO_TYPE):
         pass # do nothing for now
     varTypeObj = VarType()
     varTypeObj.setLineNo(i)
+    varTypeObj.setSrcLine(node)    
     if origName.find(LIST_INDEX_SYMBOL) != -1: # definitely in a list
         varTypeObj.isInAList = True
         refCount2Name = origName.split(LIST_INDEX_SYMBOL)[1:]

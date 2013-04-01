@@ -8,6 +8,7 @@ class VarType:
         self.lineNo = None
         self.isInAList = False
         self.listRefType = types.NO_TYPE
+        self.srcLine = ""
         
     def getType(self):
         return self.type
@@ -39,3 +40,10 @@ class VarType:
     
     def getRefType(self):
         return self.listRefType
+    
+    def setSrcLine(self, node):
+        self.srcLine = str(node)
+        return
+    
+    def getSrcLine(self):
+        return self.srcLine

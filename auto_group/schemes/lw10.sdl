@@ -74,9 +74,9 @@ egg := e(g,g)
 C0 := (M * (egg^s))
 
 BEGIN :: for
-for{y := 0, Y}
+for{y0 := 0, Y}
 r := random(ZR)
-k := attrs#y
+k := attrs#y0
 C1#k := (egg ^ s_sh#k) * (pk#k#0 ^ r)
 C2#k := g^r
 C3#k := (pk#k#1 ^ r) * (g ^ w_sh#k)
