@@ -35,16 +35,16 @@ END :: for
 END :: func:keygen
 
 BEGIN :: func:sign
-input := list{gpk, Aind, xind, M}
+input := list{gpk, A#index, x#index, M}
 gpk := expand{g, h, u, v, w}
 
  alpha := random(ZR)
  beta := random(ZR)
  T1 := u ^ alpha
  T2 := v ^ beta
- T3 := Aind * (h ^ (alpha + beta))
- gamma1 := xind * alpha
- gamma2 := xind * beta
+ T3 := A#index * (h ^ (alpha + beta))
+ gamma1 := x#index * alpha
+ gamma2 := x#index * beta
 
  r#0 := random(ZR)
  r#1 := random(ZR)
@@ -62,7 +62,7 @@ gpk := expand{g, h, u, v, w}
  c := H(concat{M, T1, T2, T3, R1, R2, R3, R4, R5}, ZR)
  salpha := r#0 + c * alpha
  sbeta := r#1 + c * beta
- sx := r#2 + c * xind
+ sx := r#2 + c * x#index
  sgamma1 := r#3 + c * gamma1
  sgamma2 := r#4 + c * gamma2
  sig := list{T1, T2, T3, c, salpha, sbeta, sx, sgamma1, sgamma2, R3}

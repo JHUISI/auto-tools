@@ -166,7 +166,7 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
 """theType either types.G1 or types.G2"""
 def updateForIfConditional(node, assignVar, varInfo, info, theType, noChangeList):
     new_node2 = BinaryNode.copy(node)
-    
+        
     if assignVar not in noChangeList: new_assignVar = assignVar + G1Prefix
     else: new_assignVar = str(assignVar)
 
@@ -191,28 +191,34 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         # case B: randomness and varTypeObj != None
         if blockStmt.getHasRandomness() and varTypeObj != None:
             if varTypeObj.getType() in [types.ZR, types.GT]:
-                print(" :-> not a generator, so add to newLines.", end="")
+                print(" :-> not a generator, so add to newLines.", end=" ")
                 newLine = str(assign) # unmodified
             else:
-                print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end="")
+                print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
         elif assignVarOccursInBoth(assignVar, info):
-            print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end="")
+            print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
         elif assignVarOccursInG1(assignVar, info):
-            print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end="")
+            print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
         elif assignVarOccursInG2(assignVar, info):
-            print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end="")
+            print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
-            print(" :-> update pairing.", end="")
+            print(" :-> update pairing.", end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
-            print(" :-> updating list...", end="")
+            print(" :-> updating list...", end=" ")
             newLine = updateForLists(blockStmt, assignVar, info)
+        elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
+            print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
+            if assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
+                noChangeList.append(str(assignVar))
+                info['G1'] = info['G1'].union( assignVar )
+                newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
         else:
             newLine = str(assign)
         # add to newLines
@@ -327,9 +333,11 @@ def getAssignmentForName(var, varTypes):
 def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, generators, returnList=False):
     VarNames = getAssignmentForName(configVarName, varTypes)
     VarNames = list(set(VarNames).difference(generators))
+    VarNames.sort()
     print("pruned varList: ", VarNames)
     if info != None:
         info['notInAPairing'] = list(set(VarNames).difference(xorVarMap.keys()))
+        info['notInAPairing'].sort()
     if len(info['notInAPairing']) > 0: print("Not in a pairing: ", info['notInAPairing'])
     VarNameList = []
     for i in VarNames:
@@ -481,6 +489,7 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     print("reducing size of '%s'" % short) 
 
     varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+    typesH = dict(varTypes)
     if not hasattr(config, 'schemeType'):
         sys.exit("'schemeType' option missing in specified config file.")
     pairingSearch = []
@@ -594,7 +603,7 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         if pair_vars_G1_rhs[i] in generators and pair_vars_G1_rhs.count(pair_vars_G1_rhs[i]) >= 2:
             xor.right = BinaryNode(pair_vars_G1_rhs[i]) # + "#r")
         else:
-            xor.right = BinaryNode(pair_vars_G1_rhs[i])            
+            xor.right = BinaryNode(pair_vars_G1_rhs[i])
         xorList.append(xor)
     
     ANDs = [ BinaryNode(ops.AND) for i in range(len(xorList)-1) ]
@@ -619,9 +628,9 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
     else:
         groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-    print("Test: xorMap=", xorVarMap.keys(), ", varsInG1 not in a pairing=", info['notInAPairing'])
     if len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        print("Update: new G1 deps=>", groupInfo['G1'])
     
     #generatorLines = gen.pruneGens(groupInfo)
     groupInfo['generators'] = generators 
@@ -634,7 +643,14 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     groupInfo['varTypes'].update(varTypes)
     
     noChangeList = []
-        
+    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)
+    for i, j in typesH.items():
+        t = j.getType()
+        #print(i, " : ", t)
+        if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
+            noChangeList.append(i)
+    print("Initial noChangeList: ", noChangeList)
+    
     newLinesSe = []
     newLinesS = []
     entireSDL = sdl.getLinesOfCode()

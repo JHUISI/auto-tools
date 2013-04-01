@@ -7,16 +7,8 @@ ID := str
 L := str
 ID_list := list{str}
 Lt := str
-u := list{G1}
 h := list{ZR}
 s := int
-pklist := list{G1}
-pk := G1
-sk := G1
-P := G2
-S := G1
-g := G2
-r := ZR
 END :: types
 
 BEGIN :: func:setup
