@@ -415,10 +415,10 @@ class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unroll
                     #print("The CL fix: ", self.extra_inverted)
                     return node
                     # this means we shouldn't invert the node because we're combining from another node
-                return batchtechniques.AbstractTechnique.createInvExp(node)
+                return AbstractTechnique.createInvExp(node)
         
         if self.debug: print('same side: ', self.node_side, node, self.extra_side)
-        if self.extra_inverted: return batchtechniques.AbstractTechnique.createInvExp(node) # ONLY DIFFERENCE BETWEEN SP2 and SP3
+        if self.extra_inverted: return AbstractTechnique.createInvExp(node) # ONLY DIFFERENCE BETWEEN SP2 and SP3
         return node
                         
     def combine(self, subtree1, subtree2, parentOfTarget=None):
@@ -428,7 +428,7 @@ class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unroll
             return self.combine(subtree1.right, subtree2.right)
         elif Type(subtree1) == Type(subtree2) and Type(subtree1) == ops.MUL:
             #print("Found MUL node: ", subtree1, subtree2)
-            return batchtechniques.AbstractTechnique.createMul(subtree1, subtree2)
+            return AbstractTechnique.createMul(subtree1, subtree2)
         elif Type(subtree1) == Type(subtree2) and Type(subtree1) == ops.EXP:
             if str(subtree1.left) == str(subtree2.left):
                 # print("Found EXP node bases that match: ", subtree1, subtree2)
@@ -437,8 +437,8 @@ class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unroll
                 addNode = BinaryNode(ops.ADD)
                 addNode.left = subtree1.right
                 addNode.right = subtree2.right
-                return batchtechniques.AbstractTechnique.createExp(subtree1.left, addNode)
-            return batchtechniques.AbstractTechnique.createMul(subtree1, subtree2)
+                return AbstractTechnique.createExp(subtree1.left, addNode)
+            return AbstractTechnique.createMul(subtree1, subtree2)
         else:
             #print("Found node: ", Type(subtree1), Type(subtree2))
             #print("Now combining these two: ", subtree1, "<= WITH => ", subtree2)
