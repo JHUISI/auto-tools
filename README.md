@@ -4,6 +4,7 @@ AutoTools : Various forms of cryptographic transformations
 A collection of automated Python tools that we are developing towards transforming cryptographic primitives in different ways:
 
 * AutoBatch: an automated tool for designing batch verification algorithms.
+  * See the [auto_batch]{https://github.com/JHUISI/auto-tools/tree/master/auto_batch} directory for more details.
 
 * CloudSource: an automated tool for outsourcing the computation of pairing-based schemes to untrusted cloud proxies. 
 
