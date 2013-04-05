@@ -19,8 +19,42 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msg)
     
+    print("Program Slice for sigma1: ", sigma['sigma1'])
+    for i in sigma['sigma1']:
+        sliceListSigma1 = []
+        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma1)
+        sliceListSigma1.sort()
+        print("sliceList: ", sliceListSigma1)
+    print("")    
+    print("Program Slice for sigma2: ", sigma['sigma2'])
+    for i in sigma['sigma2']:
+        sliceListSigma2 = []
+        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma2)
+        sliceListSigma2.sort()
+        print("sliceList: ", sliceListSigma2)
+    
+    
+    #newSDL = None
+    #if property2Check(config.verifyFuncName, assignInfo, sigma): # TODO: needs a lot of work
+    #    pass # proceed with BSW transform
+    #else:
+    #    pass # proceed with Bellare-X transform
+    
+    # writeSDL(newSDL)    
     return None
 
+def getProgramSlice(funcName, assignInfo, varName, sliceList):
+    assert type(sliceList) == list, "invalid input for sliceList"
+    (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, varName)
+    if name != funcName: return
+    sliceList.append(varInf.getLineNo())
+    print(varInf.getLineNo(), ":", varInf.getAssignNode())
+    varDeps = list(varInf.getVarDeps())
+    # prevent endless recursion in case we have varA := varA * varB
+    if varName in varDeps: varDeps.remove(varName)
+    for i in varDeps:
+        getProgramSlice(funcName, assignInfo, i, sliceList)    
+    return None
 
 def isPresentInVarDeps(targetFuncName, assignInfo, msg, depList):
     for i in depList:
@@ -56,8 +90,13 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
     print("sigma2 => ", sigma['sigma2'])
     return sigma
 
-def property2Check():
-    pass
+def property2Check(targetFuncName, assignInfo, sigma):
+    #TODO: use term rewriter to breakdown and extract the verification equation
+    # 1) convert the pairing equation to the version expected by our Z3 solver
+    # 2) determine whether the equation satisfies the following constraint:
+    #    - \sigma_1 != \sigma_1pr && verify(pk, m, \sigma_1pr, \sigma_2) ==> True
+    # Goal: verify that there is at most one \sigma_1 verifies with \sigma_2 under pk
+    return True
 
 
 class BSWTransform:
