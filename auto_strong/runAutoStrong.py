@@ -8,7 +8,7 @@ PKSIG = "PKSIG" # signature scheme type
 functionOrder = "functionOrder"
 verboseFlag = "-v"
 
-configParams = ["messageVar", "signatureVar", "signFuncName", "verifyFuncName"]
+configParams = ["messageVar", "signatureVar", "keygenPubVar", "signFuncName", "verifyFuncName"]
 
 def errorOut(keyword):
     sys.exit("configAutoStrong: missing '%s' variable in config." % keyword)

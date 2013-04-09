@@ -36,14 +36,13 @@ input := list{pk, sk, M}
 
  m := stringToInt(M, l, zz)
  r  := random(ZR)
+ S2 := g ^ r 
  dotProd1 := init(G1)
 BEGIN :: for
 for{i := 0, l}
  dotProd1 := dotProd1 * (u#i ^ m#i)
 END :: for
  S1 := (sk * (ut * dotProd1)^r)
- S2 := g ^ r 
-
  sig := list{S1, S2}
 output := sig
 END :: func:sign
