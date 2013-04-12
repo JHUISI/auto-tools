@@ -158,7 +158,8 @@ class Transform:
 
     def visit_div(self, node, data):
         """convert DIV to SUB"""
-        node.type = ops.SUB
+        if Type(data['parent']) != ops.EXP:
+            node.type = ops.SUB
     
     def visit_attr(self, node, data):
         varName = str(node)
@@ -190,6 +191,8 @@ def property2Extract(verifyFuncName, assignInfo, sigma):
     generators = ['g']
     # 1. decompose, then test whether pairings exist?
     freeVars = list(sigma['sigma1'])
+    newVerifyConds = []
+    goalCond = {}
     for i in verifyConds:
         if HasPairings(i):
             print("Original: ", i)
@@ -203,20 +206,79 @@ def property2Extract(verifyFuncName, assignInfo, sigma):
             tf = Transform(generators, None)
             sdl.ASTVisitor(tf).postorder(j)
             print("Final: ", j)
-            ga = GetAttrs(dropPounds=True)
-            sdl.ASTVisitor(ga).postorder(j)
-            vars = ga.getVarList()
-            testWithZ3Solver(j, vars)
+            newVerifyConds.append( j )
+            h = BinaryNode.copy(j)
+            for x in freeVars:
+                newVar = x + "pr"
+                goalCond[ x ] = newVar # used to construct sigma_1 != sigma_1
+                sdl.ASTVisitor( SubstituteVar(x, newVar) ).postorder(h)
+            newVerifyConds.append( h )
+
+                
     # 2. breakdown
-    
+    varListMap = {}
+    for i in newVerifyConds:
+        ga = GetAttrs(dropPounds=True)
+        sdl.ASTVisitor(ga).postorder(i)
+        varListMap[ str(i) ] = ga.getVarList()
+        
+    testWithZ3Solver(newVerifyConds, goalCond, varListMap)
+            
     return True
 
-def testWithZ3Solver(verifyEqs, varList):    
+def buildZ3Expression(node, varMap, Z3Funcs):
+    if node == None: return None    
+    if node.left != None: leftNode   = buildZ3Expression(node.left, varMap, Z3Funcs)
+    if node.right != None: rightNode = buildZ3Expression(node.right, varMap, Z3Funcs)
+    
+    # visit the root
+    if Type(node) == ops.EQ_TST:
+        return (leftNode == rightNode)
+    elif Type(node) == ops.PAIR:
+        return Z3Funcs['pair'](leftNode, rightNode)
+    elif Type(node) == ops.ADD:
+        return leftNode + rightNode
+    elif Type(node) == ops.SUB:
+        return leftNode - rightNode
+    elif Type(node) == ops.MUL:
+        return leftNode * rightNode
+    elif Type(node) == ops.DIV:
+        return leftNode / rightNode
+    elif Type(node) == ops.ATTR:
+        varName = str(node).split(LIST_INDEX_SYMBOL)[0] # in case it has a '#' symbol 
+        if not varName.isdigit():
+            return varMap.get(varName)
+        else:
+            return int(varName)
+    else:
+        print("NodeType unsupported: ", Type(node))
+        return None
+
+def isPartitionValid(subGoals):
+    goal = Goal()
+    goal.add( subGoals )
+    
+    tactic1 = Tactic("qfnra-nlsat")
+    tactic3 = Tactic("qe-sat")
+
+    stratSolver  = Then(tactic1, tactic3)
+    result = stratSolver(goal)[0] # first element is a list
+    
+    print("result: ", result)
+    if len(result) == 0:
+        return False # meaning the solver could find a feasible solution using the above tactics to the specified equations
+    elif result[0] == False:
+        print("Signature is PARTITIONED!!!")
+        return True
+    return False
+    
+    
+def testWithZ3Solver(verifyEqs, goalCond, varListMap):    
     I = IntSort()
     E = Function('E', I, I, I)
     x, y, z = Ints('x y z')
     
-    my_solver = Then(With('simplify', arith_lhs=True), 'normalize-bounds', 'solve-eqs', 'smt').solver()
+    my_solver = Then(With('simplify', arith_lhs=True), 'solve-eqs', 'smt').solver() # 'normalize-bounds'
     my_solver.add( ForAll([x, y], E(x, y) == x*y) )
     my_solver.add( ForAll([x, y, z], E(x+y, z) == (x*z + y*z)) )
     my_solver.add( ForAll([x, y, z], E(x, y+z) == (y*x + z*x)) )
@@ -228,15 +290,39 @@ def testWithZ3Solver(verifyEqs, varList):
     M = my_solver.model()
     print(M, "\n")
     
+    Z3Funcs = {'pair': E }
+    subGoals = []
     varMap = {}
-    print("Creating Z3 ints for... ", varList)
-    for i in varList:
-        varMap[ i ] = Int(i)
-    print("varMap: ", varMap)
-    # TODO: need recursive algorithm to model pairings
-    print("Creating Z3 expression for... ", verifyEqs)
     
-    return
+    for i in verifyEqs:
+        varList = varListMap[str(i)]
+        print("<====================>")
+        print("Creating Z3 ints for... ", varList)
+        for j in varList:
+            if j not in varMap.keys(): varMap[ j ] = Int(j)
+        print("varMap: ", varMap)
+        # TODO: need recursive algorithm to model pairings
+        print("Creating Z3 expression for... ", i)
+        newExp = buildZ3Expression(i, varMap, Z3Funcs)
+        print("Z3 result: ", newExp)
+        print("Z3 simplified: ", M.evaluate(newExp))
+        print("<====================>")
+        subGoals.append( M.evaluate(newExp) )
+    
+    for i in goalCond.keys():
+        _var1 = i 
+        _var2 = goalCond[i]
+        var1, var2 = varMap.get(_var1), varMap.get(_var2)
+        print("constraints: ", var1 != var2)
+        subGoals.append( var1 != var2 )
+    
+    for i in varMap.keys():        
+        subGoals.append( varMap.get(i) != 0 ) # constraint that values are non-zero
+    
+    print("subGoal list: ", subGoals)
+    if isPartitionValid(subGoals):
+        return True # safe route: can find 
+    return False
     
     
 ch = "ch"
