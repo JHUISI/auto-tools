@@ -181,7 +181,7 @@ class SDLParser:
         Operators = Assignment | Equality | BoolOp | ForDo | ProdOf | SumOf | IfCond # | MultiLine  # ExpOp | MulOp | DivOp | AddOp | SubOp
 
         # describes an individual leaf node
-        leafNode = Word(alphanums + '_-+*#\\?').setParseAction( createNode )
+        leafNode = Word(alphanums + '_-+#\\?').setParseAction( createNode ) # JAA: removed '*'
         expr = Forward()
         term = Forward()
         factor = Forward()

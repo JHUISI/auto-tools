@@ -1,4 +1,3 @@
-from __future__ import print_function
 from z3 import *
 
 I = IntSort()
@@ -82,11 +81,14 @@ verify2_1 = (((e(x, t) + (e(x, b) * m))) == e(1, cc))
 #max = 20
 #solve_using(my_solver, verify1, verify2, t != 0, x != 0, y != 0, x != xx) #, And(t > 1, t < max), And(x > 1, x < max), And(y > 1, y < max), And(m > 1, m < max), x != xx)
 
-t1 = Tactic("qfnra-nlsat")
-t2 = Tactic("ctx-simplify")
-t3 = Tactic("horn") #horn-simplify")
-
-s  = Then(t1, t2)
+tactic1 = Tactic("qfnra-nlsat")
+tactic3 = Tactic("qe-sat")
+#tactic2 = Tactic("ctx-simplify")
+#t3 = Tactic("horn-simplify")
+#t3 = Tactic("horn") #horn-simplify")
+#tactic3 = Tactic("horn-simplify")
+s  = Then(tactic1, tactic3)
+#s = TryFor(tactic3, 30)
 
 g2 = Goal()
 g3 = Goal()
@@ -106,30 +108,42 @@ alpha, r = Ints('alpha r')
 alpha1, r1, t1 = Ints('alpha1 r1 t1')
 
 #s1, s1pr = Ints('s1 s1pr') # alpha * m * r
-s1 = Int('s1') #alpha * t + m * r
-s1pr = Int('s1pr') #alpha1 * t1 + m * r1
+s11, s12 = Ints('s11 s12') #alpha * t + m * r
+s11pr, s12pr = Ints('s11pr s12pr') #alpha1 * t1 + m * r1
 s2 = r
 
 #verify3_0 = ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t) 
 #verify3_1 = ((e(t1*alpha1, 1) + e(m*r1, 1)) - e(s2, m)) == e(alpha, t)
 #verify3_0 = (e(s1, 1) == (e(alpha, t) + e(s2, m))) 
 #verify3_1 = (e(s1pr, 1) == (e(alpha, t) + e(s2, m)))
-verify3_0 = (e(s1, t1) - e(s2, m)== (e(alpha, t))) # + e(t1, 1))) 
-verify3_1 = (e(s1pr, t1) - e(s2, m) == (e(alpha, t) ))
+verify3_0 = (e(s11, s12) - e(s2, m)== (e(alpha, t))) # + e(t1, 1))) 
+verify3_1 = (e(s11pr, s12pr) - e(s2, m) == (e(alpha, t) ))
 
 
-g3.add( And(M.evaluate(verify3_0), M.evaluate(verify3_1), s1 != s1pr, t1 != 0) ) # , m > 1, t > 1, alpha > 1) ) #alpha1 != alpha, r1 != r, t1 != t) ) # , r > 1, r1 > 1, t > 1, m > 1, alpha > 1, alpha1 > 1) )
+g3.add( And(M.evaluate(verify3_0), M.evaluate(verify3_1), Or(s11 != s11pr, s12 != s12pr), t != 0) ) # , m > 1, t > 1, alpha > 1) ) #alpha1 != alpha, r1 != r, t1 != t) ) # , r > 1, r1 > 1, t > 1, m > 1, alpha > 1, alpha1 > 1) )
 print("Goal 3: ", g3)
 print("Result for G3: ",  s(g3) )
 print("")
 
+#prove( Not(And(M.evaluate(verify3_0), M.evaluate(verify3_1), s1 != s1pr, t1 != 0)) )
 
+g4 = Goal()
+s00pr, s01pr = Ints('s00pr s01pr')
+# s0 = Int('s0') # (1 / (x + m + y * r))
+s00 = Int('s00') # = (1 / (x + m + y * r))
+
+g4.add( (s00*(x + m + y * r) == 1), (s00pr*(x + m + y * r) == 1), s00 != s00pr, x != 0, y != 0, r != 0, m != 0 ) # , x > 1, y > 1, r > 1, m > 1) ) 
+print("Goal 4: ", g4)
+print("Result for G4: ",  s(g4) )
+print("")
 
 #verify3 = M.evaluate( ((e(t*alpha, 1) + e(m*r, 1)) - e(s2, m)) == e(alpha, t) )
 #print("verify3 : ", verify3)
-#g4 = Goal()
-#g4.add( And(verify3) ) #, t1 == t) )
 
+#g4 = Goal()
+#g4.add(  )
+
+#print("Goal 4: ", g4)
 #print("Result G4: ", s(g4))
 
 #g5 = Goal()

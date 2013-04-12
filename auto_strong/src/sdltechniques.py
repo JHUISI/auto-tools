@@ -593,6 +593,12 @@ class Technique1(AbstractTechnique):
                     var_node.right = new_node
                     addAsChildNodeToParent(data, node.left)
                     print("Move exponent inside: ", var_node)
+        elif (Type(node.left) == ops.EXP):
+            leftExp = node.left
+            new_right = self.createExp(leftExp, node.right) # indirectly simplifies
+            leftExp.right = new_right.right 
+            # promote leftExp
+            addAsChildNodeToParent(data, node.left)
         else:
             #print("Other cases not ATTR?: ", Type(node.left))
             return
@@ -1104,6 +1110,25 @@ def SimplifySDLNode(equation, path, code_block=None, debug=False):
             if len(tech_list) == 0: break
     if debug: 
         print("path: ", path)
+        print("optimized equation: ", new_eq)
+    return new_eq
+
+def SimplifyExponents(equation, code_block=None, debug=False):
+    tech_list = [1] # 4
+    # 1. apply the start technique to equation
+    new_eq = equation
+    while True:
+        cur_tech = tech_list.pop()
+        if debug: print("Testing technique: ", cur_tech)
+        (tech, new_eq) = testTechnique(cur_tech, new_eq, code_block)
+        
+        if tech.applied:
+            if debug: print("Technique ", cur_tech, " successfully applied.")
+            tech_list = [1]
+            continue
+        else:
+            if len(tech_list) == 0: break
+    if debug: 
         print("optimized equation: ", new_eq)
     return new_eq
 

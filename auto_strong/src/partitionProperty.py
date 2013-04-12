@@ -2,6 +2,7 @@ import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
+from z3 import *
 
 def runAutoStrong(sdlFile, config, sdlVerbose=False):
     sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
@@ -19,6 +20,8 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     listVars = varInf.getListNodesList()
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msg)
+    
+    property2Extract(config.verifyFuncName, assignInfo, sigma)
     
 #    print("Program Slice for sigma1: ", sigma['sigma1'])
 #    for i in sigma['sigma1']:
@@ -44,12 +47,12 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     # extract types for all variables
     varTypes = sdl.getVarTypes().get(TYPES_HEADER)
     for i in config.functionOrder:
-        print("Processing func: ", i)
+        #print("Processing func: ", i)
         varTypes.update( sdl.getVarTypes().get(i) )
     
-    print("Type variables for all: ", varTypes.keys())
-    bsw = BSWTransform(varTypes)
-    bsw.construct(config, sigma)
+    #print("Type variables for all: ", varTypes.keys())
+    #bsw = BSWTransform(varTypes)
+    #bsw.construct(config, sigma)
     
     sys.exit(0)
     #newSDL = None
@@ -108,14 +111,134 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
     print("sigma2 => ", sigma['sigma2'])
     return sigma
 
-def property2Check(targetFuncName, assignInfo, sigma):
+class Decompose:
+    def __init__(self, assignInfo, freeVars):
+        self.assignInfo = assignInfo
+        self.freeVars = freeVars
+        self.verbose = False
+        
+    def visit(self, node, data):
+        pass
+    
+    def visit_attr(self, node, data):
+        varName = node.getRefAttribute()
+        if varName in self.freeVars: return        
+        name, varInf = getVarNameEntryFromAssignInfo(self.assignInfo, varName)
+        node2 = varInf.getAssignBaseElemsOnly()
+        if self.verbose:
+            print("<=====>")
+            print("varName: ", varName)
+            print("varInf: ", varInf.getAssignBaseElemsOnly())
+        if node2 != None and varName != str(node2):
+            # make the substitution
+            if node == data['parent'].left:
+                data['parent'].left = node2
+            elif node == data['parent'].right:
+                data['parent'].right = node2
+        if self.verbose: print("<=====>")
+
+class Transform:
+    def __init__(self, generators, varTypes):
+        self.generators = generators
+        self.varTypes   = varTypes
+
+    def visit(self, node, data):
+        pass
+    
+    def visit_exp(self, node, data):
+        # this node is visited last in a post-order traversal
+        if Type(node.left) == ops.ATTR and str(node.left) == "1":
+            # promote the right node
+            addAsChildNodeToParent(data, node.right)
+
+    def visit_mul(self, node, data):
+        """convert MUL to ADD"""
+        if Type(data['parent']) != ops.EXP:
+            node.type = ops.ADD
+
+    def visit_div(self, node, data):
+        """convert DIV to SUB"""
+        node.type = ops.SUB
+    
+    def visit_attr(self, node, data):
+        varName = str(node)
+        if varName in self.generators:
+            node.setAttribute("1") # replace generators
+        #elif varName in self.varTypes.keys(): # convert group elements in G1 or G2 too g^t
+        #    varT = self.varTypes.get(varName)
+
+def property2Extract(verifyFuncName, assignInfo, sigma):
     #TODO: use term rewriter to breakdown and extract the verification equation
     # 1) convert the pairing equation to the version expected by our Z3 solver
     # 2) determine whether the equation satisfies the following constraint:
     #    - \sigma_1 != \sigma_1pr && verify(pk, m, \sigma_1pr, \sigma_2) ==> True
     # Goal: verify that there is at most one \sigma_1 verifies with \sigma_2 under pk
+    verifyConfig = sdl.getVarInfoFuncStmts( verifyFuncName )    
+    Stmts = verifyConfig[0]
+    lines = list(Stmts.keys())
+    lines.sort()
+    verifyConds = []
+    
+    for index, i in enumerate(lines):
+        assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
+        if Stmts[i].getIsIfElseBegin():
+            node = Stmts[i].getAssignNode()
+            print("Conditional: ", node.left) # extract equality and decompose... then test whether pairings exist manually
+            verifyConds.append( BinaryNode.copy(node.left) )
+    
+    # TODO: extract generator from setup routine
+    generators = ['g']
+    # 1. decompose, then test whether pairings exist?
+    freeVars = list(sigma['sigma1'])
+    for i in verifyConds:
+        if HasPairings(i):
+            print("Original: ", i)
+            dep = Decompose(assignInfo, freeVars)
+            sdl.ASTVisitor(dep).postorder(i)
+            print("Decomposed: ", i)
+            j = BinaryNode.copy(i)
+            j = SimplifyExponents(j)
+            print("Converted: ", j)
+            
+            tf = Transform(generators, None)
+            sdl.ASTVisitor(tf).postorder(j)
+            print("Final: ", j)
+            ga = GetAttrs(dropPounds=True)
+            sdl.ASTVisitor(ga).postorder(j)
+            vars = ga.getVarList()
+            testWithZ3Solver(j, vars)
+    # 2. breakdown
+    
     return True
 
+def testWithZ3Solver(verifyEqs, varList):    
+    I = IntSort()
+    E = Function('E', I, I, I)
+    x, y, z = Ints('x y z')
+    
+    my_solver = Then(With('simplify', arith_lhs=True), 'normalize-bounds', 'solve-eqs', 'smt').solver()
+    my_solver.add( ForAll([x, y], E(x, y) == x*y) )
+    my_solver.add( ForAll([x, y, z], E(x+y, z) == (x*z + y*z)) )
+    my_solver.add( ForAll([x, y, z], E(x, y+z) == (y*x + z*x)) )
+    
+    print(my_solver)
+    if my_solver.check() == unsat:
+        sys.exit("ERROR: Z3 setup failed.")
+
+    M = my_solver.model()
+    print(M, "\n")
+    
+    varMap = {}
+    print("Creating Z3 ints for... ", varList)
+    for i in varList:
+        varMap[ i ] = Int(i)
+    print("varMap: ", varMap)
+    # TODO: need recursive algorithm to model pairings
+    print("Creating Z3 expression for... ", verifyEqs)
+    
+    return
+    
+    
 ch = "ch"
 
 def print_sdl(verbose, *args):
@@ -138,16 +261,18 @@ class BSWTransform:
         self.varKeys = list(self.varTypes.keys())
         
     def construct(self, config, sigma):
-        self.chooseVariables(config)
+        self.__chooseVariables(config)
         
         funcVisited = []
         chamHashLines = self.__constructChamHash()
-        setupLines  = self.modifySetup(config, funcVisited)
+        key, setupDict  = self.modifySetup(config, funcVisited)
         signLines   = self.modifySign(config, sigma, funcVisited)
         verifyLines = self.modifyVerify(config, sigma, funcVisited)
-        print_sdl(True, chamHashLines, setupLines, signLines, verifyLines)
+        remFuncs = list(set(config.functionOrder).difference(funcVisited))
+        print_sdl(True, chamHashLines, setupDict[key], signLines, verifyLines)
+        print("Functions to copy: ", remFuncs)
         
-    def chooseVariables(self, config):
+    def __chooseVariables(self, config):
         suffix = "New"
         self.chamH = "chamH"
         self.chK, self.ch0, self.ch1, self.chpk = ch+"K", ch+"0", ch+"1", ch+"pk"
@@ -230,7 +355,7 @@ class BSWTransform:
                 newLines.append(str(Stmts[i].getAssignNode()))
         
         newLines.append( end )
-        return newLines
+        return name, { name : newLines } # key, dict[key] = value
     
     def modifySign(self, config, sigma, funcVisited):
         # Steps to create the strong 'sign' algorithm 
@@ -304,6 +429,7 @@ class BSWTransform:
     def modifyVerify(self, config, sigma, funcVisited):
         # Steps to create the strong 'verify' algorithm 
         # 1. add the statements for 
+        funcVisited.append(config.verifyFuncName)
         verifyConfig = sdl.getVarInfoFuncStmts( config.verifyFuncName )
         Stmts = verifyConfig[0]
         begin = "BEGIN :: func:" + config.verifyFuncName
@@ -316,14 +442,14 @@ class BSWTransform:
         messageSlice = []
         expandCount = 0
         for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
             if Stmts[i].getIsExpandNode(): expandCount += 1
             if Stmts[i].getAssignVar() == config.messageVar: messageSlice.append(config.messageVar)
         
         sigma2Fixed = False
         lastExpand = False
         for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."                        
+            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
             if lastExpand and len(messageSlice) == 0:
                 newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, config.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
                 newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
