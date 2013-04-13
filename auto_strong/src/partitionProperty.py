@@ -8,11 +8,40 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
+    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+    assert setting == sdl.SYMMETRIC_SETTING, "AutoStrong requires a symmetric scheme for simplicity."
+    
     # get config parameters
     msg = config.messageVar
     sigVar = config.signatureVar
     
     # extract property 1 details...
+    generators = []
+    if hasattr(config, "setupFuncName"):
+        setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
+        theStmt, theTypes = setupConfig[0], setupConfig[1]
+        extractGenerators(theStmt, theTypes, generators)
+    if hasattr(config, "keygenFuncName"):
+        keygenConfig  = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+        theStmt, theTypes = keygenConfig[0], keygenConfig[1]
+        extractGenerators(theStmt, theTypes, generators)
+
+    signConfig  = sdl.getVarInfoFuncStmts( config.signFuncName )
+    theStmt, theTypes = signConfig[0], signConfig[1]
+    extractGenerators(theStmt, theTypes, generators)
+    
+    verifyConfig  = sdl.getVarInfoFuncStmts( config.verifyFuncName )
+    theStmt, theTypes = verifyConfig[0], verifyConfig[1]
+    extractGenerators(theStmt, theTypes, generators)
+    
+    assert len(generators) != 0, "signature scheme does not select any generators?"
+    baseGen = generators[0]
+    print("Base generator: ", baseGen)
+    generators.remove(baseGen)    
+    print("Other generator: ", generators)
+    
+#    sys.exit(0)
+    
     (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, sigVar)
     if name != config.signFuncName:
         sys.exit("runAutoStrong: '%s' not in the sign function." % sigVar)
@@ -21,7 +50,7 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msg)
     
-    property2Extract(config.verifyFuncName, assignInfo, sigma)
+    property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     
 #    print("Program Slice for sigma1: ", sigma['sigma1'])
 #    for i in sigma['sigma1']:
@@ -36,14 +65,7 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
 #        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma2)
 #        sliceListSigma2.sort()
 #        print("sliceList: ", sliceListSigma2)
-    
-    
-    # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
-    if hasattr(config, "setuPFuncName"):
-        setupStmts  = getVarInfoFuncStmts( config.setupFuncName )
-    else:
-        pass
-    
+        
     # extract types for all variables
     varTypes = sdl.getVarTypes().get(TYPES_HEADER)
     for i in config.functionOrder:
@@ -63,6 +85,29 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     
     # writeSDL(newSDL)    
     return None
+        
+def extractGenerators(stmt, _types, generators):
+    assert type(generators) == list, "generator should a list."
+    lines = list(stmt.keys())
+    lines.sort()
+    for i in lines:
+        if type(stmt[i]) == sdl.VarInfo and stmt[i].getHasRandomness() and Type(stmt[i].getAssignNode()) == ops.EQ:
+            t = stmt[i].getAssignVar()
+            if _types.get(t) == None:
+                typ = stmt[i].getAssignNode().right.left.attr
+            else:
+                typ = _types[t].getType()
+            if typ == types.G1:
+                if (stmt[i].getOutsideForLoopObj() != None): inForLoop = True
+                else: inForLoop = False
+                print(i, ": ", typ, " :=> ", stmt[i].getAssignNode(), ", loop :=> ", inForLoop)
+                if not inForLoop: 
+                    generators.append(str(stmt[i].getAssignVar()))
+                else:
+                    listRef = stmt[i].getAssignVar().split(LIST_INDEX_SYMBOL)[0]
+                    generators.append(listRef)
+    return None
+
 
 def getProgramSlice(funcName, assignInfo, varName, sliceList):
     assert type(sliceList) == list, "invalid input for sliceList"
@@ -102,20 +147,26 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
         print(" deps: ", deps)
         print("")
         if msg in deps or isPresentInVarDeps(targetFuncName, assignInfo, msg, deps):
-            sigma['sigma1'].append(i)            
+            sigma['sigma1'].append(i)
+        elif type(msg) == list and len(set(msg).intersection(deps)) > 0 or isPresentInVarDeps(targetFuncName, assignInfo, msg, deps):
+            sigma['sigma1'].append(i) # alternative check where there are multiple variables that make up message
         else:
             sigma['sigma2'].append(i)
     
     print("<=== Candidate sigma1 and sigma2 ===>")
     print("sigma1 => ", sigma['sigma1'])
     print("sigma2 => ", sigma['sigma2'])
+    
+    if len(sigma['sigma1']) == 0: sys.exit("Signature scheme does not satisfy partitioning property. Property 1 check failed!")
     return sigma
 
 class Decompose:
-    def __init__(self, assignInfo, freeVars):
+    def __init__(self, assignInfo, baseGen, generators, freeVars):
         self.assignInfo = assignInfo
+        self.baseGen    = baseGen
+        self.generators = generators
         self.freeVars = freeVars
-        self.verbose = False
+        self.verbose = True
         
     def visit(self, node, data):
         pass
@@ -124,21 +175,28 @@ class Decompose:
         varName = node.getRefAttribute()
         if varName in self.freeVars: return        
         name, varInf = getVarNameEntryFromAssignInfo(self.assignInfo, varName)
+        if varInf == None: return
         node2 = varInf.getAssignBaseElemsOnly()
+        if node2 == None: return
+        if varName in self.generators:
+            node2 = BinaryNode(ops.EXP, BinaryNode(self.baseGen), BinaryNode(varName + "E"))
         if self.verbose:
             print("<=====>")
             print("varName: ", varName)
-            print("varInf: ", varInf.getAssignBaseElemsOnly())
-        if node2 != None and varName != str(node2):
+            print("varInf: ", node2) #varInf.getAssignBaseElemsOnly())
+        
+        if varName != str(node2):
             # make the substitution
             if node == data['parent'].left:
                 data['parent'].left = node2
             elif node == data['parent'].right:
                 data['parent'].right = node2
-        if self.verbose: print("<=====>")
+        if self.verbose: print("<=====>")        
+        return 
 
 class Transform:
-    def __init__(self, generators, varTypes):
+    def __init__(self, baseGen, generators, varTypes):
+        self.baseGen    = baseGen
         self.generators = generators
         self.varTypes   = varTypes
 
@@ -154,21 +212,24 @@ class Transform:
     def visit_mul(self, node, data):
         """convert MUL to ADD"""
         if Type(data['parent']) != ops.EXP:
+#        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
             node.type = ops.ADD
 
     def visit_div(self, node, data):
         """convert DIV to SUB"""
-        if Type(data['parent']) != ops.EXP:
+        if Type(data['parent']) != ops.EXP:        
+#        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
             node.type = ops.SUB
     
     def visit_attr(self, node, data):
         varName = str(node)
-        if varName in self.generators:
+        if varName == self.baseGen:
             node.setAttribute("1") # replace generators
+        #elif varName in self.generators: # one of the other generators?            
         #elif varName in self.varTypes.keys(): # convert group elements in G1 or G2 too g^t
         #    varT = self.varTypes.get(varName)
 
-def property2Extract(verifyFuncName, assignInfo, sigma):
+def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
     #TODO: use term rewriter to breakdown and extract the verification equation
     # 1) convert the pairing equation to the version expected by our Z3 solver
     # 2) determine whether the equation satisfies the following constraint:
@@ -188,7 +249,7 @@ def property2Extract(verifyFuncName, assignInfo, sigma):
             verifyConds.append( BinaryNode.copy(node.left) )
     
     # TODO: extract generator from setup routine
-    generators = ['g']
+    #baseGen = 'g'
     # 1. decompose, then test whether pairings exist?
     freeVars = list(sigma['sigma1'])
     newVerifyConds = []
@@ -196,14 +257,15 @@ def property2Extract(verifyFuncName, assignInfo, sigma):
     for i in verifyConds:
         if HasPairings(i):
             print("Original: ", i)
-            dep = Decompose(assignInfo, freeVars)
-            sdl.ASTVisitor(dep).postorder(i)
+            dep = Decompose(assignInfo, baseGen, generators, freeVars)
+            sdl.ASTVisitor(dep).postorder(i) # TODO: handle the decomposition a bit better!
+#            sdl.ASTVisitor(dep).postorder(i)
             print("Decomposed: ", i)
             j = BinaryNode.copy(i)
             j = SimplifyExponents(j)
             print("Converted: ", j)
             
-            tf = Transform(generators, None)
+            tf = Transform(baseGen, generators, None)
             sdl.ASTVisitor(tf).postorder(j)
             print("Final: ", j)
             newVerifyConds.append( j )
@@ -234,6 +296,8 @@ def buildZ3Expression(node, varMap, Z3Funcs):
     # visit the root
     if Type(node) == ops.EQ_TST:
         return (leftNode == rightNode)
+    elif Type(node) == ops.AND:
+        return And(leftNode, rightNode)
     elif Type(node) == ops.PAIR:
         return Z3Funcs['pair'](leftNode, rightNode)
     elif Type(node) == ops.ADD:
@@ -309,12 +373,14 @@ def testWithZ3Solver(verifyEqs, goalCond, varListMap):
         print("<====================>")
         subGoals.append( M.evaluate(newExp) )
     
+    constraints = []
     for i in goalCond.keys():
         _var1 = i 
         _var2 = goalCond[i]
         var1, var2 = varMap.get(_var1), varMap.get(_var2)
         print("constraints: ", var1 != var2)
-        subGoals.append( var1 != var2 )
+        constraints.append(var1 != var2)
+    subGoals.append( And(constraints) )
     
     for i in varMap.keys():        
         subGoals.append( varMap.get(i) != 0 ) # constraint that values are non-zero
@@ -322,6 +388,8 @@ def testWithZ3Solver(verifyEqs, goalCond, varListMap):
     print("subGoal list: ", subGoals)
     if isPartitionValid(subGoals):
         return True # safe route: can find 
+    
+    print("Does NOT satisfy partition property!")
     return False
     
     
