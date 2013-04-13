@@ -318,23 +318,53 @@ def buildZ3Expression(node, varMap, Z3Funcs):
         print("NodeType unsupported: ", Type(node))
         return None
 
-def isPartitionValid(subGoals):
-    goal = Goal()
-    goal.add( subGoals )
-    
-    tactic1 = Tactic("qfnra-nlsat")
-    tactic3 = Tactic("qe-sat")
-
-    stratSolver  = Then(tactic1, tactic3)
-    result = stratSolver(goal)[0] # first element is a list
-    
-    print("result: ", result)
-    if len(result) == 0:
-        return False # meaning the solver could find a feasible solution using the above tactics to the specified equations
-    elif result[0] == False:
-        print("Signature is PARTITIONED!!!")
+def doesPartitionHold(subGoals):
+    """ Z3 documentation ==>
+        unsat : unsatisfiable. Proves that equations and constraints are impossible and thus, partitioning property holds. Action: return True
+        unkown : means that the solver is not sure. As a result, means could NOT confirm that the scheme is partitioned. Action: return False.
+    """
+        
+    # test
+    testSolver = Tactic("qfnra-nlsat").solver()
+    testSolver.add( subGoals )
+    result = testSolver.check()
+    print(result)
+    if result == unsat:
+        print("Signature is PARTITIONED!!!")        
         return True
-    return False
+    elif result == unknown:
+        testSolver2 = Tactic("nlsat").solver()
+        testSolver2.add( subGoals )
+        result = testSolver2.check()
+        if result == unknown:
+            return False
+    else:
+        # found solution which is also not good
+        print(testSolver.model())
+        return False
+    
+    # second attempt must have worked! but highly unlikely
+    return True    
+    
+#    goal = Goal()
+#    goal.add( subGoals )
+#    
+#    # nlsat => solve goal using a nonlinear arithmetic solver.
+#    tactic1 = Tactic("qfnra-nlsat") # builtin strategy for solving QF_NRA problems using only nlsat.
+#    tactic2 = Tactic("smt") # apply a SAT based SMT solver.
+#    # "qe-sat" => check satisfiability of quantified formulas using quantifier elimination.
+#
+#    stratSolver  = Then(tactic1, tactic2)
+#    result = stratSolver(goal)[0] # first element is a list
+#    
+#    print("result: ", result)
+#    sys.exit(0)
+#    if len(result) == 0:
+#        return False # meaning the solver could find a feasible solution using the above tactics to the specified equations
+#    elif result[0] == False:
+#        print("Signature is PARTITIONED!!!")
+#        return True
+#    return False
     
     
 def testWithZ3Solver(verifyEqs, goalCond, varListMap):    
@@ -355,7 +385,7 @@ def testWithZ3Solver(verifyEqs, goalCond, varListMap):
     print(M, "\n")
     
     Z3Funcs = {'pair': E }
-    subGoals = []
+    equations = []
     varMap = {}
     
     for i in verifyEqs:
@@ -371,7 +401,7 @@ def testWithZ3Solver(verifyEqs, goalCond, varListMap):
         print("Z3 result: ", newExp)
         print("Z3 simplified: ", M.evaluate(newExp))
         print("<====================>")
-        subGoals.append( M.evaluate(newExp) )
+        equations.append( M.evaluate(newExp) )
     
     constraints = []
     for i in goalCond.keys():
@@ -380,13 +410,13 @@ def testWithZ3Solver(verifyEqs, goalCond, varListMap):
         var1, var2 = varMap.get(_var1), varMap.get(_var2)
         print("constraints: ", var1 != var2)
         constraints.append(var1 != var2)
-    subGoals.append( And(constraints) )
+    equations.append( And(constraints) )
     
     for i in varMap.keys():        
-        subGoals.append( varMap.get(i) != 0 ) # constraint that values are non-zero
+        equations.append( varMap.get(i) > 1 ) # != 0 ) # constraint that values are non-zero
     
-    print("subGoal list: ", subGoals)
-    if isPartitionValid(subGoals):
+    print("subGoal list: ", equations)
+    if doesPartitionHold(equations):
         return True # safe route: can find 
     
     print("Does NOT satisfy partition property!")
