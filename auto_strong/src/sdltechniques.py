@@ -962,6 +962,38 @@ class SubstituteVar:
             if self.new_var in types.getList():
                 node.left.attr = types[self.new_var]
 
+class SubstituteVarWithNode:
+    def __init__(self, target, new_node):
+        self.target = target
+        self.new_node = BinaryNode.copy(new_node)
+        
+    def visit(self, node, data):
+        pass
+    
+    def visit_attr(self, node, data):
+        nodeName = str(node)
+        if nodeName == self.target:
+            addAsChildNodeToParent(data, self.new_node)
+        elif nodeName.find(LIST_INDEX_SYMBOL) != -1:
+            nodeName2 = nodeName.split(LIST_INDEX_SYMBOL) 
+            if nodeName2[0] == self.target:
+                addAsChildNodeToParent(data, self.new_node)
+
+class DeleteVar:
+    def __init__(self, varName):
+        self.varName = varName
+    
+    def visit(self, node, data):
+        pass
+    
+    def visit_attr(self, node, data):
+        varName = node.getRefAttribute()
+        if varName == self.varName:
+            if node == data['parent'].left:
+                BinaryNode.setNodeAs(data['parent'], data['parent'].right)
+            elif node == data['parent'].right:
+                BinaryNode.setNodeAs(data['parent'], data['parent'].left)
+
 """SubstitutePairings assumes pairings have been split already. """
 class SubstitutePairings:
     def __init__(self, info, noChangeList):
@@ -1072,6 +1104,26 @@ class SubstitutePairings:
             self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs
             
         return
+
+class CombineBases:
+    def __init__(self, baseGen):
+        self.baseGen = baseGen
+    
+    def visit(self, node, data):
+        pass
+    
+    def visit_mul(self, node, data):
+        if Type(node.left) == ops.EXP and Type(node.right) == ops.EXP:
+            g1 = node.getLeft().getLeft()
+            g2 = node.getRight().getLeft()
+            if str(g1) == str(g2) and str(g1) == self.baseGen:
+                g1Exp = node.getLeft().getRight()
+                g2Exp = node.getRight().getRight()
+                # can safely combine the expression
+                new_exp  = BinaryNode(ops.ADD, g1Exp, g2Exp)
+                new_node = BinaryNode(ops.EXP, g1, new_exp)
+                addAsChildNodeToParent(data, new_node)
+                
         
 techMap = {1:Technique1, 2:Technique2, 3:Technique3, 4:Technique4, 11:Technique11}
 
@@ -1113,7 +1165,7 @@ def SimplifySDLNode(equation, path, code_block=None, debug=False):
         print("optimized equation: ", new_eq)
     return new_eq
 
-def SimplifyExponents(equation, code_block=None, debug=False):
+def SimplifyExponents(equation, baseGen, code_block=None, debug=False):
     tech_list = [1] # 4
     # 1. apply the start technique to equation
     new_eq = equation
@@ -1128,6 +1180,8 @@ def SimplifyExponents(equation, code_block=None, debug=False):
             continue
         else:
             if len(tech_list) == 0: break
+    cb = CombineBases(baseGen)
+    ASTVisitor(cb).postorder(new_eq)
     if debug: 
         print("optimized equation: ", new_eq)
     return new_eq

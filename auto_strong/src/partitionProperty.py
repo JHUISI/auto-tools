@@ -40,7 +40,6 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     generators.remove(baseGen)    
     print("Other generator: ", generators)
     
-#    sys.exit(0)
     
     (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, sigVar)
     if name != config.signFuncName:
@@ -50,8 +49,18 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msg)
     
-    property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
-    
+    if property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma):
+        print("Applying BSW transformation...")
+        # extract types for all variables
+        varTypes = sdl.getVarTypes().get(TYPES_HEADER)
+        for i in config.functionOrder:
+            #print("Processing func: ", i)
+            varTypes.update( sdl.getVarTypes().get(i) )
+        
+        print("Type variables for all: ", varTypes.keys())
+        #bsw = BSWTransform(varTypes)
+        #bsw.construct(config, sigma)
+        pass
 #    print("Program Slice for sigma1: ", sigma['sigma1'])
 #    for i in sigma['sigma1']:
 #        sliceListSigma1 = []
@@ -65,17 +74,7 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
 #        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma2)
 #        sliceListSigma2.sort()
 #        print("sliceList: ", sliceListSigma2)
-        
-    # extract types for all variables
-    varTypes = sdl.getVarTypes().get(TYPES_HEADER)
-    for i in config.functionOrder:
-        #print("Processing func: ", i)
-        varTypes.update( sdl.getVarTypes().get(i) )
-    
-    #print("Type variables for all: ", varTypes.keys())
-    #bsw = BSWTransform(varTypes)
-    #bsw.construct(config, sigma)
-    
+            
     sys.exit(0)
     #newSDL = None
     #if property2Check(config.verifyFuncName, assignInfo, sigma): # TODO: needs a lot of work
@@ -160,13 +159,15 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
     if len(sigma['sigma1']) == 0: sys.exit("Signature scheme does not satisfy partitioning property. Property 1 check failed!")
     return sigma
 
+"""
+Step 1 for property 2 check. Decompose each verification condition to base elements.
+"""
 class Decompose:
-    def __init__(self, assignInfo, baseGen, generators, freeVars):
+    def __init__(self, assignInfo, baseGen, freeVars):
         self.assignInfo = assignInfo
         self.baseGen    = baseGen
-        self.generators = generators
         self.freeVars = freeVars
-        self.verbose = True
+        self.verbose = False
         
     def visit(self, node, data):
         pass
@@ -178,13 +179,18 @@ class Decompose:
         if varInf == None: return
         node2 = varInf.getAssignBaseElemsOnly()
         if node2 == None: return
-        if varName in self.generators:
-            node2 = BinaryNode(ops.EXP, BinaryNode(self.baseGen), BinaryNode(varName + "E"))
+#        if varName in self.generators:
+#            node2 = self.generatorMap[varName] # BinaryNode(ops.EXP, BinaryNode(self.baseGen), BinaryNode(varName + "E"))
         if self.verbose:
             print("<=====>")
             print("varName: ", varName)
             print("varInf: ", node2) #varInf.getAssignBaseElemsOnly())
-        
+            if varName in varInf.getVarDeps():
+                print("isIterator: ", varName in varInf.getVarDeps())
+                dv = DeleteVar(varName)
+                #node2t = BinaryNode(ops.EQ, BinaryNode(varName + "Test"), BinaryNode.copy(node2))
+                sdl.ASTVisitor(dv).preorder( node2 )
+                print("Result: ", node2)
         if varName != str(node2):
             # make the substitution
             if node == data['parent'].left:
@@ -208,17 +214,13 @@ class Transform:
         if Type(node.left) == ops.ATTR and str(node.left) == "1":
             # promote the right node
             addAsChildNodeToParent(data, node.right)
-
+    
     def visit_mul(self, node, data):
-        """convert MUL to ADD"""
-        if Type(data['parent']) != ops.EXP:
-#        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
+        if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
             node.type = ops.ADD
 
     def visit_div(self, node, data):
-        """convert DIV to SUB"""
-        if Type(data['parent']) != ops.EXP:        
-#        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
+        if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
             node.type = ops.SUB
     
     def visit_attr(self, node, data):
@@ -250,24 +252,42 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
     
     # TODO: extract generator from setup routine
     #baseGen = 'g'
-    # 1. decompose, then test whether pairings exist?
+    genMap = {}
+    for i in generators:
+        new_node = BinaryNode(ops.EXP, BinaryNode(baseGen), BinaryNode(i + "I"))
+        genMap[ i ] = new_node
+    
     freeVars = list(sigma['sigma1'])
     newVerifyConds = []
+    verifyThese = []
     goalCond = {}
     for i in verifyConds:
         if HasPairings(i):
             print("Original: ", i)
-            dep = Decompose(assignInfo, baseGen, generators, freeVars)
-            sdl.ASTVisitor(dep).postorder(i) # TODO: handle the decomposition a bit better!
-#            sdl.ASTVisitor(dep).postorder(i)
-            print("Decomposed: ", i)
-            j = BinaryNode.copy(i)
-            j = SimplifyExponents(j)
-            print("Converted: ", j)
+            v = BinaryNode.copy(i)
+            dep = Decompose(assignInfo, baseGen, freeVars)
+            sdl.ASTVisitor(dep).postorder(i)               
+
+            dep2 = Decompose(assignInfo, baseGen, [])
+            sdl.ASTVisitor(dep2).postorder(v)
+            for x in generators:
+                subVar = SubstituteVarWithNode(x, genMap[x])
+                sdl.ASTVisitor(subVar).postorder(i)
+                sdl.ASTVisitor(subVar).postorder(v)
             
+            print("\nStep 1: Decomposed: ", i)
+            #print("\nFull Decomp: ", v)
+            
+            j = BinaryNode.copy(i)
+            j = SimplifyExponents(j, baseGen)
+            v = SimplifyExponents(v, baseGen)
+
             tf = Transform(baseGen, generators, None)
             sdl.ASTVisitor(tf).postorder(j)
-            print("Final: ", j)
+            sdl.ASTVisitor(tf).postorder(v)
+            print("\nStep 2: Simplify & Transform: ", j)
+            #print("\nFull Final: ", v)
+            verifyThese.append( v )
             newVerifyConds.append( j )
             h = BinaryNode.copy(j)
             for x in freeVars:
@@ -283,10 +303,17 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
         ga = GetAttrs(dropPounds=True)
         sdl.ASTVisitor(ga).postorder(i)
         varListMap[ str(i) ] = ga.getVarList()
-        
-    testWithZ3Solver(newVerifyConds, goalCond, varListMap)
-            
-    return True
+    
+    # Uncomment for correctness test with the original verification equation.
+    #varListMap2 = {}
+    #for i in verifyThese:
+    #    ga = GetAttrs(dropPounds=True)
+    #    sdl.ASTVisitor(ga).postorder(i)
+    #    varListMap2[ str(i) ] = ga.getVarList()
+    
+    #testCorrectWithZ3(verifyThese, varListMap2)
+    print("\nStep 3: test partition using Z3.")
+    return testPartitionWithZ3(newVerifyConds, goalCond, varListMap)
 
 def buildZ3Expression(node, varMap, Z3Funcs):
     if node == None: return None    
@@ -304,13 +331,16 @@ def buildZ3Expression(node, varMap, Z3Funcs):
         return leftNode + rightNode
     elif Type(node) == ops.SUB:
         return leftNode - rightNode
-    elif Type(node) == ops.MUL:
+    elif Type(node) == ops.MUL or Type(node) == ops.EXP:
         return leftNode * rightNode
     elif Type(node) == ops.DIV:
         return leftNode / rightNode
     elif Type(node) == ops.ATTR:
         varName = str(node).split(LIST_INDEX_SYMBOL)[0] # in case it has a '#' symbol 
         if not varName.isdigit():
+            if "-" in varName: 
+                varName = varName.strip("-")
+                return -1 * varMap.get(varName)
             return varMap.get(varName)
         else:
             return int(varName)
@@ -321,11 +351,12 @@ def buildZ3Expression(node, varMap, Z3Funcs):
 def doesPartitionHold(subGoals):
     """ Z3 documentation ==>
         unsat : unsatisfiable. Proves that equations and constraints are impossible and thus, partitioning property holds. Action: return True
-        unkown : means that the solver is not sure. As a result, means could NOT confirm that the scheme is partitioned. Action: return False.
+        unkown : means that the solver is not sure. As a result, means could NOT find proof that confirms that the scheme is partitioned. Action: return False.
     """
-        
+
     # test
-    testSolver = Tactic("qfnra-nlsat").solver()
+    timeout = 60000 # 1 minute
+    testSolver = TryFor(Then("qfnra-nlsat", "nlsat"), timeout).solver()
     testSolver.add( subGoals )
     result = testSolver.check()
     print(result)
@@ -333,41 +364,61 @@ def doesPartitionHold(subGoals):
         print("Signature is PARTITIONED!!!")        
         return True
     elif result == unknown:
-        testSolver2 = Tactic("nlsat").solver()
-        testSolver2.add( subGoals )
-        result = testSolver2.check()
-        if result == unknown:
-            return False
+        # this indicates that the solver could not confirm that the equation was indeed impossible to satisfy
+        return False
     else:
         # found solution which is also not good
         print(testSolver.model())
-        return False
+        return False    
+
+def testCorrectWithZ3(verifyEqs, varListMap):
+    I = IntSort()
+    E = Function('E', I, I, I)
+    x, y, z = Ints('x y z')
     
-    # second attempt must have worked! but highly unlikely
-    return True    
+    my_solver = Then(With('simplify', arith_lhs=True), 'solve-eqs', 'smt').solver() # 'normalize-bounds'
+    my_solver.add( ForAll([x, y], E(x, y) == x*y) )
+    my_solver.add( ForAll([x, y, z], E(x+y, z) == (x*z + y*z)) )
+    my_solver.add( ForAll([x, y, z], E(x, y+z) == (y*x + z*x)) )
     
-#    goal = Goal()
-#    goal.add( subGoals )
-#    
-#    # nlsat => solve goal using a nonlinear arithmetic solver.
-#    tactic1 = Tactic("qfnra-nlsat") # builtin strategy for solving QF_NRA problems using only nlsat.
-#    tactic2 = Tactic("smt") # apply a SAT based SMT solver.
-#    # "qe-sat" => check satisfiability of quantified formulas using quantifier elimination.
-#
-#    stratSolver  = Then(tactic1, tactic2)
-#    result = stratSolver(goal)[0] # first element is a list
-#    
-#    print("result: ", result)
-#    sys.exit(0)
-#    if len(result) == 0:
-#        return False # meaning the solver could find a feasible solution using the above tactics to the specified equations
-#    elif result[0] == False:
-#        print("Signature is PARTITIONED!!!")
-#        return True
-#    return False
+    print(my_solver)
+    if my_solver.check() == unsat:
+        sys.exit("ERROR: Z3 setup failed.")
+
+    M = my_solver.model()
+    print(M, "\n")
+
+    Z3Funcs = {'pair': E }
+    equations = []
+    varMap = {}
+    timeout = 60000 # 1 minute
+    for i in verifyEqs:
+        varList = varListMap[str(i)]
+        print("<====================>")
+        print("Creating Z3 ints for... ", varList)
+        for j in varList:
+            if j not in varMap.keys(): varMap[ j ] = Int(j)
+        print("varMap: ", varMap)
+        # TODO: need recursive algorithm to model pairings
+        print("Creating Z3 expression for... ", i)
+        newExp = buildZ3Expression(i, varMap, Z3Funcs)
+        print("Z3 result: ", newExp)
+        print("Z3 simplified: ", M.evaluate(newExp))
+        print("<====================>")
+        constraints = []
+        for j in varMap.keys():        
+            constraints.append( varMap.get(j) ) # > 1 ) # constraint that values are non-zero        
+        testSolver = TryFor(Then('qfnra-nlsat', 'smt'), timeout).solver()
+        testSolver.add( ForAll(constraints, M.evaluate(newExp)) ) # , And(constraints) )
+        print("testSolver : ", testSolver)
+        result = testSolver.check()
+        print(result)
+        if result != unsat and result != unknown:
+            print("proof: ", testSolver.model())
     
-    
-def testWithZ3Solver(verifyEqs, goalCond, varListMap):    
+    return
+
+def testPartitionWithZ3(verifyEqs, goalCond, varListMap):    
     I = IntSort()
     E = Function('E', I, I, I)
     x, y, z = Ints('x y z')
