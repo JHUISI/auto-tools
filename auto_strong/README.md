@@ -24,9 +24,8 @@ Z3 SMT Solver
 
 * Install instructions:
 
-    python scripts/mk_make.py --prefix=/home/leo
-    cd build
-    make
-    make install
+    `python scripts/mk_make.py --prefix=/home/leo`
+
+    `cd build; make; make install`
 
 
