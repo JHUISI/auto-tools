@@ -23,9 +23,10 @@ Z3 SMT Solver
 * Clone repository: `git clone https://git01.codeplex.com/z3` 
 
 * Install instructions:
-  python scripts/mk_make.py --prefix=/home/leo
-  cd build
-  make
-  make install
+
+	python scripts/mk_make.py --prefix=/home/leo
+	cd build
+	make
+	make install
 
 
