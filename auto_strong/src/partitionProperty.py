@@ -3,6 +3,9 @@ import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
 from z3 import *
+import subprocess
+
+stringToInt = "stringToInt"
 
 def runAutoStrong(sdlFile, config, sdlVerbose=False):
     sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
@@ -10,10 +13,6 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     assignInfo = sdl.getAssignInfo()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     assert setting == sdl.SYMMETRIC_SETTING, "AutoStrong requires a symmetric scheme for simplicity."
-    
-    # get config parameters
-    msg = config.messageVar
-    sigVar = config.signatureVar
     
     # extract property 1 details...
     generators = []
@@ -27,8 +26,8 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
         extractGenerators(theStmt, theTypes, generators)
 
     signConfig  = sdl.getVarInfoFuncStmts( config.signFuncName )
-    theStmt, theTypes = signConfig[0], signConfig[1]
-    extractGenerators(theStmt, theTypes, generators)
+    signStmts, signTypes = signConfig[0], signConfig[1]
+    extractGenerators(signStmts, signTypes, generators)
     
     verifyConfig  = sdl.getVarInfoFuncStmts( config.verifyFuncName )
     theStmt, theTypes = verifyConfig[0], verifyConfig[1]
@@ -41,13 +40,26 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
     print("Other generator: ", generators)
     
     
+    #get config parameters
+    msg     = config.messageVar
+    msgList = traceMessage(signStmts, signTypes, msg)
+    if len(msgList) == 0:
+        # msg used directly
+        msgVar = msg
+    else:
+        # indirection on msg
+        msgList.append(msg)
+        msgVar = msgList
+    print("msgVar: ", msgVar)
+    sigVar = config.signatureVar
+    
     (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, sigVar)
     if name != config.signFuncName:
         sys.exit("runAutoStrong: '%s' not in the sign function." % sigVar)
     print("identified signature: ", varInf.getAssignNode())
     listVars = varInf.getListNodesList()
     print("list of possible vars: ", listVars)
-    sigma = property1Extract(config.signFuncName, assignInfo, listVars, msg)
+    sigma = property1Extract(config.signFuncName, assignInfo, listVars, msgVar)
     
     if property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma):
         print("Applying BSW transformation...")
@@ -58,8 +70,11 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
             varTypes.update( sdl.getVarTypes().get(i) )
         
         print("Type variables for all: ", varTypes.keys())
-        #bsw = BSWTransform(varTypes)
+        #bsw = BSWTransform(varTypes, msgVar, msgVarList)
         #bsw.construct(config, sigma)
+        pass
+    else:
+        #Bellare-Shoup transformation
         pass
 #    print("Program Slice for sigma1: ", sigma['sigma1'])
 #    for i in sigma['sigma1']:
@@ -107,6 +122,28 @@ def extractGenerators(stmt, _types, generators):
                     generators.append(listRef)
     return None
 
+def traceMessage(Stmt, _types, msgVar):
+    assert type(msgVar) == str, "messageVar should be a str."
+    lines = list(Stmt.keys())
+    lines.sort()
+    msgVarList = []
+    for i in lines:
+        assert type(Stmt[i]) == sdl.VarInfo, "traceMessage: not a VarInfo object."
+        if Type(Stmt[i].getAssignNode()) == ops.EQ and Stmt[i].getAssignVar() not in [inputKeyword, outputKeyword]: # assignment node
+            if msgVar in Stmt[i].getVarDeps() and Stmt[i].getIsUsedInHashCalc():
+                # expecting a hash call to a specified group type                
+                if Stmt[i].getAssignVar() not in msgVarList: msgVarList.append( Stmt[i].getAssignVar() )
+            elif msgVar in Stmt[i].getVarDeps() and Type(Stmt[i].getAssignNode().getRight()) == ops.FUNC:
+                # expecting stringToInt
+                if stringToInt == Stmt[i].getAssignNode().getRight().attr:
+                    if Stmt[i].getAssignVar() not in msgVarList: msgVarList.append( Stmt[i].getAssignVar() )
+                else:
+                    print("DEBUG: Unrecognized function over " + msgVar)
+
+    #print("msgVarList: ", msgVarList)
+    assert len(msgVarList) <= 1, "perhaps, inconsistent functions over " + msgVar
+    return msgVarList
+
 
 def getProgramSlice(funcName, assignInfo, varName, sliceList):
     assert type(sliceList) == list, "invalid input for sliceList"
@@ -125,7 +162,7 @@ def isPresentInVarDeps(targetFuncName, assignInfo, msg, depList):
     for i in depList:
         (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, i)
         if name != targetFuncName: continue
-        if msg in varInf.getVarDeps():
+        if msg in varInf.getVarDeps() or len(set(msg).intersection(varInf.getVarDeps())) > 0:
             return True
     return False
 
@@ -147,7 +184,7 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
         print("")
         if msg in deps or isPresentInVarDeps(targetFuncName, assignInfo, msg, deps):
             sigma['sigma1'].append(i)
-        elif type(msg) == list and len(set(msg).intersection(deps)) > 0 or isPresentInVarDeps(targetFuncName, assignInfo, msg, deps):
+        elif (type(msg) == list and len(set(msg).intersection(deps)) > 0) or isPresentInVarDeps(targetFuncName, assignInfo, msg, deps):
             sigma['sigma1'].append(i) # alternative check where there are multiple variables that make up message
         else:
             sigma['sigma2'].append(i)
@@ -159,6 +196,13 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
     if len(sigma['sigma1']) == 0: sys.exit("Signature scheme does not satisfy partitioning property. Property 1 check failed!")
     return sigma
 
+def deleteThisVar(varName, node):
+    dv = DeleteVar(varName)
+    print("Before Deletion: ", node)    
+    sdl.ASTVisitor(dv).preorder( node )
+    print("After Deletion: ", node)
+    return
+
 """
 Step 1 for property 2 check. Decompose each verification condition to base elements.
 """
@@ -167,30 +211,38 @@ class Decompose:
         self.assignInfo = assignInfo
         self.baseGen    = baseGen
         self.freeVars = freeVars
-        self.verbose = False
+        self.verbose = True
         
     def visit(self, node, data):
         pass
-    
+            
     def visit_attr(self, node, data):
         varName = node.getRefAttribute()
-        if varName in self.freeVars: return        
+        if varName in self.freeVars: return
         name, varInf = getVarNameEntryFromAssignInfo(self.assignInfo, varName)
         if varInf == None: return
         node2 = varInf.getAssignBaseElemsOnly()
         if node2 == None: return
+        varDeps = varInf.getVarDeps()
 #        if varName in self.generators:
 #            node2 = self.generatorMap[varName] # BinaryNode(ops.EXP, BinaryNode(self.baseGen), BinaryNode(varName + "E"))
         if self.verbose:
             print("<=====>")
             print("varName: ", varName)
             print("varInf: ", node2) #varInf.getAssignBaseElemsOnly())
-            if varName in varInf.getVarDeps():
-                print("isIterator: ", varName in varInf.getVarDeps())
-                dv = DeleteVar(varName)
-                #node2t = BinaryNode(ops.EQ, BinaryNode(varName + "Test"), BinaryNode.copy(node2))
-                sdl.ASTVisitor(dv).preorder( node2 )
-                print("Result: ", node2)
+            print("varDeps: ", varDeps)
+        if varName in varDeps:
+            print("isIterator: ", varName in varDeps)
+            deleteThisVar(varName, node2)
+            #dv = DeleteVar(varName)
+            #sdl.ASTVisitor(dv).preorder( node2 )
+            #print("Result: ", node2)
+        else:
+            for i in varDeps:
+                # see if any variables need to be removed
+                name, varInf2 = getVarNameEntryFromAssignInfo(self.assignInfo, i)
+                if varInf2 != None and i in varInf2.getVarDeps(): print("\t Delete ", i, ":", varInf2.getVarDeps()); deleteThisVar(i, node2)
+
         if varName != str(node2):
             # make the substitution
             if node == data['parent'].left:
@@ -205,7 +257,11 @@ class Transform:
         self.baseGen    = baseGen
         self.generators = generators
         self.varTypes   = varTypes
-
+        self.reapplyTransform = False
+    
+    def shouldReapply(self):
+        return self.reapplyTransform
+    
     def visit(self, node, data):
         pass
     
@@ -214,6 +270,16 @@ class Transform:
         if Type(node.left) == ops.ATTR and str(node.left) == "1":
             # promote the right node
             addAsChildNodeToParent(data, node.right)
+    
+    def visit_hash(self, node, data):
+        print("Transforming...: ", node)
+        if str(node.right) == 'G1':
+            new_hash = BinaryNode(ops.EXP, BinaryNode("1"), BinaryNode.copy(node.left))
+            BinaryNode.setNodeAs(node, new_hash)
+            print("Result: ", node)
+            self.reapplyTransform = True
+        else:
+            print("Transform class: need to handle other hash cases: ", node.right)
     
     def visit_mul(self, node, data):
         if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
@@ -254,7 +320,7 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
     #baseGen = 'g'
     genMap = {}
     for i in generators:
-        new_node = BinaryNode(ops.EXP, BinaryNode(baseGen), BinaryNode(i + "I"))
+        new_node = BinaryNode(ops.EXP, BinaryNode(baseGen), BinaryNode(i + "Exp"))
         genMap[ i ] = new_node
     
     freeVars = list(sigma['sigma1'])
@@ -266,7 +332,7 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
             print("Original: ", i)
             v = BinaryNode.copy(i)
             dep = Decompose(assignInfo, baseGen, freeVars)
-            sdl.ASTVisitor(dep).postorder(i)               
+            sdl.ASTVisitor(dep).postorder(i) 
 
             dep2 = Decompose(assignInfo, baseGen, [])
             sdl.ASTVisitor(dep2).postorder(v)
@@ -282,9 +348,13 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
             j = SimplifyExponents(j, baseGen)
             v = SimplifyExponents(v, baseGen)
 
-            tf = Transform(baseGen, generators, None)
-            sdl.ASTVisitor(tf).postorder(j)
-            sdl.ASTVisitor(tf).postorder(v)
+            tf1 = Transform(baseGen, generators, None)
+            tf2 = Transform(baseGen, generators, None)            
+            sdl.ASTVisitor(tf1).postorder(j)
+            sdl.ASTVisitor(tf2).postorder(v)
+            if tf1.shouldReapply(): sdl.ASTVisitor(tf1).postorder(j)
+            if tf2.shouldReapply(): sdl.ASTVisitor(tf2).postorder(v)
+                
             print("\nStep 2: Simplify & Transform: ", j)
             #print("\nFull Final: ", v)
             verifyThese.append( v )
@@ -305,14 +375,15 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
         varListMap[ str(i) ] = ga.getVarList()
     
     # Uncomment for correctness test with the original verification equation.
-    #varListMap2 = {}
-    #for i in verifyThese:
-    #    ga = GetAttrs(dropPounds=True)
-    #    sdl.ASTVisitor(ga).postorder(i)
-    #    varListMap2[ str(i) ] = ga.getVarList()
+    varListMap2 = {}
+    for i in verifyThese:
+        ga = GetAttrs(dropPounds=True)
+        sdl.ASTVisitor(ga).postorder(i)
+        varListMap2[ str(i) ] = ga.getVarList()
     
-    #testCorrectWithZ3(verifyThese, varListMap2)
+    testCorrectWithZ3(verifyThese, varListMap2)
     print("\nStep 3: test partition using Z3.")
+    #sys.exit(0)
     return testPartitionWithZ3(newVerifyConds, goalCond, varListMap)
 
 def buildZ3Expression(node, varMap, Z3Funcs):
@@ -406,17 +477,21 @@ def testCorrectWithZ3(verifyEqs, varListMap):
         print("Z3 simplified: ", M.evaluate(newExp))
         print("<====================>")
         constraints = []
-        for j in varMap.keys():        
+        for j in varMap.keys():
             constraints.append( varMap.get(j) ) # > 1 ) # constraint that values are non-zero        
-        testSolver = TryFor(Then('qfnra-nlsat', 'smt'), timeout).solver()
-        testSolver.add( ForAll(constraints, M.evaluate(newExp)) ) # , And(constraints) )
-        print("testSolver : ", testSolver)
-        result = testSolver.check()
-        print(result)
-        if result != unsat and result != unknown:
-            print("proof: ", testSolver.model())
+
+        simplify_cmd = ["src/runMath", "Simplify[" + str(M.evaluate(newExp)).replace("\n", " ") + "]"]
+        print("Verify with Mathematica:  ", simplify_cmd ) # , And(constraints) )
+        p = subprocess.Popen(simplify_cmd, stdout=subprocess.PIPE)
+        preprocessed, _ = p.communicate()
+        result = preprocessed.strip()
+        print("Mathematica output: ", result)
+        if eval(result) == True: 
+            continue
+        else:
+            return result
     
-    return
+    return True
 
 def testPartitionWithZ3(verifyEqs, goalCond, varListMap):    
     I = IntSort()
@@ -461,10 +536,10 @@ def testPartitionWithZ3(verifyEqs, goalCond, varListMap):
         var1, var2 = varMap.get(_var1), varMap.get(_var2)
         print("constraints: ", var1 != var2)
         constraints.append(var1 != var2)
-    equations.append( And(constraints) )
+    equations.append( Or(constraints) )
     
-    for i in varMap.keys():        
-        equations.append( varMap.get(i) > 1 ) # != 0 ) # constraint that values are non-zero
+    for i in varMap.keys():
+        equations.append( varMap.get(i) > 1 ) # > 1 ) # constraint that values are non-zero            
     
     print("subGoal list: ", equations)
     if doesPartitionHold(equations):
@@ -488,7 +563,9 @@ def print_sdl(verbose, *args):
 
 
 class BSWTransform:
-    def __init__(self, theVarTypes):
+    def __init__(self, theVarTypes, messageVar, messageVarList):
+        self.messageVar     = messageVar
+        self.messageVarList = messageVarList 
         self.listToCRHash = []
         self.chamHashFunc = []
         assert type(theVarTypes) == dict, "invalid type for varTypes"
@@ -517,7 +594,7 @@ class BSWTransform:
         seedVar = "s"
         self.seed = seedVar + "0"
         self.hashVal = seedVar + "1"
-        self.newMsgVal = config.messageVar + "pr"
+        self.newMsgVal = self.messageVar + "pr"
         
         # search for each one
         sdlVars = [self.chK, self.ch0, self.ch1, self.chpk, self.t0, self.t1, self.chZr, self.chVal, self.seed, self.hashVal, self.newMsgVal]
@@ -617,8 +694,8 @@ class BSWTransform:
             assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
             if sigma2Fixed:
                 # 4. add the rest of code and substitute references from m to m'
-                if config.messageVar in Stmts[i].getVarDeps():
-                    sdl.ASTVisitor( SubstituteVar(config.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+                if self.messageVar in Stmts[i].getVarDeps():
+                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
             
             if Stmts[i].getIsExpandNode():
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
@@ -642,7 +719,7 @@ class BSWTransform:
                     sigma2.remove(assignVar)
                     if len(sigma2) == 0:
                         newLines.append( self.seed + " := random(ZR)" )
-                        newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, config.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
+                        newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
                         newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
                     sigma2Fixed = True
                 elif assignVar == config.signatureVar:
@@ -679,22 +756,22 @@ class BSWTransform:
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
             if Stmts[i].getIsExpandNode(): expandCount += 1
-            if Stmts[i].getAssignVar() == config.messageVar: messageSlice.append(config.messageVar)
+            if Stmts[i].getAssignVar() == self.messageVar: messageSlice.append(self.messageVar)
         
         sigma2Fixed = False
         lastExpand = False
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
             if lastExpand and len(messageSlice) == 0:
-                newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, config.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
+                newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
                 newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
                 lastExpand = False
                 sigma2Fixed = True
 
             if sigma2Fixed:
                 # 4. add the rest of code and substitute references from m to m'
-                if config.messageVar in Stmts[i].getVarDeps():
-                    sdl.ASTVisitor( SubstituteVar(config.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+                if self.messageVar in Stmts[i].getVarDeps():
+                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
 
             if Stmts[i].getIsExpandNode():
                 expandCount -= 1
@@ -727,7 +804,7 @@ class BSWTransform:
                     sigLen = len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma1'] )) + len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma2'] ))
                     if sigLen > 0: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
                     newLines.append( str(Stmts[i].getAssignNode()) )
-                elif assignVar == config.messageVar:
+                elif assignVar == self.messageVar:
                     messageSlice.remove(assignVar)
                     newLines.append( str(Stmts[i].getAssignNode()) )                    
                 else:
