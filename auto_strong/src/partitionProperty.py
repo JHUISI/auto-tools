@@ -2,6 +2,7 @@ import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
+from src.bswTransform import BSWTransform
 from z3 import *
 import subprocess
 
@@ -381,10 +382,15 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
         sdl.ASTVisitor(ga).postorder(i)
         varListMap2[ str(i) ] = ga.getVarList()
     
-    testCorrectWithZ3(verifyThese, varListMap2)
+    isCorrect = testCorrectWithZ3(verifyThese, varListMap2)
+    if isCorrect == True:
+        print("Verification Equation Correct!!")
+    else:
+        print("Equation NOT consistent: take a look at your SDL.")
+        print("Result: ", isCorrect)
     print("\nStep 3: test partition using Z3.")
-    #sys.exit(0)
-    return testPartitionWithZ3(newVerifyConds, goalCond, varListMap)
+
+    return testPartWithZ3(newVerifyConds, goalCond, varListMap)
 
 def buildZ3Expression(node, varMap, Z3Funcs):
     if node == None: return None    
@@ -419,12 +425,11 @@ def buildZ3Expression(node, varMap, Z3Funcs):
         print("NodeType unsupported: ", Type(node))
         return None
 
-def doesPartitionHold(subGoals):
+def doesPartHoldWithZ3(subGoals):
     """ Z3 documentation ==>
         unsat : unsatisfiable. Proves that equations and constraints are impossible and thus, partitioning property holds. Action: return True
         unkown : means that the solver is not sure. As a result, means could NOT find proof that confirms that the scheme is partitioned. Action: return False.
     """
-
     # test
     timeout = 60000 # 1 minute
     testSolver = TryFor(Then("qfnra-nlsat", "nlsat"), timeout).solver()
@@ -441,6 +446,27 @@ def doesPartitionHold(subGoals):
         # found solution which is also not good
         print(testSolver.model())
         return False    
+
+def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
+    equations_str = ""
+    vars_str = ""
+    AND = " && "
+    for i in equations:
+        equations_str += str(i).replace("\n", " ") + AND
+    equations_str = equations_str[:-len(AND)]
+    for i in vars:
+        vars_str += str(i) + ","
+    vars_str = vars_str[:-1]
+    reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]
+    print("Mathematica cmd: ", reduce_cmd)
+    p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE)
+    preprocessed, _ = p.communicate()
+    result = preprocessed.strip()
+    print("Mathematica output: ", result)
+    if result == b'False': 
+        print("Signature is PARTITIONED!!!")        
+        return True
+    return False
 
 def testCorrectWithZ3(verifyEqs, varListMap):
     I = IntSort()
@@ -486,14 +512,14 @@ def testCorrectWithZ3(verifyEqs, varListMap):
         preprocessed, _ = p.communicate()
         result = preprocessed.strip()
         print("Mathematica output: ", result)
-        if eval(result) == True: 
+        if result == b'True':
             continue
         else:
             return result
     
     return True
 
-def testPartitionWithZ3(verifyEqs, goalCond, varListMap):    
+def testPartWithZ3(verifyEqs, goalCond, varListMap):    
     I = IntSort()
     E = Function('E', I, I, I)
     x, y, z = Ints('x y z')
@@ -530,27 +556,37 @@ def testPartitionWithZ3(verifyEqs, goalCond, varListMap):
         equations.append( M.evaluate(newExp) )
     
     constraints = []
+    constraints_str = "("
+    OR = " || "
+    equations1 = list(equations)
+    equations2 = list(equations)
     for i in goalCond.keys():
         _var1 = i 
         _var2 = goalCond[i]
         var1, var2 = varMap.get(_var1), varMap.get(_var2)
         print("constraints: ", var1 != var2)
         constraints.append(var1 != var2)
-    equations.append( Or(constraints) )
+        constraints_str += str(var1 != var2) + OR
+    
+    constraints_str = constraints_str[:-len(OR)] + ")"
+    equations1.append( constraints_str ) # Mathematica construction
+    equations2.append( Or(constraints) ) # Z3 construction
     
     for i in varMap.keys():
-        equations.append( varMap.get(i) > 1 ) # > 1 ) # constraint that values are non-zero            
+        equations1.append( varMap.get(i) >= 1 ) 
+        equations2.append( varMap.get(i) >= 1 ) 
     
     print("subGoal list: ", equations)
-    if doesPartitionHold(equations):
-        return True # safe route: can find 
     
-    print("Does NOT satisfy partition property!")
+    if doesPartHoldWithMath(list(varMap.keys()), equations1):
+        return True 
+    elif doesPartHoldWithZ3(equations2):
+        return True 
+    
+    print("Could NOT confirm that this scheme satisfies the partition property!")
     return False
     
     
-ch = "ch"
-
 def print_sdl(verbose, *args):
     if verbose:
         print("<===== new SDL =====>")    
@@ -561,254 +597,254 @@ def print_sdl(verbose, *args):
         print("<===== new SDL =====>")
     return
 
-
-class BSWTransform:
-    def __init__(self, theVarTypes, messageVar, messageVarList):
-        self.messageVar     = messageVar
-        self.messageVarList = messageVarList 
-        self.listToCRHash = []
-        self.chamHashFunc = []
-        assert type(theVarTypes) == dict, "invalid type for varTypes"
-        self.varTypes = theVarTypes
-        self.varKeys = list(self.varTypes.keys())
-        
-    def construct(self, config, sigma):
-        self.__chooseVariables(config)
-        
-        funcVisited = []
-        chamHashLines = self.__constructChamHash()
-        key, setupDict  = self.modifySetup(config, funcVisited)
-        signLines   = self.modifySign(config, sigma, funcVisited)
-        verifyLines = self.modifyVerify(config, sigma, funcVisited)
-        remFuncs = list(set(config.functionOrder).difference(funcVisited))
-        print_sdl(True, chamHashLines, setupDict[key], signLines, verifyLines)
-        print("Functions to copy: ", remFuncs)
-        
-    def __chooseVariables(self, config):
-        suffix = "New"
-        self.chamH = "chamH"
-        self.chK, self.ch0, self.ch1, self.chpk = ch+"K", ch+"0", ch+"1", ch+"pk"
-        self.t0, self.t1 = "t0", "t1"
-        self.chZr, self.chVal = ch+"Zr", ch+"Val"
-        self.chPrefix = "1"
-        seedVar = "s"
-        self.seed = seedVar + "0"
-        self.hashVal = seedVar + "1"
-        self.newMsgVal = self.messageVar + "pr"
-        
-        # search for each one
-        sdlVars = [self.chK, self.ch0, self.ch1, self.chpk, self.t0, self.t1, self.chZr, self.chVal, self.seed, self.hashVal, self.newMsgVal]
-        
-        for i,j in enumerate(sdlVars):
-            if j in self.varKeys:
-               setattr(self, j, j+suffix)
-    
-    def __constructChamHash(self):
-        sdlLines = []
-        sdlLines.append( "BEGIN :: func:%s" % self.chamH )
-        sdlLines.append( "input := list{%s, %s, %s}" % (self.chpk, self.t0, self.t1) )
-        sdlLines.append( "%s := expand{%s, %s}" % (self.chpk, self.ch0, self.ch1) )
-        sdlLines.append( "%s := (%s ^ %s) * (%s ^ %s)" % (self.chVal, self.ch0, self.t0, self.ch1, self.t1) )
-        if True: # type check message 
-            sdlLines.append( "%s := H(concat{%s, %s}, ZR)" % (self.chZr, self.chPrefix, self.chVal) )
-            sdlLines.append( "output := %s" % self.chZr ) # if ZR output required
-        else:
-            sdlLines.append( "output := %s" % self.chVal ) # if G1 output required
-        sdlLines.append( "END :: func:%s" % self.chamH )
-        return sdlLines
-    
-    def modifySetup(self, config, funcVisited):
-        # append to Setup or Keygen       
-        # add chpk to output list, and chK to pk 
-        (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, config.keygenPubVar)        
-        funcVisited.append(name)
-        print("Fount public key in: ", name)
-        # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
-        if name == "setup": # hasattr(config, "setupFuncName"):
-            setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
-            Stmts = setupConfig[0]
-            begin = "BEGIN :: func:" + config.setupFuncName
-            end   = "END :: func:" + config.setupFuncName
-        elif name == "keygen": # and hasattr(config, "keygenFuncName"):
-            keygenConfig = sdl.getVarInfoFuncStmts( config.keygenFuncName )
-            Stmts = keygenConfig[0]
-            begin = "BEGIN :: func:" + config.keygenFuncName
-            end   = "END :: func:" + config.keygenFuncName            
-        
-        lines = list(Stmts.keys())
-        lines.sort()
-        newLines = [begin]
-        
-        for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
-            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
-                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
-                    newLines.append( self.chK + " := random(ZR)" )
-                    newLines.append( self.ch0 + " := random(G1)" )
-                    newLines.append( self.ch1 + " := random(G1)" )
-                    newLines.append( self.chpk + " := list{" + self.ch0 + ", " + self.ch1 + "}" )
-                elif str(Stmts[i].getAssignVar()) == outputKeyword:
-                    Stmts[i].getAssignNode().getRight().listNodes.append(self.chpk)
-                                        
-                newLines.append( str(Stmts[i].getAssignNode()) )
-            elif Stmts[i].getIsForLoopBegin():
-                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
-                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
-                newLines.append(str(Stmts[i].getAssignNode()))
-            elif Stmts[i].getIsForLoopEnd():
-                newLines.append(str(Stmts[i].getAssignNode()))
-            
-            elif Stmts[i].getIsIfElseBegin():
-                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
-                newLines.append( str(Stmts[i].getAssignNode()) )
-            else:
-                newLines.append(str(Stmts[i].getAssignNode()))
-        
-        newLines.append( end )
-        return name, { name : newLines } # key, dict[key] = value
-    
-    def modifySign(self, config, sigma, funcVisited):
-        # Steps to create the strong 'sign' algorithm 
-        # 1. select a new random variable, s (seed)
-        funcVisited.append(config.signFuncName)                
-        signConfig = sdl.getVarInfoFuncStmts( config.signFuncName )
-        Stmts = signConfig[0]
-        begin = "BEGIN :: func:" + config.signFuncName
-        end   = "END :: func:" + config.signFuncName            
-
-        # 2. obtain program slice of \sigma_2 variables? and include
-        lines = list(Stmts.keys())
-        lines.sort()
-        newLines = [begin]
-        sigma2 = list(sigma['sigma2'])
-        sigmaStr = ""
-        for i in sigma['sigma2']:
-            sigmaStr += i + ", "
-        sigmaStr = sigmaStr[:-2]
-        self.sigma2str = sigmaStr
-
-        sigma2Fixed = False
-        for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
-            if sigma2Fixed:
-                # 4. add the rest of code and substitute references from m to m'
-                if self.messageVar in Stmts[i].getVarDeps():
-                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
-            
-            if Stmts[i].getIsExpandNode():
-                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
-                    newLines.append( str(Stmts[i].getAssignNode()) ) 
-                else:
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-            elif Stmts[i].getIsForLoopBegin():
-                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
-                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
-                newLines.append(str(Stmts[i].getAssignNode()))
-            elif Stmts[i].getIsIfElseBegin():
-                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
-                newLines.append( str(Stmts[i].getAssignNode()) )
-            else:
-                assignVar = str(Stmts[i].getAssignVar())
-                if assignVar in sigma2:                   
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-                    # 3. add statement for computing m' using original m and \sigma_2
-                    sigma2.remove(assignVar)
-                    if len(sigma2) == 0:
-                        newLines.append( self.seed + " := random(ZR)" )
-                        newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
-                        newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
-                    sigma2Fixed = True
-                elif assignVar == config.signatureVar:
-                    # 5. add seed to output as part of signature
-                    if Stmts[i].getIsList():
-                        if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
-                        newLines.append( str(Stmts[i].getAssignNode()) )
-                    else:
-                        print("TODO: ", assignVar, " has unexpected structure.")
-                elif assignVar == inputKeyword:
-                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-                else:
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-
-        newLines.append( end )        
-        return newLines
-    
-    def modifyVerify(self, config, sigma, funcVisited):
-        # Steps to create the strong 'verify' algorithm 
-        # 1. add the statements for 
-        funcVisited.append(config.verifyFuncName)
-        verifyConfig = sdl.getVarInfoFuncStmts( config.verifyFuncName )
-        Stmts = verifyConfig[0]
-        begin = "BEGIN :: func:" + config.verifyFuncName
-        end   = "END :: func:" + config.verifyFuncName          
-
-        # 2. obtain program slice of \sigma_2 variables? and include
-        lines = list(Stmts.keys())
-        lines.sort()
-        newLines = [begin]
-        messageSlice = []
-        expandCount = 0
-        for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
-            if Stmts[i].getIsExpandNode(): expandCount += 1
-            if Stmts[i].getAssignVar() == self.messageVar: messageSlice.append(self.messageVar)
-        
-        sigma2Fixed = False
-        lastExpand = False
-        for index, i in enumerate(lines):
-            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
-            if lastExpand and len(messageSlice) == 0:
-                newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
-                newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
-                lastExpand = False
-                sigma2Fixed = True
-
-            if sigma2Fixed:
-                # 4. add the rest of code and substitute references from m to m'
-                if self.messageVar in Stmts[i].getVarDeps():
-                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
-
-            if Stmts[i].getIsExpandNode():
-                expandCount -= 1
-                if expandCount == 0: lastExpand = True
-                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
-                elif str(Stmts[i].getAssignVar()) == config.signatureVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )                                        
-                newLines.append( str(Stmts[i].getAssignNode()) )
-            elif Stmts[i].getIsForLoopBegin():
-                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
-                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
-                newLines.append(str(Stmts[i].getAssignNode()))
-            elif Stmts[i].getIsIfElseBegin():
-                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
-                newLines.append( str(Stmts[i].getAssignNode()) )
-            else:
-                assignVar = str(Stmts[i].getAssignVar())
-                if assignVar == config.signatureVar:
-                    # 5. add seed to output as part of signature
-                    if Stmts[i].getIsExpandNode():
-                        if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
-                        newLines.append( str(Stmts[i].getAssignNode()) )
-                    else:
-                        print("TODO: ", assignVar, " has unexpected structure.")
-                elif assignVar == inputKeyword:
-                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
-                    # check if signature variables are contained inside the list
-                    sigLen = len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma1'] )) + len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma2'] ))
-                    if sigLen > 0: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-                elif assignVar == self.messageVar:
-                    messageSlice.remove(assignVar)
-                    newLines.append( str(Stmts[i].getAssignNode()) )                    
-                else:
-                    newLines.append( str(Stmts[i].getAssignNode()) )
-
-        newLines.append( end )        
-        return newLines
+#ch = "ch"
+#class BSWTransform:
+#    def __init__(self, theVarTypes, messageVar, messageVarList):
+#        self.messageVar     = messageVar
+#        self.messageVarList = messageVarList 
+#        self.listToCRHash = []
+#        self.chamHashFunc = []
+#        assert type(theVarTypes) == dict, "invalid type for varTypes"
+#        self.varTypes = theVarTypes
+#        self.varKeys = list(self.varTypes.keys())
+#        
+#    def construct(self, config, sigma):
+#        self.__chooseVariables(config)
+#        
+#        funcVisited = []
+#        chamHashLines = self.__constructChamHash()
+#        key, setupDict  = self.modifySetup(config, funcVisited)
+#        signLines   = self.modifySign(config, sigma, funcVisited)
+#        verifyLines = self.modifyVerify(config, sigma, funcVisited)
+#        remFuncs = list(set(config.functionOrder).difference(funcVisited))
+#        print_sdl(True, chamHashLines, setupDict[key], signLines, verifyLines)
+#        print("Functions to copy: ", remFuncs)
+#        
+#    def __chooseVariables(self, config):
+#        suffix = "New"
+#        self.chamH = "chamH"
+#        self.chK, self.ch0, self.ch1, self.chpk = ch+"K", ch+"0", ch+"1", ch+"pk"
+#        self.t0, self.t1 = "t0", "t1"
+#        self.chZr, self.chVal = ch+"Zr", ch+"Val"
+#        self.chPrefix = "1"
+#        seedVar = "s"
+#        self.seed = seedVar + "0"
+#        self.hashVal = seedVar + "1"
+#        self.newMsgVal = self.messageVar + "pr"
+#        
+#        # search for each one
+#        sdlVars = [self.chK, self.ch0, self.ch1, self.chpk, self.t0, self.t1, self.chZr, self.chVal, self.seed, self.hashVal, self.newMsgVal]
+#        
+#        for i,j in enumerate(sdlVars):
+#            if j in self.varKeys:
+#               setattr(self, j, j+suffix)
+#    
+#    def __constructChamHash(self):
+#        sdlLines = []
+#        sdlLines.append( "BEGIN :: func:%s" % self.chamH )
+#        sdlLines.append( "input := list{%s, %s, %s}" % (self.chpk, self.t0, self.t1) )
+#        sdlLines.append( "%s := expand{%s, %s}" % (self.chpk, self.ch0, self.ch1) )
+#        sdlLines.append( "%s := (%s ^ %s) * (%s ^ %s)" % (self.chVal, self.ch0, self.t0, self.ch1, self.t1) )
+#        if True: # type check message 
+#            sdlLines.append( "%s := H(concat{%s, %s}, ZR)" % (self.chZr, self.chPrefix, self.chVal) )
+#            sdlLines.append( "output := %s" % self.chZr ) # if ZR output required
+#        else:
+#            sdlLines.append( "output := %s" % self.chVal ) # if G1 output required
+#        sdlLines.append( "END :: func:%s" % self.chamH )
+#        return sdlLines
+#    
+#    def modifySetup(self, config, funcVisited):
+#        # append to Setup or Keygen       
+#        # add chpk to output list, and chK to pk 
+#        (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, config.keygenPubVar)        
+#        funcVisited.append(name)
+#        print("Fount public key in: ", name)
+#        # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
+#        if name == "setup": # hasattr(config, "setupFuncName"):
+#            setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
+#            Stmts = setupConfig[0]
+#            begin = "BEGIN :: func:" + config.setupFuncName
+#            end   = "END :: func:" + config.setupFuncName
+#        elif name == "keygen": # and hasattr(config, "keygenFuncName"):
+#            keygenConfig = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+#            Stmts = keygenConfig[0]
+#            begin = "BEGIN :: func:" + config.keygenFuncName
+#            end   = "END :: func:" + config.keygenFuncName            
+#        
+#        lines = list(Stmts.keys())
+#        lines.sort()
+#        newLines = [begin]
+#        
+#        for index, i in enumerate(lines):
+#            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+#            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
+#                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+#                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
+#                    print("new list: ", Stmts[i].getAssignNode().getRight())
+#                    newLines.append( self.chK + " := random(ZR)" )
+#                    newLines.append( self.ch0 + " := random(G1)" )
+#                    newLines.append( self.ch1 + " := random(G1)" )
+#                    newLines.append( self.chpk + " := list{" + self.ch0 + ", " + self.ch1 + "}" )
+#                elif str(Stmts[i].getAssignVar()) == outputKeyword:
+#                    Stmts[i].getAssignNode().getRight().listNodes.append(self.chpk)
+#                                        
+#                newLines.append( str(Stmts[i].getAssignNode()) )
+#            elif Stmts[i].getIsForLoopBegin():
+#                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+#                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+#                newLines.append(str(Stmts[i].getAssignNode()))
+#            elif Stmts[i].getIsForLoopEnd():
+#                newLines.append(str(Stmts[i].getAssignNode()))
+#            
+#            elif Stmts[i].getIsIfElseBegin():
+#                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+#                newLines.append( str(Stmts[i].getAssignNode()) )
+#            else:
+#                newLines.append(str(Stmts[i].getAssignNode()))
+#        
+#        newLines.append( end )
+#        return name, { name : newLines } # key, dict[key] = value
+#    
+#    def modifySign(self, config, sigma, funcVisited):
+#        # Steps to create the strong 'sign' algorithm 
+#        # 1. select a new random variable, s (seed)
+#        funcVisited.append(config.signFuncName)                
+#        signConfig = sdl.getVarInfoFuncStmts( config.signFuncName )
+#        Stmts = signConfig[0]
+#        begin = "BEGIN :: func:" + config.signFuncName
+#        end   = "END :: func:" + config.signFuncName            
+#
+#        # 2. obtain program slice of \sigma_2 variables? and include
+#        lines = list(Stmts.keys())
+#        lines.sort()
+#        newLines = [begin]
+#        sigma2 = list(sigma['sigma2'])
+#        sigmaStr = ""
+#        for i in sigma['sigma2']:
+#            sigmaStr += i + ", "
+#        sigmaStr = sigmaStr[:-2]
+#        self.sigma2str = sigmaStr
+#
+#        sigma2Fixed = False
+#        for index, i in enumerate(lines):
+#            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+#            if sigma2Fixed:
+#                # 4. add the rest of code and substitute references from m to m'
+#                if self.messageVar in Stmts[i].getVarDeps():
+#                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+#            
+#            if Stmts[i].getIsExpandNode():
+#                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+#                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
+#                    print("new list: ", Stmts[i].getAssignNode().getRight())
+#                    newLines.append( str(Stmts[i].getAssignNode()) ) 
+#                else:
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#            elif Stmts[i].getIsForLoopBegin():
+#                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+#                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+#                newLines.append(str(Stmts[i].getAssignNode()))
+#            elif Stmts[i].getIsIfElseBegin():
+#                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+#                newLines.append( str(Stmts[i].getAssignNode()) )
+#            else:
+#                assignVar = str(Stmts[i].getAssignVar())
+#                if assignVar in sigma2:                   
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#                    # 3. add statement for computing m' using original m and \sigma_2
+#                    sigma2.remove(assignVar)
+#                    if len(sigma2) == 0:
+#                        newLines.append( self.seed + " := random(ZR)" )
+#                        newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
+#                        newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
+#                    sigma2Fixed = True
+#                elif assignVar == config.signatureVar:
+#                    # 5. add seed to output as part of signature
+#                    if Stmts[i].getIsList():
+#                        if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
+#                        newLines.append( str(Stmts[i].getAssignNode()) )
+#                    else:
+#                        print("TODO: ", assignVar, " has unexpected structure.")
+#                elif assignVar == inputKeyword:
+#                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#                else:
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#
+#        newLines.append( end )        
+#        return newLines
+#    
+#    def modifyVerify(self, config, sigma, funcVisited):
+#        # Steps to create the strong 'verify' algorithm 
+#        # 1. add the statements for 
+#        funcVisited.append(config.verifyFuncName)
+#        verifyConfig = sdl.getVarInfoFuncStmts( config.verifyFuncName )
+#        Stmts = verifyConfig[0]
+#        begin = "BEGIN :: func:" + config.verifyFuncName
+#        end   = "END :: func:" + config.verifyFuncName          
+#
+#        # 2. obtain program slice of \sigma_2 variables? and include
+#        lines = list(Stmts.keys())
+#        lines.sort()
+#        newLines = [begin]
+#        messageSlice = []
+#        expandCount = 0
+#        for index, i in enumerate(lines):
+#            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
+#            if Stmts[i].getIsExpandNode(): expandCount += 1
+#            if Stmts[i].getAssignVar() == self.messageVar: messageSlice.append(self.messageVar)
+#        
+#        sigma2Fixed = False
+#        lastExpand = False
+#        for index, i in enumerate(lines):
+#            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
+#            if lastExpand and len(messageSlice) == 0:
+#                newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
+#                newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
+#                lastExpand = False
+#                sigma2Fixed = True
+#
+#            if sigma2Fixed:
+#                # 4. add the rest of code and substitute references from m to m'
+#                if self.messageVar in Stmts[i].getVarDeps():
+#                    sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+#
+#            if Stmts[i].getIsExpandNode():
+#                expandCount -= 1
+#                if expandCount == 0: lastExpand = True
+#                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+#                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
+#                    print("new list: ", Stmts[i].getAssignNode().getRight())
+#                elif str(Stmts[i].getAssignVar()) == config.signatureVar:
+#                    Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )                                        
+#                newLines.append( str(Stmts[i].getAssignNode()) )
+#            elif Stmts[i].getIsForLoopBegin():
+#                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+#                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+#                newLines.append(str(Stmts[i].getAssignNode()))
+#            elif Stmts[i].getIsIfElseBegin():
+#                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+#                newLines.append( str(Stmts[i].getAssignNode()) )
+#            else:
+#                assignVar = str(Stmts[i].getAssignVar())
+#                if assignVar == config.signatureVar:
+#                    # 5. add seed to output as part of signature
+#                    if Stmts[i].getIsExpandNode():
+#                        if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
+#                        newLines.append( str(Stmts[i].getAssignNode()) )
+#                    else:
+#                        print("TODO: ", assignVar, " has unexpected structure.")
+#                elif assignVar == inputKeyword:
+#                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
+#                    # check if signature variables are contained inside the list
+#                    sigLen = len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma1'] )) + len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma2'] ))
+#                    if sigLen > 0: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#                elif assignVar == self.messageVar:
+#                    messageSlice.remove(assignVar)
+#                    newLines.append( str(Stmts[i].getAssignNode()) )                    
+#                else:
+#                    newLines.append( str(Stmts[i].getAssignNode()) )
+#
+#        newLines.append( end )        
+#        return newLines
