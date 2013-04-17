@@ -1,0 +1,88 @@
+name := waters09sig
+setting := symmetric
+
+BEGIN :: types
+ m := str
+END :: types
+
+BEGIN :: func:keygen
+input := None
+g := random(G1)
+w := random(G1) 
+u := random(G1)
+h := random(G1)
+v := random(G1)
+v1 := random(G1)
+v2 := random(G1)
+a1 := random(ZR)
+a2 := random(ZR) 
+b := random(ZR) 
+alpha := random(ZR)
+        
+gb := g ^ b
+ga1 := g ^ a1
+ga2 := g ^ a2
+gba1 := gb ^ a1
+gba2 := gb ^ a2
+tau1 := v * (v1 ^ a1)
+tau2 := v * (v2 ^ a2)        
+tau1b := tau1 ^ b
+tau2b := tau2 ^ b
+A := e(g, g)^(alpha * (a1 * b)) 
+galpha := g ^ alpha
+galphaa1 := galpha ^ a1
+
+pk := list{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, A}
+sk := list{galpha, galphaa1, v, v1, v2, alpha}
+
+output := list{pk, sk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{pk, sk, m}
+ pk := expand{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, A}
+ sk := expand{galpha, galphaa1, v, v1, v2, alpha} 
+
+ r1 := random(ZR)
+ r2 := random(ZR)
+ z1 := random(ZR)
+ z2 := random(ZR)
+ tagk := random(ZR)
+
+ r := r1 + r2
+ M := H(m, ZR)
+
+ S1 := galphaa1 * (v ^ r)
+ S2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+ S3 := gb ^ -z1
+ S4 := (v2 ^ r) * (g ^ z2)
+ S5 := gb ^ -z2
+ S6 := gb ^ r2
+ S7 := g ^ r1
+ SK := (((u ^ M) * (w ^ tagk)) * h)^ r1
+
+ sig := list{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+ output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{pk, m, sig} 
+ pk := expand{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, A}
+ sig := expand{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+
+ s1 := random(ZR)
+ s2 := random(ZR)
+ t := random(ZR)
+ tagc := random(ZR)
+ s := s1 + s2
+ M := H(m, ZR)
+ theta := (1 / (tagc - tagk))
+
+BEGIN :: if
+if { (e(gb^s, S1) * (e(gba1^s1, S2) * (e(ga1^s1, S3) * (e(gba2^s2, S4) * e(ga2^s2, S5))))) == (e(S6, (tau1^s1) * (tau2^s2)) * (e(S7, ((tau1b^s1) * ((tau2b^s2) * w^-t))) * ( ( ( e(S7, ((u^(M * t)) * (w^(tagc * t))) * h^t) * (e(g^-t, SK)) )^theta) * (A^s2)))) }
+   output := True
+else
+   output := False
+END :: if
+END :: func:verify
+
