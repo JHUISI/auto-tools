@@ -29,8 +29,9 @@ def configAutoStrong(sdl_file, cm, sdlVerbose):
             errorOut(i)
     
     print("function order: ", cm.functionOrder)
+    testForSUCMA = False
     
-    runAutoStrong(sdl_file, cm, sdlVerbose)
+    runAutoStrong(sdl_file, cm, testForSUCMA, sdlVerbose)
     return
 
 if __name__ == "__main__":

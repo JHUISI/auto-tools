@@ -5,4 +5,6 @@ value=ToExpression[$ScriptCommandLine[[2]]];
 (*The next line prints the script name.*)
 (*Print[$ScriptCommandLine[[1]]];*)
 
+SetSystemOptions["ReduceOptions" -> "MaxModularPoints" -> 1000000000000]
+
 Print[value];

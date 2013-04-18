@@ -9,7 +9,7 @@ import subprocess
 expTimeout = 21600 # 6 hours
 stringToInt = "stringToInt"
 
-def runAutoStrong(sdlFile, config, sdlVerbose=False):
+def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
     sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
@@ -63,7 +63,14 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
         listVars.append(sigVar) # probably just one element in signature
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msgVar)
-    
+    if testForSUCMA:
+        # quick test for whether scheme is SU-CMA secure already
+        sigma['sigma1'] += sigma['sigma2']
+        sigma['sigma2'] = []
+    print("sigma1 => ", sigma['sigma1'])
+    print("sigma2 => ", sigma['sigma2'])
+
+        
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     noSigma2Result = noSigma2Check(sigma)
     
@@ -75,7 +82,7 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
             #print("Processing func: ", i)
             varTypes.update( sdl.getVarTypes().get(i) )
         
-        print("Type variables for all: ", varTypes.keys())
+        #print("Type variables for all: ", varTypes.keys())
         bsw = BSWTransform(assignInfo, varTypes, msgVar, msgList)
         bsw.construct(config, sigma)
 
@@ -199,8 +206,8 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
             sigma['sigma2'].append(i)
         
     print("<=== Candidate sigma1 and sigma2 ===>")
-    print("sigma1 => ", sigma['sigma1'])
-    print("sigma2 => ", sigma['sigma2'])
+    #print("sigma1 => ", sigma['sigma1'])
+    #print("sigma2 => ", sigma['sigma2'])
     
     if len(sigma['sigma1']) == 0: sys.exit("Signature scheme does not satisfy partitioning property. Property 1 check failed!")
     return sigma
@@ -452,18 +459,22 @@ def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
     vars_str = ""
     AND = " && "
     for i in equations:
-        equations_str += str(i).replace("\n", " ") + AND
+        j = str(i)
+        if "And" in j: j = j.replace("And", "").replace(",", AND)
+        equations_str += str(j).replace("\n", " ") + AND
     equations_str = equations_str[:-len(AND)]
     for i in vars:
         vars_str += str(i) + ","
-    vars_str = vars_str[:-1]
-    reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]
+    vars_str = vars_str[:-1] # Modulus -> 17, FindInstance
+    reduce_cmd = ["src/runMath", "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]
+    #reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]    
     print("Mathematica cmd: ", reduce_cmd)
     p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE)
     preprocessed, _ = p.communicate()
     result = preprocessed.strip()
     print("Mathematica output: ", result)
-    if result == b'False': 
+    if result == b'{}': # b'False':
+        print("FindInstance could find NO solutions...")
         print("Signature is PARTITIONED!!!")        
         return True
     return False
@@ -573,15 +584,15 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
     equations2.append( Or(constraints) ) # Z3 construction
     
     for i in varMap.keys():
-        equations1.append( varMap.get(i) >= 1 ) 
-        equations2.append( varMap.get(i) >= 1 ) 
+        equations1.append( varMap.get(i) != 0 ) 
+        equations2.append( varMap.get(i) != 0 ) 
     
     print("subGoal list: ", equations)
     
     if doesPartHoldWithMath(list(varMap.keys()), equations1, expTimeout):
         return True 
-    elif doesPartHoldWithZ3(equations2):
-        return True 
+    #elif doesPartHoldWithZ3(equations2):
+    #    return True 
     
     print("Could NOT confirm that this scheme satisfies the partition property!")
     return False

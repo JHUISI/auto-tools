@@ -1,3 +1,7 @@
+"""
+Boneh-Shen-Waters Transformation - if a signature is partitionable, then we can apply the efficient BSW transform to 
+convert the signature to a strongly-unforgeable signature.
+"""
 import src.sdlpath, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
@@ -150,7 +154,6 @@ class BSWTransform:
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     print("new list: ", Stmts[i].getAssignNode().getRight())
-                    newLines.append( str(Stmts[i].getAssignNode()) ) 
                 elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:                    
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT) 
 
