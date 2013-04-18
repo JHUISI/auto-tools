@@ -7,7 +7,8 @@ from src.sdltechniques import *
 ch = "ch"
 
 class BSWTransform:
-    def __init__(self, theVarTypes, messageVar, messageVarList):
+    def __init__(self, assignInfo, theVarTypes, messageVar, messageVarList):
+        self.assignInfo     = assignInfo
         self.messageVar     = messageVar
         self.messageVarList = messageVarList 
         self.listToCRHash = []
@@ -27,11 +28,12 @@ class BSWTransform:
         remFuncs = list(set(config.functionOrder).difference(funcVisited))
         print_sdl(True, chamHashLines, setupDict[key], signLines, verifyLines)
         print("Functions to copy: ", remFuncs)
+        return
         
     def __chooseVariables(self, config):
         suffix = "New"
         self.chamH = "chamH"
-        self.chK, self.ch0, self.ch1, self.chpk = ch+"K", ch+"0", ch+"1", ch+"pk"
+        self.chK, self.chT, self.ch0, self.ch1, self.chpk = ch+"K", ch+"t", ch+"0", ch+"1", ch+"pk"
         self.t0, self.t1 = "t0", "t1"
         self.chZr, self.chVal = ch+"Zr", ch+"Val"
         self.chPrefix = "1"
@@ -41,7 +43,7 @@ class BSWTransform:
         self.newMsgVal = self.messageVar + "pr"
         
         # search for each one
-        sdlVars = [self.chK, self.ch0, self.ch1, self.chpk, self.t0, self.t1, self.chZr, self.chVal, self.seed, self.hashVal, self.newMsgVal]
+        sdlVars = [self.chK, self.chT, self.ch0, self.ch1, self.chpk, self.t0, self.t1, self.chZr, self.chVal, self.seed, self.hashVal, self.newMsgVal]
         
         for i,j in enumerate(sdlVars):
             if j in self.varKeys:
@@ -64,9 +66,9 @@ class BSWTransform:
     def modifySetup(self, config, funcVisited):
         # append to Setup or Keygen       
         # add chpk to output list, and chK to pk 
-        (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, config.keygenPubVar)        
+        (name, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)        
         funcVisited.append(name)
-        print("Fount public key in: ", name)
+        print("Found public key in: ", name)
         # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
         if name == "setup": # hasattr(config, "setupFuncName"):
             setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
@@ -90,9 +92,12 @@ class BSWTransform:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     print("new list: ", Stmts[i].getAssignNode().getRight())
                     newLines.append( self.chK + " := random(ZR)" )
+                    newLines.append( self.chT + " := random(ZR)" )                    
                     newLines.append( self.ch0 + " := random(G1)" )
-                    newLines.append( self.ch1 + " := random(G1)" )
+                    newLines.append( self.ch1 + " := %s ^ %s" % (self.ch0, self.chT))
                     newLines.append( self.chpk + " := list{" + self.ch0 + ", " + self.ch1 + "}" )
+                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT)                                    
                 elif str(Stmts[i].getAssignVar()) == outputKeyword:
                     Stmts[i].getAssignNode().getRight().listNodes.append(self.chpk)
                                         
@@ -146,8 +151,10 @@ class BSWTransform:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     print("new list: ", Stmts[i].getAssignNode().getRight())
                     newLines.append( str(Stmts[i].getAssignNode()) ) 
-                else:
-                    newLines.append( str(Stmts[i].getAssignNode()) )
+                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:                    
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT) 
+
+                newLines.append( str(Stmts[i].getAssignNode()) )
             elif Stmts[i].getIsForLoopBegin():
                 if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
                 elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
@@ -224,7 +231,7 @@ class BSWTransform:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     print("new list: ", Stmts[i].getAssignNode().getRight())
                 elif str(Stmts[i].getAssignVar()) == config.signatureVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )                                        
+                    Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
                 newLines.append( str(Stmts[i].getAssignNode()) )
             elif Stmts[i].getIsForLoopBegin():
                 if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
@@ -256,3 +263,13 @@ class BSWTransform:
 
         newLines.append( end )        
         return newLines
+
+def print_sdl(verbose, *args):
+    if verbose:
+        print("<===== new SDL =====>")    
+        for block in args:
+            for i in block:
+                print(i)
+            print("\n\n")
+        print("<===== new SDL =====>")
+    return

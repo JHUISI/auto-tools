@@ -6,6 +6,7 @@ from src.bswTransform import BSWTransform
 from z3 import *
 import subprocess
 
+expTimeout = 21600 # 6 hours
 stringToInt = "stringToInt"
 
 def runAutoStrong(sdlFile, config, sdlVerbose=False):
@@ -75,9 +76,9 @@ def runAutoStrong(sdlFile, config, sdlVerbose=False):
             varTypes.update( sdl.getVarTypes().get(i) )
         
         print("Type variables for all: ", varTypes.keys())
-        #bsw = BSWTransform(varTypes, msgVar, msgVarList)
-        #bsw.construct(config, sigma)
-        pass
+        bsw = BSWTransform(assignInfo, varTypes, msgVar, msgList)
+        bsw.construct(config, sigma)
+
     elif prop2Result and noSigma2Result:
         #Bellare-Shoup transformation
         print("Signature Scheme Already Strongly Unforgeable!")
@@ -204,13 +205,6 @@ def property1Extract(targetFuncName, assignInfo, listVars, msg):
     if len(sigma['sigma1']) == 0: sys.exit("Signature scheme does not satisfy partitioning property. Property 1 check failed!")
     return sigma
 
-def deleteThisVar(varName, node):
-    dv = DeleteVar(varName)
-    print("Before Deletion: ", node)    
-    sdl.ASTVisitor(dv).preorder( node )
-    print("After Deletion: ", node)
-    return
-
 """
 Step 1 for property 2 check. Decompose each verification condition to base elements and exponents.
 """
@@ -243,12 +237,12 @@ class Decompose:
             print("varDeps: ", varDeps)
         if varName in varDeps:
             print("isIterator: ", varName in varDeps)
-            deleteThisVar(varName, node2)
+            DeleteThisVar(varName, node2)
         else:
             for i in varDeps:
                 # see if any variables need to be removed
                 name, varInf2 = getVarNameEntryFromAssignInfo(self.assignInfo, i)
-                if varInf2 != None and i in varInf2.getVarDeps(): print("\t Delete ", i, ":", varInf2.getVarDeps()); deleteThisVar(i, node2)
+                if varInf2 != None and i in varInf2.getVarDeps(): print("\t Delete ", i, ":", varInf2.getVarDeps()); DeleteThisVar(i, node2)
 
         if varName != str(node2):
             # make the substitution
@@ -270,13 +264,14 @@ class Transform:
         return self.reapplyTransform
     
     def visit(self, node, data):
-        pass
+        return
     
     def visit_exp(self, node, data):
         # this node is visited last in a post-order traversal
         if Type(node.left) == ops.ATTR and str(node.left) == "1":
             # promote the right node
             addAsChildNodeToParent(data, node.right)
+        return
     
     def visit_hash(self, node, data):
         #print("Transforming...: ", node)
@@ -287,23 +282,24 @@ class Transform:
             self.reapplyTransform = True
         else:
             print("Transform class: need to handle other hash cases: ", node.right)
+        return
     
     def visit_mul(self, node, data):
         if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
             node.type = ops.ADD
+        return
 
     def visit_div(self, node, data):
         if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
             node.type = ops.SUB
+        return
     
     def visit_attr(self, node, data):
         varName = str(node)
         if varName == self.baseGen:
             node.setAttribute("1") # replace generators
-        #elif varName in self.generators: # one of the other generators?            
-        #elif varName in self.varTypes.keys(): # convert group elements in G1 or G2 too g^t
-        #    varT = self.varTypes.get(varName)
-
+        return
+        
 def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
     #TODO: use term rewriter to breakdown and extract the verification equation
     # 1) convert the pairing equation to the version expected by our Z3 solver
@@ -323,8 +319,6 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
             print("Conditional: ", node.left) # extract equality and decompose... then test whether pairings exist manually
             verifyConds.append( BinaryNode.copy(node.left) )
     
-    # TODO: extract generator from setup routine
-    #baseGen = 'g'
     genMap = {}
     for i in generators:
         new_node = BinaryNode(ops.EXP, BinaryNode(baseGen), BinaryNode(i + "Exp"))
@@ -584,7 +578,7 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
     
     print("subGoal list: ", equations)
     
-    if doesPartHoldWithMath(list(varMap.keys()), equations1):
+    if doesPartHoldWithMath(list(varMap.keys()), equations1, expTimeout):
         return True 
     elif doesPartHoldWithZ3(equations2):
         return True 
@@ -592,13 +586,3 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
     print("Could NOT confirm that this scheme satisfies the partition property!")
     return False
     
-    
-def print_sdl(verbose, *args):
-    if verbose:
-        print("<===== new SDL =====>")    
-        for block in args:
-            for i in block:
-                print(i)
-            print("\n\n")
-        print("<===== new SDL =====>")
-    return

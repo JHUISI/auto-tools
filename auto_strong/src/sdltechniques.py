@@ -997,6 +997,13 @@ class DeleteVar:
             elif node == data['parent'].right:
                 BinaryNode.setNodeAs(data['parent'], data['parent'].left)
 
+def DeleteThisVar(varName, node):
+    dv = DeleteVar(varName)
+    print("Before Deletion: ", node)    
+    sdl.ASTVisitor(dv).preorder( node )
+    print("After Deletion: ", node)
+    return
+
 """SubstitutePairings assumes pairings have been split already. """
 class SubstitutePairings:
     def __init__(self, info, noChangeList):
