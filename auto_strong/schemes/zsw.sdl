@@ -1,0 +1,34 @@
+name := zsw04 
+setting := symmetric
+
+BEGIN :: types
+ M := str
+END :: types
+
+BEGIN :: func:keygen
+input := None
+ g := random(G1)
+ x := random(ZR)
+ pk := g^x
+ sk := x
+output := list{pk, sk, g}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{sk, M, g}
+ m := H(M, ZR)
+ sig := g^(1 / (m + sk))
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+ input := list{pk, M, sig, g}
+ m := H(M, ZR)
+ BEGIN :: if
+ if {e((g^m) * pk, sig) == e(g, g)}
+ output := True
+ else
+ output := False
+ END :: if
+END :: func:verify
+

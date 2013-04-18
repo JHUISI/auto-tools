@@ -888,27 +888,30 @@ def applyTechnique11(equation, code_block={}):
         return testEqCombined
     return None
 
-class FindT1:
-    def __init__(self, T0_var):
-        self.T0 = T0_var
-        self.T1 = None
-        self.decout_op = None
+class HashCheck:
+    def __init__(self):
+        self.isHashCall = False
+        self.isNotZR    = False
         
     def visit(self, node, data):
-        if Type(node.left) == ops.ATTR:
-            var_name = node.left.getFullAttribute()
-            print("Visiting this node :=", node, self.T0)
-            if var_name == self.T0:
-                self.T1 = node.right
-                self.decout_op = Type(node)
-                print("T1 right :=", self.T1)
-#                self.T1 = data['sibling']
-        elif Type(node.right) == ops.ATTR:
-            var_name = node.right.getFullAttribute()
-            if var_name == self.T0:
-                self.T1 = node.left
-                self.decout_op = Type(node)
-                print("T1 left :=", self.T1)
+        pass
+    
+    def visit_hash(self, node, data):
+        self.isHashCall = True
+        if str(node.right) != 'ZR': 
+            self.isNotZR = True
+        return
+
+def isHashCall(node):
+    hc = HashCheck()
+    ASTVisitor(hc).preorder(node)
+    return hc.isHashCall
+
+def isHashCallNonZR(node):
+    hc = HashCheck()
+    ASTVisitor(hc).preorder(node)
+    return hc.isHashCall and hc.isNotZR
+    
 
 class SubstituteVar:
     def __init__(self, target, new_var, initChange=False):
