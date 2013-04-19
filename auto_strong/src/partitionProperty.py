@@ -6,7 +6,7 @@ from src.bswTransform import BSWTransform
 from z3 import *
 import subprocess
 
-expTimeout = 21600 # 6 hours
+expTimeout = 60 # 21600 # 6 hours
 stringToInt = "stringToInt"
 
 def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
