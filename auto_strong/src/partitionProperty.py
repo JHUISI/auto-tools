@@ -15,6 +15,7 @@ def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
     assignInfo = sdl.getAssignInfo()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     assert setting == sdl.SYMMETRIC_SETTING, "AutoStrong requires a symmetric scheme for simplicity."
+    origVarTypes = dict(sdl.getVarTypes().get(sdl.TYPES_HEADER))
     
     # extract property 1 details...
     generators = []
@@ -83,8 +84,8 @@ def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
             varTypes.update( sdl.getVarTypes().get(i) )
         
         #print("Type variables for all: ", varTypes.keys())
-        bsw = BSWTransform(assignInfo, varTypes, msgVar, msgList)
-        bsw.construct(config, sigma)
+        bsw = BSWTransform(assignInfo, origVarTypes, varTypes, msgVar, msgList)
+        bsw.constructSDL(config, sigma)
 
     elif prop2Result and noSigma2Result:
         #Bellare-Shoup transformation
@@ -179,8 +180,7 @@ def isPresentInVarDeps(targetFuncName, assignInfo, msg, depList):
 
 def noSigma2Check(sigma):
     if len(sigma['sigma2']) == 0: return True
-    return False
-    
+    return False 
 
 """Extracts candidate sigma_1 and sigma_2 values from the signature"""
 def property1Extract(targetFuncName, assignInfo, listVars, msg):
@@ -220,7 +220,7 @@ class Decompose:
         self.assignInfo = assignInfo
         self.baseGen    = baseGen
         self.freeVars = freeVars
-        self.verbose = True
+        self.verbose = False
         
     def visit(self, node, data):
         pass
@@ -466,7 +466,7 @@ def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
     for i in vars:
         vars_str += str(i) + ","
     vars_str = vars_str[:-1] # Modulus -> 17, FindInstance
-    reduce_cmd = ["src/runMath", "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]
+    reduce_cmd = ["src/runMath", "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Reals], " + str(timeout) + "]"]
     #reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]    
     print("Mathematica cmd: ", reduce_cmd)
     p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE)

@@ -1,6 +1,6 @@
 schemeType = "PKSIG"
 
-setupFuncName 	= "setup"
+keygenFuncName 	= "keygen"
 signFuncName 	= "sign"
 verifyFuncName 	= "verify"
 
@@ -11,5 +11,5 @@ keygenPubVar = "pk"
 keygenSecVar = "sk" 
 messageVar = "M"
 signatureVar = "sig" 
-functionOrder = [setupFuncName, signFuncName, verifyFuncName]
+functionOrder = [keygenFuncName, signFuncName, verifyFuncName]
 

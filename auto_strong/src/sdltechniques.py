@@ -1000,7 +1000,7 @@ class DeleteVar:
 def DeleteThisVar(varName, node):
     dv = DeleteVar(varName)
     print("Before Deletion: ", node)    
-    sdl.ASTVisitor(dv).preorder( node )
+    ASTVisitor(dv).preorder( node )
     print("After Deletion: ", node)
     return
 

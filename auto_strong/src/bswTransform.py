@@ -9,29 +9,44 @@ from src.sdltechniques import *
 
 
 ch = "ch"
+strongSuffix = "_strong"
 
 class BSWTransform:
-    def __init__(self, assignInfo, theVarTypes, messageVar, messageVarList):
+    def __init__(self, assignInfo, origVarTypes, theVarTypes, messageVar, messageVarList):
         self.assignInfo     = assignInfo
         self.messageVar     = messageVar
         self.messageVarList = messageVarList 
         self.listToCRHash = []
         self.chamHashFunc = []
         assert type(theVarTypes) == dict, "invalid type for varTypes"
+        self.origVarTypes = origVarTypes
         self.varTypes = theVarTypes
         self.varKeys = list(self.varTypes.keys())
         
-    def construct(self, config, sigma):
+    def constructSDL(self, config, sigma):
         self.__chooseVariables(config)
+        sdl_name = self.assignInfo[sdl.NONE_FUNC_NAME][sdl.BV_NAME].getAssignNode().getRight().getAttribute()
+        setting  = self.assignInfo[sdl.NONE_FUNC_NAME][sdl.ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
         
-        funcVisited = []
         chamHashLines = self.__constructChamHash()
-        key, setupDict  = self.modifySetup(config, funcVisited)
-        signLines   = self.modifySign(config, sigma, funcVisited)
-        verifyLines = self.modifyVerify(config, sigma, funcVisited)
-        remFuncs = list(set(config.functionOrder).difference(funcVisited))
-        print_sdl(True, chamHashLines, setupDict[key], signLines, verifyLines)
-        print("Functions to copy: ", remFuncs)
+        newLines = None
+        new_name = sdl_name + strongSuffix
+        metadataLines = ["name := " + new_name, "setting := " + setting]
+        typesLines = self.getTypeLines()
+        newSDL = [ metadataLines, typesLines, chamHashLines]
+        for funcName in config.functionOrder:
+            if funcName == config.keygenFuncName:
+                newLines  = self.modifyKeygen(config)
+            elif funcName == config.signFuncName:
+                newLines   = self.modifySign(config, sigma)
+            elif funcName == config.verifyFuncName:
+                newLines = self.modifyVerify(config, sigma)
+            else:
+                newLines = self.getFuncLines(funcName)
+            newSDL.append(newLines)
+        print_sdl(True, newSDL)
+        outfile = new_name + sdlSuffix
+        write_sdl(outfile, newSDL)
         return
         
     def __chooseVariables(self, config):
@@ -44,6 +59,10 @@ class BSWTransform:
         seedVar = "s"
         self.seed = seedVar + "0"
         self.hashVal = seedVar + "1"
+        #if self.messageVar
+        if type(self.messageVar) == list:
+            self.messageVar = self.messageVar[0]
+            
         self.newMsgVal = self.messageVar + "pr"
         
         # search for each one
@@ -67,44 +86,38 @@ class BSWTransform:
         sdlLines.append( "END :: func:%s" % self.chamH )
         return sdlLines
     
-    def modifySetup(self, config, funcVisited):
-        # append to Setup or Keygen       
-        # add chpk to output list, and chK to pk 
-        (name, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)        
-        funcVisited.append(name)
-        print("Found public key in: ", name)
-        # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
-        if name == "setup": # hasattr(config, "setupFuncName"):
-            setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
-            Stmts = setupConfig[0]
-            begin = "BEGIN :: func:" + config.setupFuncName
-            end   = "END :: func:" + config.setupFuncName
-        elif name == "keygen": # and hasattr(config, "keygenFuncName"):
-            keygenConfig = sdl.getVarInfoFuncStmts( config.keygenFuncName )
-            Stmts = keygenConfig[0]
-            begin = "BEGIN :: func:" + config.keygenFuncName
-            end   = "END :: func:" + config.keygenFuncName            
+    def getTypeLines(self):
+        typesHeadBegin = "BEGIN :: " + sdl.TYPES_HEADER
+        typesHeadEnd = "END :: " + sdl.TYPES_HEADER
+        newLines = [typesHeadBegin]
+        typeLines = {}
+        # extract line numbers
+        for i, j in self.origVarTypes.items():
+            print(i, ":", j)
+            typeLines[ j.getLineNo() ] = (i, j)
+        
+        # sort based on line number, then process each type
+        typeKeysList = list(typeLines.keys())
+        typeKeysList.sort() # sort the line numbers
+        for k in typeKeysList:
+            (i, j) = typeLines[k]
+            newLines.append( j.getSrcLine() )
+        
+        newLines.append( typesHeadEnd )
+        return newLines
+        
+    def getFuncLines(self, funcName):
+        funcConfig = sdl.getVarInfoFuncStmts( funcName )
+        Stmts = funcConfig[0]
+        begin = "BEGIN :: func:" + funcName
+        end   = "END :: func:" + funcName
         
         lines = list(Stmts.keys())
         lines.sort()
         newLines = [begin]
-        
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
             if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
-                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
-                    newLines.append( self.chK + " := random(ZR)" )
-                    newLines.append( self.chT + " := random(ZR)" )                    
-                    newLines.append( self.ch0 + " := random(G1)" )
-                    newLines.append( self.ch1 + " := %s ^ %s" % (self.ch0, self.chT))
-                    newLines.append( self.chpk + " := list{" + self.ch0 + ", " + self.ch1 + "}" )
-                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
-                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT)                                    
-                elif str(Stmts[i].getAssignVar()) == outputKeyword:
-                    Stmts[i].getAssignNode().getRight().listNodes.append(self.chpk)
-                                        
                 newLines.append( str(Stmts[i].getAssignNode()) )
             elif Stmts[i].getIsForLoopBegin():
                 if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
@@ -120,12 +133,100 @@ class BSWTransform:
                 newLines.append(str(Stmts[i].getAssignNode()))
         
         newLines.append( end )
-        return name, { name : newLines } # key, dict[key] = value
+        return newLines
+        
+    def modifyKeygen(self, config):
+        # append to Setup or Keygen       
+        # add chpk to output list, and chK to pk 
+        self.singlePKeys = False
+        self.singleSKeys = False
+        (name, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)
+        print("Found public key in: ", name)
+#        if name == "setup": # hasattr(config, "setupFuncName"):
+#            setupConfig  = sdl.getVarInfoFuncStmts( config.setupFuncName )
+#            Stmts = setupConfig[0]
+#            begin = "BEGIN :: func:" + config.setupFuncName
+#            end   = "END :: func:" + config.setupFuncName
+        # (stmt, types, depList, depListNoExp, infList, infListNoExp) = getVarInfoFuncStmts
+        if name == config.keygenFuncName:
+            keygenConfig = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+            Stmts = keygenConfig[0]
+            begin = "BEGIN :: func:" + config.keygenFuncName
+            end   = "END :: func:" + config.keygenFuncName            
+        
+        lines = list(Stmts.keys())
+        lines.sort()
+        savedSK, savedPK = None, None
+        for index, i in enumerate(lines):
+            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
+                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
+                    savedPK = str(Stmts[i].getAssignNode())
+                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)                    
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT)
+                    savedSK = str(Stmts[i].getAssignNode())
+            elif str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+                if savedPK == None: # in case it is a single variable
+                    oldPKvar = config.keygenPubVar + "0" # TODO: need to verify this variable doesn't exist already too
+                    savedPK  = oldPKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
+                    self.singlePKeysStr = "{%s, %s}" % (oldPKvar, self.chK)
+                    savedPK += config.keygenPubVar + " := list" + self.singlePKeysStr
+                    self.singlePKeys = True
+            elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                if savedSK == None: # in case it is a single variable
+                    oldSKvar = config.keygenSecVar + "0" # TODO: need to verify this variable doesn't exist already too
+                    savedSK  = oldSKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
+                    self.singleSKeysStr = "{%s, %s, %s}" % (oldSKvar, self.chK, self.chT)
+                    savedSK += config.keygenSecVar + " := list" + self.singleSKeysStr
+                    self.singleSKeys    = True
+        
+        newLines = [begin]
+        
+        for index, i in enumerate(lines):
+            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
+                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:                    
+                    continue
+                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                    continue
+                elif str(Stmts[i].getAssignVar()) == outputKeyword:
+                    newLines.append( self.chK + " := random(ZR)" )
+                    newLines.append( self.chT + " := random(ZR)" )                    
+                    newLines.append( self.ch0 + " := random(G1)" )
+                    newLines.append( self.ch1 + " := %s ^ %s" % (self.ch0, self.chT))
+                    newLines.append( self.chpk + " := list{" + self.ch0 + ", " + self.ch1 + "}" )
+                    newLines.append( savedSK )
+                    newLines.append( savedPK )
+                    # add final output keyword
+                    Stmts[i].getAssignNode().getRight().listNodes.append( self.chpk )
+                    newLines.append( str(Stmts[i].getAssignNode()) )
+                else:
+                    newLines.append( str(Stmts[i].getAssignNode()) )
+            elif Stmts[i].getIsForLoopBegin():
+                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+                newLines.append(str(Stmts[i].getAssignNode()))
+            elif Stmts[i].getIsForLoopEnd():
+                newLines.append(str(Stmts[i].getAssignNode()))
+            
+            elif Stmts[i].getIsIfElseBegin():
+                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+                newLines.append( str(Stmts[i].getAssignNode()) )
+            else:
+                if self.singleSKeys and str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                    continue
+                if self.singlePKeys and str(Stmts[i].getAssignVar()) == config.keygenPubVar:
+                    continue
+                newLines.append(str(Stmts[i].getAssignNode()))
+        
+        newLines.append( end )
+        return newLines # key, dict[key] = value
     
-    def modifySign(self, config, sigma, funcVisited):
+    def modifySign(self, config, sigma):
         # Steps to create the strong 'sign' algorithm 
         # 1. select a new random variable, s (seed)
-        funcVisited.append(config.signFuncName)                
         signConfig = sdl.getVarInfoFuncStmts( config.signFuncName )
         Stmts = signConfig[0]
         begin = "BEGIN :: func:" + config.signFuncName
@@ -153,10 +254,10 @@ class BSWTransform:
             if Stmts[i].getIsExpandNode():
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
-                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:                    
+                    #print("new list: ", Stmts[i].getAssignNode().getRight())
+                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:        
+                    Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT) 
-
                 newLines.append( str(Stmts[i].getAssignNode()) )
             elif Stmts[i].getIsForLoopBegin():
                 if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
@@ -184,18 +285,24 @@ class BSWTransform:
                     else:
                         print("TODO: ", assignVar, " has unexpected structure.")
                 elif assignVar == inputKeyword:
-                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
+                    inputlistNodes = []
+                    if Stmts[i].getAssignNode().getRight() != None: 
+                        Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk) 
+                        inputlistNodes = Stmts[i].getAssignNode().getRight().listNodes
                     newLines.append( str(Stmts[i].getAssignNode()) )
+                    if self.singleSKeys and config.keygenSecVar in inputlistNodes:
+                        newLines.append( config.keygenSecVar + " := expand" + self.singleSKeysStr )
+                    if self.singlePKeys and config.keygenPubVar in inputlistNodes:
+                        newLines.append( config.keygenSecVar + " := expand" + self.singlePKeysStr )
                 else:
                     newLines.append( str(Stmts[i].getAssignNode()) )
 
         newLines.append( end )        
         return newLines
     
-    def modifyVerify(self, config, sigma, funcVisited):
+    def modifyVerify(self, config, sigma):
         # Steps to create the strong 'verify' algorithm 
         # 1. add the statements for 
-        funcVisited.append(config.verifyFuncName)
         verifyConfig = sdl.getVarInfoFuncStmts( config.verifyFuncName )
         Stmts = verifyConfig[0]
         begin = "BEGIN :: func:" + config.verifyFuncName
@@ -232,7 +339,7 @@ class BSWTransform:
                 if expandCount == 0: lastExpand = True
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
-                    print("new list: ", Stmts[i].getAssignNode().getRight())
+                    #print("new list: ", Stmts[i].getAssignNode().getRight())
                 elif str(Stmts[i].getAssignVar()) == config.signatureVar:
                     Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
                 newLines.append( str(Stmts[i].getAssignNode()) )
@@ -253,11 +360,17 @@ class BSWTransform:
                     else:
                         print("TODO: ", assignVar, " has unexpected structure.")
                 elif assignVar == inputKeyword:
-                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk)
+                    inputlistNodes = []
+                    if Stmts[i].getAssignNode().getRight() != None: Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk); inputlistNodes = Stmts[i].getAssignNode().getRight().listNodes
                     # check if signature variables are contained inside the list
                     sigLen = len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma1'] )) + len(set( Stmts[i].getAssignNode().getRight().listNodes ).intersection( sigma['sigma2'] ))
                     if sigLen > 0: Stmts[i].getAssignNode().getRight().listNodes.append( self.seed )
                     newLines.append( str(Stmts[i].getAssignNode()) )
+                    
+                    if self.singleSKeys and config.keygenSecVar in inputlistNodes:
+                        newLines.append( config.keygenSecVar + " := expand" + self.singleSKeysStr )
+                    if self.singlePKeys and config.keygenPubVar in inputlistNodes:
+                        newLines.append( config.keygenSecVar + " := expand" + self.singlePKeysStr )
                 elif assignVar == self.messageVar:
                     messageSlice.remove(assignVar)
                     newLines.append( str(Stmts[i].getAssignNode()) )                    
@@ -267,12 +380,21 @@ class BSWTransform:
         newLines.append( end )        
         return newLines
 
-def print_sdl(verbose, *args):
+def print_sdl(verbose, blocks):
     if verbose:
         print("<===== new SDL =====>")    
-        for block in args:
+        for block in blocks:
             for i in block:
                 print(i)
-            print("\n\n")
+            print("\n")
         print("<===== new SDL =====>")
+    return
+
+def write_sdl(filename, blocks):
+    f = open(filename, 'w')
+    for block in blocks:
+        for line in block:
+            f.write(line + "\n")
+        if len(block) > 0: f.write('\n') # in case block = [] (empty)
+    f.close()
     return

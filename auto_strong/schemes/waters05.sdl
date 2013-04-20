@@ -12,7 +12,7 @@ u := list{G1}
 zz := int
 END :: types
 
-BEGIN :: func:setup
+BEGIN :: func:keygen
 input := None
  alpha := random(ZR) 
  g := random(G1)
@@ -28,7 +28,7 @@ END :: for
  sk := g2 ^ alpha
  pk := list{g, g1, g2, u, ut} 
 output := list{pk, sk}
-END :: func:setup
+END :: func:keygen
 
 BEGIN :: func:sign
 input := list{pk, sk, M}

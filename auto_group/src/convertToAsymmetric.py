@@ -667,12 +667,6 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     xorList = []
     for i in range(varsLen):
         xor = BinaryNode(ops.XOR)
-#        if pair_vars_G1_lhs[i] in generators and pair_vars_G1_lhs.count(pair_vars_G1_lhs[i]) >= 2:
-#            xor.left = BinaryNode(pair_vars_G1_lhs[i]) # + "#l") 
-#        else:
-#        if pair_vars_G1_rhs[i] in generators and pair_vars_G1_rhs.count(pair_vars_G1_rhs[i]) >= 2:
-#            xor.right = BinaryNode(pair_vars_G1_rhs[i]) # + "#r")
-#        else:
         xor.left = BinaryNode(pair_vars_G1_lhs[i])
         xor.right = BinaryNode(pair_vars_G1_rhs[i])
         xorList.append(xor)
@@ -781,8 +775,8 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
     # debug 
     print_sdl(False, newLinesS, newLinesK, newLines2, newLines3)
     
-    outputFile = sdl_name + "_asym_" + fileSuffix
-    writeConfig(outputFile + ".sdl", newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
+    outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
+    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
 
 # temporary placement

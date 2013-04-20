@@ -24,6 +24,7 @@ AST simple rules
 from charm.toolbox.enum import *
 import string, sys
 
+sdlSuffix = ".sdl" 
 inputKeyword = "input"
 outputKeyword = "output"
 returnKeyword = "return"
