@@ -1277,7 +1277,7 @@ def codegen_PY_main(SDL_Scheme, setupFileArg, userFuncsFileArg, codegenOpts={}):
         
     incNumSig = codegenOpts.get('NumSigs')
     incSmallExp = codegenOpts.get('SmallExp')
-    parseFile2(SDL_Scheme, False, True)
+    parseFile(SDL_Scheme, False, True)
 
     astNodes = getAstNodes()
     assignInfo = getAssignInfo()

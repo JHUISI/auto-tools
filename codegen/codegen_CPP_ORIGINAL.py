@@ -2058,7 +2058,7 @@ def codegen_CPP(inputSDLScheme, outputFileName):
     global blindingFactors_NonLists, blindingFactors_Lists, ignoreCloudSourcing
     global nonCloudSourcingFileName
 
-    parseFile2(inputSDLScheme, False, True)
+    parseFile(inputSDLScheme, False, True)
 
     astNodes = getAstNodes()
     assignInfo = getAssignInfo()

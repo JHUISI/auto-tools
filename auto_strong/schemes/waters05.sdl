@@ -1,15 +1,13 @@
 name := waters05
 setting := symmetric
-l := 5
-zz := 32
-
+l := 32
 
 BEGIN :: types
 alpha := ZR
 m := list{ZR}
-M := str
+M := ZR
 u := list{G1}
-zz := int
+l := int
 END :: types
 
 BEGIN :: func:keygen
@@ -34,7 +32,7 @@ BEGIN :: func:sign
 input := list{pk, sk, M}
  pk := expand{g, g1, g2, u, ut} 
 
- m := stringToInt(M, l, zz)
+ m := intToBits(M, l)
  r  := random(ZR)
  S2 := g ^ r 
  dotProd1 := init(G1)
@@ -52,7 +50,7 @@ BEGIN :: func:verify
  pk := expand{g, g1, g2, u, ut}
  sig := expand{S1, S2}
 
- m := stringToInt(M, l, zz)
+ m := intToBits(M, l)
  dotProd2 := init(G1)
  
 BEGIN :: for

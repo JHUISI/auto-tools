@@ -45,6 +45,6 @@ if __name__ == "__main__":
     sdl_file = sys.argv[1]
     sdlVerbose = False
     if len(sys.argv) > 2 and sys.argv[2] == "-v":  sdlVerbose = True
-    parseFile2(sdl_file, sdlVerbose)
+    parseFile(sdl_file, sdlVerbose)
     keygenVarList = getSecretList(config, sdlVerbose)
     print("\n")

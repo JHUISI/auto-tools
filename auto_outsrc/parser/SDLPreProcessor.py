@@ -164,7 +164,7 @@ def SDLPreProcessor_main(inputFileName, outputFileName, config):
     except:
         sys.exit("SDLPreProcessor_main in SDLPreProcessor.py:  could not open output file name passed in.")
 
-    parseFile2(inputFileName, False, True)
+    parseFile(inputFileName, False, True)
     assignInfo = getAssignInfo()
     astNodes = getAstNodes()
 

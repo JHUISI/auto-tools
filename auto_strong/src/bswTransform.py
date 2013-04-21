@@ -59,9 +59,14 @@ class BSWTransform:
         seedVar = "s"
         self.seed = seedVar + "0"
         self.hashVal = seedVar + "1"
-        #if self.messageVar
+
+        self.messageVarInBody = None
         if type(self.messageVar) == list:
-            self.messageVar = self.messageVar[0]
+            if len(self.messageVar) == 2:
+                self.messageVarInBody = self.messageVar[0]
+                self.messageVar       = self.messageVar[1]
+            else:
+                sys.exit("DEBUG: more than two references to msg? check SDL please.")
             
         self.newMsgVal = self.messageVar + "pr"
         
@@ -93,7 +98,6 @@ class BSWTransform:
         typeLines = {}
         # extract line numbers
         for i, j in self.origVarTypes.items():
-            print(i, ":", j)
             typeLines[ j.getLineNo() ] = (i, j)
         
         # sort based on line number, then process each type
@@ -163,35 +167,43 @@ class BSWTransform:
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
                     savedPK = str(Stmts[i].getAssignNode())
+                    Stmts[i].skipMe = True                    
                 elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)                    
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chT)
                     savedSK = str(Stmts[i].getAssignNode())
+                    Stmts[i].skipMe = True
             elif str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                 if savedPK == None: # in case it is a single variable
-                    oldPKvar = config.keygenPubVar + "0" # TODO: need to verify this variable doesn't exist already too
-                    savedPK  = oldPKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
-                    self.singlePKeysStr = "{%s, %s}" % (oldPKvar, self.chK)
+                    newPKvar = config.keygenPubVar + "0" # TODO: need to verify this variable doesn't exist already too
+                    self.newPKvar = newPKvar
+                    savedPK  = newPKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
+                    self.singlePKeysStr = "{%s, %s}" % (newPKvar, self.chK)
                     savedPK += config.keygenPubVar + " := list" + self.singlePKeysStr
                     self.singlePKeys = True
+                    Stmts[i].skipMe = True
+                    
             elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
                 if savedSK == None: # in case it is a single variable
-                    oldSKvar = config.keygenSecVar + "0" # TODO: need to verify this variable doesn't exist already too
-                    savedSK  = oldSKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
-                    self.singleSKeysStr = "{%s, %s, %s}" % (oldSKvar, self.chK, self.chT)
+                    newSKvar = config.keygenSecVar + "0" # TODO: need to verify this variable doesn't exist already too
+                    self.newSKvar = newSKvar
+                    savedSK  = newSKvar + " := " + str(Stmts[i].getAssignNode().getRight()) + "\n"
+                    self.singleSKeysStr = "{%s, %s, %s}" % (newSKvar, self.chK, self.chT)
                     savedSK += config.keygenSecVar + " := list" + self.singleSKeysStr
                     self.singleSKeys    = True
+                    Stmts[i].skipMe = True
         
         newLines = [begin]
         
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if hasattr(Stmts[i], "skipMe") and Stmts[i].skipMe: continue            
             if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
-                if str(Stmts[i].getAssignVar()) == config.keygenPubVar:                    
-                    continue
-                elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
-                    continue
-                elif str(Stmts[i].getAssignVar()) == outputKeyword:
+                #if str(Stmts[i].getAssignVar()) == config.keygenPubVar:                    
+                #    continue
+                #elif str(Stmts[i].getAssignVar()) == config.keygenSecVar:
+                #    continue
+                if str(Stmts[i].getAssignVar()) == outputKeyword:
                     newLines.append( self.chK + " := random(ZR)" )
                     newLines.append( self.chT + " := random(ZR)" )                    
                     newLines.append( self.ch0 + " := random(G1)" )
@@ -242,15 +254,29 @@ class BSWTransform:
             sigmaStr += i + ", "
         sigmaStr = sigmaStr[:-2]
         self.sigma2str = sigmaStr
-
+        for index, i in enumerate(lines):
+            assert type(Stmts[i]) == sdl.VarInfo, "Stmts not VarInfo Objects for some reason."
+            if self.messageVarInBody != None and str(Stmts[i].getAssignVar()) == self.messageVarInBody: 
+                sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+                self.oldMsgStmt = str(Stmts[i].getAssignNode())
+                Stmts[i].skipMe = True
+                
         sigma2Fixed = False
+        passedInputLine = False
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if hasattr(Stmts[i], "skipMe") and Stmts[i].skipMe: continue
             if sigma2Fixed:
                 # 4. add the rest of code and substitute references from m to m'
                 if self.messageVar in Stmts[i].getVarDeps():
                     sdl.ASTVisitor( SubstituteVar(self.messageVar, self.newMsgVal) ).preorder( Stmts[i].getAssignNode() ) # modify in place
             
+            if passedInputLine:
+                if self.singleSKeys and config.keygenSecVar in Stmts[i].getVarDeps():
+                    sdl.ASTVisitor( SubstituteVar(config.keygenSecVar, self.newSKvar) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+                if self.singlePKeys and config.keygenPubVar in Stmts[i].getVarDeps():
+                    sdl.ASTVisitor( SubstituteVar(config.keygenPubVar, self.newPKvar) ).preorder( Stmts[i].getAssignNode() ) # modify in place
+                
             if Stmts[i].getIsExpandNode():
                 if str(Stmts[i].getAssignVar()) == config.keygenPubVar:
                     Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chK)
@@ -276,6 +302,7 @@ class BSWTransform:
                         newLines.append( self.seed + " := random(ZR)" )
                         newLines.append( self.hashVal + " := H(concat{%s, %s, %s}, ZR)" % (self.chK, self.messageVar, self.sigma2str) ) # s1 := H(concat{k, m, r}, ZR) 
                         newLines.append( self.newMsgVal + " := %s(%s, %s, %s)"  % (self.chamH, self.chpk, self.hashVal, self.seed) ) # mpr := chamH(chpk, s1, s)
+                        if self.messageVarInBody != None: newLines.append( self.oldMsgStmt )
                     sigma2Fixed = True
                 elif assignVar == config.signatureVar:
                     # 5. add seed to output as part of signature
@@ -285,6 +312,7 @@ class BSWTransform:
                     else:
                         print("TODO: ", assignVar, " has unexpected structure.")
                 elif assignVar == inputKeyword:
+                    passedInputLine = True
                     inputlistNodes = []
                     if Stmts[i].getAssignNode().getRight() != None: 
                         Stmts[i].getAssignNode().getRight().listNodes.insert(0, self.chpk) 
@@ -294,6 +322,7 @@ class BSWTransform:
                         newLines.append( config.keygenSecVar + " := expand" + self.singleSKeysStr )
                     if self.singlePKeys and config.keygenPubVar in inputlistNodes:
                         newLines.append( config.keygenSecVar + " := expand" + self.singlePKeysStr )
+                # update old references
                 else:
                     newLines.append( str(Stmts[i].getAssignNode()) )
 

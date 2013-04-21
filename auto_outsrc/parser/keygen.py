@@ -1384,7 +1384,7 @@ def keygen(file, config):
     if ( (type(file) is not str) or (len(file) == 0) ):
         sys.exit("First argument passed to keygen.py is invalid.")
     
-    #parseFile2(file, False)
+    #parseFile(file, False)
     updateCodeAndStructs()
     getMasterSecretKeyElements(config)
     keygenFuncName = config.keygenFuncName

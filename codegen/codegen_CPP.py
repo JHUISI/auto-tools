@@ -1719,7 +1719,7 @@ def codegen_CPP_main(inputSDLScheme, outputFileName, userFuncList=[], defineAsCl
     global varNamesToFuncs_Assign, inputOutputVars, userFuncsListNames, functionNameOrder
     global blindingFactors_NonLists, blindingFactors_Lists
 
-    parseFile2(inputSDLScheme, False, True)
+    parseFile(inputSDLScheme, False, True)
 
     astNodes = getAstNodes()
     assignInfo = getAssignInfo()

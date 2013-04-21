@@ -1636,7 +1636,7 @@ def main(SDL_Scheme, ignoreCloudSourcingArg, nonCloudSourcingFileNameArg=None):
     if (ignoreCloudSourcing == False):
         (blindingFactors_NonLists, blindingFactors_Lists) = keygen(SDL_Scheme)
     else:
-        parseFile2(SDL_Scheme, False, True)
+        parseFile(SDL_Scheme, False, True)
 
     #printLinesOfCode()
     #print(blindingFactors_NonLists)

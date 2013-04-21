@@ -386,7 +386,7 @@ def run_main(opts, start=None, stop=None):
     else:
         # Parse the SDL file into binary tree
 #        ast_struct = parseFile(file)
-        parseFile2(file, verbose, ignoreCloudSourcing=True)
+        parseFile(file, verbose, ignoreCloudSourcing=True)
         setting = SDLSetting(verbose)
         setting.parse(getAssignInfo(), getVarTypes()) # check for errors and pass on to user before continuing
 

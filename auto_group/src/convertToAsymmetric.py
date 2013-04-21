@@ -537,7 +537,7 @@ def transformTypes(typesH, info):
 
 
 def runAutoGroup(sdlFile, config, sdlVerbose=False):
-    sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
+    sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()

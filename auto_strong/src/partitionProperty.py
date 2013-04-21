@@ -8,9 +8,10 @@ import subprocess
 
 expTimeout = 60 # 21600 # 6 hours
 stringToInt = "stringToInt"
+intToBits   = "intToBits"
 
 def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
-    sdl.parseFile2(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
+    sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
@@ -146,8 +147,8 @@ def traceMessage(Stmt, _types, msgVar):
                 # expecting a hash call to a specified group type               
                 if Stmt[i].getAssignVar() not in msgVarList: msgVarList.append( Stmt[i].getAssignVar() )
             elif msgVar in Stmt[i].getVarDeps() and Type(Stmt[i].getAssignNode().getRight()) == ops.FUNC:
-                # expecting stringToInt
-                if stringToInt == Stmt[i].getAssignNode().getRight().attr:
+                # expecting stringToInt or intToBits
+                if Stmt[i].getAssignNode().getRight().attr in [stringToInt, intToBits]:
                     if Stmt[i].getAssignVar() not in msgVarList: msgVarList.append( Stmt[i].getAssignVar() )
                 else:
                     print("DEBUG: Unrecognized function over " + msgVar)

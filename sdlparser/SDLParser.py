@@ -1,7 +1,4 @@
-# batch parser provides majority of the functionality for parsing bv files and the mechanics of the 
-# techniques for generating an optimized batch equation (tech 2, 3, 4 and simplifying products, etc.)
-# 
-
+'''SDL Parser: a parser based on pyparsing toolkit for the SDL language'''
 from pyparsing import *
 try:
    from sdlparser.SDLang import *
@@ -61,10 +58,8 @@ refType = 'refType'
 usedBuiltinsFunc = []
 builtInTypes = {}
 builtInTypes["DeriveKey"] = types.str
-builtInTypes["SymEnc"] = types.str
-builtInTypes["SymDec"] = types.str
-builtInTypes["stringToId"] = types.listZR
 builtInTypes["stringToInt"] = types.listZR
+builtInTypes["intToBits"] = types.listZR
 builtInTypes["createPolicy"] = types.pol # these are app specific
 builtInTypes["getAttributeList"] = types.listStr
 builtInTypes["calculateSharesDict"] = types.symmapZR
@@ -128,7 +123,7 @@ def pushFunc(s, loc, toks):
     if debug >= levels.some: print("found a function: ", toks[0])
     objStack.append( FUNC_SYMBOL + toks[0] )
 
-# Implements language parser for our signature descriptive language (SDL) and returns
+# Implements language parser for our scheme descriptive language (SDL) and returns
 # a binary tree (AST) representation of valid SDL statements.
 class SDLParser:
     def __init__(self, verbose=False):
@@ -439,120 +434,7 @@ class SDLParser:
 signer_mode  = Enum('single', 'multi', 'ring')
 LINE_DELIM, COMMENT = ';', '#'
 
-
-def clean(arr):
-    return [i.strip() for i in arr]
-
-def handle(lines, target):
-    if target == LATEX:
-        code = {}; EQ = ':='
-        for line in lines:
-            line = line.rstrip()
-            if line.find(EQ) != -1:
-                x = line.split(EQ)
-                lhs, rhs = x[0].strip(), x[1].strip()
-                code [ lhs ] = rhs
-        print("latex =>", code)
-        return code
-    
-    # parse as usual
-    parser = SDLParser()
-    if type(lines) != list:
-        return parser.parse(lines)
-
-    if (target in [CONST, TRANSFORM, PUBLIC, SIGNATURE, MESSAGE]) or (ARBITRARY_FUNC in target):
-        # parse differently 'a, b, etc.\n'
-        _ast = []
-        for line in lines:
-            l = line.split(',')
-            _ast = [i.strip() for i in l]
-        print(target, " =>", _ast)
-        return _ast
-    elif target == TYPE:
-        _ast = {}
-        for line in lines:
-            ast_node = parser.parse(line)
-            # make sure it's an assignment node
-            # otherwise, ignore the node
-            if ast_node.type == ops.EQ:
-                left = str(ast_node.left)
-                right = str(ast_node.right)
-                _ast[ left ] = right
-        print(target, " =>", _ast)
-        return _ast
-    elif target == PRECOMP:
-        indiv_ast = {}
-        batch_ast = {}
-        for line in lines:
-            ast_node = parser.parse(line)
-            # make sure it's an assignment node
-            # otherwise, ignore the node
-            if ast_node.type == ops.EQ:
-                left = ast_node.left
-                right = ast_node.right
-                indiv_ast[ left ] = right
-                batch_ast[ BinaryNode.copy(left) ] = BinaryNode.copy(right)
-        #print(target, " =>", indiv_ast)
-        return (indiv_ast, batch_ast)
-    return None
-
 debugs = levels.none
-
-def parseFile(filename):
-    fd = open(filename, 'r')
-    ast = {TYPE: None, CONST: None, PRECOMP: None, TRANSFORM: None, 
-           MESSAGE: None, SIGNATURE: None, PUBLIC: None, LATEX: None, 
-           OTHER: [] }
-    AcceptedEnclosures = [TYPE, CONST, PRECOMP, TRANSFORM, MESSAGE, SIGNATURE, PUBLIC, LATEX]
-    # parser = BatchParser()
-    code = fd.readlines(); i = 1
-    inStruct = (False, None)
-    queue = []
-    for line in code:
-        if len(line.strip()) == 0 or line[0] == COMMENT:
-            continue
-        elif line.find(BLOCK_SEP) != -1: # parse differently
-            token = clean(line.split(BLOCK_SEP))
-            if token[0] == START_TOKEN and (token[1] in AcceptedEnclosures or ARBITRARY_FUNC in token[1]):
-                inStruct = (True, token[1])
-                if debugs == levels.all: print("Got a section!!!")
-                continue
-            elif inStruct[0]:
-                # continue until we reach an end token, then
-                # test if end token matches the start token, if so can handle queue 
-                key = token[1]
-                if token[0] == END_TOKEN and inStruct[1] == key:
-                    ast[ key ] = handle(queue, key)
-                    if debugs == levels.all:
-                        print("section =>", key)
-                        # print("queue =>", queue)
-                        # print("result =>", ast[key])
-                    # check for global syntax error and exit
-                    queue = [] # tmp remove everything
-                    inStruct = (False, None)  
-            else:
-                print("Syntax Error while parsing section: ", line)
-
-        else: # if not, keep going and assume that we can safely add lines to queue
-            if inStruct[0]:
-                if line.find(LINE_DELIM) != -1: # if a ';' exists in string then we can probably split into two
-                    queue.extend(line.split(LINE_DELIM))
-                else:
-                    queue.append(line)
-            elif len(line.strip()) == 0 or line[0] == COMMENT:
-                if debugs == levels.all:
-                    print(line)
-                continue
-            else:
-                if debugs == levels.all: 
-                    print("Not in a type enclosure: ", line)
-                result = handle(line, None)
-                #print("result =>", result)
-                #print("type =>", type(result))
-                ast[ OTHER ].append(result)                
-                
-    fd.close()
-    return ast
 
 def getEndLineNoOfForLoop(funcName, lineNo):
     if (funcName not in forLoops):
@@ -2099,8 +1981,8 @@ def getFuncNameFromLineNo(lineNo):
 
     return None
 
-# NEW SDL PARSER
-def parseFile2(filename, verbosity, ignoreCloudSourcing=False):
+# OFFICIAL SDL PARSER
+def parseFile(filename, verbosity, ignoreCloudSourcing=False):
     global linesOfCode
 
     fd = open(filename, 'r')
@@ -2413,24 +2295,6 @@ def getVarInfoFuncStmts(funcName):
 
     return (retDict, varTypes[funcName], varDepList[funcName], varDepListNoExponents[funcName], varInfList[funcName], varInfListNoExponents[funcName])
 
-
-# Perform some type checking here?
-# rules: find constants, verify, variable definitions
-def astParser(astList):
-    constants = []
-    verify_eq = None
-    variables = {}
-    
-    for i in astList:
-        s = str(i.left)
-        if s == 'constant':
-            constants.append(str(i.right))
-        elif s == 'verify':
-            verify_eq = i
-        else:
-            variables[s] = str(i.right)
-
-    return (constants, verify_eq, variables)
 
 class ASTIterator:
     def __init__(self, _node, _type):
@@ -2916,14 +2780,6 @@ def printFinalOutput():
 
     print("Variables that protect the message:\n")
     print(varsThatProtectM)
-    print("Ayo:  can you get this information from the two data structures I have shown above?")
-    print("If so, please access the message variable using the name M (defined in config.py) rather")
-    print("than hard-coding 'M' so we can keep it flexible for the user.")
-    print("If not, let me know so I can re-write the getVarsThatProtectM() method to make it what")
-    print("you need.\n")
-    print("-------------------------")
-    print("\n")
-
     print("Variable types inferred so far (more to come soon):\n")
     printVarTypes()
     print("\n")
@@ -2945,7 +2801,7 @@ if __name__ == "__main__":
         print("Final statement:  '%s'" % final)
         exit(0)
     else:
-        parseFile2(sys.argv[1], True, True)
+        parseFile(sys.argv[1], True, True)
         getVarDepInfLists()
         getVarsThatProtectM()
         printFinalOutput()

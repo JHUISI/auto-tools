@@ -1,26 +1,4 @@
-''' Operators in SDL language:
-
-* ADD, SUB, DIV, MUL, EXP - '+','-','*', '/' for division,'^' for exponentiation
-* EQ - ':=' for assignment
-* EQ_TST, NON_EQ_TST - '==' for equality testing and '!=' for inequality testing
-* PAIR - 'e(' arg1, arg2 ')'
-* RANDOM - 'random assignment'
-* HASH - 'H(val, ZR)' compute 'hash' of a variable to ZR, G1 or G2 
-* FOR - 'for{i:=1,X} do x' loop from 1 to X on statement x
-* SUM - 'sum{t:=1,X} of x_t' computes summation of x at index t for all X
-* PROD - 'prod{i:=1,N} on n' apply dot product to statement n
-* LIST - 'list{x, y, z,...}'
-
-e.g., prod{i:=1,N} on (pk_i ^ del_i) 
-
-AST simple rules
-
-* check constraints assignment node exists.
-* check verify assignment node exists.
-* check variables have appropriate assignment types.
-* support batch for different messages/signers/public keys.
-'''
-
+''' SDL Grammar: BinaryNode class is internal representation for SDL statements.'''
 from charm.toolbox.enum import *
 import string, sys
 

@@ -35,6 +35,17 @@ def stringToInt(strID, zz, ll):
         v.append(intelement)
     return v
 
+def intToBits(x, bitLen):
+    """Converts an integer into a binary number and returns it as a list of ZR types of size length"""
+    s = bin(int(x))[2:]
+    if len(s) >= bitLen: 
+        s = s[:bitLen] # cut anything above
+        return [ groupObj.init(ZR, int(i)) for i in s ]
+    else:
+        # need to pad this many 0's
+        extraZeros = bitLen - len(s)
+        return [ groupObj.init(ZR, 0) for i in range(extraZeros)] + [ groupObj.init(ZR, int(i)) for i in s ]
+
 def isList(object):
     objectTypeName = None
 
