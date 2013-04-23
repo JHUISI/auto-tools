@@ -13,7 +13,7 @@ configParams = ["messageVar", "signatureVar", "keygenPubVar", "keygenSecVar", "k
 def errorOut(keyword):
     sys.exit("configAutoStrong: missing '%s' variable in config." % keyword)
 
-def configAutoStrong(sdl_file, cm, sdlVerbose):
+def configAutoStrong(sdl_file, cm, option, sdlVerbose):
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
     sdl.masterSecVars = cm.masterSecVars
@@ -31,7 +31,7 @@ def configAutoStrong(sdl_file, cm, sdlVerbose):
     print("function order: ", cm.functionOrder)
     testForSUCMA = False
     
-    runAutoStrong(sdl_file, cm, testForSUCMA, sdlVerbose)
+    runAutoStrong(sdl_file, cm, option, sdlVerbose)
     return
 
 if __name__ == "__main__":
@@ -42,9 +42,14 @@ if __name__ == "__main__":
         else: sdlVerbose = False
         config = sys.argv[2]
         config = config.split('.')[0]
-
+        option = {skipTransform:False}
+        try:
+            value = sys.argv.index("-s")
+            option[skipTransform] = True
+        except:
+            pass
         configModule = importlib.import_module("schemes." + config)
-        configAutoStrong(sdl_file, configModule, sdlVerbose)
+        configAutoStrong(sdl_file, configModule, option, sdlVerbose)
     else:
         print("python %s [ SDL file ] [ SDL config name ]" % sys.argv[0])
         sys.exit(-1)

@@ -9,8 +9,10 @@ import subprocess
 expTimeout = 60 # 21600 # 6 hours
 stringToInt = "stringToInt"
 intToBits   = "intToBits"
+skipTransform = "skipTransform"
 
-def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
+AND = " && "
+def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
@@ -65,16 +67,18 @@ def runAutoStrong(sdlFile, config, testForSUCMA, sdlVerbose=False):
         listVars.append(sigVar) # probably just one element in signature
     print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msgVar)
-    if testForSUCMA:
+    #if testForSUCMA:
         # quick test for whether scheme is SU-CMA secure already
-        sigma['sigma1'] += sigma['sigma2']
-        sigma['sigma2'] = []
+    #    sigma['sigma1'] += sigma['sigma2']
+    #    sigma['sigma2'] = []
     print("sigma1 => ", sigma['sigma1'])
     print("sigma2 => ", sigma['sigma2'])
 
         
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     noSigma2Result = noSigma2Check(sigma)
+
+    if options.get(skipTransform): sys.exit(0)            
     
     if prop2Result and not noSigma2Result:
         print("Applying BSW transformation...")
@@ -136,7 +140,9 @@ def extractGenerators(stmt, _types, generators):
     return None
 
 def traceMessage(Stmt, _types, msgVar):
-    assert type(msgVar) == str, "messageVar should be a str."
+    if type(msgVar) != str: 
+        #"messageVar should be a str."
+        return []
     lines = list(Stmt.keys())
     lines.sort()
     msgVarList = []
@@ -293,12 +299,12 @@ class Transform:
         return
     
     def visit_mul(self, node, data):
-        if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
+        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
             node.type = ops.ADD
         return
 
     def visit_div(self, node, data):
-        if Type(node.left) == Type(node.right) and Type(node.left) == ops.PAIR:
+        if Type(node.left) == ops.PAIR or Type(node.right) == ops.PAIR:
             node.type = ops.SUB
         return
     
@@ -422,9 +428,14 @@ def buildZ3Expression(node, varMap, Z3Funcs):
         return leftNode / rightNode
     elif Type(node) == ops.ATTR:
         varName = str(node).split(LIST_INDEX_SYMBOL)[0] # in case it has a '#' symbol 
+        if varName == "-1": return -1
+        if "-" in varName: negated = True
+        else: negated = False
+        
         if not varName.isdigit():
-            if "-" in varName: 
+            if negated: 
                 varName = varName.strip("-")
+                assert varName in varMap.keys(), "missing var reference: " + varName
                 return -1 * varMap.get(varName)
             return varMap.get(varName)
         else:
@@ -458,11 +469,10 @@ def doesPartHoldWithZ3(subGoals):
 def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
     equations_str = ""
     vars_str = ""
-    AND = " && "
     for i in equations:
         j = str(i)
-        if "And" in j: j = j.replace("And", "").replace(",", AND)
-        equations_str += str(j).replace("\n", " ") + AND
+#        if "And" in j: j = j.replace("And", "").replace(",", AND)
+        equations_str += str(j).replace("\n", " ").replace("\t", "") + AND
     equations_str = equations_str[:-len(AND)]
     for i in vars:
         vars_str += str(i) + ","
@@ -510,16 +520,21 @@ def testCorrectWithZ3(verifyEqs, varListMap):
         print("varMap: ", varMap)
         # TODO: need recursive algorithm to model pairings
         print("Creating Z3 expression for... ", i)
-        newExp = buildZ3Expression(i, varMap, Z3Funcs)
-        print("Z3 result: ", newExp)
-        print("Z3 simplified: ", M.evaluate(newExp))
-        print("<====================>")
-        constraints = []
-        for j in varMap.keys():
-            constraints.append( varMap.get(j) ) # > 1 ) # constraint that values are non-zero        
-
-        simplify_cmd = ["src/runMath", "Simplify[" + str(M.evaluate(newExp)).replace("\n", " ") + "]"]
-        print("Verify with Mathematica:  ", simplify_cmd ) # , And(constraints) )
+        eqList = retrieveAnds(i)
+        eqList.reverse()
+        finalExp = ""
+        for k in eqList:
+            print("Z3 input: ", k)
+            newExp = buildZ3Expression(k, varMap, Z3Funcs)
+            result = str(M.evaluate(newExp)).replace("\n", " ").replace("\t", "")
+            print("Z3 output: ", newExp)
+            print("Z3 simplified: ", result)
+            print("<====================>")
+            finalExp += result + AND
+        
+        finalExp = finalExp[:-len(AND)]
+        simplify_cmd = ["src/runMath", "Simplify[" + str(finalExp).replace("\n", " ") + "]"]
+        print("Verify with Mathematica:  ", simplify_cmd )
         p = subprocess.Popen(simplify_cmd, stdout=subprocess.PIPE)
         preprocessed, _ = p.communicate()
         result = preprocessed.strip()
@@ -561,17 +576,21 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
         print("varMap: ", varMap)
         # TODO: need recursive algorithm to model pairings
         print("Creating Z3 expression for... ", i)
-        newExp = buildZ3Expression(i, varMap, Z3Funcs)
-        print("Z3 result: ", newExp)
-        print("Z3 simplified: ", M.evaluate(newExp))
-        print("<====================>")
-        equations.append( M.evaluate(newExp) )
+        eqList = retrieveAnds(i)
+        eqList.reverse()
+        finalExp = ""
+        for k in eqList:
+            newExp = buildZ3Expression(k, varMap, Z3Funcs)
+            print("Z3 result: ", newExp)
+            print("Z3 simplified: ", M.evaluate(newExp))
+            print("<====================>")
+            equations.append( M.evaluate(newExp) )
     
     constraints = []
     constraints_str = "("
     OR = " || "
     equations1 = list(equations)
-    equations2 = list(equations)
+    #equations2 = list(equations)
     for i in goalCond.keys():
         _var1 = i 
         _var2 = goalCond[i]
@@ -582,11 +601,11 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
     
     constraints_str = constraints_str[:-len(OR)] + ")"
     equations1.append( constraints_str ) # Mathematica construction
-    equations2.append( Or(constraints) ) # Z3 construction
+    #equations2.append( Or(constraints) ) # Z3 construction
     
     for i in varMap.keys():
         equations1.append( varMap.get(i) != 0 ) 
-        equations2.append( varMap.get(i) != 0 ) 
+        #equations2.append( varMap.get(i) != 0 ) 
     
     print("subGoal list: ", equations)
     

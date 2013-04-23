@@ -1889,6 +1889,36 @@ class MaintainOrder:
             node.left = node.right
             node.right = save_left
 
+class CheckBoolOps:
+    def __init__(self):
+        self.usedAnd = False
+        self.conditions = []
+    
+    def visit(self, node, data):
+        return
+    
+    def visit_and(self, node, data):
+        self.usedAnd = True
+        if Type(node.left) not in [ops.AND]:
+            self.conditions.append( node.left )
+        if Type(node.right) not in [ops.AND]:
+            self.conditions.append( node.right )
+    
+    def getUsedAnd(self):
+        return self.usedAnd
+    
+    def getConditions(self):
+        return self.conditions
+
+def retrieveAnds(node):
+    cbo = CheckBoolOps()
+    ASTVisitor(cbo).preorder( node )
+    
+    if cbo.getUsedAnd():
+        return cbo.getConditions()
+    # return original
+    return [node]
+
 def PEMDAS(node):
     if (type(node) is str):
         return str(node)
