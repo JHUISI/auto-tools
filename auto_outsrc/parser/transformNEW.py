@@ -38,6 +38,9 @@ singleBF = False
 
 canCollapseThisForLoop = False
 
+FLrepVarCounter = 0
+FLrepVarPrefix = "FLrepVar"
+
 latexOutputString = ""
 latexStepCounter = 0
 
@@ -446,7 +449,7 @@ def getForLoopListIndex(currentLineNo, astNodes, config):
     currentForLoopSeed = int(config.forLoopSeed * currentNumberOfForLoops)
     loopVarName = getLoopVarNameFromLineNo(currentLineNo)
 
-    return str(str(currentForLoopSeed + int(iterationNo)) + "+" + str(numStatementsInForLoop + numPairingsInForLoop) + "*" + str(loopVarName))
+    return str(str(currentForLoopSeed + int(iterationNo)) + " + " + str(numStatementsInForLoop + numPairingsInForLoop) + " * " + str(loopVarName))
 
 def getIndexVarNameFromBinaryNodeRecursive(node, varName, possibleIndexVarNames):
     if (node.left != None):
@@ -476,7 +479,7 @@ def getIndexVarNameFromBinaryNode(node, varName):
     return firstPossibleName
 
 def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLines, currentNode, blindingVarsThatAreLists, currentLineNo, astNodes, config):
-    global transformListCounter, decoutListCounter, iterationNo
+    global transformListCounter, decoutListCounter, iterationNo, FLrepVarCounter
 
     decoutListCounter = transformListCounter
     origIterationNo = iterationNo
@@ -490,8 +493,11 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
         lineForTransformLines = ""
 
         if (withinForLoop == True):
-            lineForTransformLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
-            lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := GT\n"
+            #lineForTransformLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
+            lineForTransformLines += FLrepVarPrefix + str(FLrepVarCounter) + " := " + str(transformListIndex) + "\n"
+            lineForTransformLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter) + " := "
+            #lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := GT\n"
+            lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter) + " := GT\n"
             appendToLinesOfCode([lineForTypesSection], getEndLineNoOfFunc(TYPES_HEADER))
             parseLinesOfCode(getLinesOfCode(), False)
         else:
@@ -519,7 +525,8 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
 
         if (len(groupedPairings) == 1):
             if (withinForLoop == True):
-                lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "?"
+                #lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "?"
+                lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter)
             else:
                 lineForTransformLines = str(currentNode.left) + " := " + transformOutputList + LIST_INDEX_SYMBOL + str(transformListIndex)
 
@@ -540,7 +547,9 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
          decoutListIndex = getDecoutListIndex(currentLineNo, astNodes, config)
 
          if (withinForLoop == True):
-             subLineForDecoutLines += "(" + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(decoutListIndex) + "?"
+             #subLineForDecoutLines += "(" + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(decoutListIndex) + "?"
+             subLineForDecoutLines += FLrepVarPrefix + str(FLrepVarCounter) + " := " + str(decoutListIndex) + "\n"
+             subLineForDecoutLines += "(" + transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter)
          else:
              subLineForDecoutLines += "(" + transformOutputList + LIST_INDEX_SYMBOL + str(decoutListIndex)
              decoutListCounter += 1
@@ -575,6 +584,8 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
         addVarsUsedInDecoutToGlobalList(getRightSideOfStringAssignStatement(lineForDecoutLines))
         #print("Line for decout:  ", lineForDecoutLines)
 
+    FLrepVarCounter += 1
+
 def makeListTypeReplacement(inputType):
     if (inputType == types.listInt):
         return "list{int}"
@@ -597,7 +608,7 @@ def makeListTypeReplacement(inputType):
     return str(inputType)
 
 def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, currentLineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors):
-    global transformListCounter, decoutListCounter, iterationNo, varsWithNonStandardTypes
+    global transformListCounter, decoutListCounter, iterationNo, varsWithNonStandardTypes, FLrepVarCounter
 
     decoutListCounter = transformListCounter
     origIterationNo = iterationNo
@@ -609,8 +620,11 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
 
     if (currentNodeRightType in listOfStandardTypes):
         if (withinForLoop == True):
-            lineForTransformLines = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
-            lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
+            #lineForTransformLines = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
+            lineForTransformLines = FLrepVarPrefix + str(FLrepVarCounter) + " := " + str(transformListIndex) + "\n"
+            lineForTransformLines = transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter) + " := "
+            #lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
+            lineForTypesSection = transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter) + " := "
             lineForTypesSection += makeListTypeReplacement(currentNodeRightType) + "\n"
             appendToLinesOfCode([lineForTypesSection], getEndLineNoOfFunc(TYPES_HEADER))
             parseLinesOfCode(getLinesOfCode(), False)
@@ -647,7 +661,8 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
     #decoutListIndex = getDecoutListIndex(currentLineNo)
 
     if (withinForLoop == True):
-        lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "?"
+        #lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "?"
+        lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter)
         iterationNo += 1
     else:
         lineForTransformLines = str(currentNode.left) + " := " + transformOutputList + LIST_INDEX_SYMBOL + str(transformListIndex)
@@ -663,7 +678,8 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
     decoutListIndex = getDecoutListIndex(currentLineNo, astNodes, config)
 
     if (withinForLoop == True): 
-        lineForDecoutLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + str(decoutListIndex) + "?"
+        #lineForDecoutLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + str(decoutListIndex) + "?"
+        lineForDecoutLines += transformOutputListForLoop + LIST_INDEX_SYMBOL + FLrepVarPrefix + str(FLrepVarCounter)
         iterationNo += 1
     else:
         lineForDecoutLines += transformOutputList + LIST_INDEX_SYMBOL + str(decoutListIndex)
@@ -680,6 +696,8 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
             decoutLines.append(lineForDecoutLines + "\n")
         addVarsUsedInDecoutToGlobalList(getRightSideOfStringAssignStatement(lineForDecoutLines))
         searchForCTVarsThatNeedBuckets(getRightSideOfStringAssignStatement(lineForDecoutLines), ctExpandListNodes, ctVarsThatNeedBuckets)
+
+    FLrepVarCounter += 1
 
 '''
 def writeOutNonPairingCalcs(currentNode, transformLines, decoutLines):
@@ -1227,4 +1245,4 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
     parseLinesOfCode(getLinesOfCode(), False)
 
     #print(latexOutputString)
-    proof.writeProof()
+    #proof.writeProof()

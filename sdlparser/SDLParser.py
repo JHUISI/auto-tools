@@ -636,8 +636,14 @@ def updateVarTypes(node, i, newType=types.NO_TYPE):
         sys.exit("updateVarTypes in SDLParser.py received newType unequal to types.NO_TYPE when currentFuncName was TYPES_HEADER.")
 
     origName = str(node.left)
-    varName = getFullVarName(node.left, True)
-    #print("DEBUG: varName=", varName, ", origName=", node.left) 
+    if (origName.find(transformOutputListForLoop) == -1):
+        varName = getFullVarName(node.left, True)
+    else:
+        varName = getFullVarName(node.left, False)
+
+    if (varName.startswith("transformOutputList") == True):
+        print("here")
+    print("DEBUG: varName=", varName, ", origName=", node.left) 
     if ( (varName in varTypes[currentFuncName]) and (varName != outputVarName) ):
         if (varTypes[currentFuncName][varName].getType() == newType): 
             #print("DEBUG: common case newType is oldType=", newType)

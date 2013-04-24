@@ -6,6 +6,7 @@ outputVarName = "output"
 M = 'M'
 
 transformOutputList = "transformOutputList"
+transformOutputListForLoop = "transformOutputListForLoop"
 
 blindingLoopVar = "y"
 blindingLoopVarLength = "yLength"
