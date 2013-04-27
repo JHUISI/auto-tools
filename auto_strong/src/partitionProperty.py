@@ -407,7 +407,7 @@ def property2Extract(verifyFuncName, assignInfo, baseGen, generators, sigma):
     return testPartWithZ3(newVerifyConds, goalCond, varListMap)
 
 def buildZ3Expression(node, varMap, Z3Funcs):
-    if node == None: return None    
+    if node == None: return None
     if node.left != None: leftNode   = buildZ3Expression(node.left, varMap, Z3Funcs)
     if node.right != None: rightNode = buildZ3Expression(node.right, varMap, Z3Funcs)
     

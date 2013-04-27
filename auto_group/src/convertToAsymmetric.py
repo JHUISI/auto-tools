@@ -2,6 +2,7 @@ import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes
+from src.solver import *
 
 assignInfo = None
 SHORT_SECKEYS = "secret_keys" # for
@@ -11,10 +12,10 @@ SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
 SHORT_DEFAULT = "all"
 SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
-variableKeyword = "variables"
-clauseKeyword = "clauses"
-constraintKeyword = "constraints"
-mofnKeyword = "mofn"
+#variableKeyword = "variables"
+#clauseKeyword = "clauses"
+#constraintKeyword = "constraints"
+#mofnKeyword = "mofn"
 PKENC = "PKENC" # encryption
 PKSIG = "PKSIG" # signatures
 functionOrder = "functionOrder"
@@ -253,6 +254,31 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         print("Unrecognized type: ", Type(assign))
     return False
 
+def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnConstraints, bothConstraints):
+    _mofnConstraints = []
+    _search = False 
+    if mofnConstraints != None:
+        _mofnConstraints = mofnConstraints
+    if len(bothConstraints.keys()) > 0: _search = True
+    
+    options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
+     
+    options[hardConstKeyword] = hardConstraints
+    options[mofnKeyword]   = _mofnConstraints
+    options[bothKeyword] = bothConstraints
+    options[verboseKeyword] = True
+    
+    # uncomment for SAT version of AutoGroup
+    #(result1, satisfiable) = solveUsingSAT(options)    
+    #print("Satisfiable: ", satisfiable)
+    #print("Result: ", result1)
+    
+    options[searchKeyword] = True 
+    options[countKeyword] = {} # blank for now
+    (result2, satisfiable2) = solveUsingSMT(options)
+    return (satisfiable2, result2)
+
+
 def instantiateSolver(variables, clauses, constraints, mofnConstraints, bothConstraints):
     print("variables = ", variables) # txor.getVariables())
     outputVariables = variableKeyword + " = " + str(variables) + "\n"
@@ -351,13 +377,13 @@ def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, 
     return str(VarNameList) # string
  
 
-def searchForSolution(info, short, constraintList, txor, varTypes, conf, generators):
+def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, generators):
     resultDict = None
     satisfiable = False
     adjustConstraints = False
     mofnConstraints = None # only used if necessary
     fileSuffix = ""
-    bothConstraints = {}
+    bothConstraints = {isSet:False }
     while not satisfiable:
         print("\n<===== Generate Constraints =====>")    
         xorVarMap = txor.getVarMap()
@@ -366,10 +392,10 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
             fileSuffix = 'ky'
             assert type(conf.keygenSecVar) == str, "keygenSecVar in config file expected as a string"
             if not adjustConstraints:
-                constraints = getConstraintList(info, constraintList, conf.keygenSecVar, xorVarMap, varTypes, generators)
+                constraints = getConstraintList(info, hardConstraintList, conf.keygenSecVar, xorVarMap, varTypes, generators)
             else:
                 flexConstraints = getConstraintList(info, [], conf.keygenSecVar, xorVarMap, varTypes, generators, returnList=True)
-                newConstraintList = [xorVarMap.get(i) for i in constraintList]
+                newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
                 print("DEBUG: n-of-n constraints: ", newConstraintList)
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
@@ -380,10 +406,10 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
             fileSuffix = 'ky'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
             if not adjustConstraints:
-                constraints = getConstraintList(info, constraintList, conf.keygenPubVar, xorVarMap, varTypes, generators)
+                constraints = getConstraintList(info, hardConstraintList, conf.keygenPubVar, xorVarMap, varTypes, generators)
             else:
                 flexConstraints = getConstraintList(info, [], conf.keygenPubVar, xorVarMap, varTypes, generators, returnList=True)
-                newConstraintList = [xorVarMap.get(i) for i in constraintList]
+                newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
                 print("DEBUG: n-of-n constraints: ", newConstraintList)
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
@@ -393,10 +419,10 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
             fileSuffix = 'ct'
             assert type(conf.ciphertextVar) == str, "ciphertextVar in config file expected as a string"
             if not adjustConstraints:
-                constraints = getConstraintList(info, constraintList, conf.ciphertextVar, xorVarMap, varTypes, generators)
+                constraints = getConstraintList(info, hardConstraintList, conf.ciphertextVar, xorVarMap, varTypes, generators)
             else:
                 flexConstraints = getConstraintList(info, [], conf.ciphertextVar, xorVarMap, varTypes, generators, returnList=True)
-                newConstraintList = [xorVarMap.get(i) for i in constraintList]
+                newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
                 print("DEBUG: n-of-n constraints: ", newConstraintList)
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
@@ -406,10 +432,10 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
             fileSuffix = 'sig'
             assert type(conf.signatureVar) == str, "signatureVar in config file expected as a string"
             if not adjustConstraints:
-                constraints = getConstraintList(info, constraintList, conf.signatureVar, xorVarMap, varTypes, generators)
+                constraints = getConstraintList(info, hardConstraintList, conf.signatureVar, xorVarMap, varTypes, generators)
             else:
                 flexConstraints = getConstraintList(info, [], conf.signatureVar, xorVarMap, varTypes, generators, returnList=True)
-                newConstraintList = [xorVarMap.get(i) for i in constraintList]
+                newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
                 print("DEBUG: n-of-n constraints: ", newConstraintList)
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
@@ -417,28 +443,30 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
                 mofnConstraints = flexConstraints
         elif short == SHORT_FORALL and conf.schemeType == PKENC:
             fileSuffix = 'both' #default
-            _constraintList = [xorVarMap.get(i) for i in constraintList]
-            print("default constraints: ", _constraintList)
+            _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
+            print("default constraints: ", _hardConstraintList)
             constraints_ky = getConstraintList(info, [], conf.keygenSecVar, xorVarMap, varTypes, generators, returnList=True)
-            constraints_ky = list(set(constraints_ky).difference(_constraintList))
+            constraints_ky = list(set(constraints_ky).difference(_hardConstraintList))
             print("Constraints for ky: ", constraints_ky)
             constraints_ct = getConstraintList(info, [], conf.ciphertextVar, xorVarMap, varTypes, generators, returnList=True)
-            constraints_ct = list(set(constraints_ct).difference(_constraintList))
+            constraints_ct = list(set(constraints_ct).difference(_hardConstraintList))
             print("Constraints for ct: ", constraints_ct)
-            constraints = list(_constraintList) + [conf.keygenSecVar, conf.ciphertextVar]
+            constraints = list(_hardConstraintList) + [conf.keygenSecVar, conf.ciphertextVar]
+            bothConstraints[ isSet ] = True
             bothConstraints[ conf.keygenSecVar ] = constraints_ky
             bothConstraints[ conf.ciphertextVar ] = constraints_ct
         elif short == SHORT_FORALL and conf.schemeType == PKSIG:
             fileSuffix = 'both' #default
-            _constraintList = [xorVarMap.get(i) for i in constraintList]
-            print("default constraints: ", _constraintList)
+            _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
+            print("default constraints: ", _hardConstraintList)
             constraints_ky = getConstraintList(info, [], conf.keygenPubVar, xorVarMap, varTypes, generators, returnList=True)
-            constraints_ky = list(set(constraints_ky).difference(_constraintList))
+            constraints_ky = list(set(constraints_ky).difference(_hardConstraintList))
             print("Constraints for ky: ", constraints_ky)
             constraints_sig = getConstraintList(info, [], conf.signatureVar, xorVarMap, varTypes, generators, returnList=True)
-            constraints_sig = list(set(constraints_sig).difference(_constraintList))
+            constraints_sig = list(set(constraints_sig).difference(_hardConstraintList))
             print("Constraints for sig: ", constraints_sig)
-            constraints = list(_constraintList) + [conf.keygenPubVar, conf.signatureVar]
+            constraints = list(_hardConstraintList) + [conf.keygenPubVar, conf.signatureVar]
+            bothConstraints[ isSet ] = True            
             bothConstraints[ conf.keygenPubVar ] = constraints_ky
             bothConstraints[ conf.signatureVar ] = constraints_sig
         else:
@@ -452,7 +480,10 @@ def searchForSolution(info, short, constraintList, txor, varTypes, conf, generat
         # TODO: process constraints and add to output
         print("<===== Instantiate Z3 solver =====>")
         print("map: ", xorVarMap)
-        (satisfiable, resultDict) = instantiateSolver(txor.getVariables(), txor.getClauses(), constraints, mofnConstraints, bothConstraints)
+        #(satisfiable, resultDict) = instantiateSolver(txor.getVariables(), txor.getClauses(), constraints, mofnConstraints, bothConstraints)
+        print("original hard constraint: ", hardConstraintList)
+        hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
+        (satisfiable, resultDict) = instantiateZ3Solver(txor.getVariables(), txor.getClauses(), hardConstraints, constraints, mofnConstraints, bothConstraints)
         if satisfiable == False: 
             print("Adjusing constraints...")
             adjustConstraints = True

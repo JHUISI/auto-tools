@@ -1,5 +1,7 @@
 schemeType = "PKENC"
-short = "secret_keys"
+#short = "secret_keys"
+#short = "ciphertext"
+short = "both" 
 
 setupFuncName = "setup"
 keygenFuncName = "keygen"
