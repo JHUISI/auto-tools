@@ -2,9 +2,13 @@ import sys, getopt, importlib
 import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
-from src.convertToAsymmetric import * #runAutoGroup
+from src.convertToAsymmetric import *
 
 verboseFlag = "-v"
+encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
+
+def errorOut(keyword):
+    sys.exit("configAutoGroup: missing '%s' variable in config." % keyword)
 
 def configAutoGroup(sdl_file, cm, sdlVerbose):
     # setup sdl parser configs
@@ -21,8 +25,16 @@ def configAutoGroup(sdl_file, cm, sdlVerbose):
         setattr(cm, functionOrder, funcOrder)
 
     print("function order: ", cm.functionOrder)
+        
+    for i in encConfigParams:
+        if not hasattr(cm, i):
+            errorOut(i)
     
-    runAutoGroup(sdl_file, cm, sdlVerbose)
+    if not hasattr(cm, "secparam"):
+        secparam = "MNT160" # default pairing curve for now
+    else:
+        secparam = cm.secparam
+    runAutoGroup(sdl_file, cm, secparam, sdlVerbose)
 
 if __name__ == "__main__":
     if len(sys.argv) > 2:

@@ -1133,8 +1133,7 @@ class CombineBases:
                 new_exp  = BinaryNode(ops.ADD, g1Exp, g2Exp)
                 new_node = BinaryNode(ops.EXP, g1, new_exp)
                 addAsChildNodeToParent(data, new_node)
-                
-        
+    
 techMap = {1:Technique1, 2:Technique2, 3:Technique3, 4:Technique4, 11:Technique11}
 
 def testTechnique(tech_option, equation, code_block=None):

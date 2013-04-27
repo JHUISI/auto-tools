@@ -1800,6 +1800,35 @@ class MaintainOrder:
             node.left = node.right
             node.right = save_left
 
+class CountExpOp:
+    def __init__(self):
+        self.count = 0
+    
+    def visit(self, node, data):
+        return
+    
+    def visit_exp(self, node, data):
+        self.count += 1    
+    
+    def getCount(self):
+        return self.count
+
+# TODO: it requires more thought: e.g., how do you count A * B^(c * d)?
+class CountMulOp:
+    def __init__(self):
+        self.count = 0
+    
+    def visit(self, node, data):
+        return
+    
+    def visit_mul(self, node, data):
+        if Type(data['parent']) != ops.EXP: # we don't count B^(c * d)
+            self.count += 1
+    
+    def getCount(self):
+        return self.count
+
+
 def PEMDAS(node):
     if (type(node) is str):
         return str(node)

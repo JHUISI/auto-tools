@@ -1,6 +1,7 @@
 from z3 import *
 from itertools import combinations
-import src.sdlpath
+import src.sdlpath, math
+from src.benchmark_interface import *
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 
@@ -34,8 +35,10 @@ mofnKeyword = "mofn"
 searchKeyword = "searchBoth"
 weightKeyword = "weight"
 countKeyword = "counts"
-granOptions = ["ban", "exp", "mul"]
-minKeyword = "granular"
+sizeOp = "size"
+expOp = "exp"
+mulOp = "mul"
+minKeyword = "operationTime"
 unSat = "unsat"
 isSet = "isSet"
 
@@ -44,8 +47,9 @@ SS1024 = { 'ZR':1024, 'G1': 1024, 'G2': 1024, 'GT': 2048 } # TODO: need to verif
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
 BN256 = { 'ZR':256, 'G1': 256, 'G2': 1024, 'GT': 3072 }
 
+op_times = {'exp': {'GT': 1.14, 'ZR': 0.0, 'G1': 0.5327, 'G2': 2.5845}}
 symmetric_curves = {'SS512':SS512, 'SS1024':SS1024}
-asymmetric_curves = { 'MNT160':MNT160, 'BN256':BN256 }
+asymmetric_curves = { 'MNT160':MNT160, 'BN256':BN256 } # TODO: add additional curves 
 
 def getConstraintSAT(vars, mofn, mCount, verbose=False):
     if verbose: print("mCount :", mCount)
@@ -261,30 +265,6 @@ def get_models(Formula):
         else:
             return result
 
-## Given formula F, find the model the minimizes the value of X 
-## using at-most M iterations.
-#def minimize(solver, Formula, M):
-#    s = Solver()
-#    s.add(solver.assertions())
-#    last_model  = None
-#    i = 0
-#    while True:
-#        r = s.check()
-#        if r == unsat:
-#            if last_model != None:
-#                return last_model
-#            else:
-#                return unsat
-#        if r == unknown:
-#            raise Z3Exception("failed")
-#        last_model = s.model()
-#        X = last_model.evaluate(Formula)
-#        s.add(X < last_model[X])
-#        i = i + 1
-#        if (i > M):
-#            raise Z3Exception("maximum not found, maximum number of iterations was reached")
-
-
 class ModelEval:
     def __init__(self, variables, Z3vars, countValue):
         self.variables = variables
@@ -322,31 +302,31 @@ class ModelEval:
     
         return (M[newMinIndex], newMinValue) 
     
-    def evalWeightFunc(self, solver, weights, counts):
-        # for extracting other models
-        #solver2 = Solver()
-        #solver2.add(solver.assertions()) # revert back to solver
-        w0 = self.Z3vars['w0'] = Int('w0')
-        w1 = self.Z3vars['w1'] = Int('w1')
-        formula = ""
-        ADD = " + "
-        for i in self.variables:
-            V = self.Z3vars.get(i)
-            C = counts.get(i)
-            formula +=  "(" + str((((1 - V)*w0 + V*w1))*C ) + ")" + ADD
-        formula = formula[:-len(ADD)]
-        
-        parser = sdl.SDLParser()
-        formulaNode = parser.parse(formula)
-        weightFunc = buildZ3Expression(formulaNode, self.Z3vars) 
-        print("Objective Function: ",  weightFunc)
-        
-        solver.add(  )
-        
-        theModel = solver.model() # assume initial solution is satisfiable
-        print("Weight Func value: ", theModel.evaluate(weightFunc))
-    
-        return None
+#    def evalWeightFunc(self, solver, weights, counts):
+#        # for extracting other models
+#        #solver2 = Solver()
+#        #solver2.add(solver.assertions()) # revert back to solver
+#        w0 = self.Z3vars['w0'] = Int('w0')
+#        w1 = self.Z3vars['w1'] = Int('w1')
+#        formula = ""
+#        ADD = " + "
+#        for i in self.variables:
+#            V = self.Z3vars.get(i)
+#            C = counts.get(i)
+#            formula +=  "(" + str((((1 - V)*w0 + V*w1))*C ) + ")" + ADD
+#        formula = formula[:-len(ADD)]
+#        
+#        parser = sdl.SDLParser()
+#        formulaNode = parser.parse(formula)
+#        weightFunc = buildZ3Expression(formulaNode, self.Z3vars) 
+#        print("Objective Function: ",  weightFunc)
+#        
+#        solver.add(  )
+#        
+#        theModel = solver.model() # assume initial solution is satisfiable
+#        print("Weight Func value: ", theModel.evaluate(weightFunc))
+#    
+#        return None
 
 def convertToBoolean(mod):
     result = []
@@ -360,41 +340,31 @@ def convertToBoolean(mod):
     print("\n")
     return result
 
-#def minimizeBothMode(Z3vars, mySolver, constraints, optionDict):
-#    print("search for both...")
-#    count = 0
-#    constraintLists = {}
-#    _origConstraints = []
-#    for i in constraints:
-#        if optionDict.get(i):
-#            constraintLists[ count ] = (i, optionDict.get(i)); count += 1
-#            print(i, ":", optionDict.get(i))
-#        elif Z3vars.get(i) != None: # ground truth that we can't change
-#            _origConstraints.append(i)
-#   
-#    print("constraintLists = ", constraintLists, len(constraintLists)) 
-#    assert len(constraintLists) == 2, "With this option, can only have (keys and (ciphertext or signatures))"
-#    key1 = list(set(constraintLists[0][1]).difference(_origConstraints))
-#    key1name = str(constraintLists[0][0])
-#    key2 = list(set(constraintLists[1][1]).difference(_origConstraints))
-#    key2name = str(constraintLists[1][0])
-#
-#    origConstraints = [ vars.get(i) for i in _origConstraints ]
-#    
-#    mySolver = searchBothSMT(Z3vars, mySolver, key1name, key1, key2name, key2, origConstraints, verbose=True)
-#    print("new Solver: ")
-
+def getWeights(option, specificOp):
+    if option == sizeOp:
+        # specificOp could be the curve
+        curve = asymmetric_curves.get(specificOp)
+        assert curve != None, "specified invalid curve identifier: " + specificOp
+        return {'G1': curve.get('G1'), 'G2': curve.get('G2')}
+    elif option == expOp or option == mulOp:
+        (curve, paramid) = getBenchmarkInfo() # miracl by default
+        assert curve != None, "error occured with " + paramid + " benchmark info."
+        assert paramid.upper() == specificOp.upper(), "need to create benchmark dictionary for " + paramid
+        return {'G1':math.ceil(curve[paramid][option]['G1']), 'G2':math.ceil(curve[paramid][option]['G2']) }
 
 def convertQuery(optionDict, variables, constraints):
     """check optionDict for what user wants and create corresponding weights and counts for objective function"""
-    minOps         = optionDict.get(minKeyword)
-    countOpts      = optionDict.get(countKeyword) # count of certain operations e.g., exp => a0:4, b0:3, etc
-    
+    (minOps, specificOp) = optionDict.get(minKeyword)
+    countOpts            = optionDict.get(countKeyword) # count of certain operations e.g., exp => a0:4, b0:3, etc
     
     # weights can either be group sizes OR time for whatever op: (exp or mul)
-    weights = { 'G1': MNT160['G1'], 'G2':MNT160['G2'] } # bandwidth
-    #weights = { 'G1': 1, 'G2':2 } # bandwidth 
-    
+    #weights = { 'G1': MNT160['G1'], 'G2':MNT160['G2'] } # bandwidth
+    #weights = { 'G1': 1, 'G2':2 } # basic ratio's  
+    #weights = { 'G1': 1, 'G2':3 } # operation cost here 
+    print("<====================>")
+    weights = getWeights(minOps, specificOp)
+    print("selected weights: ", weights)
+    print("count values: ", countOpts)
     countValue = {}
     print("constraints: ", constraints)
     for v in variables:
@@ -403,8 +373,9 @@ def convertQuery(optionDict, variables, constraints):
             if v in countOpts.keys(): countValue[ v ] = int(countOpts[v])
             else: countValue[ v ] = 1
         else:
-            countValue[ v ] = 0
-    
+            if v in countOpts.keys(): countValue[ v ] = int(countOpts[v])
+            else: countValue[ v ] = 0
+    print("<====================>")    
     return (weights, countValue)
     
 def findMinimalRef(M, data1, data2):
@@ -422,7 +393,7 @@ def findMinimalRef(M, data1, data2):
             prefVal = minVal; prevRef = minRef
             minVal = data3[i]
             minRef = i
-    print("min: ", data1[minRef], data2[minRef], M[minRef])
+    print("min: ", data1[minRef], data2[minRef], str(M[minRef]).replace("\n", "").replace("\t", ""))
     return M[minRef]
         
 def solveUsingSMT(optionDict):
@@ -512,23 +483,5 @@ def solveUsingSMT(optionDict):
         i = minKeys[0]
         j = minKeys[1]
         modRef = findMinimalRef(M, data[i], data[j])
-#        print("Operate on: ", )
-#        sys.exit(0)
+
     return (convertToBoolean(modRef), sat)
-    
-#    sys.exit(0)
-#    print("SMT input: ", str(mySolver).replace("\n", " ").replace("\t", ""))
-#    
-#    isSat = mySolver.check()
-#    if isSat == unsat:
-#        print("Failed!")
-#    else:
-#        mod = mySolver.model()
-##        modEval = ModelEval(variables, Z3vars, countValue)
-##        mod2 = modEval.evalWeightFunc(M, weights, counts)
-#        print("Model:\t")
-#        for i in range(len(list(variables))):
-#            k = mod[i]
-#            print(k, ":=", mod[k], end=" : ")
-#        print("\n")
-#    return (None, None)

@@ -1,7 +1,7 @@
 import src.sdlpath, sys, os, random, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes, CountExpOp, CountMulOp
 from src.solver import *
 
 assignInfo = None
@@ -12,6 +12,7 @@ SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
 SHORT_DEFAULT = "all"
 SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
+minOp = "operation"
 #variableKeyword = "variables"
 #clauseKeyword = "clauses"
 #constraintKeyword = "constraints"
@@ -19,6 +20,7 @@ SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE
 PKENC = "PKENC" # encryption
 PKSIG = "PKSIG" # signatures
 functionOrder = "functionOrder"
+curveID = "curve"
 
 G1Prefix = "G1"
 G2Prefix = "G2"
@@ -254,7 +256,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         print("Unrecognized type: ", Type(assign))
     return False
 
-def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnConstraints, bothConstraints):
+def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnConstraints, bothConstraints, countOpt, minOptions):
     _mofnConstraints = []
     _search = False 
     if mofnConstraints != None:
@@ -274,7 +276,8 @@ def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnCo
     #print("Result: ", result1)
     
     options[searchKeyword] = True 
-    options[countKeyword] = {} # blank for now
+    options[countKeyword] = countOpt # set iff min ops like exp or mul are selected
+    options[minKeyword] = minOptions # (minOps, specificOp)
     (result2, satisfiable2) = solveUsingSMT(options)
     return (satisfiable2, result2)
 
@@ -356,6 +359,21 @@ def getAssignmentForName(var, varTypes):
     print("varList: ", resultVars)
     return resultVars
 
+def getOpCost(op_key, xorVarMap, varNames):
+    global assignInfo
+    varCounts = {}
+    if op_key == expOp:
+        for i in varNames:
+            (funcName, varInfo) = getVarNameEntryFromAssignInfo(assignInfo, i)
+            ceo = CountExpOp()
+            sdl.ASTVisitor(ceo).preorder(varInfo.getAssignNode())
+            v = xorVarMap.get(i)
+            varCounts[ v ] = ceo.getCount()
+    
+        print("Final varCount for expOp: ", varCounts)
+
+    return varCounts
+    
 def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, generators, returnList=False):
     VarNames = getAssignmentForName(configVarName, varTypes)
     VarNames = list(set(VarNames).difference(generators))
@@ -364,6 +382,9 @@ def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, 
     if info != None:
         info['notInAPairing'] = list(set(VarNames).difference(xorVarMap.keys()))
         info['notInAPairing'].sort()
+        if info[minOp] != None:
+            # extract counts for whatever operation
+            info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
     if len(info['notInAPairing']) > 0: print("Not in a pairing: ", info['notInAPairing'])
     VarNameList = []
     for i in VarNames:
@@ -384,6 +405,17 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
     mofnConstraints = None # only used if necessary
     fileSuffix = ""
     bothConstraints = {isSet:False }
+    constraints = []
+    # determine if user specified granular options such as 
+    info[minOp] = None
+    minOps = sizeOp # default operation
+    info[minKeyword] = {}
+    # check if user set the min operation field in config file?
+    # this indicates interest in measuring 
+    if hasattr(conf, minOp):
+        info[minOp] = conf.operation
+        minOps = info[minOp]           
+    
     while not satisfiable:
         print("\n<===== Generate Constraints =====>")    
         xorVarMap = txor.getVarMap()
@@ -400,7 +432,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 print("DEBUG: n-of-n constraints: ", newConstraintList)
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
-                mofnConstraints = flexConstraints
+                mofnConstraints = flexConstraints                        
         elif short == SHORT_PUBKEYS:
             # create constraints around keys
             fileSuffix = 'ky'
@@ -469,10 +501,38 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
             bothConstraints[ isSet ] = True            
             bothConstraints[ conf.keygenPubVar ] = constraints_ky
             bothConstraints[ conf.signatureVar ] = constraints_sig
+        elif info[minOp] != None:
+            fileSuffix = info[minOp]                
+            if conf.schemeType == PKENC:
+                configVarName = conf.keygenSecVar
+                VarNames1 = getAssignmentForName(configVarName, varTypes)
+                VarNames1 = list(set(VarNames1).difference(generators))
+                VarNames1.sort()
+                configVarName = conf.ciphertextVar
+                VarNames2 = getAssignmentForName(configVarName, varTypes)
+                VarNames2 = list(set(VarNames2).difference(generators))
+                VarNames2.sort()
+                
+                VarNames = VarNames1 + VarNames2
+                info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
+
+            elif conf.schemeType == PKSIG:
+                configVarName = conf.keygenPubVar
+                VarNames1 = getAssignmentForName(configVarName, varTypes)
+                VarNames1 = list(set(VarNames1).difference(generators))
+                VarNames1.sort()
+                configVarName = conf.signatureVar
+                VarNames2 = getAssignmentForName(configVarName, varTypes)
+                VarNames2 = list(set(VarNames2).difference(generators))
+                VarNames2.sort()
+                
+                VarNames = VarNames1 + VarNames2
+                info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
+                
         else:
             print("Unexpected configuration. Run python runAutoGroup.py --help-config")
             sys.exit(-1)
-        
+                
         print("<===== Generate Constraints =====>\n")
         
         print("<===== Generate SAT solver input =====>")
@@ -483,7 +543,9 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
         #(satisfiable, resultDict) = instantiateSolver(txor.getVariables(), txor.getClauses(), constraints, mofnConstraints, bothConstraints)
         print("original hard constraint: ", hardConstraintList)
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
-        (satisfiable, resultDict) = instantiateZ3Solver(txor.getVariables(), txor.getClauses(), hardConstraints, constraints, mofnConstraints, bothConstraints)
+        minOptions = (minOps, info[curveID]) # user should provide this information
+        countOpt = info[minKeyword]
+        (satisfiable, resultDict) = instantiateZ3Solver(txor.getVariables(), txor.getClauses(), hardConstraints, constraints, mofnConstraints, bothConstraints, countOpt, minOptions)
         if satisfiable == False: 
             print("Adjusing constraints...")
             adjustConstraints = True
@@ -567,7 +629,7 @@ def transformTypes(typesH, info):
     return newLines
 
 
-def runAutoGroup(sdlFile, config, sdlVerbose=False):
+def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
@@ -626,6 +688,7 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
         
     info = {}
+    info[curveID] = secparam
     gen = Generators(info)
     print("List of generators for scheme")
     if hasattr(config, "extraSetupFuncName"):
@@ -724,7 +787,7 @@ def runAutoGroup(sdlFile, config, sdlVerbose=False):
         groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
     else:
         groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-    if len(info['notInAPairing']) > 0:
+    if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         print("Update: new G1 deps=>", groupInfo['G1'])
     
@@ -1405,16 +1468,16 @@ def writeConfig(filename, *args):
     return
     
 
-if __name__ == "__main__":
-    print(sys.argv)
-    sdl_file = sys.argv[1]
-    sdlVerbose = False
-    if len(sys.argv) > 2: # and sys.argv[3] == "-v":  sdlVerbose = True
-        config = sys.argv[2]
-        config = config.split('.')[0]
-
-        configModule = __import__(config)
-        sdl.masterPubVars = configModule.masterPubVars
-        sdl.masterSecVars = configModule.masterSecVars
-            
-    runAutoGroup(sdl_file, configModule, sdlVerbose)
+#if __name__ == "__main__":
+#    print(sys.argv)
+#    sdl_file = sys.argv[1]
+#    sdlVerbose = False
+#    if len(sys.argv) > 2: # and sys.argv[3] == "-v":  sdlVerbose = True
+#        config = sys.argv[2]
+#        config = config.split('.')[0]
+#
+#        configModule = __import__(config)
+#        sdl.masterPubVars = configModule.masterPubVars
+#        sdl.masterSecVars = configModule.masterSecVars
+#            
+#    runAutoGroup(sdl_file, configModule, sdlVerbose)
