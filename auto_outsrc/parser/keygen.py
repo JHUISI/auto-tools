@@ -49,6 +49,10 @@ bfMapKeyword = 'bfMap'
 skBfMapKeyword = 'skBfMap'
 parser = SDLParser()
 
+def removeLastCharFromString(inputString):
+    lenString = len(inputString)
+
+    return inputString[0:(lenString - 1)]
 
 def processListOrExpandNodes(binNode, origVarName, newVarName):
     binNodeRight = binNode.right
@@ -84,7 +88,7 @@ def replaceVarInstancesInLineNoRange(startLineNo, endLineNo, origVarName, newVar
             binNodeAsString = "\n"
         substituteOneLineOfCode(binNodeAsString, lineNoIndex)
 
-    #updateCodeAndStructs() # JAA commented out
+    updateCodeAndStructs() # JAA commented out
 
 def updateCodeAndStructs():
     global linesOfCode, assignInfo, varTypes, astNodes, forLoops, publicVarNames, secretVarNames, varDepList
@@ -1033,7 +1037,9 @@ def applyBlindingFactorsToScheme_Individual(resultDictionary, keygenOutputElem, 
 
     if (isVarList == False):
         if (isLastCharThisChar(currentBlindingFactorName, LIST_INDEX_SYMBOL) == True):
-            sys.exit("applyBlindingFactorsToScheme_Individual in keygen.py:  variable isn't supposed to be a list, but the blinding factor from resultDictionary has a pound sign at the end of it.")
+            currentBlindingFactorName = removeLastCharFromString(currentBlindingFactorName)
+            resultDictionary[keygenOutputElem] = currentBlindingFactorName
+            #sys.exit("applyBlindingFactorsToScheme_Individual in keygen.py:  variable isn't supposed to be a list, but the blinding factor from resultDictionary has a pound sign at the end of it.")
         if (currentBlindingFactorName not in blindingFactors_NonLists):
             blindingFactors_NonLists.append(currentBlindingFactorName)
         SDLLinesForKeygen.append(keygenOutputElem + config.blindingSuffix + " := " + keygenOutputElem + " ^ (1/" + currentBlindingFactorName + ")\n")
@@ -1413,7 +1419,7 @@ def keygen(file, config):
     for stringEntry in stringEntriesInKeygenElemToSMTExp:
         skBfMap[stringEntry] = nilType
 
-    skBfMap = applyGroupSharingOptimization(skBfMap, config)
+    #skBfMap = applyGroupSharingOptimization(skBfMap, config)
 
     applyBlindingFactorsToScheme(skBfMap, config)
     secretKeyName = config.keygenSecVar
@@ -1430,7 +1436,7 @@ def keygen(file, config):
 
     inputLineOfKeygenFunc = getLineNoOfInputStatement(config.keygenFuncName)
     appendToLinesOfCode(SDLLinesForKeygen, inputLineOfKeygenFunc + 1)
-    #updateCodeAndStructs() # JAA commented out
+    updateCodeAndStructs() # JAA commented out
     writeOutputLineForKeygen(secretKeyName, config.keygenFuncName, config)
 
     for index_listVars in range(0, len(varNamesForListDecls)):

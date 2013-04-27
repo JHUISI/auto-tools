@@ -45,7 +45,7 @@ KendList2Blinded := list
 KendList1Blinded := list
 bf0 := list
 transformOutputList#0 := GT
-transformOutputListForLoop#10+7*i? := GT
+transformOutputListForLoop#FLrepVar1 := GT
 transformOutputList#1 := GT
 transformOutputList := list
 transformOutputListForLoop := list
@@ -140,7 +140,7 @@ forall{y := KendList2}
 KendList2Blinded#y := (KendList2#y^(1 / bf0))
 END :: forall
 
-skBlinded := list{Kstart1Blinded, Kstart2Blinded, KendList1, KendList2Blinded, K1Blinded, K2Blinded, K3Blinded}
+skBlinded := list{Kstart1Blinded, Kstart2Blinded, KendList1Blinded, KendList2Blinded, K1Blinded, K2Blinded, K3Blinded}
 output := list{bf0, skBlinded}
 END :: func:keygen
 
@@ -197,8 +197,9 @@ for{i := 1,l+1}
 NOP
 key := hashToKey(Ti#i)
 j := (i - 1)
-transformOutputListForLoop#10+7*i? := e(C1#j,K1Blinded#key) * e((C2#i^-1),K2Blinded#key) * e(C1#i,K3Blinded#key)
-result0 := transformOutputListForLoop#10+7*i?
+FLrepVar1 := 10 + 7 * i
+transformOutputListForLoop#FLrepVar1 := e(C1#j,K1Blinded#key) * e((C2#i^-1),K2Blinded#key) * e(C1#i,K3Blinded#key)
+result0 := transformOutputListForLoop#FLrepVar1
 END :: for
 x := getAcceptState(Ti)
 transformOutputList#1 := e((Cend1^-1),KendList1Blinded#x) * e(Cend2,KendList2Blinded#x)
@@ -221,7 +222,8 @@ for{i := 1,l+1}
 NOP
 key := hashToKey(Ti#i)
 j := (i - 1)
-result0 := (transformOutputListForLoop#10+7*i? ^ (bf0) ) 
+FLrepVar1 := 10 + 7 * i
+result0 := (transformOutputListForLoop#FLrepVar1 ^ (bf0) ) 
 B#i? := (B#i-1? * result0)
 END :: for
 result1 := (transformOutputList#1 ^ (bf0) ) 

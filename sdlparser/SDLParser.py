@@ -641,9 +641,9 @@ def updateVarTypes(node, i, newType=types.NO_TYPE):
     else:
         varName = getFullVarName(node.left, False)
 
-    if (varName.startswith("transformOutputList") == True):
-        print("here")
-    print("DEBUG: varName=", varName, ", origName=", node.left) 
+    #if (varName.startswith("transformOutputList") == True):
+        #print("here")
+    #print("DEBUG: varName=", varName, ", origName=", node.left) 
     if ( (varName in varTypes[currentFuncName]) and (varName != outputVarName) ):
         if (varTypes[currentFuncName][varName].getType() == newType): 
             #print("DEBUG: common case newType is oldType=", newType)
@@ -1920,7 +1920,9 @@ def appendToLinesOfCode(linesToAdd, lineNumberToAddTo):
 
     linesOfCode = newLinesOfCode
 
-#    parseLinesOfCode(linesOfCode, False)
+    pass
+
+    #parseLinesOfCode(linesOfCode, False)
 
 def substituteOneLineOfCode(line, lineNo):
     if ( (type(line) is not str) or (len(line) == 0) ):
@@ -2086,13 +2088,28 @@ def updateSecretVarNames():
         for varToRemove in varsToRemove:
             secretVarNames.remove(varToRemove)
 
+def convertEOLCharsIntoNewLines(code):
+    newCode = []
+
+    for line in code:
+        if (line == "\n"):
+            newCode.append("\n")
+            continue
+
+        lineSplit = line.split('\n')
+        for lineFrag in lineSplit:
+            if (len(lineFrag) > 0):
+                newCode.append(lineFrag + "\n")
+
+    return newCode
+
 def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
     global varTypes, assignInfo, forLoops, forLoopsInner, currentFuncName, varDepList, varInfList, varsThatProtectM
     global algebraicSetting, startLineNo_ForLoop, startLineNo_ForLoopInner, startLineNos_Functions, endLineNos_Functions
     global getVarDepInfListsCalled, getVarsThatProtectMCalled, astNodes, varNamesToFuncs_All
     global varNamesToFuncs_Assign, ifElseBranches, startLineNo_IfBranch, startLineNo_ElseBranch
     global inputOutputVars, varDepListNoExponents, varInfListNoExponents, functionNameOrder
-    global publicVarNames, secretVarNames, assignVarInfo, overflowAssignInfo
+    global publicVarNames, secretVarNames, assignVarInfo, overflowAssignInfo, linesOfCode
 
     astNodes = []
     overflowAssignInfo = {}
@@ -2124,11 +2141,14 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
     publicVarNames = []
     secretVarNames = []
 
+    code = convertEOLCharsIntoNewLines(code)
+    linesOfCode = code
+
     parser = SDLParser()
     lineNumberInCode = 0 
     for line in code:
         lineNumberInCode += 1
-        if (lineNumberInCode == 212):
+        if (lineNumberInCode == 165):
             pass
         if len(line.strip()) > 0 and line[0] != '#':
             if currentFuncName not in [LATEX_HEADER]: # only concerned about latex section b/c parsing is slightly different
