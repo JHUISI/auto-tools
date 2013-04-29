@@ -1,42 +1,26 @@
 import hashlib, sys
 
-from charm.toolbox.pairinggroup import *
+from charm.toolbox.pairinggroup import PairingGroup,ZR,G1,G2,GT,pair
 
 from charm.toolbox.secretutil import SecretUtil
+from charm.toolbox.secretshare import SecretShare
 from charm.core.math import pairing
 from charm.toolbox.iterate import dotprod2
 from charm.core.math.pairing import hashPair as DeriveKey
 from charm.core.engine.util import objectToBytes, bytesToObject
-from charm.toolbox.symcrypto import AuthenticatedCryptoAbstraction
+#from charm.toolbox.symcrypto import AuthenticatedCryptoAbstraction
 from charm.toolbox.conversion import Conversion
-from charm.toolbox.bitstring import Bytes
+#from charm.toolbox.bitstring import Bytes
 #import hashlib
 
 groupObjBuiltInFuncs = None
 utilBuiltInFuncs = None
+shareBuiltInFuncs = None
 
 listIndexNoOfN_StrToId = 9
 listIndexNoOfl_StrToId = 10
 
-MNT160 = "SS512"
-
-def stringToInt(strID, zz, ll):
-    getUserGlobals()
-
-    '''Hash the identity string and break it up in to l bit pieces'''
-    h = hashlib.new('sha1')
-    h.update(bytes(strID, 'utf-8'))
-    _hash = Bytes(h.digest())
-    val = Conversion.OS2IP(_hash) #Convert to integer format
-    bstr = bin(val)[2:]   #cut out the 0b header
-
-    v=[]
-    for i in range(zz):  #z must be greater than or equal to 1
-        binsubstr = bstr[ll*i : ll*(i+1)]
-        intval = int(binsubstr, 2)
-        intelement = groupObjBuiltInFuncs.init(ZR, intval)
-        v.append(intelement)
-    return v
+MNT160 = 80
 
 def isList(object):
     objectTypeName = None
@@ -68,10 +52,6 @@ def writeToFile(name, s):
 	fd.write(s)
 	fd.close()
 
-def GetString(GetString_Arg):
-    getUserGlobals()
-    return GetString_Arg.getAttribute()
-
 def createPolicy(policy_str):
 	getUserGlobals()
 	return utilBuiltInFuncs.createPolicy(policy_str)
@@ -95,6 +75,65 @@ def prune(policy, S):
 def getCoefficients(policy):
 	getUserGlobals()
 	return utilBuiltInFuncs.getCoefficients(policy)
+
+def strkeys(var):
+	keys = []
+	for i in range(len(var)):
+	    keys.append( var[i][0] ) 
+	return keys
+
+def recoverCoefficientsDict(inputDict):
+	getUserGlobals()
+	newDict = {}
+	_inputDict = {}
+	if type(inputDict[0]) == int:
+		for i,j in inputDict.items():
+		    _inputDict[ i ] = groupObjBuiltInFuncs.init(ZR, j)
+		resultDict = shareBuiltInFuncs.recoverCoefficientsDict(_inputDict)
+		for i,j in resultDict.items():
+		    newDict[ int(i) ] = j	
+		return newDict
+
+	length = len(inputDict)
+	for i in range(length):
+	    _inputDict[ inputDict[i][0] ] = inputDict[i][1]
+	resultDict = shareBuiltInFuncs.recoverCoefficientsDict(_inputDict)
+	for i in range(length):
+	    key = inputDict[i][1] 
+	    if resultDict.get(key) != None:
+	       newDict[ inputDict[i][0] ] = resultDict[key]
+	return newDict
+
+def genShares(mk0, dOver, n, q, wHash):
+	getUserGlobals()
+	return shareBuiltInFuncs.genShares(mk0, dOver, n, q, wHash)
+
+def genSharesForX(mk0, q, wHash):
+	getUserGlobals()
+	newX = []
+	x = shareBuiltInFuncs.genShares(mk0, 1, 1, q, wHash) 
+	for i in range(len(x)):
+		newX.append(x[i][1])
+	return newX
+	#return utilBuiltInFuncs.genShares(mk0, q, wHash)
+
+def intersectionSubset(w, wPrime, d):
+    getUserGlobals()	
+    SSub = {}
+    S = {}
+
+    wLen = len(w)
+    wPrimeLen = len(wPrime)
+    SIndex = 0
+    for i in range(0, wLen):
+        for j in range(0, wPrimeLen):
+            if ( ( (w[i]) == (wPrime[j]) ) ):
+                S[SIndex] = (w[i], groupObjBuiltInFuncs.hash(w[i]))
+                SIndex = (SIndex + 1)
+    #for k in range(0, d):
+    #    SSub[k] = (S[k][0]], S[k][1])
+    output = S
+    return output
 
 def sha1(message):
 	getUserGlobals()
@@ -121,10 +160,13 @@ def strToId(pk, strID):
 	return v
 
 def getUserGlobals():
-	global groupObjBuiltInFuncs, utilBuiltInFuncs
+	global groupObjBuiltInFuncs, utilBuiltInFuncs, shareBuiltInFuncs
 
 	if (groupObjBuiltInFuncs == None):
-		groupObjBuiltInFuncs = PairingGroup(MNT160)
+		groupObjBuiltInFuncs = PairingGroup("SS512")
 
 	if (utilBuiltInFuncs == None):
 		utilBuiltInFuncs = SecretUtil(groupObjBuiltInFuncs, verbose=False)
+
+	if (shareBuiltInFuncs == None):
+		shareBuiltInFuncs = SecretShare(groupObjBuiltInFuncs, False)

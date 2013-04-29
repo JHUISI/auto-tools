@@ -232,4 +232,3 @@ M := (Cm * (Bend^-1))
 output := M
 END :: func:decout
 
-

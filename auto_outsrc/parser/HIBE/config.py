@@ -18,6 +18,7 @@ transformOutputList = "transformOutputList"
 
 #doNotIncludeInTransformList = ["reservedVarName0"]
 doNotIncludeInTransformList = []
+#doNotIncludeInTransformList = ["finalLoopVar"]
 
 M = 'M'
 
