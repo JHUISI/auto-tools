@@ -1,7 +1,7 @@
-import src.sdlpath, sys, os, random, string, re, importlib
+import src.sdlpath, sys, os, copy, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes, CountExpOp, CountMulOp
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 from src.solver import *
 
 assignInfo = None
@@ -13,10 +13,6 @@ SHORT_FORALL = "both"
 SHORT_DEFAULT = "all"
 SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
 minOp = "operation"
-#variableKeyword = "variables"
-#clauseKeyword = "clauses"
-#constraintKeyword = "constraints"
-#mofnKeyword = "mofn"
 PKENC = "PKENC" # encryption
 PKSIG = "PKSIG" # signatures
 functionOrder = "functionOrder"
@@ -129,8 +125,10 @@ class transformXOR:
         if leftAssignVar in 'G2': create 1 statement in G2
 """
 def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, startLines={}):
-    begin = "BEGIN :: func:" + funcName
-    end = "END :: func:" + funcName
+    parser = sdl.SDLParser()
+    funcNode = BinaryNode("func:" + str(funcName))
+    begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
+    end = BinaryNode(ops.END, funcNode, None) # "END :: func:" + funcName
     newLines = [begin] # + list(startLines)
     stack = []
     lines = list(blockStmts.keys())
@@ -139,23 +137,23 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
     for index, i in enumerate(lines):
         assert type(blockStmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
         if blockStmts[i].getIsForLoopBegin():
-            if blockStmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
-            elif blockStmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
-            newLines.append(str(blockStmts[i].getAssignNode()))
+            if blockStmts[i].getIsForType(): newLines.append(parser.parse("BEGIN :: for\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+            elif blockStmts[i].getIsForAllType(): newLines.append(parser.parse("BEGIN :: forall\n"))  # "\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+            newLines.append(blockStmts[i].getAssignNode())
         elif blockStmts[i].getIsForLoopEnd():
-            newLines.append(str(blockStmts[i].getAssignNode()))
+            newLines.append(blockStmts[i].getAssignNode())
         
         elif blockStmts[i].getIsIfElseBegin():
-            newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+            newLines.append(parser.parse("BEGIN :: if\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
             assign = blockStmts[i].getAssignNode()
             print(i, ":", assign, end="")           
             handleVarInfo(newLines, assign, blockStmts[i], info, noChangeList)
         
         elif blockStmts[i].getIsIfElseEnd():
-            newLines.append(str(blockStmts[i].getAssignNode())) 
+            newLines.append(blockStmts[i].getAssignNode()) 
         
         elif blockStmts[i].getIsElseBegin():
-            newLines.append(str(blockStmts[i].getAssignNode()))
+            newLines.append(blockStmts[i].getAssignNode())
         
         else:
             assign = blockStmts[i].getAssignNode()
@@ -195,10 +193,28 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         if blockStmt.getHasRandomness() and varTypeObj != None:
             if varTypeObj.getType() in [types.ZR, types.GT]:
                 print(" :-> not a generator, so add to newLines.", end=" ")
-                newLine = str(assign) # unmodified
+                #newLine = str(assign) # unmodified
+                newLines.append(assign) # unmodified
+                return True
             else:
                 print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
-        elif assignVarOccursInBoth(assignVar, info):
+                if info['varTypes'].get(assignVar).getType() == types.G1:
+                    pass # figure out what to do here
+        if assignVar == outputKeyword:
+            vardeps = blockStmt.getVarDepsNoExponents()
+            if len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
+                if Type(assign.right) == ops.LIST:
+                    newLine = updateForLists(blockStmt, assignVar, info)                    
+                    newLines.append( newLine )
+                    return True
+                elif Type(assign.right) == ops.ATTR:
+                    assign.right = BinaryNode(ops.LIST)
+                    assign.right.listNodes = list(vardeps)
+                    newLine = updateForLists(blockStmt, assignVar, info)
+                    newLines.append( newLine )
+                    return True
+                
+        if assignVarOccursInBoth(assignVar, info):
             print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
         elif assignVarOccursInG1(assignVar, info):
@@ -222,8 +238,9 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
                 noChangeList.append(str(assignVar))
                 info['G1'] = info['G1'].union( assignVar )
                 newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+                print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
         else:
-            newLine = str(assign)
+            newLine = assign
         # add to newLines
         if type(newLine) == list:
             newLines.extend(newLine)
@@ -249,9 +266,9 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
             assign2 = updateForPairing(blockStmt, info, noChangeList)
             
         if str(assign2) == str(assign):
-            newLines.append(str(assign))
+            newLines.append(assign)
         else:
-            newLines.append(str(assign2))
+            newLines.append(assign2)
     else:
         print("Unrecognized type: ", Type(assign))
     return False
@@ -274,6 +291,7 @@ def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnCo
     #(result1, satisfiable) = solveUsingSAT(options)    
     #print("Satisfiable: ", satisfiable)
     #print("Result: ", result1)
+    options[curveKeyword] = False # TODO: check option from user (not ready for prime-time)
     
     options[searchKeyword] = True 
     options[countKeyword] = countOpt # set iff min ops like exp or mul are selected
@@ -570,6 +588,10 @@ def convertType(v, i):
         return "pol"
     elif i == types.list:
         return "list"
+    elif i == types.ZR:
+        return "ZR"
+    elif i == types.listZR:
+        return "list{ZR}"
     print("DEBUG: convertType error: ", v, " = ", i)
     return False
 
@@ -699,12 +721,13 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     
     if hasattr(config, 'setupFuncName'):
         gen.extractGens(stmtS, typesS)
-    elif hasattr(config, 'keygenFuncName'):
+    if hasattr(config, 'keygenFuncName'):
         gen.extractGens(stmtK, typesK)
     else:
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
-    
     generators = gen.getGens()
+    print("Generators extracted: ", generators)
+
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt 
     hashVarList = []
@@ -791,7 +814,7 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         print("Update: new G1 deps=>", groupInfo['G1'])
     
-    #generatorLines = gen.pruneGens(groupInfo)
+
     groupInfo['generators'] = generators 
     groupInfo['generatorMapG1'] = generatorMapG1
     groupInfo['generatorMapG2'] = generatorMapG2
@@ -800,22 +823,10 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     groupInfo['newTypes'] = {}
     groupInfo['varTypes'] = {}
     groupInfo['varTypes'].update(varTypes)
-    
-    noChangeList = []
-    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
-    for i, j in typesH.items():
-        t = j.getType()
-        if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
-            noChangeList.append(i)
-    print("Initial noChangeList: ", noChangeList)
-    
-    newLinesSe = []
-    newLinesS = []
-    newLinesK = []
-    entireSDL = sdl.getLinesOfCode()
-    transFuncGen = {}
-    transFuncRes = {}
+    groupInfo['usedVars'] = set()
     transFunc = {}
+    transFuncGen = {}
+
     if hasattr(config, "extraSetupFuncName"):
         transFuncGen[ config.extraSetupFuncName ] = stmtSe
     if hasattr(config, 'setupFuncName'):    
@@ -823,56 +834,200 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     elif hasattr(config, 'keygenFuncName'):
         transFuncGen[ config.keygenFuncName ] = stmtK
 
-    for funcName in config.functionOrder:
-        if funcName in transFuncGen.keys():
-            print("<===== processing %s =====>" % funcName)
-            transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFuncGen[ funcName ], groupInfo, noChangeList, generatorLines)
-            print("<===== processing %s =====>" % funcName)
-            
-    # obtain results
-    newLinesT = transformTypes(typesH, groupInfo)
-    if hasattr(config, "extraSetupFuncName"):
-        newLinesSe = transFuncRes.get( config.extraSetupFuncName )
-    if hasattr(config, 'setupFuncName'):   
-        newLinesS  = transFuncRes.get( config.setupFuncName )
-    elif hasattr(config, 'keygenFuncName'):
-        newLinesK  = transFuncRes.get( config.keygenFuncName )
-    
-    # transform body of SDL scheme
     if config.schemeType == PKENC:
         transFunc[ config.keygenFuncName ]  = stmtK
         transFunc[ config.encryptFuncName ] = stmtE
         transFunc[ config.decryptFuncName ] = stmtD
-        for funcName in config.functionOrder:
-            if funcName in transFunc.keys():
-                print("<===== processing %s =====>" % funcName)
-                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList)
-                print("<===== processing %s =====>" % funcName)
-        newLinesK = transFuncRes.get( config.keygenFuncName )
-        newLines2 = transFuncRes.get( config.encryptFuncName )
-        newLines3 = transFuncRes.get( config.decryptFuncName )
-            
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
             transFunc[ config.keygenFuncName ] = stmtK
         transFunc[ config.signFuncName ] = stmtSi
         transFunc[ config.verifyFuncName ] = stmtV
-        for funcName in config.functionOrder:
-            if funcName in transFunc.keys():
-                print("<===== processing %s =====>" % funcName)
-                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList) 
-                print("<===== processing %s =====>" % funcName)
-            
-        newLinesK = transFuncRes.get( config.keygenFuncName )
-        newLines2 = transFuncRes.get( config.signFuncName )
-        newLines3 = transFuncRes.get( config.verifyFuncName )
-    # debug 
-    print_sdl(False, newLinesS, newLinesK, newLines2, newLines3)
+
+    newSDL = AsymSDL(groupInfo, typesH, generatorLines, transFunc, transFuncGen)
+    newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3 = newSDL.construct(config)
     
+    # debug 
+    print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)   
+    sys.exit(0)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
+        
 
+####### TEST ################    
+#    noChangeList = []
+#    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
+#    for i, j in typesH.items():
+#        t = j.getType()
+#        if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
+#            noChangeList.append(i)
+#
+#    print("Initial noChangeList: ", noChangeList)
+#    
+#    newLinesSe = []
+#    newLinesS = []
+#    newLinesK = []
+#    entireSDL = sdl.getLinesOfCode()
+#    transFuncGen = {}
+#    transFuncRes = {}
+#    transFunc = {}
+#    if hasattr(config, "extraSetupFuncName"):
+#        transFuncGen[ config.extraSetupFuncName ] = stmtSe
+#    if hasattr(config, 'setupFuncName'):    
+#        transFuncGen[ config.setupFuncName ] = stmtS
+#    elif hasattr(config, 'keygenFuncName'):
+#        transFuncGen[ config.keygenFuncName ] = stmtK
+#
+#    for funcName in config.functionOrder:
+#        if funcName in transFuncGen.keys():
+#            print("<===== processing %s =====>" % funcName)
+#            transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFuncGen[ funcName ], groupInfo, noChangeList, generatorLines)
+#            print("<===== processing %s =====>" % funcName)
+#            
+#    # obtain results
+#    newLinesT = transformTypes(typesH, groupInfo)
+#    if hasattr(config, "extraSetupFuncName"):
+#        newLinesSe = transFuncRes.get( config.extraSetupFuncName )
+#    if hasattr(config, 'setupFuncName'):   
+#        newLinesS  = transFuncRes.get( config.setupFuncName )
+#    elif hasattr(config, 'keygenFuncName'):
+#        newLinesK  = transFuncRes.get( config.keygenFuncName )
+#    
+#    # transform body of SDL scheme
+#    if config.schemeType == PKENC:
+#        transFunc[ config.keygenFuncName ]  = stmtK
+#        transFunc[ config.encryptFuncName ] = stmtE
+#        transFunc[ config.decryptFuncName ] = stmtD
+#        for funcName in config.functionOrder:
+#            if funcName in transFunc.keys():
+#                print("<===== processing %s =====>" % funcName)
+#                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList)
+#                print("<===== processing %s =====>" % funcName)
+#        newLinesK = transFuncRes.get( config.keygenFuncName )
+#        newLines2 = transFuncRes.get( config.encryptFuncName )
+#        newLines3 = transFuncRes.get( config.decryptFuncName )
+#            
+#    elif config.schemeType == PKSIG:
+#        if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
+#            transFunc[ config.keygenFuncName ] = stmtK
+#        transFunc[ config.signFuncName ] = stmtSi
+#        transFunc[ config.verifyFuncName ] = stmtV
+#        for funcName in config.functionOrder:
+#            if funcName in transFunc.keys():
+#                print("<===== processing %s =====>" % funcName)
+#                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList) 
+#                print("<===== processing %s =====>" % funcName)
+#            
+#        newLinesK = transFuncRes.get( config.keygenFuncName )
+#        newLines2 = transFuncRes.get( config.signFuncName )
+#        newLines3 = transFuncRes.get( config.verifyFuncName )
+#    # debug 
+#    print_sdl(False, newLinesS, newLinesK, newLines2, newLines3)
+#    
+#    outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
+#    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
+#    return outputFile
+####### TEST ################    
+
+class AsymSDL:
+    def __init__(self, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+        self.groupInfo      = copy.deepcopy(groupInfo)
+        self.generatorMap   = list(self.groupInfo['generatorMapG1'].values()) + list(self.groupInfo['generatorMapG2'].values()) 
+        self.typesH         = copy.deepcopy(typesH)
+        self.generatorLines = copy.deepcopy(generatorLines)
+        self.transFunc      = transFunc
+        self.transFuncGen   = transFuncGen
+        self.verbose        = False
+    
+    def construct(self, config):
+        noChangeList = []
+        # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
+        for i, j in self.typesH.items():
+            t = j.getType()
+            if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
+                noChangeList.append(i)
+    
+        print("Initial noChangeList: ", noChangeList)
+        
+        newLinesSe = []
+        newLinesS = []
+        newLinesK = []
+        entireSDL = sdl.getLinesOfCode()
+        transFuncRes = {}
+        Input = {}
+        for funcName in config.functionOrder:
+            if funcName in self.transFuncGen.keys():
+                print("<===== processing %s =====>" % funcName)
+                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
+                print("<===== processing %s =====>" % funcName)
+                
+        # obtain results
+        newLinesT = transformTypes(self.typesH, self.groupInfo)
+        if hasattr(config, "extraSetupFuncName"):
+            newLinesSe = transFuncRes.get( config.extraSetupFuncName )
+        if hasattr(config, 'setupFuncName'):   
+            newLinesS  = transFuncRes.get( config.setupFuncName )
+        elif hasattr(config, 'keygenFuncName'):
+            newLinesK  = transFuncRes.get( config.keygenFuncName )
+        
+        # transform body of SDL scheme
+        if config.schemeType == PKENC:
+            for funcName in config.functionOrder:
+                if funcName in self.transFunc.keys():
+                    print("<===== processing %s =====>" % funcName)
+                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
+                    print("<===== processing %s =====>" % funcName)
+            newLinesK = transFuncRes.get( config.keygenFuncName )
+            newLines2 = transFuncRes.get( config.encryptFuncName )
+            newLines3 = transFuncRes.get( config.decryptFuncName )
+                
+        elif config.schemeType == PKSIG:
+            for funcName in config.functionOrder:
+                if funcName in self.transFunc.keys():
+                    print("<===== processing %s =====>" % funcName)
+                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList) 
+                    print("<===== processing %s =====>" % funcName)
+                
+            newLinesK = transFuncRes.get( config.keygenFuncName )
+            newLines2 = transFuncRes.get( config.signFuncName )
+            newLines3 = transFuncRes.get( config.verifyFuncName )
+        
+        # prune generators not used in the scheme 
+        usedGenerators = []
+        for i in self.groupInfo['usedVars']:
+            if i in self.generatorMap:
+                # actual generator
+                usedGenerators.append(i)
+        print("usedVars :=> ", usedGenerators)
+        print("generators :=> ", self.generatorMap)
+        deleteMe = list(set(self.generatorMap).difference(usedGenerators))
+        
+        if len(deleteMe) > 0:
+            print("Pruning Generators:\t", deleteMe)
+            newLinesSe = self.__prune(newLinesSe, deleteMe)
+            newLinesS  = self.__prune(newLinesS, deleteMe)
+            newLinesK  = self.__prune(newLinesK, deleteMe)
+            newLines2  = self.__prune(newLines2, deleteMe)
+            newLines3  = self.__prune(newLines3, deleteMe)
+                    
+        return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3
+
+    def __prune(self, nodeLines, deleteMeList):
+        nodeLines2 = []
+        for node in nodeLines:
+            if Type(node) == ops.EQ:
+                if str(node.left) in deleteMeList:
+                    if self.verbose: print("Delete line: ", node.left)
+                    continue
+                else: # check right side
+                    contain = DelAnyVarInList(deleteMeList) 
+                    sdl.ASTVisitor(contain).preorder( node.right )
+                    if len(contain.foundVar) > 0 and self.verbose: print("Deleted ", contain.foundVar)
+            if self.verbose: print("line: ", node)
+            nodeLines2.append( node )
+        return nodeLines2
+    
 # temporary placement
 def NaiveEvaluation(solutionList, preference):
     trueCount = 0
@@ -1113,10 +1268,12 @@ class Generators:
         # split the first generator
         base_genG1 = base_gen + G1Prefix
         base_genG2 = base_gen + G2Prefix
-        
+        baseG1 = BinaryNode(base_genG1)
+        baseG2 = BinaryNode(base_genG2)
+
         self.genLines[ base_gen ] = []
-        self.genLines[ base_gen ].append(base_genG1 + " := random(G1)")
-        self.genLines[ base_gen ].append(base_genG2 + " := random(G2)")
+        self.genLines[ base_gen ].append(BinaryNode(ops.EQ, baseG1, createTree("random(", "G1", None))) # base_genG1 + " := random(G1)")
+        self.genLines[ base_gen ].append(BinaryNode(ops.EQ, baseG2, createTree("random(", "G2", None))) # base_genG2 + " := random(G2)")
         
         genMapG1[ base_gen ] = base_genG1
         genMapG2[ base_gen ] = base_genG2
@@ -1126,25 +1283,25 @@ class Generators:
         genOfList = self.genDict.keys()
         for j in range(1, len(self.generators)):
             i = self.generators[j]
+            iNode = BinaryNode(i)
+            expG1 = BinaryNode(ops.EXP, BinaryNode.copy(baseG1), BinaryNode.copy(iNode))
+            expG2 = BinaryNode(ops.EXP, BinaryNode.copy(baseG2), BinaryNode.copy(iNode))
             if i not in genOfList: 
                 # generator itself is not a list
                 self.genLines[ i ] = []
-                self.genLines[ i ].append(i + " := random(ZR)")
-                self.genLines[ i ].append(i + G1Prefix + " := " + base_genG1 + " ^ " + i)
-                self.genLines[ i ].append(i + G2Prefix + " := " + base_genG2 + " ^ " + i)
+                self.genLines[ i ].append(BinaryNode(ops.EQ, iNode, createTree("random(", "ZR", None))) # i + " := random(ZR)")
+                self.genLines[ i ].append(BinaryNode(ops.EQ, BinaryNode(i + G1Prefix), expG1)) # i + G1Prefix + " := " + base_genG1 + " ^ " + i)
+                self.genLines[ i ].append(BinaryNode(ops.EQ, BinaryNode(i + G2Prefix), expG2)) # i + G2Prefix + " := " + base_genG2 + " ^ " + i)
                 
-                #generatorLines.append(i + " := random(ZR)")
-                #generatorLines.append(i + G1Prefix + " := " + base_generatorG1 + " ^ " + i)
-                #generatorLines.append(i + G2Prefix + " := " + base_generatorG2 + " ^ " + i)
                 genMapG1[ i ] = i + G1Prefix
                 genMapG2[ i ] = i + G2Prefix
             elif i in genOfList:
                 print("setupNewGens: handle list => ", i)
                 oldI = self.genDict[ i ] # 0 : old i
                 self.genLines[ oldI ] = []
-                self.genLines[ oldI ].append(i + " := random(ZR)")
-                self.genLines[ oldI ].append(oldI.replace(i, i + G1Prefix) + " := " + base_genG1 + " ^ " + i)
-                self.genLines[ oldI ].append(oldI.replace(i, i + G2Prefix) + " := " + base_genG2 + " ^ " + i)
+                self.genLines[ oldI ].append(BinaryNode(ops.EQ, iNode, createTree("random(", "ZR", None))) # (i + " := random(ZR)")
+                self.genLines[ oldI ].append(BinaryNode(ops.EQ, BinaryNode(oldI.replace(i, i + G1Prefix)), expG1)) # (oldI.replace(i, i + G1Prefix) + " := " + base_genG1 + " ^ " + i)
+                self.genLines[ oldI ].append(BinaryNode(ops.EQ, BinaryNode(oldI.replace(i, i + G2Prefix)), expG2)) # (oldI.replace(i, i + G2Prefix) + " := " + base_genG2 + " ^ " + i)
                 genMapG1[ i ] = i + G1Prefix
                 genMapG2[ i ] = i + G2Prefix                
             else: #elif i in genCond:
@@ -1327,12 +1484,13 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
     else: new_assignVar = str(assignVar)
     sdl.ASTVisitor( SubstituteVar(assignVar, new_assignVar) ).preorder( new_node2 )
     info['generatorMapG1'][assignVar] = new_assignVar
+    #info['usedVars'] = info['usedVars'].union([new_assignVar])
     # see if it is initCall:
     if varInfo.getInitCall() or varInfo.getHasRandomness():
         # make change and return here
         sdl.ASTVisitor( SubstituteVar('', str(types.G1), initChange=True) ).preorder( new_node2 )
-        info['newTypes'][new_assignVar] = types.G1        
-        return str(new_node2)
+        info['newTypes'][new_assignVar] = types.G1
+        return new_node2
     
     prunedList = prune(noChangeList)
     newVarDeps = set(varDeps).difference(prunedList, Gtypes)
@@ -1355,9 +1513,10 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
 
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
         info['generatorMapG1'][i] = new_i
+        info['usedVars'] = info['usedVars'].union([new_i])
         info['newTypes'][new_i] = types.G1
     print("\n\tChanged: ", new_node2, end="")
-    return str(new_node2)
+    return new_node2
 
 def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[]):
     varTypes = info.get('varTypes')  
@@ -1368,12 +1527,13 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
     else: new_assignVar = str(assignVar)
     sdl.ASTVisitor( SubstituteVar(assignVar, new_assignVar) ).preorder( new_node2 )
     info['generatorMapG2'][assignVar] = new_assignVar
+    #info['usedVars'] = info['usedVars'].union([new_assignVar])    
     # see if it is initCall:
     if varInfo.getInitCall() or varInfo.getHasRandomness():
         # make change and return here
         sdl.ASTVisitor( SubstituteVar('', str(types.G2), initChange=True) ).preorder( new_node2 )
         info['newTypes'][new_assignVar] = types.G2        
-        return str(new_node2)
+        return new_node2
     
     prunedList = prune(noChangeList)
     newVarDeps = set(varDeps).difference(prunedList, Gtypes)
@@ -1394,9 +1554,10 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
                 continue
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
         info['generatorMapG2'][i] = new_i
+        info['usedVars'] = info['usedVars'].union([new_i])
         info['newTypes'][new_i] = types.G2        
     print("\n\tChanged: ", new_node2, end="")
-    return str(new_node2)
+    return new_node2
 
 def updateForLists(varInfo, assignVar, info):
     global oldListTypeRefs, newListTypeRefs
@@ -1414,7 +1575,7 @@ def updateForLists(varInfo, assignVar, info):
     new_node.right.listNodes = newList
     print("\n\tnewList: ", new_node)
     newListTypeRefs[ str(assignVar) ] = list(newList) # record the updates
-    return str(new_node)
+    return new_node
 
 def updateForPairing(varInfo, info, noChangeList):
     node = BinaryNode.copy(varInfo.getAssignNode())
@@ -1427,7 +1588,7 @@ def updateForPairing(varInfo, info, noChangeList):
         for i in listOfNodes:
             tmp = applyPairingUpdate(info, i, noChangeList) # pass reference to eq_tst nodes
         print("\n\t Final: ", node)
-        return str(node)
+        return node
     
     return applyPairingUpdate(info, node, noChangeList)
 
@@ -1445,7 +1606,7 @@ def applyPairingUpdate(info, node, noChangeList):
             break
 
     print("\n\t Changed: ", node)
-    return str(node)
+    return node
 
 def print_sdl(verbose, *args):
     if verbose:
@@ -1467,17 +1628,3 @@ def writeConfig(filename, *args):
     f.close()
     return
     
-
-#if __name__ == "__main__":
-#    print(sys.argv)
-#    sdl_file = sys.argv[1]
-#    sdlVerbose = False
-#    if len(sys.argv) > 2: # and sys.argv[3] == "-v":  sdlVerbose = True
-#        config = sys.argv[2]
-#        config = config.split('.')[0]
-#
-#        configModule = __import__(config)
-#        sdl.masterPubVars = configModule.masterPubVars
-#        sdl.masterSecVars = configModule.masterSecVars
-#            
-#    runAutoGroup(sdl_file, configModule, sdlVerbose)

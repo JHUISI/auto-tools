@@ -14,6 +14,7 @@ h := random(G1)
 v := random(G1)
 v1 := random(G1)
 v2 := random(G1)
+v3 := random(G1)
 a1 := random(ZR)
 a2 := random(ZR) 
 b := random(ZR) 
@@ -33,7 +34,7 @@ galpha := g ^ alpha
 galphaa1 := galpha ^ a1
 
 pk := list{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, A}
-sk := list{galpha, galphaa1, v, v1, v2, alpha}
+sk := list{galpha, galphaa1, v, v1, v2, v3, alpha}
 
 output := list{pk, sk}
 END :: func:keygen
@@ -41,7 +42,7 @@ END :: func:keygen
 BEGIN :: func:sign
 input := list{pk, sk, m}
  pk := expand{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, A}
- sk := expand{galpha, galphaa1, v, v1, v2, alpha} 
+ sk := expand{galpha, galphaa1, v, v1, v2, v3, alpha} 
 
  r1 := random(ZR)
  r2 := random(ZR)

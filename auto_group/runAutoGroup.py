@@ -6,6 +6,7 @@ from src.convertToAsymmetric import *
 
 verboseFlag = "-v"
 encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
+sigConfigParams = ["keygenPubVar", "keygenSecVar", "signatureVar", "keygenFuncName", "signFuncName", "verifyFuncName"]
 
 def errorOut(keyword):
     sys.exit("configAutoGroup: missing '%s' variable in config." % keyword)
@@ -25,17 +26,23 @@ def configAutoGroup(sdl_file, cm, sdlVerbose):
         setattr(cm, functionOrder, funcOrder)
 
     print("function order: ", cm.functionOrder)
-        
-    for i in encConfigParams:
-        if not hasattr(cm, i):
-            errorOut(i)
+    
+    if cm.schemeType == PKENC:
+        for i in encConfigParams:
+            if not hasattr(cm, i):
+                errorOut(i)
+    elif cm.schemeType == PKSIG:
+        for i in sigConfigParams:
+            if not hasattr(cm, i):
+                errorOut(i)
     
     if not hasattr(cm, "secparam"):
         secparam = "MNT160" # default pairing curve for now
     else:
         secparam = cm.secparam
-    runAutoGroup(sdl_file, cm, secparam, sdlVerbose)
-
+    outfile = runAutoGroup(sdl_file, cm, secparam, sdlVerbose)
+    print("output: ", outfile)
+    
 if __name__ == "__main__":
     if len(sys.argv) > 2:
         print(sys.argv)

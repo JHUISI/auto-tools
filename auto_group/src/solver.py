@@ -39,6 +39,7 @@ sizeOp = "size"
 expOp = "exp"
 mulOp = "mul"
 minKeyword = "operationTime"
+curveKeyword = "findCurve"
 unSat = "unsat"
 isSet = "isSet"
 
@@ -47,7 +48,6 @@ SS1024 = { 'ZR':1024, 'G1': 1024, 'G2': 1024, 'GT': 2048 } # TODO: need to verif
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
 BN256 = { 'ZR':256, 'G1': 256, 'G2': 1024, 'GT': 3072 }
 
-op_times = {'exp': {'GT': 1.14, 'ZR': 0.0, 'G1': 0.5327, 'G2': 2.5845}}
 symmetric_curves = {'SS512':SS512, 'SS1024':SS1024}
 asymmetric_curves = { 'MNT160':MNT160, 'BN256':BN256 } # TODO: add additional curves 
 
@@ -273,8 +273,8 @@ class ModelEval:
         self.verbose = False
     
     def minimizeWeightFunc(self, M, weights, counts, cache=None):
-        w0 = self.Z3vars['w0'] = IntVal(weights['G1'])
-        w1 = self.Z3vars['w1'] = IntVal(weights['G2'])
+        w0 = self.Z3vars['w0'] = weights['G1'] # IntVal(weights['G1'])
+        w1 = self.Z3vars['w1'] = weights['G2'] # IntVal(weights['G2'])
         formula = ""
         ADD = " + "
         for i in self.variables:
@@ -287,7 +287,15 @@ class ModelEval:
         formulaNode = parser.parse(formula)
         weightFunc = buildZ3Expression(formulaNode, self.Z3vars) 
         print("Objective Function: ",  str(weightFunc).replace("\n", " ").replace("\t", ""))
-                
+
+# TODO: make this an option where we don't set weights and figure out which curve satisfies a condition
+#        for i in range(len(M)):
+#            print(i, "=>", end="")
+#            solve(M[i].evaluate(weightFunc) < 512, And(w0 == 160, w1 == 960))
+#            print("")
+#
+#        sys.exit(0)
+        
         newMinValue = int(M[0].evaluate(weightFunc).as_string())
         newMinIndex = 0
         if self.verbose: print("Weight Func value: ", newMinValue, M[0])
@@ -345,24 +353,25 @@ def getWeights(option, specificOp):
         # specificOp could be the curve
         curve = asymmetric_curves.get(specificOp)
         assert curve != None, "specified invalid curve identifier: " + specificOp
-        return {'G1': curve.get('G1'), 'G2': curve.get('G2')}
+        return {'G1': IntVal(curve.get('G1')), 'G2': IntVal(curve.get('G2'))}
     elif option == expOp or option == mulOp:
         (curve, paramid) = getBenchmarkInfo() # miracl by default
         assert curve != None, "error occured with " + paramid + " benchmark info."
         assert paramid.upper() == specificOp.upper(), "need to create benchmark dictionary for " + paramid
-        return {'G1':math.ceil(curve[paramid][option]['G1']), 'G2':math.ceil(curve[paramid][option]['G2']) }
+        return {'G1':IntVal(math.ceil(curve[paramid][option]['G1'])), 'G2':IntVal(math.ceil(curve[paramid][option]['G2'])) }
 
 def convertQuery(optionDict, variables, constraints):
     """check optionDict for what user wants and create corresponding weights and counts for objective function"""
     (minOps, specificOp) = optionDict.get(minKeyword)
     countOpts            = optionDict.get(countKeyword) # count of certain operations e.g., exp => a0:4, b0:3, etc
+    findCurve            = optionDict.get(curveKeyword)
     
     # weights can either be group sizes OR time for whatever op: (exp or mul)
-    #weights = { 'G1': MNT160['G1'], 'G2':MNT160['G2'] } # bandwidth
-    #weights = { 'G1': 1, 'G2':2 } # basic ratio's  
-    #weights = { 'G1': 1, 'G2':3 } # operation cost here 
     print("<====================>")
-    weights = getWeights(minOps, specificOp)
+    if findCurve:
+        weights = { 'G1': Int('w0'), 'G2':Int('w1') } # if we want to figure out appropriate weights
+    else: # specify specific one
+        weights = getWeights(minOps, specificOp)
     print("selected weights: ", weights)
     print("count values: ", countOpts)
     countValue = {}

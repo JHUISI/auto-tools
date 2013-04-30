@@ -79,6 +79,7 @@ builtInTypes["getAcceptState"] = types.int
 builtInTypes["getString"] = types.str
 builtInTypes["getTransitions"] = types.metalistInt
 builtInTypes["strkeys"] = types.listStr
+builtInTypes["chamH"] = types.ZR
 
 #TODO:  CHANGE THIS TO SYMMAP
 #builtInTypes["getTransitions"] = types.symmap
