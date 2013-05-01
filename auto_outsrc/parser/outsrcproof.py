@@ -255,10 +255,11 @@ class GenerateProof:
         self.__lcg_combine_pair_cnt += 1
         return
     
-    def setBuckets(self, lineNo, metaSdlList):
+    def setBuckets(self, lineNo, metaSdlList, metaSdlFactors):
         assert self.lcg != None, "LatexCodeGen not initialized."
         print("DEBUG: ", lineNo)
         print("DEBUG: ", metaSdlList)        
+        print("DEBUG: ", metaSdlFactors)
         msg = "Some Message..."        
         CM = ", "
         listOfStr = []
@@ -272,22 +273,22 @@ class GenerateProof:
         self.__lcg_buckets_pair_cnt += 1
         return
         
-    def setUnblindedPairs(self, lineNo, metaSdlList):
-        assert self.lcg != None, "LatexCodeGen not initialized."
-        print("DEBUG: ", lineNo)
-        print("DEBUG: ", metaSdlList)        
-        msg = "Some Message..."    
-        CM = ", "
-        listOfStr = []
-        for i in range(len(metaSdlList)):
-            eqStr = "BT" + str(i)
-            for node in metaSdlList[i]:
-                eqStr += self.lcg.print_statement( node ) + ", "
-            eqStr = eqStr[:-len(CM)]
-            listOfStr.append(eqStr)
-        self.__lcg_unblinded_pair[ self.__lcg_unblinded_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
-        self.__lcg_unblinded_pair_cnt += 1
-        return
+#    def setUnblindedPairs(self, lineNo, metaSdlList):
+#        assert self.lcg != None, "LatexCodeGen not initialized."
+#        print("DEBUG: ", lineNo)
+#        print("DEBUG: ", metaSdlList)        
+#        msg = "Some Message..."    
+#        CM = ", "
+#        listOfStr = []
+#        for i in range(len(metaSdlList)):
+#            eqStr = "BT" + str(i)
+#            for node in metaSdlList[i]:
+#                eqStr += self.lcg.print_statement( node ) + ", "
+#            eqStr = eqStr[:-len(CM)]
+#            listOfStr.append(eqStr)
+#        self.__lcg_unblinded_pair[ self.__lcg_unblinded_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
+#        self.__lcg_unblinded_pair_cnt += 1
+#        return
     
 #    def setBreakPoint(self):
 #        self.lcg_data[ self.__lcg_steps ] = {} # how should this work?

@@ -916,7 +916,11 @@ class SubstituteVar:
                 if str(i) == self.target: found = True; break
         if found:
             ind = node.listNodes.index(self.target)
-            node.listNodes[ind] = self.new_var
+            if type(self.new_var) == list:
+                node.listNodes.remove(self.target)
+                node.listNodes.extend(self.new_var)
+            else:
+                node.listNodes[ind] = self.new_var
 
     def visit_func(self, node, data):
         if node.attr == INIT_FUNC_NAME and self.initChange:

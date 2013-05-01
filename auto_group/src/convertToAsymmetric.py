@@ -843,18 +843,20 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         transFunc[ config.signFuncName ] = stmtSi
         transFunc[ config.verifyFuncName ] = stmtV
 
-    newSDL = AsymSDL(groupInfo, typesH, generatorLines, transFunc, transFuncGen)
+    newSDL = AsymSDL(assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
     newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3 = newSDL.construct(config)
     
     # debug 
-    print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)   
+    print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)
+    sys.exit(0)  
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
         
 
 class AsymSDL:
-    def __init__(self, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+    def __init__(self, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+        self.assignInfo     = assignInfo
         self.groupInfo      = copy.deepcopy(groupInfo)
         self.groupInfo['myAsymSDL'] = self # this is for recording used vars in each function
         self.generatorMap   = list(self.groupInfo['generatorMapG1'].values()) + list(self.groupInfo['generatorMapG2'].values()) 
@@ -949,22 +951,33 @@ class AsymSDL:
             newLines3  = self.__prune(newLines3, deleteMe)
         
         if config.schemeType == PKSIG:
-            (origPK, defInFuncName) = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+            # 1. find out where pk was originally defined
+            (defInFuncName, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)
+            # 2. get new pk list if defined in scheme
+            origPK = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+            # 3. split pk into two new public keys (sPK, and vPK)
             (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = self.optimizePK(config, origPK)
             
-#            # apply PKSIG optimizations to pk
-#            newVarNames = [sPub, vPub]
-#            newVarNodes = [newSignPK, newVerifyPK]
-#            if defInFuncName == config.setupFuncName:
-#                newLinesS = self.__replaceNode(origPK, newVarNodes, newVarNames, newLinesS)
-#            elif defInFuncName == config.keygenFuncName:
-#                newLinesK = self.__replaceNode(origPK, newVarNodes, newVarNames, newLinesK)
-#                
-#            sys.exit(0)
+            # apply PKSIG optimizations to pk
+            newVarNames = [sPub, vPub]
+            newVarNodes = [newSignPK, newVerifyPK]
+            print("Public Key defined in ", defInFuncName)
+            if defInFuncName == "setup":
+                newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
+            elif defInFuncName == "keygen":
+                newLinesK = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesK)
+            
+            # sPub => keygen AND sign
+            # vPub => verify 
+            if defInFuncName != "keygen":
+                newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)                
+            newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
+            newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
+            
             # 1. retrieve original pk        
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3
 
-    def __replaceNode(self, targetVar, newVarNodes, newVarNames, newLinesK):
+    def __updatePKList(self, targetVar, newVarNodes, newVarNames, newLinesK):
         nodeLines2 = []
         replacedNewPK = False 
         for node in newLinesK:
@@ -973,8 +986,23 @@ class AsymSDL:
                     nodeLines2.extend(newVarNodes)
                     replacedNewPK = True
                     continue
-                elif str(node.left) == outputKeyword and replacedNewPK:
-                    pass
+                if str(node.left) == outputKeyword and replacedNewPK:
+                    sv = SubstituteVar(targetVar, newVarNames)
+                    sdl.ASTVisitor(sv).preorder(node)
+            nodeLines2.append( node )
+        return nodeLines2
+
+    def __updatePKExpand(self, targetVar, newVarNode, newVarName, newLines):
+        nodeLines2 = []
+        replacedNewPK = False 
+        for node in newLines:
+            if Type(node) == ops.EQ:
+                if str(node.left) == targetVar: # found
+                    nodeLines2.append(newVarNode)
+                    continue
+                if str(node.left) == inputKeyword:
+                    sv = SubstituteVar(targetVar, newVarName)
+                    sdl.ASTVisitor(sv).preorder(node)
             nodeLines2.append( node )
         return nodeLines2
 
