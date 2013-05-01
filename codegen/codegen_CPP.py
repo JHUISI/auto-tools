@@ -749,6 +749,8 @@ def getCondStmtAsString_CPP(node, replacementsDict):
     elif (node.type == ops.EQ_TST):
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        if leftSide == None and rightSide == None:
+            return "None"
         if (rightSide == "False"):
             rightSide = "false"
         elif (rightSide == "True"):
@@ -769,6 +771,47 @@ def getCondStmtAsString_CPP(node, replacementsDict):
             return "( isNotEqual(" + leftSide + ", " + rightSide + ") )"
         else:
             return "( (" + leftSide + ") != (" + rightSide + ") )"
+    elif (node.type == ops.PAIR):
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "pair")
+    elif (node.type == ops.ADD):
+        testLeftSide = getFinalVarType(str(node.left), currentFuncName)
+        testRightSide = getFinalVarType(str(node.right), currentFuncName)
+        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "add")
+
+    elif (node.type == ops.SUB):
+        testLeftSide = getFinalVarType(str(node.left), currentFuncName)
+        testRightSide = getFinalVarType(str(node.right), currentFuncName)
+        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "sub")
+
+    elif (node.type == ops.MUL):
+        testLeftSide = getFinalVarType(str(node.left), currentFuncName)
+        testRightSide = getFinalVarType(str(node.right), currentFuncName)
+        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "mul")
+
+    elif (node.type == ops.DIV):
+        testLeftSide = getFinalVarType(str(node.left), currentFuncName)
+        testRightSide = getFinalVarType(str(node.right), currentFuncName)
+        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "div")
+
+    elif (node.type == ops.EXP):
+        leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
+        rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
+        return writeMathStatement(leftSide, rightSide, "exp")  
+
     elif (node.type == ops.ATTR):
         returnString = processAttrOrTypeAssignStmt(node, replacementsDict)
         return returnString

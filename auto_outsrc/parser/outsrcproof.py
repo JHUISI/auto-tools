@@ -219,6 +219,78 @@ class GenerateProof:
         self.__lcg_transform_count += 1
         return
     
+    def setStartPairs(self, lineNo, sdlList):
+        assert self.lcg != None, "LatexCodeGen not initialized."
+        print("DEBUG: ", lineNo)
+        print("DEBUG: ", sdlList)
+        msg = "Some Message..."
+        CM = ", "
+        eqStr = ""        
+        for node in sdlList:
+            eqStr += self.lcg.print_statement( node ) + ", "
+        eqStr = eqStr[:-len(CM)]
+        self.initMember("__lcg_start_pair", "__lcg_start_pair_cnt")
+        self.__lcg_start_pair[ self.__lcg_start_pair_cnt ] = {'msg': msg, 'eq':eqStr }
+        self.__lcg_start_pair_cnt += 1
+        return
+    
+    def setCombinePairs(self, lineNo, sdlList):
+        assert self.lcg != None, "LatexCodeGen not initialized."
+        print("DEBUG: ", lineNo)
+        print("DEBUG: ", sdlList)
+        msg = "Some Message..."        
+        CM = ", "
+        eqStr = ""
+        for node in sdlList:
+            eqStr += self.lcg.print_statement( node ) + ", "
+        eqStr = eqStr[:-len(CM)]
+        self.initMember("__lcg_combine_pair", "__lcg_combine_pair_cnt")        
+        self.__lcg_combine_pair[ self.__lcg_combine_pair_cnt ] = {'msg': msg, 'eq':eqStr }
+        self.__lcg_combine_pair_cnt += 1
+        return
+    
+    def setBuckets(self, lineNo, metaSdlList):
+        assert self.lcg != None, "LatexCodeGen not initialized."
+        print("DEBUG: ", lineNo)
+        print("DEBUG: ", metaSdlList)        
+        msg = "Some Message..."        
+        CM = ", "
+        listOfStr = []
+        for i in range(len(metaSdlList)):
+            eqStr = "BT" + str(i)
+            for node in metaSdlList[i]:
+                eqStr += self.lcg.print_statement( node ) + ", "
+            eqStr = eqStr[:-len(CM)]
+            listOfStr.append(eqStr)
+        self.initMember("__lcg_buckets_pair", "__lcg_buckets_pair_cnt")
+        self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
+        self.__lcg_buckets_pair_cnt += 1
+        return
+        
+    def setUnblindedPairs(self, lineNo, metaSdlList):
+        assert self.lcg != None, "LatexCodeGen not initialized."
+        print("DEBUG: ", lineNo)
+        print("DEBUG: ", metaSdlList)        
+        msg = "Some Message..."    
+        CM = ", "
+        listOfStr = []
+        for i in range(len(metaSdlList)):
+            eqStr = "BT" + str(i)
+            for node in metaSdlList[i]:
+                eqStr += self.lcg.print_statement( node ) + ", "
+            eqStr = eqStr[:-len(CM)]
+            listOfStr.append(eqStr)
+        self.initMember("__lcg_unblinded_pair", "__lcg_unblinded_pair_cnt")
+        self.__lcg_unblinded_pair[ self.__lcg_unblinded_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
+        self.__lcg_unblinded_pair_cnt += 1
+        return
+    
+    def initMember(self, varName, countName):
+        if not hasattr(self, varName) and not hasattr(self, countName):
+            setattr(self, varName, {})
+            setattr(self, countName, 0)
+        return
+    
 #    def setBreakPoint(self):
 #        self.lcg_data[ self.__lcg_steps ] = {} # how should this work?
 #        self.__lcg_steps += 1
