@@ -25,6 +25,12 @@ searchBoth = True # mode that forces the solver to come up w/ a bunch of solutio
 satisfiable = True or False
 resultDictionary = [('x', True), ('y', False), ... ]
 """
+SHORT_SECKEYS = "secret_keys" # for
+SHORT_PUBKEYS = "public_keys"
+SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
+SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
+SHORT_FORALL = "both"
+SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
 verboseKeyword = "verbose"
 variableKeyword = "variables"
 clauseKeyword = "clauses"
@@ -40,6 +46,7 @@ expOp = "exp"
 mulOp = "mul"
 minKeyword = "operationTime"
 curveKeyword = "findCurve"
+dropKeyword  = "dropFirst"
 unSat = "unsat"
 isSet = "isSet"
 
@@ -266,7 +273,8 @@ def get_models(Formula):
             return result
 
 class ModelEval:
-    def __init__(self, variables, Z3vars, countValue):
+    def __init__(self, indexList, variables, Z3vars, countValue):
+        self.indexList = indexList
         self.variables = variables
         self.Z3vars = Z3vars
         self.countValue = countValue
@@ -287,7 +295,7 @@ class ModelEval:
         formulaNode = parser.parse(formula)
         weightFunc = buildZ3Expression(formulaNode, self.Z3vars) 
         print("Objective Function: ",  str(weightFunc).replace("\n", " ").replace("\t", ""))
-
+    
 # TODO: make this an option where we don't set weights and figure out which curve satisfies a condition
 #        for i in range(len(M)):
 #            print(i, "=>", end="")
@@ -296,11 +304,12 @@ class ModelEval:
 #
 #        sys.exit(0)
         
-        newMinValue = int(M[0].evaluate(weightFunc).as_string())
-        newMinIndex = 0
+        first = self.indexList[0]
+        newMinValue = int(M[first].evaluate(weightFunc).as_string())
+        newMinIndex = first
         if self.verbose: print("Weight Func value: ", newMinValue, M[0])
         if cache != None: cache[ newMinIndex ] = newMinValue
-        for i in range(1, len(M)):
+        for i in self.indexList[1:]: # range(1, len(M))
             minValue = int(M[i].evaluate(weightFunc).as_string())
             if cache != None: cache[ i ] = minValue
             if minValue < newMinValue:
@@ -349,7 +358,7 @@ def convertToBoolean(mod):
     return result
 
 def getWeights(option, specificOp):
-    if option == sizeOp:
+    if option in SHORT_OPTIONS:
         # specificOp could be the curve
         curve = asymmetric_curves.get(specificOp)
         assert curve != None, "specified invalid curve identifier: " + specificOp
@@ -360,10 +369,13 @@ def getWeights(option, specificOp):
         assert paramid.upper() == specificOp.upper(), "need to create benchmark dictionary for " + paramid
         return {'G1':IntVal(math.ceil(curve[paramid][option]['G1'])), 'G2':IntVal(math.ceil(curve[paramid][option]['G2'])) }
 
-def convertQuery(optionDict, variables, constraints):
+def convertQuery(configOpt, optionDict, variables, constraints):
     """check optionDict for what user wants and create corresponding weights and counts for objective function"""
-    (minOps, specificOp) = optionDict.get(minKeyword)
-    countOpts            = optionDict.get(countKeyword) # count of certain operations e.g., exp => a0:4, b0:3, etc
+    specificOp           = optionDict.get(minKeyword)
+    if configOpt in SHORT_OPTIONS:
+        countOpts        = {}
+    else:
+        countOpts        = optionDict.get(countKeyword) # count of certain operations e.g., exp => a0:4, b0:3, etc
     findCurve            = optionDict.get(curveKeyword)
     
     # weights can either be group sizes OR time for whatever op: (exp or mul)
@@ -371,7 +383,7 @@ def convertQuery(optionDict, variables, constraints):
     if findCurve:
         weights = { 'G1': Int('w0'), 'G2':Int('w1') } # if we want to figure out appropriate weights
     else: # specify specific one
-        weights = getWeights(minOps, specificOp)
+        weights = getWeights(configOpt, specificOp)
     print("selected weights: ", weights)
     print("count values: ", countOpts)
     countValue = {}
@@ -387,38 +399,42 @@ def convertQuery(optionDict, variables, constraints):
     print("<====================>")    
     return (weights, countValue)
     
-def findMinimalRef(M, data1, data2):
+def findMinimalRef(M, data1, data2, skipList=[]):
     # compute differences
-    skipList = []
     data3 = {}
+    data3Count = {}
+    data3Index = {}
+    first = None
     for j in range(len(data1.keys())):
-        diff = abs(data1[j] - data2[j])
-        data3[j] = diff
-    
-    minVal = prevVal = data3[0]
-    minRef = prevRef = 0
+        if j not in skipList:
+            diff = abs(data1[j] - data2[j])
+            data3[j] = diff
+            # count up solutions
+            if data3Count.get(diff) == None: data3Count[diff] = 1; data3Index[diff] = []
+            else: data3Count[diff] += 1; data3Index[diff].append(j)
+            if first == None: first = j
+
+    minVal = data3[first]
+    minRef = first
     for i in data3.keys():
         if data3[i] <= minVal:
-            prefVal = minVal; prevRef = minRef
             minVal = data3[i]
             minRef = i
+            minCount = data3Count[minVal]
+            minRefList = data3Index[minVal]
     print("min: ", data1[minRef], data2[minRef], str(M[minRef]).replace("\n", "").replace("\t", ""))
-    return M[minRef]
+    return minRef, minCount, minRefList # M[minRef]
         
-def solveUsingSMT(optionDict):
+def solveUsingSMT(optionDict, shortOpt, timeOpt):
     verbose     = optionDict.get(verboseKeyword)
     variables   = optionDict.get(variableKeyword)
     clauses     = optionDict.get(clauseKeyword)
     constraints = optionDict.get(constraintKeyword)
-    mofn        = optionDict.get(mofnKeyword)
     bothConst   = optionDict.get(bothKeyword)
     
     searchAll   = optionDict.get(searchKeyword)    
     hard_constraints = optionDict.get(hardConstKeyword)
     print("hardConstraints: ", hard_constraints)
-    # granular configuration options
-    # weights     = optionDict.get(weightKeyword) # cost of operations in each group. bandwitdh => G1:100, G2:300
-#    countOpts      = optionDict.get(countKeyword) # count of certain operations e.g., exp => a:4, b:3, etc
     counts  = {}
     Z3vars = {}
     for v in variables:
@@ -437,49 +453,52 @@ def solveUsingSMT(optionDict):
             X = Z3vars.get(x)
             Y = Z3vars.get(y)
             Conditions.append( X != Y )
-            if not searchAll:
-                if x in constraints:
-                    Values.append( X == 0 )
-                else:
-                    Values.extend( [Or(X == 0, X == 1)] )
-                if y in constraints:
-                    Values.append( Y == 0 )
-                else:
-                    Values.extend( [Or(Y == 0, Y == 1)] )
+            if x in hard_constraints:
+                Values.append( X == 0 )
             else:
-                if x in hard_constraints:
-                    Values.append( X == 0 )
-                else:
-                    Values.extend( [Or(X == 0, X == 1)] )
-                if y in hard_constraints:
-                    Values.append( Y == 0 )
-                else:
-                    Values.extend( [Or(Y == 0, Y == 1)] )
+                Values.extend( [Or(X == 0, X == 1)] )
+            if y in hard_constraints:
+                Values.append( Y == 0 )
+            else:
+                Values.extend( [Or(Y == 0, Y == 1)] )
+#            if not searchAll:
+#                if x in constraints:
+#                    Values.append( X == 0 )
+#                else:
+#                    Values.extend( [Or(X == 0, X == 1)] )
+#                if y in constraints:
+#                    Values.append( Y == 0 )
+#                else:
+#                    Values.extend( [Or(Y == 0, Y == 1)] )
+#            else:
             
     M = get_models([And(Conditions), And(Values)])
     print("Unique solutions: ", len(M))
     
-    # if only minimizing one aspect: SK or CT, PK or SIG
+    # if only minimizing one aspect: size: SK or CT, PK or SIG OR time: exp or mul
     if not bothConst[isSet]:
-        weights, countValue = convertQuery(optionDict, variables, constraints)
+        if shortOpt != "": # minimize SK or CT OR PK or SIG
+            weights, countValue = convertQuery(shortOpt, optionDict, variables, constraints)
+        elif timeOpt != "": # minimize exp or mul
+            weights, countValue = convertQuery(timeOpt, optionDict, variables, constraints)
     
-        modEval             = ModelEval(variables, Z3vars, countValue)
+        modEval             = ModelEval(range(len(M)), variables, Z3vars, countValue)
         cacheOpts = {}
         (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
         print("Results: ", cacheOpts)
         
         print("minimal Value: ", modVal) 
         #print("minimal Model: ", modRef)
-    else:
+    elif bothConst[isSet]: # and len(optionDict.get(countKeyword).keys()) == 0: # in other words, just size (but SK and CT or PK and SIG), but NOT time
         # more than one option 
         minKeys = list(set(list(bothConst.keys())).difference([isSet]))
         data = {}
         for i in minKeys: 
             print("Compute min value for: ", i)
             print("<================================================>")
-            weights, countValue = convertQuery(optionDict, variables, bothConst[i])
+            weights, countValue = convertQuery(shortOpt, optionDict, variables, bothConst[i])
         
-            modEval             = ModelEval(variables, Z3vars, countValue)
+            modEval             = ModelEval(range(len(M)), variables, Z3vars, countValue)
             cacheOpts = {}
             (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
             print("Cached: ", cacheOpts)
@@ -491,6 +510,52 @@ def solveUsingSMT(optionDict):
         # operate on the solution
         i = minKeys[0]
         j = minKeys[1]
-        modRef = findMinimalRef(M, data[i], data[j])
-
+#        topSolCount = 1 + math.floor(len(M) * 0.1)
+#        topList = []
+#        for k in range(topSolCount):
+#            topList.append(minIndex)
+        minIndex, minCount, minIndexList = findMinimalRef(M, data[i], data[j])
+        print("Final Solution: ", minIndex)
+        print("Found ", minCount, " such solutions that minimize both.")
+        print("Index List: ", minIndexList)
+        modRef = M[minIndex]
+        
+        if minCount > 1 and timeOpt != "":
+            print("<================================================>")
+            weights, countValue = convertQuery(timeOpt, optionDict, variables, hard_constraints)
+            print("Time option: ", weights)
+            print("Cost count: ", countValue)
+            modEval             = ModelEval(minIndexList, variables, Z3vars, countValue)
+            cacheOpts = {}
+            (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
+            print("Cached: ", cacheOpts)
+            data[i] = cacheOpts
+            print("minimal Value: ", modVal)
+            print("minimal model: ", modRef)
+    else:
+        pass
+        # means both size and time are selected
+#        minKeys = list(set(list(bothConst.keys())).difference([isSet]))
+#        data = {}
+#        for i in minKeys: 
+#            print("Compute min value for: ", i)
+#            print("<================================================>")
+#            weights, countValue = convertQuery(optionDict, variables, bothConst[i])
+#        
+#            modEval             = ModelEval(variables, Z3vars, countValue)
+#            cacheOpts = {}
+#            (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
+#            print("Cached: ", cacheOpts)
+#            data[i] = cacheOpts
+#            print("minimal Value: ", modVal) 
+#            #print("minimal Model: ", modRef)
+#            print("<================================================>")
+#        
+#        # operate on the solution
+#        i = minKeys[0]
+#        j = minKeys[1]
+#        k = 
+#        modRef = findMinimalRef(M, data[i], data[j])
+    
+    
     return (convertToBoolean(modRef), sat)

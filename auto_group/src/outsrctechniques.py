@@ -946,7 +946,15 @@ class SubstitutePairings:
         self.bothGroups = info.get('both')
         self.noChangeList = [ self.strip_index(i) for i in noChangeList ]
         self.verbose = False
+        self.usedGens = set()
+        self.usedVar = set()
         
+    def getUsedGens(self):
+        return self.usedGens
+    
+    def getUsedVars(self):
+        return self.usedVar
+    
     def visit(self, node, data):
         pass
     
@@ -959,7 +967,8 @@ class SubstitutePairings:
         if Type(node) == ops.EXP:
             return node.left
         #elif Type(node) == ops.MUL:
-        #    pass
+        #     pass
+
         return node
     
     def updateNode(self, node, var, new_var):
@@ -991,12 +1000,16 @@ class SubstitutePairings:
         if lhs in self.generators and rhs in self.generators: # covers lhs == rhs OR lhs != rhs
             node.left.setAttribute( self.mapG1.get(lhs) )
             node.right.setAttribute( self.mapG2.get(rhs) )
+            varL = [self.mapG1.get(lhs), self.mapG2.get(rhs)]
+            self.usedGens = self.usedGens.union(varL)            
+            self.usedVar  = self.usedVar.union(varL)
             return
-        elif lhs == rhs and lhs in self.bothGroups:
+        elif lhs == rhs and lhs in self.bothGroups: # e(g, g)
             new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)
             new_rhs = str(node.right).replace(rhs, rhs + G2Prefix)
             node.left.setAttribute( new_lhs )
             node.right.setAttribute( new_rhs )
+            self.usedVar  = self.usedVar.union([new_lhs, new_rhs]) 
             return 
         # if e(g, X \in G2) => e(gG1, X) and vice versa
         if lhs in self.generators and rhs not in self.generators:
@@ -1004,11 +1017,17 @@ class SubstitutePairings:
 #                node.left.setAttribute( self.mapG2.get(lhs) )
                 new_lhs = self.updateNode(node.left, lhs, self.mapG2.get(lhs))
                 self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs # self.mapG2.get(lhs)
+                varL = [new_lhs]
+                self.usedGens = self.usedGens.union(varL)     
+                self.usedVar  = self.usedVar.union(varL)                       
                 return
             elif rhs in self.pairingInfo[G2Prefix]:
 #                node.left.setAttribute( self.mapG1.get(lhs) )
                 new_lhs = self.updateNode(node.left, lhs, self.mapG1.get(lhs))
                 self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = new_lhs # self.mapG1.get(lhs)
+                varL = [new_lhs]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)                                       
                 return
         # if e(X \in G1, g) => e(X, gG2) and vice versa                
         elif lhs not in self.generators and rhs in self.generators:
@@ -1016,11 +1035,17 @@ class SubstitutePairings:
 #                node.right.setAttribute( self.mapG2.get(rhs) )
                 new_rhs = self.updateNode(node.right, rhs, self.mapG2.get(rhs))
                 self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs # self.mapG2.get(rhs)
+                varL = [new_rhs]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)                
                 return
             elif lhs in self.pairingInfo[G2Prefix]:
 #                node.right.setAttribute( self.mapG1.get(rhs) )                
                 new_rhs = self.updateNode(node.right, rhs, self.mapG1.get(rhs))
                 self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs # self.mapG1.get(rhs)
+                varL = [new_rhs]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)                
                 return
         else:
             pass # we leave other cases untouched
@@ -1031,20 +1056,22 @@ class SubstitutePairings:
             # new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)
             new_lhs = self.updateNode(node.left, lhs, lhs + G1Prefix) # node.left.setAttribute( new_lhs )
             self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = new_lhs
+            self.usedVar  = self.usedVar.union([new_lhs])            
         elif lhs in self.pairingInfo[G2Prefix] and lhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G2 lhs=", lhs)
             new_lhs = self.updateNode(node.left, lhs, lhs + G2Prefix) # node.left.setAttribute( new_lhs )
             self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs
-
+            self.usedVar  = self.usedVar.union([new_lhs])
         if rhs in self.pairingInfo[G1Prefix] and rhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G1 rhs=", rhs)
             new_rhs = self.updateNode(node.right, rhs, rhs + G1Prefix) # node.right.setAttribute( new_rhs )
-            self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs            
+            self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs
+            self.usedVar  = self.usedVar.union([new_rhs])            
         elif rhs in self.pairingInfo[G2Prefix] and rhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G2 rhs=", rhs)
             new_rhs = self.updateNode(node.right, rhs, rhs + G2Prefix) # node.right.setAttribute( new_rhs )
             self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs
-            
+            self.usedVar  = self.usedVar.union([new_rhs])
         return
         
 techMap = {1:Technique1, 2:Technique2, 3:Technique3, 4:Technique4, 11:Technique11}
@@ -1619,31 +1646,31 @@ class GetAttrs:
                             
             if addVarName != None and addVarName not in self.varList:
                 self.varList.append(addVarName)
-        elif varName.find("+") != -1:
-            newVarNames = varName.split("+")
-            for newVarName in newVarNames:
-                if (not newVarName.isdigit()) and (newVarName not in self.varList):
-                    self.varList.append(newVarName)
-        elif varName.find("-") != -1:
-            newVarNames = varName.split("-")
-            for newVarName in newVarNames:
-                if (not newVarName.isdigit()) and (newVarName not in self.varList):
-                    self.varList.append(newVarName)
-        elif varName.find("*") != -1:
-            newVarNames = varName.split("*")
-            for newVarName in newVarNames:
-                if (not newVarName.isdigit()) and (newVarName not in self.varList):
-                    self.varList.append(newVarName)
-        elif varName.find("/") != -1:
-            newVarNames = varName.split("/")
-            for newVarName in newVarNames:
-                if (not newVarName.isdigit()) and (newVarName not in self.varList):
-                    self.varList.append(newVarName)
-        elif varName.find("^") != -1:
-            newVarNames = varName.split("^")
-            for newVarName in newVarNames:
-                if (not newVarName.isdigit()) and (newVarName not in self.varList):
-                    self.varList.append(newVarName)
+#        elif varName.find("+") != -1:
+#            newVarNames = varName.split("+")
+#            for newVarName in newVarNames:
+#                if (not newVarName.isdigit()) and (newVarName not in self.varList):
+#                    self.varList.append(newVarName)
+#        elif varName.find("-") != -1:
+#            newVarNames = varName.split("-")
+#            for newVarName in newVarNames:
+#                if (not newVarName.isdigit()) and (newVarName not in self.varList):
+#                    self.varList.append(newVarName)
+#        elif varName.find("*") != -1:
+#            newVarNames = varName.split("*")
+#            for newVarName in newVarNames:
+#                if (not newVarName.isdigit()) and (newVarName not in self.varList):
+#                    self.varList.append(newVarName)
+#        elif varName.find("/") != -1:
+#            newVarNames = varName.split("/")
+#            for newVarName in newVarNames:
+#                if (not newVarName.isdigit()) and (newVarName not in self.varList):
+#                    self.varList.append(newVarName)
+#        elif varName.find("^") != -1:
+#            newVarNames = varName.split("^")
+#            for newVarName in newVarNames:
+#                if (not newVarName.isdigit()) and (newVarName not in self.varList):
+#                    self.varList.append(newVarName)
         else: # no pounds
             if varName not in self.varList:
                 self.varList.append(varName)
@@ -1845,6 +1872,12 @@ class DelAnyVarInList:
         
     def visit(self, node, data):
         return
+
+    def visit_expand(self, node, data):
+        diffList = list(set(self.varList).intersection(node.listNodes))
+        for i in diffList:
+            node.listNodes.remove(i)
+        self.foundVar = diffList
     
     def visit_list(self, node, data):
         diffList = list(set(self.varList).intersection(node.listNodes))

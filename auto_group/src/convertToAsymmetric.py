@@ -1,7 +1,7 @@
 import src.sdlpath, sys, os, copy, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 from src.solver import *
 
 assignInfo = None
@@ -273,78 +273,72 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         print("Unrecognized type: ", Type(assign))
     return False
 
-def instantiateZ3Solver(variables, clauses, hardConstraints, constraints, mofnConstraints, bothConstraints, countOpt, minOptions):
-    _mofnConstraints = []
-    _search = False 
-    if mofnConstraints != None:
-        _mofnConstraints = mofnConstraints
-    if len(bothConstraints.keys()) > 0: _search = True
+def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, constraints, bothConstraints, countOpt, minOptions):
     
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
-     
-    options[hardConstKeyword] = hardConstraints
-    options[mofnKeyword]   = _mofnConstraints
-    options[bothKeyword] = bothConstraints
     options[verboseKeyword] = True
-    
+         
     # uncomment for SAT version of AutoGroup
     #(result1, satisfiable) = solveUsingSAT(options)    
     #print("Satisfiable: ", satisfiable)
     #print("Result: ", result1)
     options[curveKeyword] = False # TODO: check option from user (not ready for prime-time)
     
-    options[searchKeyword] = True 
+#    options[searchKeyword] = True 
     options[countKeyword] = countOpt # set iff min ops like exp or mul are selected
     options[minKeyword] = minOptions # (minOps, specificOp)
-    (result2, satisfiable2) = solveUsingSMT(options)
-    return (satisfiable2, result2)
+    options[hardConstKeyword] = hardConstraints
+    options[bothKeyword] = bothConstraints
+    
+    (result, satisfiable) = solveUsingSMT(options, shortOpt, timeOpt)
+    return (satisfiable, result)
 
 
-def instantiateSolver(variables, clauses, constraints, mofnConstraints, bothConstraints):
-    print("variables = ", variables) # txor.getVariables())
-    outputVariables = variableKeyword + " = " + str(variables) + "\n"
-    print("clauses = ", clauses)
-    outputClauses   = clauseKeyword + " = " + str(clauses) + "\n"
-    print("constraints = ", constraints)
-    outputConstraints = constraintKeyword + " = " + str(constraints) + "\n"
-    outputMofN = ""
-    if mofnConstraints != None:
-        print("mofn = ", mofnConstraints)
-        outputMofN += mofnKeyword + " = " + str(mofnConstraints) + "\n"
-    
-    # options of the user wants to minimize both
-    keys = list(bothConstraints.keys())
-    outputForBoth = ""
-    if len(keys) > 0:
-        outputForBoth = "searchBoth = True\n"
-        for k in keys:
-            outputForBoth += str(k) + " = " + str(bothConstraints[k]) + "\n"
-        print(outputForBoth)
-    # get random file
-    name = ""
-    for i in range(length):
-        name += random.choice(string.ascii_lowercase + string.digits)
-    newName = loc + "." + name
-    name += ".py"
-    fileTarget = loc + "/" + name
-    f = open(fileTarget, 'w')
-    f.write(outputVariables)
-    f.write(outputClauses)
-    if outputForBoth != "": f.write(outputForBoth)
-    if outputMofN != "":    f.write(outputMofN)
-    f.write(outputConstraints)
-    f.close()
-    
-    os.system("/opt/local/bin/python2.7 %s/z3solver.py %s/%s" % (loc, loc, name))
-    results = importlib.import_module(newName) #__import__(newName)
-    if(not results.satisfiable):
-        os.system("rm -f " + fileTarget + "*")
-        print("SAT solver could not find a suitable solution. Change configuration and try again!")
-        return results.satisfiable, None
-    
-    print(results.resultDictionary)
-    os.system("rm -f " + fileTarget + "*")
-    return results.satisfiable, results.resultDictionary
+#def instantiateSolver(variables, clauses, constraints, mofnConstraints, bothConstraints):
+#    print("variables = ", variables) # txor.getVariables())
+#    outputVariables = variableKeyword + " = " + str(variables) + "\n"
+#    print("clauses = ", clauses)
+#    outputClauses   = clauseKeyword + " = " + str(clauses) + "\n"
+#    print("constraints = ", constraints)
+#    outputConstraints = constraintKeyword + " = " + str(constraints) + "\n"
+#    outputMofN = ""
+#    if mofnConstraints != None:
+#        print("mofn = ", mofnConstraints)
+#        outputMofN += mofnKeyword + " = " + str(mofnConstraints) + "\n"
+#    
+#    # options of the user wants to minimize both
+#    keys = list(bothConstraints.keys())
+#    outputForBoth = ""
+#    if len(keys) > 0:
+#        outputForBoth = "searchBoth = True\n"
+#        for k in keys:
+#            outputForBoth += str(k) + " = " + str(bothConstraints[k]) + "\n"
+#        print(outputForBoth)
+#    # get random file
+#    name = ""
+#    for i in range(length):
+#        name += random.choice(string.ascii_lowercase + string.digits)
+#    newName = loc + "." + name
+#    name += ".py"
+#    fileTarget = loc + "/" + name
+#    f = open(fileTarget, 'w')
+#    f.write(outputVariables)
+#    f.write(outputClauses)
+#    if outputForBoth != "": f.write(outputForBoth)
+#    if outputMofN != "":    f.write(outputMofN)
+#    f.write(outputConstraints)
+#    f.close()
+#    
+#    os.system("/opt/local/bin/python2.7 %s/z3solver.py %s/%s" % (loc, loc, name))
+#    results = importlib.import_module(newName) #__import__(newName)
+#    if(not results.satisfiable):
+#        os.system("rm -f " + fileTarget + "*")
+#        print("SAT solver could not find a suitable solution. Change configuration and try again!")
+#        return results.satisfiable, None
+#    
+#    print(results.resultDictionary)
+#    os.system("rm -f " + fileTarget + "*")
+#    return results.satisfiable, results.resultDictionary
 
 def getAssignmentForName(var, varTypes):
     global assignInfo
@@ -416,7 +410,7 @@ def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, 
     return str(VarNameList) # string
  
 
-def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, generators):
+def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, generators):
     resultDict = None
     satisfiable = False
     adjustConstraints = False
@@ -437,7 +431,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
     while not satisfiable:
         print("\n<===== Generate Constraints =====>")    
         xorVarMap = txor.getVarMap()
-        if short == SHORT_SECKEYS:
+        if shortOpt == SHORT_SECKEYS:
             # create constraints around keys
             fileSuffix = 'ky'
             assert type(conf.keygenSecVar) == str, "keygenSecVar in config file expected as a string"
@@ -451,7 +445,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints                        
-        elif short == SHORT_PUBKEYS:
+        elif shortOpt == SHORT_PUBKEYS:
             # create constraints around keys
             fileSuffix = 'ky'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
@@ -465,7 +459,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints            
-        elif short == SHORT_CIPHERTEXT:
+        elif shortOpt == SHORT_CIPHERTEXT:
             fileSuffix = 'ct'
             assert type(conf.ciphertextVar) == str, "ciphertextVar in config file expected as a string"
             if not adjustConstraints:
@@ -478,7 +472,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints
-        elif short == SHORT_SIGNATURE:
+        elif shortOpt == SHORT_SIGNATURE:
             fileSuffix = 'sig'
             assert type(conf.signatureVar) == str, "signatureVar in config file expected as a string"
             if not adjustConstraints:
@@ -491,7 +485,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints
-        elif short == SHORT_FORALL and conf.schemeType == PKENC:
+        elif shortOpt == SHORT_FORALL and conf.schemeType == PKENC:
             fileSuffix = 'both' #default
             _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
             print("default constraints: ", _hardConstraintList)
@@ -505,7 +499,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
             bothConstraints[ isSet ] = True
             bothConstraints[ conf.keygenSecVar ] = constraints_ky
             bothConstraints[ conf.ciphertextVar ] = constraints_ct
-        elif short == SHORT_FORALL and conf.schemeType == PKSIG:
+        elif shortOpt == SHORT_FORALL and conf.schemeType == PKSIG:
             fileSuffix = 'both' #default
             _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
             print("default constraints: ", _hardConstraintList)
@@ -519,8 +513,13 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
             bothConstraints[ isSet ] = True            
             bothConstraints[ conf.keygenPubVar ] = constraints_ky
             bothConstraints[ conf.signatureVar ] = constraints_sig
-        elif info[minOp] != None:
-            fileSuffix = info[minOp]                
+        else:
+            print("'short' option not specified.\n")
+        
+        # time options
+        timeOpt = ""
+        if info[minOp] != None:
+            fileSuffix += info[minOp]                
             if conf.schemeType == PKENC:
                 configVarName = conf.keygenSecVar
                 VarNames1 = getAssignmentForName(configVarName, varTypes)
@@ -533,7 +532,7 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 
                 VarNames = VarNames1 + VarNames2
                 info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
-
+                timeOpt = info[minOp]
             elif conf.schemeType == PKSIG:
                 configVarName = conf.keygenPubVar
                 VarNames1 = getAssignmentForName(configVarName, varTypes)
@@ -546,10 +545,11 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
                 
                 VarNames = VarNames1 + VarNames2
                 info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
+                timeOpt = info[minOp]
                 
-        else:
-            print("Unexpected configuration. Run python runAutoGroup.py --help-config")
-            sys.exit(-1)
+        #else:
+        #    print("Unexpected configuration. Run python runAutoGroup.py --help-config")
+        #    sys.exit(-1)
                 
         print("<===== Generate Constraints =====>\n")
         
@@ -558,13 +558,12 @@ def searchForSolution(info, short, hardConstraintList, txor, varTypes, conf, gen
         # TODO: process constraints and add to output
         print("<===== Instantiate Z3 solver =====>")
         print("map: ", xorVarMap)
-        #(satisfiable, resultDict) = instantiateSolver(txor.getVariables(), txor.getClauses(), constraints, mofnConstraints, bothConstraints)
         print("original hard constraint: ", hardConstraintList)
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
-        minOptions = (minOps, info[curveID]) # user should provide this information
-        countOpt = info[minKeyword]
-        (satisfiable, resultDict) = instantiateZ3Solver(txor.getVariables(), txor.getClauses(), hardConstraints, constraints, mofnConstraints, bothConstraints, countOpt, minOptions)
-        if satisfiable == False: 
+        minOptions = info[curveID] # user should provide this information
+        countOpt = info[minKeyword] # the cost of group operations
+        (satisfiable, resultDict) = instantiateZ3Solver(shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions)
+        if satisfiable == False:
             print("Adjusing constraints...")
             adjustConstraints = True
         print("<===== Instantiate Z3 solver =====>")
@@ -693,7 +692,7 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         varTypes.update(typesE)
         varTypes.update(typesD)
         # TODO: expand search to encrypt and potentially setup
-        pairingSearch += [stmtS, stmtD] # aka start with decrypt.
+        pairingSearch += [stmtS, stmtE, stmtD] # aka start with decrypt.
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName'): 
             (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
@@ -849,96 +848,31 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     
     # debug 
     print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)   
-    sys.exit(0)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
         
 
-####### TEST ################    
-#    noChangeList = []
-#    # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
-#    for i, j in typesH.items():
-#        t = j.getType()
-#        if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
-#            noChangeList.append(i)
-#
-#    print("Initial noChangeList: ", noChangeList)
-#    
-#    newLinesSe = []
-#    newLinesS = []
-#    newLinesK = []
-#    entireSDL = sdl.getLinesOfCode()
-#    transFuncGen = {}
-#    transFuncRes = {}
-#    transFunc = {}
-#    if hasattr(config, "extraSetupFuncName"):
-#        transFuncGen[ config.extraSetupFuncName ] = stmtSe
-#    if hasattr(config, 'setupFuncName'):    
-#        transFuncGen[ config.setupFuncName ] = stmtS
-#    elif hasattr(config, 'keygenFuncName'):
-#        transFuncGen[ config.keygenFuncName ] = stmtK
-#
-#    for funcName in config.functionOrder:
-#        if funcName in transFuncGen.keys():
-#            print("<===== processing %s =====>" % funcName)
-#            transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFuncGen[ funcName ], groupInfo, noChangeList, generatorLines)
-#            print("<===== processing %s =====>" % funcName)
-#            
-#    # obtain results
-#    newLinesT = transformTypes(typesH, groupInfo)
-#    if hasattr(config, "extraSetupFuncName"):
-#        newLinesSe = transFuncRes.get( config.extraSetupFuncName )
-#    if hasattr(config, 'setupFuncName'):   
-#        newLinesS  = transFuncRes.get( config.setupFuncName )
-#    elif hasattr(config, 'keygenFuncName'):
-#        newLinesK  = transFuncRes.get( config.keygenFuncName )
-#    
-#    # transform body of SDL scheme
-#    if config.schemeType == PKENC:
-#        transFunc[ config.keygenFuncName ]  = stmtK
-#        transFunc[ config.encryptFuncName ] = stmtE
-#        transFunc[ config.decryptFuncName ] = stmtD
-#        for funcName in config.functionOrder:
-#            if funcName in transFunc.keys():
-#                print("<===== processing %s =====>" % funcName)
-#                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList)
-#                print("<===== processing %s =====>" % funcName)
-#        newLinesK = transFuncRes.get( config.keygenFuncName )
-#        newLines2 = transFuncRes.get( config.encryptFuncName )
-#        newLines3 = transFuncRes.get( config.decryptFuncName )
-#            
-#    elif config.schemeType == PKSIG:
-#        if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
-#            transFunc[ config.keygenFuncName ] = stmtK
-#        transFunc[ config.signFuncName ] = stmtSi
-#        transFunc[ config.verifyFuncName ] = stmtV
-#        for funcName in config.functionOrder:
-#            if funcName in transFunc.keys():
-#                print("<===== processing %s =====>" % funcName)
-#                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, transFunc[ funcName ], groupInfo, noChangeList) 
-#                print("<===== processing %s =====>" % funcName)
-#            
-#        newLinesK = transFuncRes.get( config.keygenFuncName )
-#        newLines2 = transFuncRes.get( config.signFuncName )
-#        newLines3 = transFuncRes.get( config.verifyFuncName )
-#    # debug 
-#    print_sdl(False, newLinesS, newLinesK, newLines2, newLines3)
-#    
-#    outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
-#    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
-#    return outputFile
-####### TEST ################    
-
 class AsymSDL:
     def __init__(self, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
         self.groupInfo      = copy.deepcopy(groupInfo)
+        self.groupInfo['myAsymSDL'] = self # this is for recording used vars in each function
         self.generatorMap   = list(self.groupInfo['generatorMapG1'].values()) + list(self.groupInfo['generatorMapG2'].values()) 
         self.typesH         = copy.deepcopy(typesH)
         self.generatorLines = copy.deepcopy(generatorLines)
         self.transFunc      = transFunc
         self.transFuncGen   = transFuncGen
         self.verbose        = False
+        self.__currentFunc    = None
+        self.__funcUsedVar    = {}
+
+    def recordUsedVar(self, varList):
+        assert type(varList) in [set, list], "AsymSDL.recordUsedVar: expected a list or set type."
+        if self.__currentFunc != None:
+            if self.__funcUsedVar.get( self.__currentFunc ) == None:
+                self.__funcUsedVar[ self.__currentFunc ] = set() # create new set iff the first time
+            self.__funcUsedVar[ self.__currentFunc ] = self.__funcUsedVar[ self.__currentFunc ].union(varList)
+        return
     
     def construct(self, config):
         noChangeList = []
@@ -959,6 +893,7 @@ class AsymSDL:
         for funcName in config.functionOrder:
             if funcName in self.transFuncGen.keys():
                 print("<===== processing %s =====>" % funcName)
+                self.__currentFunc = funcName
                 transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
                 print("<===== processing %s =====>" % funcName)
                 
@@ -976,6 +911,7 @@ class AsymSDL:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
                     print("<===== processing %s =====>" % funcName)
+                    self.__currentFunc = funcName
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
                     print("<===== processing %s =====>" % funcName)
             newLinesK = transFuncRes.get( config.keygenFuncName )
@@ -986,6 +922,7 @@ class AsymSDL:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
                     print("<===== processing %s =====>" % funcName)
+                    self.__currentFunc = funcName                    
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList) 
                     print("<===== processing %s =====>" % funcName)
                 
@@ -1002,7 +939,7 @@ class AsymSDL:
         print("usedVars :=> ", usedGenerators)
         print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
-        
+                
         if len(deleteMe) > 0:
             print("Pruning Generators:\t", deleteMe)
             newLinesSe = self.__prune(newLinesSe, deleteMe)
@@ -1010,7 +947,38 @@ class AsymSDL:
             newLinesK  = self.__prune(newLinesK, deleteMe)
             newLines2  = self.__prune(newLines2, deleteMe)
             newLines3  = self.__prune(newLines3, deleteMe)
-                    
+        
+        if config.schemeType == PKSIG:
+            pass
+            # apply PKSIG optimizations to pk
+            # 1. retrieve original pk
+#            origPK = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+#            print("origPK :", origPK)
+#            if len(origPK) > 0:
+#                signUsedVars   = []
+#                signVars       = self.__funcUsedVar.get(config.signFuncName)
+#                if signVars != None:
+#                    for i in signVars:
+#                        if i in origPK: signUsedVars.append(i)
+#                signUsedVars.sort()
+#
+#                keygenVars       = self.__funcUsedVar.get(config.keygenFuncName)
+#                print("keygenVars: ", keygenVars)
+#                if keygenVars != None:
+#                    for i in keygenVars:
+#                        if i in origPK: signUsedVars.append(i)
+#                signUsedVars.sort()
+#                
+#                print("sign usedVars: ", self.__createListNode("s"+config.keygenPubVar, signUsedVars))
+#                verifyUsedVars = []
+#                verifyVars     = self.__funcUsedVar.get(config.verifyFuncName)
+#                if verifyVars != None:
+#                    for i in verifyVars:
+#                        if i in origPK: verifyUsedVars.append(i)
+#                verifyUsedVars.sort()
+#                print("verify usedVars: ", self.__createListNode("v"+config.keygenPubVar, verifyUsedVars))
+#            sys.exit(0)
+        
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3
 
     def __prune(self, nodeLines, deleteMeList):
@@ -1028,6 +996,24 @@ class AsymSDL:
             nodeLines2.append( node )
         return nodeLines2
     
+    def __getOriginalPK(self, varPK, funcs):
+        for node in funcs:
+            if Type(node) == ops.EQ:
+                if str(node.left) == varPK and Type(node.right) == ops.LIST:
+                    return node.right.listNodes
+        return []    
+                
+    
+    def __createListNode(self, name, varList):
+        _list = BinaryNode(ops.LIST)
+        _list.listNodes = list(varList)
+        return BinaryNode(ops.EQ, BinaryNode(name), _list)
+    
+    def __createExpandNode(self, name, varList):
+        _list = BinaryNode(ops.EXPAND)
+        _list.listNodes = list(varList)
+        return BinaryNode(ops.EQ, BinaryNode(name), _list)
+        
 # temporary placement
 def NaiveEvaluation(solutionList, preference):
     trueCount = 0
@@ -1318,52 +1304,7 @@ class Generators:
     
     def getGenLines(self):
         return self.genLines
-    
-    # TODO: future optimization
-    def pruneGens(self, groupInfo):
-        pruneGenLines = {}
-        base_genG1 = self.base_gen + G1Prefix
-        base_genG2 = self.base_gen + G2Prefix
-
-        genOfList = self.genDict.keys()
-        for j in range(1, len(self.generators)):
-            i = self.generators[j]
-            if i not in genOfList: 
-                # generator itself is not a list
-                pruneGenLines[ i ] = []
-                pruneGenLines[ i ].append(i + " := random(ZR)")
-                stmtG1 = i + G1Prefix + " := " + base_genG1 + " ^ " + i
-                stmtG2 = i + G2Prefix + " := " + base_genG2 + " ^ " + i
-                if i in groupInfo["both"]: 
-                    pruneGenLines[ i ].extend([stmtG1, stmtG2])
-                elif i in groupInfo[G1Prefix]:
-                    pruneGenLines[ i ].append(stmtG1)
-                elif i in groupInfo[G2Prefix]:
-                    pruneGenLines[ i ].append(stmtG2)
-                else:
-                    assert False, "pruneGens: could not find generator in groupInfo list."                    
-            elif i in genOfList:
-                oldI = self.genDict[ i ] # 0 : old i
-                pruneGenLines[ oldI ] = []
-                pruneGenLines[ oldI ].append(i + " := random(ZR)")
-                stmtG1 = oldI.replace(i, i + G1Prefix) + " := " + base_genG1 + " ^ " + i
-                stmtG2 = oldI.replace(i, i + G2Prefix) + " := " + base_genG2 + " ^ " + i
-                if i in groupInfo["both"]: 
-                    pruneGenLines[ oldI ].extend([stmtG1, stmtG2])
-                elif i in groupInfo[G1Prefix]:
-                    pruneGenLines[ oldI ].append(stmtG1)
-                elif i in groupInfo[G2Prefix]:
-                    pruneGenLines[ oldI ].append(stmtG2)
-                else:
-                    assert False, "pruneGens: could not find generator in groupInfo list."
-            else: #elif i in genCond:
-                print("setupNewGens: handle conditionals => ", i)
-        print("....Start Pruned Generators...")
-        for line in pruneGenLines:
-            print(line)
-        print("....End Pruned Generators...")                
-        return pruneGenLines
-    
+        
 def assignVarOccursInBoth(varName, info):
     """determines if varName occurs in the 'both' set. For varName's that have a '#' indicator, we first split it
     then see if arg[0] is in the 'both' set."""
@@ -1514,6 +1455,7 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
         info['generatorMapG1'][i] = new_i
         info['usedVars'] = info['usedVars'].union([new_i])
+        info['myAsymSDL'].recordUsedVar([new_i])
         info['newTypes'][new_i] = types.G1
     print("\n\tChanged: ", new_node2, end="")
     return new_node2
@@ -1526,7 +1468,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
     if changeLeftVar: new_assignVar = assignNewVar(assignVar, G2Prefix) # new_assignVar = assignVar + G2Prefix
     else: new_assignVar = str(assignVar)
     sdl.ASTVisitor( SubstituteVar(assignVar, new_assignVar) ).preorder( new_node2 )
-    info['generatorMapG2'][assignVar] = new_assignVar
+    info['generatorMapG2'][assignVar] = new_assignVar    
     #info['usedVars'] = info['usedVars'].union([new_assignVar])    
     # see if it is initCall:
     if varInfo.getInitCall() or varInfo.getHasRandomness():
@@ -1555,6 +1497,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
         info['generatorMapG2'][i] = new_i
         info['usedVars'] = info['usedVars'].union([new_i])
+        info['myAsymSDL'].recordUsedVar([new_i])
         info['newTypes'][new_i] = types.G2        
     print("\n\tChanged: ", new_node2, end="")
     return new_node2
@@ -1593,7 +1536,10 @@ def updateForPairing(varInfo, info, noChangeList):
     return applyPairingUpdate(info, node, noChangeList)
 
 def applyPairingUpdate(info, node, noChangeList):
-    sdl.ASTVisitor( SubstitutePairings(info, noChangeList) ).preorder( node )
+    sp = SubstitutePairings(info, noChangeList)
+    sdl.ASTVisitor( sp ).preorder( node )
+    info['usedVars'] = info['usedVars'].union(sp.getUsedGens())
+    info['myAsymSDL'].recordUsedVar(GetAttributeVars(node)) # sp.getUsedVars())    
     print("\n\t Pre techs: ", node, end="")
     sdl.ASTVisitor( MaintainOrder(info) ).preorder( node )    
     # combining pairing logic a bit.
@@ -1623,7 +1569,7 @@ def writeConfig(filename, *args):
     f = open(filename, 'w')
     for block in args:
         for line in block:
-            f.write(line + "\n")
+            f.write(str(line) + "\n")
         if len(block) > 0: f.write('\n') # in case block = [] (empty)
     f.close()
     return
