@@ -161,7 +161,15 @@ class GenerateProof:
         self.__lcg_transform_count = 0
         self.lcg = None
         self.stepPrefix = ''
-    
+        self.__lcg_start_pair = {}
+        self.__lcg_start_pair_cnt = 0
+        self.__lcg_combine_pair = {}
+        self.__lcg_combine_pair_cnt = 0
+        self.__lcg_buckets_pair = {}
+        self.__lcg_buckets_pair_cnt = 0
+        self.__lcg_unblinded_pair = {}
+        self.__lcg_unblinded_pair_cnt = 0
+        
     def setPrefix(self, prefixStr):
         assert type(prefixStr) == str, "expecting string for the step prefix."
         self.stepPrefix = prefixStr
@@ -229,7 +237,6 @@ class GenerateProof:
         for node in sdlList:
             eqStr += self.lcg.print_statement( node ) + ", "
         eqStr = eqStr[:-len(CM)]
-        self.initMember("__lcg_start_pair", "__lcg_start_pair_cnt")
         self.__lcg_start_pair[ self.__lcg_start_pair_cnt ] = {'msg': msg, 'eq':eqStr }
         self.__lcg_start_pair_cnt += 1
         return
@@ -244,7 +251,6 @@ class GenerateProof:
         for node in sdlList:
             eqStr += self.lcg.print_statement( node ) + ", "
         eqStr = eqStr[:-len(CM)]
-        self.initMember("__lcg_combine_pair", "__lcg_combine_pair_cnt")        
         self.__lcg_combine_pair[ self.__lcg_combine_pair_cnt ] = {'msg': msg, 'eq':eqStr }
         self.__lcg_combine_pair_cnt += 1
         return
@@ -262,7 +268,6 @@ class GenerateProof:
                 eqStr += self.lcg.print_statement( node ) + ", "
             eqStr = eqStr[:-len(CM)]
             listOfStr.append(eqStr)
-        self.initMember("__lcg_buckets_pair", "__lcg_buckets_pair_cnt")
         self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
         self.__lcg_buckets_pair_cnt += 1
         return
@@ -280,15 +285,8 @@ class GenerateProof:
                 eqStr += self.lcg.print_statement( node ) + ", "
             eqStr = eqStr[:-len(CM)]
             listOfStr.append(eqStr)
-        self.initMember("__lcg_unblinded_pair", "__lcg_unblinded_pair_cnt")
         self.__lcg_unblinded_pair[ self.__lcg_unblinded_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
         self.__lcg_unblinded_pair_cnt += 1
-        return
-    
-    def initMember(self, varName, countName):
-        if not hasattr(self, varName) and not hasattr(self, countName):
-            setattr(self, varName, {})
-            setattr(self, countName, 0)
         return
     
 #    def setBreakPoint(self):

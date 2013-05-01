@@ -949,38 +949,69 @@ class AsymSDL:
             newLines3  = self.__prune(newLines3, deleteMe)
         
         if config.schemeType == PKSIG:
-            pass
-            # apply PKSIG optimizations to pk
-            # 1. retrieve original pk
-#            origPK = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
-#            print("origPK :", origPK)
-#            if len(origPK) > 0:
-#                signUsedVars   = []
-#                signVars       = self.__funcUsedVar.get(config.signFuncName)
-#                if signVars != None:
-#                    for i in signVars:
-#                        if i in origPK: signUsedVars.append(i)
-#                signUsedVars.sort()
-#
-#                keygenVars       = self.__funcUsedVar.get(config.keygenFuncName)
-#                print("keygenVars: ", keygenVars)
-#                if keygenVars != None:
-#                    for i in keygenVars:
-#                        if i in origPK: signUsedVars.append(i)
-#                signUsedVars.sort()
+            (origPK, defInFuncName) = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+            (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = self.optimizePK(config, origPK)
+            
+#            # apply PKSIG optimizations to pk
+#            newVarNames = [sPub, vPub]
+#            newVarNodes = [newSignPK, newVerifyPK]
+#            if defInFuncName == config.setupFuncName:
+#                newLinesS = self.__replaceNode(origPK, newVarNodes, newVarNames, newLinesS)
+#            elif defInFuncName == config.keygenFuncName:
+#                newLinesK = self.__replaceNode(origPK, newVarNodes, newVarNames, newLinesK)
 #                
-#                print("sign usedVars: ", self.__createListNode("s"+config.keygenPubVar, signUsedVars))
-#                verifyUsedVars = []
-#                verifyVars     = self.__funcUsedVar.get(config.verifyFuncName)
-#                if verifyVars != None:
-#                    for i in verifyVars:
-#                        if i in origPK: verifyUsedVars.append(i)
-#                verifyUsedVars.sort()
-#                print("verify usedVars: ", self.__createListNode("v"+config.keygenPubVar, verifyUsedVars))
 #            sys.exit(0)
-        
+            # 1. retrieve original pk        
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3
 
+    def __replaceNode(self, targetVar, newVarNodes, newVarNames, newLinesK):
+        nodeLines2 = []
+        replacedNewPK = False 
+        for node in newLinesK:
+            if Type(node) == ops.EQ:
+                if str(node.left) == targetVar: # found
+                    nodeLines2.extend(newVarNodes)
+                    replacedNewPK = True
+                    continue
+                elif str(node.left) == outputKeyword and replacedNewPK:
+                    pass
+            nodeLines2.append( node )
+        return nodeLines2
+
+    def optimizePK(self, config, origPK):
+        print("origPK :", origPK)
+        if len(origPK) > 0:
+            signUsedVars   = []
+            signVars       = self.__funcUsedVar.get(config.signFuncName)
+            if signVars != None:
+                for i in signVars:
+                    if i in origPK: signUsedVars.append(i)
+
+            keygenVars       = self.__funcUsedVar.get(config.keygenFuncName)
+            print("keygenVars: ", keygenVars)
+            if keygenVars != None:
+                for i in keygenVars:
+                    if i in origPK:
+                        if i not in signUsedVars: signUsedVars.append(i)
+            signUsedVars.sort()
+            
+            verifyUsedVars = []
+            verifyVars     = self.__funcUsedVar.get(config.verifyFuncName)
+            if verifyVars != None:
+                for i in verifyVars:
+                    if i in origPK: verifyUsedVars.append(i)
+            verifyUsedVars.sort()
+            
+            sPub = "s"+config.keygenPubVar
+            vPub = "v"+config.keygenPubVar
+            newSignPK      = self.__createListNode(sPub, signUsedVars)
+            newSignPKexp   = self.__createExpandNode(sPub, signUsedVars)
+            newVerifyPK    = self.__createListNode(vPub, verifyUsedVars)
+            newVerifyPKexp = self.__createExpandNode(vPub, verifyUsedVars)
+
+            
+        return (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp)
+            
     def __prune(self, nodeLines, deleteMeList):
         nodeLines2 = []
         for node in nodeLines:
@@ -1432,6 +1463,8 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         sdl.ASTVisitor( SubstituteVar('', str(types.G1), initChange=True) ).preorder( new_node2 )
         info['newTypes'][new_assignVar] = types.G1
         return new_node2
+
+    info['myAsymSDL'].recordUsedVar(varDeps)                
     
     prunedList = prune(noChangeList)
     newVarDeps = set(varDeps).difference(prunedList, Gtypes)
@@ -1477,6 +1510,8 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         info['newTypes'][new_assignVar] = types.G2        
         return new_node2
     
+    info['myAsymSDL'].recordUsedVar(varDeps)                
+        
     prunedList = prune(noChangeList)
     newVarDeps = set(varDeps).difference(prunedList, Gtypes)
     for i in newVarDeps:
@@ -1487,6 +1522,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
             if newRef == False: print("ERROR in handleListTypeRefs"); return
             elif newRef == i: continue # meaning no change in reference
             else: new_i = newRef; updatedRefAlready = True
+            
         if not updatedRefAlready:   
             v = varTypes.get(i)
             if v != None: v = v.getType()
