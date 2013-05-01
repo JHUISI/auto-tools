@@ -481,7 +481,11 @@ def getIndexVarNameFromBinaryNode(node, varName):
 
     return firstPossibleName
 
-def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLines, currentNode, blindingVarsThatAreLists, currentLineNo, astNodes, config):
+def addToCombinedPairingsForProof(combinedPairingsForProof, listOfPairings):
+    for pairing in listOfPairings:
+        combinedPairingsForProof.append(pairing)
+
+def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, decoutLines, currentNode, blindingVarsThatAreLists, currentLineNo, astNodes, config):
     global transformListCounter, decoutListCounter, iterationNo, FLrepVarCounter
 
     decoutListCounter = transformListCounter
@@ -491,6 +495,10 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
     #decoutListIndex = getDecoutListIndex(currentLineNo)
 
     originalFLrepVarCounter = FLrepVarCounter
+
+    combinedPairingsForProof = []
+    bucketizedPairingsForProof = []
+    bfsForProof = []
 
     for groupedPairing in groupedPairings:
         transformListIndex = getTransformListIndex(currentLineNo, astNodes, config)
@@ -517,6 +525,9 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
         listOfPairings = groupedPairing[1]
         listOfPairings, techApplied['CombinePairings'] = CombinePairings(listOfPairings)
         #print("Combined pairings for blinding factor ", groupedPairing[0], ":  ", listOfPairings)
+
+        addToCombinedPairingsForProof(combinedPairingsForProof, listOfPairings)
+
         for pairing in listOfPairings:
             lineForTransformLines += str(pairing) + " * " 
 
@@ -543,6 +554,13 @@ def writeOutPairingCalcs(techApplied, groupedPairings, transformLines, decoutLin
 
         iterationNo += 1
         FLrepVarCounter += 1
+
+        bucketizedPairingsForProof.append(listOfPairings)
+        bfsForProof.append(groupedPairing[0])
+
+    proof.setCombinePairs(currentLineNo, combinedPairingsForProof)
+    #proof.setBuckets(currentLineNo, bucketizedPairingsForProof, bfsForProof)
+    proof.setBuckets(currentLineNo, bucketizedPairingsForProof)
 
     FLrepVarCounter = originalFLrepVarCounter
 
@@ -1110,8 +1128,8 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
         nodePairingsForProof = getNodePairingObjs(currentNode)
 
         #UNCOMMENT ME
-        #if (len(nodePairingsForProof) > 0):
-            #proof.setStartPairs(lineNo, nodePairingsForProof)
+        if (len(nodePairingsForProof) > 0):
+            proof.setStartPairs(lineNo, nodePairingsForProof)
 
         if(len(path_applied) > 0): techs_applied['SimplifySDLNode'] = True
         #if (hasPairingsSomewhere(currentNode) == True):
@@ -1185,7 +1203,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
         elif ( (len(currentNodePairings) > 0) and (areAllVarsOnLineKnownByTransform == True) ):
             groupedPairings = groupPairings(currentNodePairings, varsThatAreBlindedDict, config)
             #print("Grouped pairings:  ", groupedPairings)
-            writeOutPairingCalcs(techs_applied, groupedPairings, transformLines, decoutLines, currentNode, blindingVarsThatAreLists, lineNo, astNodes, config)
+            writeOutPairingCalcs(proof, techs_applied, groupedPairings, transformLines, decoutLines, currentNode, blindingVarsThatAreLists, lineNo, astNodes, config)
             proof.setTransformStep(currentNode, techs_applied)
             if (groupedPairings[0][0] == []):
                 knownVars.append(str(currentNode.left))
