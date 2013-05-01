@@ -1102,10 +1102,17 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
         if (currentNode.type == ops.NONE):
             continue
         path_applied = []
+        #nodePairingsForProof = getNodePairingObjs(currentNode)
         #if (hasPairingsSomewhere(currentNode) == True):
             #print("Unsimplified node:  ", currentNode)
         techs_applied = {'SimplifySDLNode':None, 'applyTechnique11':None, 'GroupPairings':None}
         currentNode = SimplifySDLNode(currentNode, path_applied)
+        nodePairingsForProof = getNodePairingObjs(currentNode)
+
+        #UNCOMMENT ME
+        #if (len(nodePairingsForProof) > 0):
+            #proof.setStartPairs(lineNo, nodePairingsForProof)
+
         if(len(path_applied) > 0): techs_applied['SimplifySDLNode'] = True
         #if (hasPairingsSomewhere(currentNode) == True):
             #print("Simplified node:  ", currentNode)
