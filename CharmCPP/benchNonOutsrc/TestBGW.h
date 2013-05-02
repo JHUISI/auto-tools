@@ -13,7 +13,7 @@ class Bgw05
 {
 public:
 	PairingGroup group;
-	Bgw05() { group.setCurve(AES_SECURITY); };
+	Bgw05() { group.setCurve(SS1536); };
 	~Bgw05() {};
 	void setup(int n, CharmList & pk, CharmList & msk);
 	void keygen(CharmList & pk, CharmList & msk, int n, CharmMetaListG1 & skComplete);

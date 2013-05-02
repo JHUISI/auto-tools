@@ -87,6 +87,9 @@ G2& CharmListG2::operator[](const int index)
 		cur_index++;
 		return list[index];
 	}
+	else if(index < MAX_LIST) {
+		return list[index];
+	}
 
 	int len = (int) list.size();
 	if(index >= 0 && index < len) {

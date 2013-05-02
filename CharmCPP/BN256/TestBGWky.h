@@ -1,6 +1,6 @@
 #ifndef BGW05_H
 #define BGW05_H
-
+/* minimize SK */
 #include "Charm.h"
 #include <iostream>
 #include <sstream>
@@ -13,7 +13,7 @@ class Bgw05
 {
 public:
 	PairingGroup group;
-	Bgw05() { group.setCurve(AES_SECURITY); };
+	Bgw05() { group.setCurve(BN256); };
 	~Bgw05() {};
 	
 	void setup(int n, CharmList & pk, CharmList & msk);

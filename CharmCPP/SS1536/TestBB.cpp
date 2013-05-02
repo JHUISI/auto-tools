@@ -22,7 +22,7 @@ void Bbibe04::setup(CharmList & msk, CharmList & pk)
     return;
 }
 
-void Bbibe04::keygen(CharmList & pk, CharmList & msk, NO_TYPE & id, CharmList & sk)
+void Bbibe04::keygen(CharmList & pk, CharmList & msk, string & id, CharmList & sk)
 {
     G1 g;
     G1 u;
@@ -42,14 +42,14 @@ void Bbibe04::keygen(CharmList & pk, CharmList & msk, NO_TYPE & id, CharmList & 
     galpha = msk[0].getG1();
     ID = group.hashListToZR(id);
     r = group.random(ZR_t);
-    K1 = group.exp(group.mul(galpha, group.mul(group.exp(u, ID), h)), r);
+    K1 = group.mul(galpha, group.exp(group.mul(group.exp(u, ID), h), r));
     K2 = group.exp(g, r);
     sk.insert(0, K1);
     sk.insert(1, K2);
     return;
 }
 
-void Bbibe04::encrypt(CharmList & pk, GT & M, NO_TYPE & id, CharmList & ct)
+void Bbibe04::encrypt(CharmList & pk, GT & M, string & id, CharmList & ct)
 {
     G1 g;
     G1 u;

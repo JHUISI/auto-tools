@@ -3,6 +3,7 @@ setting := symmetric
 
 BEGIN :: types
 M := GT
+id := str
 END :: types
 
 BEGIN :: func:setup
@@ -29,7 +30,7 @@ msk := expand{galpha}
 
 ID := H(id, ZR)
 r := random(ZR)
-K1 := (galpha * ((u^ID) * h))^r
+K1 := galpha * ((u^ID) * h)^r
 K2 := g^r
 
 sk := list{K1, K2}

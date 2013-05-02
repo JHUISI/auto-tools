@@ -1,5 +1,6 @@
 #ifndef DFA12_H
 #define DFA12_H
+/* minimize CT */
 
 #include "Charm.h"
 #include <iostream>

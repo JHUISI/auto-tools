@@ -284,6 +284,9 @@ bool PairingGroup::ismember(CharmMetaListG2 & g)
 G2 PairingGroup::mul(G2 g, G2 h)
 {
 	G2 l(g + h);
+#if BUILD_BN_CURVE == 1
+	l.g.norm();
+#endif
 	return l;
 }
 

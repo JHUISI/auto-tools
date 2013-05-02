@@ -1,5 +1,5 @@
 
-#include "TestBGW.h"
+#include "TestBGWky.h"
 #include <fstream>
 #include <time.h>
 
@@ -24,7 +24,7 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile1, ofstream & outfile2, int num
 {
 	Benchmark benchT, benchD, benchK;
 	CharmList pk, msk, Hdr, ct;
-	CharmMetaListG1 skComplete, skComplete2;
+	CharmMetaListG1 sk;
 	CharmListInt S;
 //	int receivers[] = {1, 3, 5, 12, 14};
 // 	S.init(receivers, 5);
@@ -34,28 +34,30 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile1, ofstream & outfile2, int num
 	getRandomReceivers(S, numOfRecs);
 	int n = numOfRecs, i = S[(rand() % numOfRecs)];
 	double kg_in_ms;
+
 	bgw.setup(n, pk, msk);
 //	cout << "pk: " << pk << endl;
 //	cout << "msk: " << msk << endl;
 	// BENCHMARK KEYGEN SETUP
-	for(int i = 0; i < iterationCount; i++) {
+	bgw.keygen(pk, msk, n, sk);
+	cout << "receiver: " << i << endl;
+//	for(int j = 0; j < iterationCount; j++) {
 		benchK.start();
-		bgw.keygen(pk, msk, n, skComplete2);
+		bgw.encrypt(S, pk, n, ct);
 		benchK.stop();
 		kg_in_ms = benchK.computeTimeInMilliseconds();
-	}
-	cout << "Keygen avg: " << benchK.getAverage() << " ms" << endl;
+//	}
+
+	cout << "Encrypt avg: " << benchK.getAverage() << " ms" << endl;
     stringstream s1;
 	s1 << numOfRecs << " " << benchK.getAverage() << endl;
 	outfile1 << s1.str();
     keygenResults[numOfRecs] = benchK.getRawResultString();
 	// BENCHMARK KEYGEN SETUP
 
-	bgw.keygen(pk, msk, n, skComplete);
+	// bgw.keygen(pk, msk, n, skComplete);
 //	cout << "tk: " <<  skCompleteBlinded << endl;
 //	cout << "bf: " << bf0 << endl;
-	cout << "receiver: " << i << endl;
-	bgw.encrypt(S, pk, n, ct);
 
 	Hdr = ct[0].getList();
 	K = ct[1].getGT();
@@ -64,7 +66,7 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile1, ofstream & outfile2, int num
 	stringstream s2;
 	for(int j = 0; j < iterationCount; j++) {
 		benchD.start();
-		bgw.decrypt(S, i, n, Hdr, pk, skComplete, KDecrypt);
+		bgw.decrypt(S, i, n, Hdr, pk, sk, KDecrypt);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}

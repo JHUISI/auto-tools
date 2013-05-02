@@ -13,7 +13,7 @@ class Dse09
 {
 public:
 	PairingGroup group;
-	Dse09() { group.setCurve(SS1024); };
+	Dse09() { group.setCurve(SS1536); };
 	~Dse09() {};
 	
 	void setup(CharmList & mpk, CharmList & msk);

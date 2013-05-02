@@ -19,40 +19,35 @@ string getID(int len)
 void benchmarkDSE(Dse09 & dse, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & decryptResults)
 {
 	Benchmark benchT, benchD, benchK;
-    CharmList msk, mpk, pk, sk, sk2, ct;
+    CharmList msk, mpk, pk, sk, ct;
     GT M, newM;
     ZR bf0;
     string id = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
 	dse.setup(mpk, msk);
-	for(int i = 0; i < iterationCount; i++) {
-		benchK.start();
-		dse.keygen(mpk, msk, id, sk2);
-		benchK.stop();
-		kg_in_ms = benchK.computeTimeInMilliseconds();
-	}
-	cout << "Keygen avg: " << benchK.getAverage() << " ms" << endl;
-    stringstream s1;
-	s1 << ID_string_len << " " << benchK.getAverage() << endl;
-	outfile1 << s1.str();
-    keygenResults[ID_string_len] = benchK.getRawResultString();
-
 	dse.keygen(mpk, msk, id, sk);
-    M = dse.group.random(GT_t);
-    //cout << "M: " << convert_str(M) << endl;
-    dse.encrypt(mpk, M, id, ct);
-
     stringstream s2;
 
     //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
-		// run TRANSFORM
+		// run enc and dec
+	    M = dse.group.random(GT_t);
+		benchK.start();
+	    dse.encrypt(mpk, M, id, ct);
+		benchK.stop();
+		kg_in_ms = benchK.computeTimeInMilliseconds();
+
 		benchD.start();
 		dse.decrypt(ct, sk, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
+	cout << "Encrypt avg: " << benchK.getAverage() << " ms" << endl;
+    stringstream s1;
+	s1 << ID_string_len << " " << benchK.getAverage() << endl;
+	outfile1 << s1.str();
+    keygenResults[ID_string_len] = benchK.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
 	s2 << iterationCount << " " << benchD.getAverage() << endl;
@@ -87,9 +82,9 @@ int main(int argc, const char *argv[])
 	string filename = string(argv[0]);
 	stringstream s3, s4;
 	ofstream outfile1, outfile2, outfile3, outfile4;
-	string f1 = filename + "_keygen.dat";
+	string f1 = filename + "_encrypt.dat";
 	string f2 = filename + "_decrypt.dat";
-	string f3 = filename + "_keygen_raw.txt";
+	string f3 = filename + "_encrypt_raw.txt";
 	string f4 = filename + "_decrypt_raw.txt";
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());
