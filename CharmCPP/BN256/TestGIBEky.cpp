@@ -1,4 +1,4 @@
-#include "TestGIBE.h"
+#include "TestGIBEky.h"
 
 void Gentry06::setup(CharmList & mk, CharmList & pk)
 {
@@ -25,7 +25,7 @@ void Gentry06::setup(CharmList & mk, CharmList & pk)
     return;
 }
 
-void Gentry06::keygen(CharmList & pk, CharmList & mk, string & id, CharmList & sk)
+void Gentry06::keygen(CharmList & pk, CharmList & mk, string & id, NO_TYPE & error, CharmList & sk)
 {
     G1 gG1;
     G2 gG2;
@@ -60,7 +60,7 @@ void Gentry06::keygen(CharmList & pk, CharmList & mk, string & id, CharmList & s
     return;
 }
 
-void Gentry06::encrypt(CharmList & pk, GT & m, NO_TYPE & id, CharmList & ct)
+void Gentry06::encrypt(CharmList & pk, GT & m, string & id, CharmList & ct)
 {
     G1 gG1;
     G2 gG2;

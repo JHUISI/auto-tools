@@ -14,7 +14,7 @@ class Dse09
 {
 public:
 	PairingGroup group;
-	Dse09() { group.setCurve(AES_SECURITY); };
+	Dse09() { group.setCurve(BN256); };
 	~Dse09() {};
 	
 	void setup(CharmList & mpk, CharmList & msk);
