@@ -33,7 +33,7 @@
 // super-singular curve over GF(P) where k=2 (large prime)
 #define MR_PAIRING_SSP
 #define ASYMMETRIC		0
-#define AES_SECURITY	80 // 80 for SS512, 128 for SS1536 (BIG_SIZE 96)
+#define AES_SECURITY	80 // 80 for SS512 (BIG_SIZE 64), 128 for SS1536 (BIG_SIZE 96)
 #define BIG_SIZE		64
 #define MAX_LEN			BIG_SIZE + PAD_SIZE // 64 bytes necessary, 2 for zero padding on deserialization
 #include "miracl/pairing_1.h"

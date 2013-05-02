@@ -848,7 +848,6 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     
     # debug 
     print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)
-    sys.exit(0)  
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
     return outputFile
@@ -954,25 +953,26 @@ class AsymSDL:
             # 1. find out where pk was originally defined
             (defInFuncName, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)
             # 2. get new pk list if defined in scheme
-            origPK = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+            origPKList = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
             # 3. split pk into two new public keys (sPK, and vPK)
-            (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = self.optimizePK(config, origPK)
-            
-            # apply PKSIG optimizations to pk
-            newVarNames = [sPub, vPub]
-            newVarNodes = [newSignPK, newVerifyPK]
-            print("Public Key defined in ", defInFuncName)
-            if defInFuncName == "setup":
-                newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
-            elif defInFuncName == "keygen":
-                newLinesK = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesK)
-            
-            # sPub => keygen AND sign
-            # vPub => verify 
-            if defInFuncName != "keygen":
-                newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)                
-            newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
-            newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
+            if len(origPKList) > 0:
+                (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = self.optimizePK(config, origPKList)
+                
+                # apply PKSIG optimizations to pk
+                newVarNames = [sPub, vPub]
+                newVarNodes = [newSignPK, newVerifyPK]
+                print("Public Key defined in ", defInFuncName)
+                if defInFuncName == "setup":
+                    newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
+                elif defInFuncName == "keygen":
+                    newLinesK = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesK)
+                
+                # sPub => keygen AND sign
+                # vPub => verify 
+                if defInFuncName != "keygen":
+                    newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)                
+                newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
+                newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
             # 1. retrieve original pk        
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3

@@ -37,7 +37,7 @@ def configAutoGroup(sdl_file, cm, sdlVerbose):
                 errorOut(i)
     
     if not hasattr(cm, "secparam"):
-        secparam = "MNT160" # default pairing curve for now
+        secparam = "BN256" # default pairing curve for now
     else:
         secparam = cm.secparam
     outfile = runAutoGroup(sdl_file, cm, secparam, sdlVerbose)

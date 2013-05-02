@@ -18,6 +18,7 @@
 /* sec-level identifiers for security equivalent to AES-80bit or 128-bit security*/
 #define MNT160			80
 #define SS512			80
+#define SS1536			128
 #define BN256			128
 
 
