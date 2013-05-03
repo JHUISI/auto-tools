@@ -559,8 +559,8 @@ def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, de
         bfsForProof.append(groupedPairing[0])
 
     proof.setCombinePairs(currentLineNo, combinedPairingsForProof)
-    #proof.setBuckets(currentLineNo, bucketizedPairingsForProof, bfsForProof)
-    proof.setBuckets(currentLineNo, bucketizedPairingsForProof)
+    proof.setBuckets(currentLineNo, bucketizedPairingsForProof, bfsForProof)
+    #proof.setBuckets(currentLineNo, bucketizedPairingsForProof)
 
     FLrepVarCounter = originalFLrepVarCounter
 
