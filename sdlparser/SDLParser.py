@@ -55,6 +55,8 @@ publicVarNames = []
 secretVarNames = []
 refType = 'refType'
 
+#generators = []
+
 usedBuiltinsFunc = []
 builtInTypes = {}
 builtInTypes["DeriveKey"] = types.str
@@ -748,7 +750,7 @@ def updateKeywordStmts(node, lineNum):
 
     varInfoObj = VarInfo()
     varInfoObj.setLineNo(lineNum)
-    varInfoObj.setAssignNode(assignInfo, varTypes, node, currentFuncName, None, None)
+    varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, None, None)
     if (varName in assignInfo[currentFuncName]):
         sys.exit("In updateKeywordStmts in SDLParser.py, found duplicate entries for variable name in HEADER function.")
 
@@ -769,7 +771,7 @@ def updatePrecomputeStmts(node, lineNum):
 
     varInfoObj = VarInfo()
     varInfoObj.setLineNo(lineNum)
-    varInfoObj.setAssignNode(assignInfo, varTypes, node, currentFuncName, None, None, traverseAssignNode=False)
+    varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, None, None, traverseAssignNode=False)
     if (varName in assignInfo[currentFuncName]):
         sys.exit("In updatePrecomputeStmts in SDLParser.py, found duplicate entries for variable name in PRECOMPUTE_HEADER function.")
 
@@ -1498,7 +1500,7 @@ def updateAssignInfo(node, i):
         saveOriginalAssignInfoEntry(varName)
 
         assignInfo_Func[varName].setLineNo(i)
-        (resultingVarDeps, resultingHashInputArgNames) = assignInfo_Func[varName].setAssignNode(assignInfo, varTypes, node, currentFuncName, currentForLoopObj, currentIfElseBranch)
+        (resultingVarDeps, resultingHashInputArgNames) = assignInfo_Func[varName].setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, currentForLoopObj, currentIfElseBranch)
         # figure out whether this node is top level
         if currentForLoopObj != None and currentIfElseBranch == None:
             assignInfo_Func[varName].topLevelNode = False
@@ -1516,7 +1518,7 @@ def updateAssignInfo(node, i):
     else:
         varInfoObj = VarInfo()
         varInfoObj.setLineNo(i)
-        (resultingVarDeps, resultingHashInputArgNames) = varInfoObj.setAssignNode(assignInfo, varTypes, node, currentFuncName, currentForLoopObj, currentIfElseBranch)
+        (resultingVarDeps, resultingHashInputArgNames) = varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, currentForLoopObj, currentIfElseBranch)
         # figure out whether this node is top level
         if currentForLoopObj != None and currentIfElseBranch == None:
             varInfoObj.topLevelNode = False
@@ -2111,6 +2113,9 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
     global varNamesToFuncs_Assign, ifElseBranches, startLineNo_IfBranch, startLineNo_ElseBranch
     global inputOutputVars, varDepListNoExponents, varInfListNoExponents, functionNameOrder
     global publicVarNames, secretVarNames, assignVarInfo, overflowAssignInfo, linesOfCode
+
+    #print(generators)
+    #sys.exit("test2")
 
     astNodes = []
     overflowAssignInfo = {}

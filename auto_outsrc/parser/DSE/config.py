@@ -1,5 +1,7 @@
 schemeName = "LW"
 
+generators = ["gG1", "gG2", "wG1", "wG2", "hG1", "hG2", "uG1", "uG2", "vG1", "vG2", "v1G1", "v1G2", "v2G1", "v2G2"]
+
 rootNodeName = 'root'
 addNodePrefix = 'ADD'
 mulNodePrefix = 'MUL'

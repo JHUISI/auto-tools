@@ -27,6 +27,7 @@ def main(inputSDLScheme, configName, outputFile, outputUserDefFile):
     config = importlib.import_module(configName) # pkg.config
     SDLParser.masterPubVars = config.masterPubVars
     SDLParser.masterSecVars = config.masterSecVars
+    SDLParser.generators = config.generators
     if hasattr(config, userFuncListName):
        userFuncList = getattr(config, userFuncListName)
     else:

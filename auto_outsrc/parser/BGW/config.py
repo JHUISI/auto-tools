@@ -1,5 +1,7 @@
 schemeName = "BGW"
 
+generators = []
+
 rootNodeName = 'root'
 addNodePrefix = 'ADD'
 mulNodePrefix = 'MUL'
@@ -17,7 +19,8 @@ doNotIncludeInTransformList = []
 
 forLoopSeed = 10
 
-M = 'KDecrypt'
+#M = 'KDecrypt'
+M = 'K'
 
 listNameIndicator = "LISTNAMEINDICATOR"
 
@@ -52,7 +55,8 @@ masterSecVars = ["msk"]
 # superset of variables we have used to represent public parameters in
 # our crypto schemes
 keygenPubVar = ["pk"]
-keygenSecVar = "skComplete"
+#keygenSecVar = "skComplete"
+keygenSecVar = "sk"
 
 pySuffix = ".py"
 cppSuffix = ".cpp"

@@ -1,4 +1,6 @@
 schemeName = "LW"
+
+generators = []
  
 rootNodeName = 'root'
 addNodePrefix = 'ADD'

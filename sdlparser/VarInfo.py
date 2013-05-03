@@ -342,10 +342,13 @@ class VarInfo:
                 if (stillNumIndices == True):
                     stillNumIndices = False
 
-    def traverseAssignBaseElemsOnlyRecursive(self, node):
+    def traverseAssignBaseElemsOnlyRecursive(self, node, generators):
+        #print(generators)
+        #sys.exit("test")
         if (node.type == ops.ATTR):
+            fullVarNameOfNode = getFullVarName(node, False)
             (retFuncName, retVarInfoObj) = self.getVarNameEntryFromAssignInfo_Wrapper(node, getFullVarName(node, False))
-            if ( (retFuncName != None) and (retVarInfoObj != None) ):
+            if ( (retFuncName != None) and (retVarInfoObj != None) and (fullVarNameOfNode not in generators) ):
                 retNode = copy.deepcopy(retVarInfoObj.getAssignBaseElemsOnly())
                 if (retNode == None):
                     return node
@@ -376,19 +379,20 @@ class VarInfo:
             node.listNodes = newListNodesList
 
         if (node.left != None):
-            retNodeLeft = self.traverseAssignBaseElemsOnlyRecursive(node.left)
+            retNodeLeft = self.traverseAssignBaseElemsOnlyRecursive(node.left, generators)
             node.left = retNodeLeft
         if (node.right != None):
-            retNodeRight = self.traverseAssignBaseElemsOnlyRecursive(node.right)
+            retNodeRight = self.traverseAssignBaseElemsOnlyRecursive(node.right, generators)
             node.right = retNodeRight
 
         return node
 
-    def traverseAssignBaseElemsOnlyThisFuncRecursive(self, node):
+    def traverseAssignBaseElemsOnlyThisFuncRecursive(self, node, generators):
         if (node.type == ops.ATTR):
+            fullVarNameOfNode = getFullVarName(node, False)
             (retFuncName, retVarInfoObj) = self.getVarNameEntryFromAssignInfo_Wrapper(node, getFullVarName(node, False))
             #if ( (retFuncName != None) and (retVarInfoObj != None) ):
-            if ( (retFuncName != None) and (retFuncName == self.funcName) ):
+            if ( (retFuncName != None) and (retFuncName == self.funcName) and (fullVarNameOfNode not in generators) ):
                 retNode = copy.deepcopy(retVarInfoObj.getAssignBaseElemsOnlyThisFunc())
                 if (retNode == None):
                     return node
@@ -422,15 +426,15 @@ class VarInfo:
             #return node
 
         if (node.left != None):
-            retNodeLeft = self.traverseAssignBaseElemsOnlyThisFuncRecursive(node.left)
+            retNodeLeft = self.traverseAssignBaseElemsOnlyThisFuncRecursive(node.left, generators)
             node.left = retNodeLeft
         if (node.right != None):
-            retNodeRight = self.traverseAssignBaseElemsOnlyThisFuncRecursive(node.right)
+            retNodeRight = self.traverseAssignBaseElemsOnlyThisFuncRecursive(node.right, generators)
             node.right = retNodeRight
 
         return node
 
-    def traverseAssignNode(self):
+    def traverseAssignNode(self, generators):
         if (self.assignNode == None):
             sys.exit("Attempting to run traverseAssignNode in VarInfo when self.assignNode is still None.")
 
@@ -469,11 +473,11 @@ class VarInfo:
         #if ( (self.assignBaseElemsOnly == None) or (self.beenSet == :
         if (self.isBaseElement == False):
             assignNodeRightDeepCopy = copy.deepcopy(self.assignNode.right)
-            newAssignBaseElemsOnlyNode = self.traverseAssignBaseElemsOnlyRecursive(assignNodeRightDeepCopy)
+            newAssignBaseElemsOnlyNode = self.traverseAssignBaseElemsOnlyRecursive(assignNodeRightDeepCopy, generators)
             self.assignBaseElemsOnly = newAssignBaseElemsOnlyNode
 
             assignNodeRightDeepCopyThisFunc = copy.deepcopy(self.assignNode.right)
-            newAssignBaseElemsOnlyNodeThisFunc = self.traverseAssignBaseElemsOnlyThisFuncRecursive(assignNodeRightDeepCopyThisFunc)
+            newAssignBaseElemsOnlyNodeThisFunc = self.traverseAssignBaseElemsOnlyThisFuncRecursive(assignNodeRightDeepCopyThisFunc, generators)
             self.assignBaseElemsOnlyThisFunc = newAssignBaseElemsOnlyNodeThisFunc
 
         self.traverseAssignNodeRecursive(self.assignNode.right, False)
@@ -481,7 +485,7 @@ class VarInfo:
         if (M in self.varDeps):
             self.protectsM = True
 
-    def setAssignNode(self, assignInfo, varTypes, assignNode, funcName, outsideForLoopObj, outsideIfElseBranchObj, traverseAssignNode=True):
+    def setAssignNode(self, generators, assignInfo, varTypes, assignNode, funcName, outsideForLoopObj, outsideIfElseBranchObj, traverseAssignNode=True):
         if (type(assignNode).__name__ != BINARY_NODE_CLASS_NAME):
             sys.exit("Assignment node passed to VarInfo is invalid.")
 
@@ -500,7 +504,7 @@ class VarInfo:
             self.hasListIndexSymInLeftAssign = True
 
         if traverseAssignNode:
-            self.traverseAssignNode()
+            self.traverseAssignNode(generators)
 
         self.beenSet = not(self.initCall)
 

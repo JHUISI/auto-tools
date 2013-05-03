@@ -1,5 +1,7 @@
 schemeName = "LW"
 
+generators = []
+
 inputVarName = "input"
 outputVarName = "output"
 

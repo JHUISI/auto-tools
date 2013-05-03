@@ -39,7 +39,7 @@ KendList2Blinded := list
 KendList1Blinded := list
 bf0 := list
 transformOutputList#0 := GT
-transformOutputListForLoop#1000+7*i? := GT
+transformOutputListForLoop#FLrepVar1 := GT
 transformOutputList#1 := GT
 transformOutputList := list
 transformOutputListForLoop := list
@@ -50,22 +50,22 @@ input := list{alphabet}
 gG1 := random(G1)
 gG2 := random(G2)
 z := random(ZR)
-zG1 := (gG1^z)
-zG2 := (gG2^z)
+zG1 := gG1 ^ z
+zG2 := gG2 ^ z
 hstart := random(ZR)
-hstartG1 := (gG1^hstart)
-hstartG2 := (gG2^hstart)
+hstartG1 := gG1 ^ hstart
+hstartG2 := gG2 ^ hstart
 hend := random(ZR)
-hendG1 := (gG1^hend)
-hendG2 := (gG2^hend)
+hendG1 := gG1 ^ hend
+hendG2 := gG2 ^ hend
 
 A := len(alphabet)
 BEGIN :: for
 for{i := 0,A}
 a := getString(alphabet#i)
 ha := random(ZR)
-hG1#a? := (gG1^ha)
-hG2#a? := (gG2^ha)
+hG1#a? := gG1 ^ ha
+hG2#a? := gG2 ^ ha
 END :: for
 
 alpha := random(ZR)
@@ -182,8 +182,9 @@ for{i := 1,l+1}
 NOP
 key := hashToKey(Ti#i)
 j := (i - 1)
-transformOutputListForLoop#1000+7*i? := e(C1#j,K1Blinded#key) * e((C2#i^-1),K2Blinded#key) * e(C1#i,K3Blinded#key)
-result0 := transformOutputListForLoop#1000+7*i?
+FLrepVar1 := 10 + 7 * i
+transformOutputListForLoop#FLrepVar1 := e(C1#j,K1Blinded#key) * e((C2#i^-1),K2Blinded#key) * e(C1#i,K3Blinded#key)
+result0 := transformOutputListForLoop#FLrepVar1
 END :: for
 x := getAcceptState(Ti)
 transformOutputList#1 := e((Cend1^-1),KendList1Blinded#x) * e(Cend2,KendList2Blinded#x)
@@ -205,7 +206,8 @@ for{i := 1,l+1}
 NOP
 key := hashToKey(Ti#i)
 j := (i - 1)
-result0 := (transformOutputListForLoop#1000+7*i? ^ (bf0) ) 
+FLrepVar1 := 10 + 7 * i
+result0 := (transformOutputListForLoop#FLrepVar1 ^ (bf0) ) 
 B#i? := (B#i-1? * result0)
 END :: for
 result1 := (transformOutputList#1 ^ (bf0) ) 
@@ -213,5 +215,4 @@ Bend := (B#l * result1)
 M := (Cm * (Bend^-1))
 output := M
 END :: func:decout
-
 

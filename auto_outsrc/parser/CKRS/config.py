@@ -1,5 +1,7 @@
 schemeName = "BSW"
 
+generators = []
+
 rootNodeName = 'root'
 addNodePrefix = 'ADD'
 mulNodePrefix = 'MUL'
