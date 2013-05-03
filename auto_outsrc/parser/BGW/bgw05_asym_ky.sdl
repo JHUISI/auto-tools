@@ -1,0 +1,79 @@
+name := bgw05
+setting := asymmetric
+
+BEGIN :: types
+n := int
+S := list{int}
+glG1 := list{G1}
+glG2 := list{G2}
+s := list{G1}
+END :: types
+
+BEGIN :: func:setup
+input := list{n}
+gG1 := random(G1)
+gG2 := random(G2)
+alpha := random(ZR)
+index := ((2 * n) + 1)
+BEGIN :: for
+for{i := 1,index}
+glG1#i := (gG1^(alpha^i))
+glG2#i := (gG2^(alpha^i))
+END :: for
+gamma := random(ZR)
+v := (gG2^gamma)
+pk := list{gG1, gG2, glG1, glG2, v}
+msk := list{gamma}
+output := list{pk, msk, n}
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{pk, msk, n}
+pk := expand{gG1, gG2, glG1, glG2, v}
+msk := expand{gamma}
+BEGIN :: for
+for{i := 1,n+1}
+s#i := (glG1#i^gamma)
+END :: for
+sk := list{s}
+output := sk
+END :: func:keygen
+
+BEGIN :: func:encrypt
+input := list{S, pk, n}
+pk := expand{gG1, gG2, glG1, glG2, v}
+t := random(ZR)
+K := (e(glG1#n,glG2#1)^t)
+dotProd1 := init(G2)
+BEGIN :: forall
+forall{j := S}
+dotProd1 := (dotProd1 * glG2#n+1-j?)
+END :: forall
+Hdr2 := ((v * dotProd1)^t)
+Hdr1 := (gG2^t)
+Hdr := list{Hdr1, Hdr2}
+ct := list{Hdr, K}
+output := ct
+END :: func:encrypt
+
+BEGIN :: func:decrypt
+input := list{S, i, n, Hdr, pk, sk}
+Hdr := expand{Hdr1, Hdr2}
+pk := expand{gG1, gG2, glG1, glG2, v}
+sk := expand{s}
+numerator := e(glG1#i,Hdr2)
+dotProd2 := init(G1)
+lenS := len(S)
+BEGIN :: for
+for{k := 0,lenS}
+j := S#k
+BEGIN :: if
+if {j != i}
+dotProd2 := (dotProd2 * glG1#n+1-j+i?)
+END :: if
+END :: for
+denominator := e((s#i * dotProd2),Hdr1)
+K := (numerator / denominator)
+output := K
+END :: func:decrypt
+

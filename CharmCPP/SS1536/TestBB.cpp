@@ -89,10 +89,11 @@ void Bbibe04::decrypt(CharmList & pk, CharmList & sk, CharmList & ct, GT & M)
     G1 K2;
     GT R0 = group.init(GT_t);
     
-    g = pk[0].getG1();
+    /*g = pk[0].getG1();
     u = pk[1].getG1();
     h = pk[2].getG1();
     egg = pk[3].getGT();
+    */
     
     C0 = ct[0].getGT();
     C1 = ct[1].getG1();

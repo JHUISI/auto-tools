@@ -32,9 +32,9 @@ void benchmarkBB(Bbibe04 & bb, ofstream & outfile1, ofstream & outfile2, int ID_
     //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-	    M = bb.group.random(GT_t);
+	        M = bb.group.random(GT_t);
 		benchK.start();
-	    bb.encrypt(pk, M, id, ct);
+	        bb.encrypt(pk, M, id, ct);
 		benchK.stop();
 		kg_in_ms = benchK.computeTimeInMilliseconds();
 

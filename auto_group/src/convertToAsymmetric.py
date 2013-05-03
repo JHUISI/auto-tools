@@ -515,6 +515,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             bothConstraints[ conf.signatureVar ] = constraints_sig
         else:
             print("'short' option not specified.\n")
+            shortOpt = ""
         
         # time options
         timeOpt = ""
@@ -1227,7 +1228,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
 #                    varList.append(i)
             elif typeI in [types.G1]:
                 varList.append(i)
-            elif typeI in [types.ZR, types.str, types.list, types.pol]:
+            elif typeI in [types.ZR, types.list, types.pol]: #types.str,
                 (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, i)
                 if varInf.getIsUsedInHashCalc():
                     print("adding", i, "to the list")

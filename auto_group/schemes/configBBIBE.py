@@ -1,6 +1,6 @@
 schemeType = "PKENC"
-short = "secret_keys"
-#short = "ciphertext"
+#short = "secret_keys"
+short = "ciphertext"
 #short = "both"
 #operation = "exp"
 

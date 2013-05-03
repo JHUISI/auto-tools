@@ -13,7 +13,7 @@ class Bbibe04
 {
 public:
 	PairingGroup group;
-	Bbibe04() { group.setCurve(AES_SECURITY); };
+	Bbibe04() { group.setCurve(BN256); };
 	~Bbibe04() {};
 	
 	void setup(CharmList & msk, CharmList & pk);
