@@ -82,10 +82,10 @@ int main(int argc, const char *argv[])
 	string filename = string(argv[0]);
 	stringstream s3, s4;
 	ofstream outfile1, outfile2, outfile3, outfile4;
-	string f1 = filename + "_encrypt.dat";
-	string f2 = filename + "_decrypt.dat";
-	string f3 = filename + "_encrypt_raw.txt";
-	string f4 = filename + "_decrypt_raw.txt";
+	string f1 = filename + "_sym_enc.dat";
+	string f2 = filename + "_sym_dec.dat";
+	string f3 = filename + "_sym_enc_raw.txt";
+	string f4 = filename + "_sym_dec_raw.txt";
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());
 	outfile3.open(f3.c_str());

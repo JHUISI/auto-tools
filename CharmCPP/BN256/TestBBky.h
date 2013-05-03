@@ -17,8 +17,8 @@ public:
 	~Bbibe04() {};
 	
 	void setup(CharmList & msk, CharmList & pk);
-	void keygen(CharmList & pk, CharmList & msk, NO_TYPE & id, CharmList & sk);
-	void encrypt(CharmList & pk, GT & M, NO_TYPE & id, CharmList & ct);
+	void keygen(CharmList & pk, CharmList & msk, string & id, CharmList & sk);
+	void encrypt(CharmList & pk, GT & M, string & id, CharmList & ct);
 	void decrypt(CharmList & pk, CharmList & sk, CharmList & ct, GT & M);
 };
 

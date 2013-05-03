@@ -13,7 +13,7 @@ class Gentry06
 {
 public:
 	PairingGroup group;
-	Gentry06() { group.setCurve(AES_SECURITY); };
+	Gentry06() { group.setCurve(SS1536); };
 	~Gentry06() {};
 	
 	void setup(CharmList & mk, CharmList & pk);

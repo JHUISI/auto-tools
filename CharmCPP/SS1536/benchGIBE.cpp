@@ -1,4 +1,4 @@
-#include "TestBB.h"
+#include "TestGIBE.h"
 #include <fstream>
 #include <time.h>
 
@@ -16,7 +16,7 @@ string getID(int len)
 	return id;
 }
 
-void benchmarkBB(Bbibe04 & bb, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & decryptResults)
+void benchmarkGIBE(Gentry06 & gibe, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & decryptResults)
 {
 	Benchmark benchT, benchD, benchK;
     CharmList msk, pk, sk, ct;
@@ -25,21 +25,21 @@ void benchmarkBB(Bbibe04 & bb, ofstream & outfile1, ofstream & outfile2, int ID_
     string id = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
-	bb.setup(msk, pk);
-	bb.keygen(pk, msk, id, sk);
+	gibe.setup(msk, pk);
+	gibe.keygen(pk, msk, id, sk);
     stringstream s2;
 
     //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-	    M = bb.group.random(GT_t);
+	    M = gibe.group.random(GT_t);
 		benchK.start();
-	    bb.encrypt(pk, M, id, ct);
+	    gibe.encrypt(pk, M, id, ct);
 		benchK.stop();
 		kg_in_ms = benchK.computeTimeInMilliseconds();
 
 		benchD.start();
-		bb.decrypt(pk, sk, ct, newM);
+		gibe.decrypt(sk, ct, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
@@ -78,7 +78,7 @@ int main(int argc, const char *argv[])
 	cout << "measurement: " << fixOrRange << endl;
 
 	srand(time(NULL));
-	Bbibe04 bb;
+	Gentry06 gibe;
 	string filename = string(argv[0]);
 	stringstream s3, s4;
 	ofstream outfile1, outfile2, outfile3, outfile4;
@@ -94,12 +94,12 @@ int main(int argc, const char *argv[])
 	CharmListStr keygenResults, decryptResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= ID_string_len; i++) {
-			benchmarkBB(bb, outfile1, outfile2, i, iterationCount, keygenResults, decryptResults);
+			benchmarkGIBE(gibe, outfile1, outfile2, i, iterationCount, keygenResults, decryptResults);
 		}
 		s4 << decryptResults << endl;
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
-		benchmarkBB(bb, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, decryptResults);
+		benchmarkGIBE(gibe, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, decryptResults);
 		s3 << ID_string_len << " " << keygenResults[ID_string_len] << endl;
 		s4 << ID_string_len << " " << decryptResults[ID_string_len] << endl;
 	}

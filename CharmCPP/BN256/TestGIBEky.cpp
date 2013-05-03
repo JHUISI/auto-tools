@@ -25,7 +25,7 @@ void Gentry06::setup(CharmList & mk, CharmList & pk)
     return;
 }
 
-void Gentry06::keygen(CharmList & pk, CharmList & mk, string & id, NO_TYPE & error, CharmList & sk)
+void Gentry06::keygen(CharmList & pk, CharmList & mk, string & id, CharmList & sk)
 {
     G1 gG1;
     G2 gG2;

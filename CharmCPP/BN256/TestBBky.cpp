@@ -35,7 +35,7 @@ void Bbibe04::setup(CharmList & msk, CharmList & pk)
     return;
 }
 
-void Bbibe04::keygen(CharmList & pk, CharmList & msk, NO_TYPE & id, CharmList & sk)
+void Bbibe04::keygen(CharmList & pk, CharmList & msk, string & id, CharmList & sk)
 {
     G1 gG1;
     G2 gG2;
@@ -68,7 +68,7 @@ void Bbibe04::keygen(CharmList & pk, CharmList & msk, NO_TYPE & id, CharmList & 
     return;
 }
 
-void Bbibe04::encrypt(CharmList & pk, GT & M, NO_TYPE & id, CharmList & ct)
+void Bbibe04::encrypt(CharmList & pk, GT & M, string & id, CharmList & ct)
 {
     G1 gG1;
     G2 gG2;

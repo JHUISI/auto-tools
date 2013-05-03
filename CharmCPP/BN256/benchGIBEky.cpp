@@ -39,7 +39,7 @@ void benchmarkBB(Gentry06 & gibe, ofstream & outfile1, ofstream & outfile2, int 
 		kg_in_ms = benchK.computeTimeInMilliseconds();
 
 		benchD.start();
-		gibe.decrypt(pk, sk, ct, newM);
+		gibe.decrypt(sk, ct, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
