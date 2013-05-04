@@ -110,9 +110,9 @@ int main(int argc, const char *argv[])
 	string filename = string(argv[0]);
 	stringstream s2, s3, s4;
 	ofstream outfile0, outfile1, outfile2;
-	string f0 = filename + "_keygen.dat";
-	string f1 = filename + "_encrypt.dat";
-	string f2 = filename + "_decrypt.dat";
+	string f0 = filename + "_sym_keygen.dat";
+	string f1 = filename + "_sym_encrypt.dat";
+	string f2 = filename + "_sym_decrypt.dat";
 	outfile0.open(f0.c_str());
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());

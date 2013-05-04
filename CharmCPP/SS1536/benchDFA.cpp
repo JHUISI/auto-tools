@@ -25,7 +25,7 @@ string getRandomHexString(int len)
 
 void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int wStringCount, int iterationCount, int increment, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
-	Benchmark benchT, benchD, benchK;
+	Benchmark benchE, benchD, benchK;
 	string letters = "xABCDEFabcdef0123456789";
 	dfa12.dfaUtil.constructDFA("0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|A|B|C|D|E|F)*", letters);
 	CharmList mpk, sk, sk2, ct;
@@ -69,10 +69,10 @@ void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile0, ofstream & outfile1, ofstr
 	for(int i = 0; i < iterationCount; i ++) {
 		w = dfa12.dfaUtil.getSymbols(getRandomHexString(wStringCount)); // "aba"
 		M = dfa12.group.random(GT_t);
-		benchT.start();
+		benchE.start();
 		dfa12.encrypt(mpk, w, M, ct);
-		benchT.stop();
-		kg_in_ms = benchT.computeTimeInMilliseconds();
+		benchE.stop();
+		kg_in_ms = benchE.computeTimeInMilliseconds();
 
 		if(dfa12.dfaUtil.accept(w)) {
 			cout << "isAccept: true" << endl;
@@ -86,11 +86,11 @@ void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile0, ofstream & outfile1, ofstr
 			de_in_ms = benchD.computeTimeInMilliseconds();
 		}
 	}
-	cout << "Encrypt avg: " << benchT.getAverage() << " ms" << endl;
+	cout << "Encrypt avg: " << benchE.getAverage() << " ms" << endl;
 	stringstream s1;
-	s1 << wStringCount << " " << benchT.getAverage() << endl;
+	s1 << wStringCount << " " << benchE.getAverage() << endl;
 	outfile1 << s1.str();
-	encryptResults[wStringCount] = benchT.getRawResultString();
+	encryptResults[wStringCount] = benchE.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
 	stringstream s2;

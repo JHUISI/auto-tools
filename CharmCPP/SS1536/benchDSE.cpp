@@ -18,7 +18,7 @@ string getID(int len)
 
 void benchmarkDSE(Dse09 & dse, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
-	Benchmark benchT, benchD, benchK;
+	Benchmark benchE, benchD, benchK;
     CharmList msk, mpk, pk, sk, ct;
     GT M, newM;
     ZR bf0;
@@ -45,21 +45,21 @@ void benchmarkDSE(Dse09 & dse, ofstream & outfile0, ofstream & outfile1, ofstrea
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
 	    M = dse.group.random(GT_t);
-		benchK.start();
+		benchE.start();
 	    dse.encrypt(mpk, M, id, ct);
-		benchK.stop();
-		kg_in_ms = benchK.computeTimeInMilliseconds();
+		benchE.stop();
+		kg_in_ms = benchE.computeTimeInMilliseconds();
 
 		benchD.start();
 		dse.decrypt(ct, sk, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
-	cout << "Encrypt avg: " << benchK.getAverage() << " ms" << endl;
+	cout << "Encrypt avg: " << benchE.getAverage() << " ms" << endl;
     stringstream s1;
-	s1 << ID_string_len << " " << benchK.getAverage() << endl;
+	s1 << ID_string_len << " " << benchE.getAverage() << endl;
 	outfile1 << s1.str();
-    keygenResults[ID_string_len] = benchK.getRawResultString();
+    keygenResults[ID_string_len] = benchE.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
     stringstream s2;

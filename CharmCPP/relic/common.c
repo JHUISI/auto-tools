@@ -12,6 +12,52 @@ int compute_length(int type)
 	return 0;
 }
 
+void fp_write_bin(unsigned char *str, int len, fp_t a) {
+        bn_t t;
+
+        bn_null(t);
+
+        TRY {
+                bn_new(t);
+
+                fp_prime_back(t, a);
+
+                bn_write_bin(str, len, t);
+        } CATCH_ANY {
+                THROW(ERR_CAUGHT);
+        }
+        FINALLY {
+                bn_free(t);
+        }
+}
+
+void fp_read_bin(fp_t a, const unsigned char *str, int len) {
+        bn_t t;
+
+        bn_null(t);
+
+        TRY {
+                bn_new(t);
+                bn_read_bin(t, (unsigned char *) str, len);
+                if (bn_is_zero(t)) {
+                        fp_zero(a);
+                } else {
+                        if (t->used == 1) {
+                                fp_prime_conv_dig(a, t->dp[0]);
+                        } else {
+                                fp_prime_conv(a, t);
+                        }
+                }
+        }
+        CATCH_ANY {
+                THROW(ERR_CAUGHT);
+        }
+        FINALLY {
+                bn_free(t);
+        }
+}
+
+
 
 status_t g1_read_bin(g1_t g, uint8_t *data, int data_len)
 {

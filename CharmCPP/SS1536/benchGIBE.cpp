@@ -18,7 +18,7 @@ string getID(int len)
 
 void benchmarkGIBE(Gentry06 & gibe, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
-	Benchmark benchT, benchD, benchK;
+	Benchmark benchE, benchD, benchK;
     CharmList msk, pk, sk, sk2, ct;
     GT M, newM;
     ZR bf0;
@@ -47,21 +47,21 @@ void benchmarkGIBE(Gentry06 & gibe, ofstream & outfile0, ofstream & outfile1, of
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
 	    M = gibe.group.random(GT_t);
-		benchT.start();
+		benchE.start();
 	    gibe.encrypt(pk, M, id, ct);
-		benchT.stop();
-		kg_in_ms = benchT.computeTimeInMilliseconds();
+		benchE.stop();
+		kg_in_ms = benchE.computeTimeInMilliseconds();
 
 		benchD.start();
 		gibe.decrypt(sk, ct, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
-	cout << "Encrypt avg: " << benchT.getAverage() << " ms" << endl;
+	cout << "Encrypt avg: " << benchE.getAverage() << " ms" << endl;
     stringstream s1;
-	s1 << ID_string_len << " " << benchT.getAverage() << endl;
+	s1 << ID_string_len << " " << benchE.getAverage() << endl;
 	outfile1 << s1.str();
-    encryptResults[ID_string_len] = benchT.getRawResultString();
+    encryptResults[ID_string_len] = benchE.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
     stringstream s2;

@@ -22,7 +22,7 @@ void getRandomReceivers(CharmListInt & recs, int numRecs)
 
 void benchmarkBGW(Bgw05 & bgw, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int numOfRecs, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
-	Benchmark benchT, benchD, benchK;
+	Benchmark benchE, benchD, benchK;
 	CharmList pk, msk, Hdr, ct;
 	CharmMetaListG1 sk, sk2;
 	CharmListInt S;
@@ -61,10 +61,10 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile0, ofstream & outfile1, ofstrea
 	stringstream s2;
 	cout << "receiver: ";
 	for(int j = 0; j < iterationCount; j++) {
-		benchT.start();
+		benchE.start();
 		bgw.encrypt(S, pk, n, ct);
-		benchT.stop();
-		kg_in_ms = benchT.computeTimeInMilliseconds();
+		benchE.stop();
+		kg_in_ms = benchE.computeTimeInMilliseconds();
 
 		Hdr = ct[0].getList();
 		K = ct[1].getGT();
@@ -76,11 +76,11 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile0, ofstream & outfile1, ofstrea
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
-	cout << "Encrypt avg: " << benchT.getAverage() << " ms" << endl;
+	cout << "Encrypt avg: " << benchE.getAverage() << " ms" << endl;
     stringstream s1;
-	s1 << numOfRecs << " " << benchT.getAverage() << endl;
+	s1 << numOfRecs << " " << benchE.getAverage() << endl;
 	outfile1 << s1.str();
-    encryptResults[numOfRecs] = benchT.getRawResultString();
+    encryptResults[numOfRecs] = benchE.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
 	s2 << numOfRecs << " " << benchD.getAverage() << endl;
