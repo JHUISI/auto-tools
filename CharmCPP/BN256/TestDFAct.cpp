@@ -198,7 +198,7 @@ void Dfa12::encrypt(CharmList & mpk, CharmListStr & w, GT & M, CharmList & ct)
     return;
 }
 
-void Dfa12::decrypt(CharmList & sk, CharmList & ct, GT & M)
+void Dfa12::decrypt(CharmList & sk, CharmList & ct, GT & M, CharmMetaListInt & Ti, int x)
 {
     G2 Kstart1;
     G2 Kstart2;
@@ -214,12 +214,12 @@ void Dfa12::decrypt(CharmList & sk, CharmList & ct, GT & M)
     CharmListG1 C2;
     GT Cm;
     int l = 0;
-    CharmMetaListInt Ti;
+    //CharmMetaListInt Ti;
     CharmListGT B;
     string key;
     int j = 0;
     GT result0 = group.init(GT_t);
-    int x = 0;
+    //int x = 0;
     GT result1 = group.init(GT_t);
     GT Bend = group.init(GT_t);
     
@@ -238,12 +238,12 @@ void Dfa12::decrypt(CharmList & sk, CharmList & ct, GT & M)
     C2 = ct[4].getListG1();
     Cm = ct[5].getGT();
     l = w.length();
-    if ( ( (dfaUtil.accept(w)) == (false) ) )
-    {
-        cout << "Error occurred!" << endl;
-        return;
-    }
-    Ti = dfaUtil.getTransitions(w);
+//    if ( ( (dfaUtil.accept(w)) == (false) ) )
+//    {
+//        cout << "Error occurred!" << endl;
+//        return;
+//    }
+//    Ti = dfaUtil.getTransitions(w);
     B[0] = group.mul(group.pair(C1[0], Kstart1), group.exp(group.pair(C2[0], Kstart2), -1));
     for (int i = 1; i < l+1; i++)
     {

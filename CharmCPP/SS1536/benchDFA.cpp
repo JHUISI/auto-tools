@@ -23,12 +23,12 @@ string getRandomHexString(int len)
 
 }
 
-void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile1, ofstream & outfile2, int wStringCount, int iterationCount, int increment, CharmListStr & keygenResults, CharmListStr & decryptResults)
+void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int wStringCount, int iterationCount, int increment, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
 	Benchmark benchT, benchD, benchK;
 	string letters = "xABCDEFabcdef0123456789";
 	dfa12.dfaUtil.constructDFA("0x(0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|A|B|C|D|E|F)*", letters);
-	CharmList mpk, sk, ct;
+	CharmList mpk, sk, sk2, ct;
 	CharmListStr alphabet = dfa12.dfaUtil.getAlphabet();
 	CharmListStr w;
 	CharmListInt Q = dfa12.dfaUtil.getStates(), F = dfa12.dfaUtil.getAcceptStates(); // get all states, and all accept states
@@ -43,6 +43,18 @@ void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile1, ofstream & outfile2, int w
 	//cout << "T:\n" << T << endl;
 
 	dfa12.setup(alphabet, mpk, msk);
+	for(int j = 0; j < iterationCount; j ++) {
+		benchK.start();
+		dfa12.keygen(mpk, msk, Q, T, F, sk2);
+		benchK.stop();
+		kg_in_ms = benchK.computeTimeInMilliseconds();
+	}
+	cout << "Keygen avg: " << benchK.getAverage() << " ms" << endl;
+	stringstream s0;
+	s0 << wStringCount << " " << benchK.getAverage() << endl;
+	outfile0 << s0.str();
+	keygenResults[wStringCount] = benchK.getRawResultString();
+
 	dfa12.keygen(mpk, msk, Q, T, F, sk);
 
 	//cout << "MPK:\n" << mpk << endl;
@@ -57,15 +69,15 @@ void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile1, ofstream & outfile2, int w
 	for(int i = 0; i < iterationCount; i ++) {
 		w = dfa12.dfaUtil.getSymbols(getRandomHexString(wStringCount)); // "aba"
 		M = dfa12.group.random(GT_t);
-		benchK.start();
+		benchT.start();
 		dfa12.encrypt(mpk, w, M, ct);
-		benchK.stop();
-		kg_in_ms = benchK.computeTimeInMilliseconds();
+		benchT.stop();
+		kg_in_ms = benchT.computeTimeInMilliseconds();
 
 		if(dfa12.dfaUtil.accept(w)) {
 			cout << "isAccept: true" << endl;
 			CharmMetaListInt Ti = dfa12.dfaUtil.getTransitions(w); // 1
-			cout << "transitions to decrypt: " << Ti.length() << endl;
+			cout << "State transitions to decrypt: " << Ti.length() << endl;
 			int x = dfa12.dfaUtil.getAcceptState(Ti); // 2
 
 			benchD.start();
@@ -74,11 +86,11 @@ void benchmarkDFA(Dfa12 & dfa12, ofstream & outfile1, ofstream & outfile2, int w
 			de_in_ms = benchD.computeTimeInMilliseconds();
 		}
 	}
-	cout << "Encrypt avg: " << benchK.getAverage() << " ms" << endl;
+	cout << "Encrypt avg: " << benchT.getAverage() << " ms" << endl;
 	stringstream s1;
-	s1 << wStringCount << " " << benchK.getAverage() << endl;
+	s1 << wStringCount << " " << benchT.getAverage() << endl;
 	outfile1 << s1.str();
-	keygenResults[wStringCount] = benchK.getRawResultString();
+	encryptResults[wStringCount] = benchT.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
 	stringstream s2;
@@ -113,46 +125,46 @@ int main(int argc, const char *argv[])
 
 	Dfa12 dfa12;
 	string filename = string(argv[0]);
-	ofstream outfile1, outfile2, outfile3, outfile4;
-	string f1 = filename + "_sym_enc.dat";
-	string f2 = filename + "_sym_dec.dat";
-	string f3 = filename + "_sym_enc_raw.txt";
-	string f4 = filename + "_sym_dec_raw.txt";
+	ofstream outfile0, outfile1, outfile2;
+	string f0 = filename + "_sym_keygen.dat";
+	string f1 = filename + "_sym_encrypt.dat";
+	string f2 = filename + "_sym_decrypt.dat";
+	outfile0.open(f0.c_str());
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());
-	outfile3.open(f3.c_str());
-	outfile4.open(f4.c_str());
 
-	CharmListStr keygenResults, decryptResults;
+	CharmListStr keygenResults, encryptResults, decryptResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= wStringCount; i += incrementCount) {
 			cout << "Benchmark with " << i << " wStringCount." << endl;
-			benchmarkDFA(dfa12, outfile1, outfile2, i, iterationCount, incrementCount, keygenResults, decryptResults);
+			benchmarkDFA(dfa12, outfile0, outfile1, outfile2, i, iterationCount, incrementCount, keygenResults, encryptResults, decryptResults);
 			stringstream s4;
 			s4 << i << " " << decryptResults[i] << endl;
-			outfile4 << s4.str();
-			outfile4.flush();
+			outfile2 << s4.str();
+			outfile2.flush();
 		}
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
 		cout << "Benchmark with " << wStringCount << " wStringCount." << endl;
-		benchmarkDFA(dfa12, outfile1, outfile2, wStringCount, iterationCount, incrementCount, keygenResults, decryptResults);
-		stringstream s3, s4;
-		s3 << wStringCount << " " << keygenResults[wStringCount] << endl;
-		outfile3 << s3.str();
-		outfile3.flush();
+		benchmarkDFA(dfa12, outfile0, outfile1, outfile2, wStringCount, iterationCount, incrementCount, keygenResults, encryptResults, decryptResults);
+		stringstream s2, s3, s4;
+		s2 << wStringCount << " " << keygenResults[wStringCount] << endl;
+		outfile0 << s2.str();
+		outfile0.flush();
+		s3 << wStringCount << " " << encryptResults[wStringCount] << endl;
+		outfile1 << s3.str();
+		outfile1.flush();
 		s4 << wStringCount << " " << decryptResults[wStringCount] << endl;
-		outfile4 << s4.str();
-		outfile4.flush();
+		outfile2 << s4.str();
+		outfile2.flush();
 	}
 	else {
 		cout << "invalid option." << endl;
 		return -1;
 	}
+	outfile0.close();
 	outfile1.close();
 	outfile2.close();
-	outfile3.close();
-	outfile4.close();
 //	cout << "<=== Transform benchmarkWATERS breakdown ===>" << endl;
 //	cout << transformResults << endl;
 //	cout << "<=== Transform benchmarkWATERS breakdown ===>" << endl;

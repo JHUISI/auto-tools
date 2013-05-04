@@ -16,7 +16,7 @@ string getID(int len)
 	return id;
 }
 
-void benchmarkDSE(Dse09 & dse, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & decryptResults)
+void benchmarkDSE(Dse09 & dse, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
 	Benchmark benchT, benchD, benchK;
     CharmList msk, mpk, pk, sk, ct;
@@ -26,8 +26,20 @@ void benchmarkDSE(Dse09 & dse, ofstream & outfile1, ofstream & outfile2, int ID_
     double de_in_ms, kg_in_ms;
 
 	dse.setup(mpk, msk);
+	for(int i = 0; i < iterationCount; i++) {
+		id = getID(ID_string_len);
+		benchK.start();
+		dse.keygen(mpk, msk, id, sk2);
+		benchK.stop();
+		kg_in_ms = benchK.computeTimeInMilliseconds();
+	}
+	cout << "Keygen avg: " << benchK.getAverage() << " ms" << endl;
+    stringstream s0;
+	s0 << ID_string_len << " " << benchK.getAverage() << endl;
+	outfile0 << s0.str();
+    keygenResults[ID_string_len] = benchK.getRawResultString();
+
 	dse.keygen(mpk, msk, id, sk);
-    stringstream s2;
 
     //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
@@ -50,6 +62,7 @@ void benchmarkDSE(Dse09 & dse, ofstream & outfile1, ofstream & outfile2, int ID_
     keygenResults[ID_string_len] = benchK.getRawResultString();
 
 	cout << "Decrypt avg: " << benchD.getAverage() << " ms" << endl;
+    stringstream s2;
 	s2 << iterationCount << " " << benchD.getAverage() << endl;
 	outfile2 << s2.str();
 	decryptResults[ID_string_len] = benchD.getRawResultString();
@@ -80,40 +93,39 @@ int main(int argc, const char *argv[])
 	srand(time(NULL));
 	Dse09 dse;
 	string filename = string(argv[0]);
-	stringstream s3, s4;
-	ofstream outfile1, outfile2, outfile3, outfile4;
-	string f1 = filename + "_sym_enc.dat";
-	string f2 = filename + "_sym_dec.dat";
-	string f3 = filename + "_sym_enc_raw.txt";
-	string f4 = filename + "_sym_dec_raw.txt";
+	stringstream s2, s3, s4;
+	ofstream outfile0, outfile1, outfile2;
+	string f0 = filename + "_sym_keygen.dat";
+	string f1 = filename + "_sym_encrypt.dat";
+	string f2 = filename + "_sym_decrypt.dat";
+	outfile0.open(f0.c_str());
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());
-	outfile3.open(f3.c_str());
-	outfile4.open(f4.c_str());
 
-	CharmListStr keygenResults, decryptResults;
+	CharmListStr keygenResults, encryptResults, decryptResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= ID_string_len; i++) {
-			benchmarkDSE(dse, outfile1, outfile2, i, iterationCount, keygenResults, decryptResults);
+			benchmarkDSE(dse, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, encryptResults, decryptResults);
 		}
 		s4 << decryptResults << endl;
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
-		benchmarkDSE(dse, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, decryptResults);
-		s3 << ID_string_len << " " << keygenResults[ID_string_len] << endl;
-		s4 << ID_string_len << " " << decryptResults[ID_string_len] << endl;
+		benchmarkDSE(dse, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, encryptResults, decryptResults);
+		s2 << "Raw: " << ID_string_len << " " << keygenResults[ID_string_len] << endl;
+		s3 << "Raw: " << ID_string_len << " " << encryptResults[ID_string_len] << endl;
+		s4 << "Raw: " << ID_string_len << " " << decryptResults[ID_string_len] << endl;
 	}
 	else {
 		cout << "invalid option." << endl;
 		return -1;
 	}
 
-	outfile3 << s3.str();
-	outfile4 << s4.str();
+	outfile0 << s2.str();
+	outfile1 << s3.str();
+	outfile2 << s4.str();
+	outfile0.close();
 	outfile1.close();
 	outfile2.close();
-	outfile3.close();
-	outfile4.close();
 	return 0;
 }
 

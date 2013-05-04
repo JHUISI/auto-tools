@@ -1,4 +1,14 @@
-#include "TestBB.h"
+#if TESTGIBEKY == 1
+#include "TestGIBEky.h"
+ #define PRINT_BANNER "Test Case: Running GIBE ky test"
+#elif TESTGIBECT == 1
+ #include "TestGIBEct.h"
+ #define PRINT_BANNER "Test Case: Running GIBE ct test"
+#elif TESTGIBEEX == 1
+ #include "TestGIBEex.h"
+ #define PRINT_BANNER "Test Case: Running GIBE ex test"
+#endif
+
 #include <fstream>
 #include <time.h>
 
@@ -12,24 +22,23 @@ string getID(int len)
 		val = (int) (rand() % alpha_len);
 		id +=  alphabet[val];
 	}
-	cout << "Rand selected ID: '" << id << "'" << endl;
 	return id;
 }
 
-void benchmarkBB(Bbibe04 & bb, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
+void benchmarkGIBE(Gentry06 & gibe, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
 	Benchmark benchT, benchD, benchK;
     CharmList msk, pk, sk, sk2, ct;
     GT M, newM;
     ZR bf0;
-    string id = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
+    string id; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
-	bb.setup(msk, pk);
+	gibe.setup(msk, pk);
 	for(int i = 0; i < iterationCount; i++) {
 		id = getID(ID_string_len);
 		benchK.start();
-		bb.keygen(pk, msk, id, sk2);
+		gibe.keygen(pk, msk, id, sk2);
 		benchK.stop();
 		kg_in_ms = benchK.computeTimeInMilliseconds();
 
@@ -43,19 +52,20 @@ void benchmarkBB(Bbibe04 & bb, ofstream & outfile0, ofstream & outfile1, ofstrea
 
 	id = getID(ID_string_len);
 	cout << "Final rand selected ID: '" << id << "'" << endl;
-	bb.keygen(pk, msk, id, sk);
+	gibe.keygen(pk, msk, id, sk);
+
 
     //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-	    M = bb.group.random(GT_t);
+	    M = gibe.group.random(GT_t);
 		benchT.start();
-	    bb.encrypt(pk, M, id, ct);
+	    gibe.encrypt(pk, M, id, ct);
 		benchT.stop();
 		kg_in_ms = benchT.computeTimeInMilliseconds();
 
 		benchD.start();
-		bb.decrypt(pk, sk, ct, newM);
+		gibe.decrypt(sk, ct, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
@@ -90,18 +100,19 @@ int main(int argc, const char *argv[])
 	int iterationCount = atoi( argv[1] );
 	int ID_string_len = atoi( argv[2] );
 	string fixOrRange = string(argv[3]);
+	cout << PRINT_BANNER << endl;
 	cout << "iterationCount: " << iterationCount << endl;
 	cout << "ID-string: " << ID_string_len << endl;
 	cout << "measurement: " << fixOrRange << endl;
 
 	srand(time(NULL));
-	Bbibe04 bb;
+	Gentry06 gibe;
 	string filename = string(argv[0]);
 	stringstream s2, s3, s4;
-	ofstream outfile0, outfile1, outfile2, outfile3, outfile4;
-	string f0 = filename + "_sym_keygen.dat";
-	string f1 = filename + "_sym_encrypt.dat";
-	string f2 = filename + "_sym_decrypt.dat";
+	ofstream outfile0, outfile1, outfile2;
+	string f0 = filename + "_keygen.dat";
+	string f1 = filename + "_encrypt.dat";
+	string f2 = filename + "_decrypt.dat";
 	outfile0.open(f0.c_str());
 	outfile1.open(f1.c_str());
 	outfile2.open(f2.c_str());
@@ -109,12 +120,12 @@ int main(int argc, const char *argv[])
 	CharmListStr keygenResults, encryptResults, decryptResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= ID_string_len; i++) {
-			benchmarkBB(bb, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, encryptResults, decryptResults);
+			benchmarkGIBE(gibe, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, encryptResults, decryptResults);
 		}
 		s4 << decryptResults << endl;
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
-		benchmarkBB(bb, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, encryptResults, decryptResults);
+		benchmarkGIBE(gibe, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, encryptResults, decryptResults);
 		s2 << "Raw: " << ID_string_len << " " << keygenResults[ID_string_len] << endl;
 		s3 << "Raw: " << ID_string_len << " " << encryptResults[ID_string_len] << endl;
 		s4 << "Raw: " << ID_string_len << " " << decryptResults[ID_string_len] << endl;
@@ -132,4 +143,3 @@ int main(int argc, const char *argv[])
 	outfile2.close();
 	return 0;
 }
-
