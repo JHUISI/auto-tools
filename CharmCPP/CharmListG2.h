@@ -56,14 +56,17 @@ public:
 
 	int length(); // return length of lists
 	string printAtIndex(int index);
+	string printStrKeyIndex(int index);
 
 	// retrieve a particular index
 	CharmListG2& operator[](const int index);
+	CharmListG2& operator[](const string index);
 
     friend ostream& operator<<(ostream&, const CharmMetaListG2&);
 private:
 	int cur_index;
 	map<int, CharmListG2> list;
+	map<string, int, g2_cmp_str> strList;
 };
 
 #endif

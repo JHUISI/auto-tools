@@ -186,14 +186,15 @@ CharmMetaListG2::CharmMetaListG2(void)
 
 CharmMetaListG2::~CharmMetaListG2()
 {
-	for(int i = 0; i < (int) list.size(); i++)
-		list.erase(i);
+	list.clear();
+	strList.clear();
 }
 
 CharmMetaListG2::CharmMetaListG2(const CharmMetaListG2& cList)
 {
 	//copy constructor
 	cur_index = cList.cur_index;
+	strList = cList.strList;
 	list = cList.list;
 }
 
@@ -245,6 +246,22 @@ CharmListG2& CharmMetaListG2::operator[](const int index)
 	}
 }
 
+CharmListG2& CharmMetaListG2::operator[](const string index)
+{
+	int the_index;
+	if(strList.find(index) == strList.end()) {
+		the_index = cur_index; // select current index
+		strList[index] = the_index;
+		cur_index++;
+	}
+	else {
+		// retrieve the index
+		the_index = strList[index];
+	}
+
+	return list[the_index];
+}
+
 int CharmMetaListG2::length()
 {
 	return (int) list.size();
@@ -263,6 +280,22 @@ string CharmMetaListG2::printAtIndex(int index)
 	string s = ss.str();
 	return s;
 }
+
+string CharmMetaListG2::printStrKeyIndex(int index)
+{
+	map<string, int, g2_cmp_str>::iterator it;
+	if(((int) strList.size()) > 0) {
+		//cout << "iterate over length: " << strList.size() << endl;
+		for(it = strList.begin(); it != strList.end(); ++it) {
+			//cout << "Compare: " << it->second << " == " << index << endl;
+			if(it->second == index) {
+				return ": " + it->first;
+			}
+		}
+	}
+	return "";
+}
+
 
 ostream& operator<<(ostream& s, const CharmMetaListG2& cList)
 {
