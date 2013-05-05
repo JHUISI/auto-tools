@@ -197,6 +197,29 @@ CharmMetaListG2::CharmMetaListG2(const CharmMetaListG2& cList)
 	list = cList.list;
 }
 
+void CharmMetaListG2::insert(int index, CharmListG2 m)
+{
+	list[index] = m;
+	cur_index++;
+}
+
+void CharmMetaListG2::insert(string index, CharmListG2 m)
+{
+	int the_index;
+	// see if index exists in strList. If so, use that index
+	if(strList.find(index) == strList.end()) {
+		the_index = cur_index; // select current index
+		strList.insert(pair<string, int>(index, the_index));
+	}
+	else {
+		// retrieve the index
+		the_index = strList[index];
+	}
+
+	list[the_index] = m;
+	cur_index++;
+}
+
 void CharmMetaListG2::append(CharmListG2 & g2)
 {
 	list[cur_index] = g2;

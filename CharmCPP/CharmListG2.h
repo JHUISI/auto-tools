@@ -49,6 +49,9 @@ public:
     CharmMetaListG2& operator=(const CharmMetaListG2&);
 
 	// consider adding remove
+	void insert(int, CharmListG2);
+	void insert(string, CharmListG2);
+
 	void append(CharmListG2&);
 
 	int length(); // return length of lists
