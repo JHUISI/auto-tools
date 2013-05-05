@@ -33,10 +33,9 @@ def setup(n, l):
     return output
 
 def extract(mpk, msk, id):
-    uf4 = group.random(ZR)
-    uf5 = group.random(ZR)
-    uf2 = group.random(ZR)
     uf3 = group.random(ZR)
+    uf4 = group.random(ZR)
+    uf2 = group.random(ZR)
     uf0 = group.random(ZR)
     uf1 = group.random(ZR)
     idBlinded = id
@@ -64,10 +63,8 @@ def extract(mpk, msk, id):
     d3Blinded = (d3 ** (1 / uf3))
     d4 = (hashID2r2 ** t3)
     d4Blinded = (d4 ** (1 / uf4))
-    d5 = ((h ** t1) * (h ** t2))
-    d5Blinded = (d5 ** (1 / uf5))
-    skBlinded = [idBlinded, d0Blinded, d1Blinded, d2Blinded, d3Blinded, d4Blinded, d5Blinded]
-    output = (uf4, uf5, uf2, uf3, uf0, uf1, skBlinded)
+    skBlinded = [idBlinded, d0Blinded, d1Blinded, d2Blinded, d3Blinded, d4Blinded]
+    output = (uf3, uf4, uf2, uf0, uf1, skBlinded)
     return output
 
 def encrypt(mpk, M, id):
@@ -95,7 +92,7 @@ def encrypt(mpk, M, id):
 def transform(skBlinded, ct):
     transformOutputList = {}
 
-    idBlinded, d0Blinded, d1Blinded, d2Blinded, d3Blinded, d4Blinded, d5Blinded = skBlinded
+    idBlinded, d0Blinded, d1Blinded, d2Blinded, d3Blinded, d4Blinded = skBlinded
     c0, c1, c2, c3, c4, cpr = ct
     transformOutputList[5] = cpr
     transformOutputList[0] = pair(c0, d0Blinded)
@@ -106,7 +103,7 @@ def transform(skBlinded, ct):
     output = transformOutputList
     return output
 
-def decout(transformOutputList, uf3, uf5, uf0, uf1, uf4, uf2):
+def decout(transformOutputList, uf3, uf0, uf1, uf4, uf2):
     cpr = transformOutputList[5]
     result = (((((transformOutputList[0] ** uf0) * (transformOutputList[1] ** uf1)) * (transformOutputList[2] ** uf2)) * (transformOutputList[3] ** uf3)) * (transformOutputList[4] ** uf4))
     M = (cpr * result)
@@ -122,13 +119,13 @@ def main():
     builtInFuncs.utilBuiltInFuncs = SecretUtil(group, verbose=False)
 
     (mpk, msk) = setup(5, 32)
-    (uf4, uf5, uf2, uf3, uf0, uf1, skBlinded) = extract(mpk, msk, "test")
+    (uf3, uf4, uf2, uf0, uf1, skBlinded) = extract(mpk, msk, "test")
     M = group.random(GT)
     print(M)
     print("\n\n\n")
     ct = encrypt(mpk, M, "test")
     transformOutputList = transform(skBlinded, ct)
-    M2 = decout(transformOutputList, uf3, uf5, uf0, uf1, uf4, uf2)
+    M2 = decout(transformOutputList, uf3, uf0, uf1, uf4, uf2)
     print(M2)
 
     if (M == M2):
