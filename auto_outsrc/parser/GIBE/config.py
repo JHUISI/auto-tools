@@ -21,3 +21,5 @@ addNodePrefix = 'ADD'
 mulNodePrefix = 'MUL'
 leafNodeName = 'LEAF0'
 listNodeName = 'LIST0'
+
+generators = []

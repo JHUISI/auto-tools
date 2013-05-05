@@ -56,7 +56,7 @@ void Ibeckrs09::setup(int n, int l, CharmList & mpk, CharmList & msk)
     return;
 }
 
-void Ibeckrs09::extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf4, ZR & uf5, ZR & uf2, ZR & uf3, ZR & uf0, ZR & uf1, CharmList & skBlinded)
+void Ibeckrs09::extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf3, ZR & uf4, ZR & uf2, ZR & uf0, ZR & uf1, CharmList & skBlinded)
 {
     string idBlinded;
     GT omega;
@@ -95,12 +95,9 @@ void Ibeckrs09::extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf4,
     G2 d3Blinded;
     G2 d4;
     G2 d4Blinded;
-    G2 d5;
-    G2 d5Blinded;
-    uf4 = group.random(ZR_t);
-    uf5 = group.random(ZR_t);
-    uf2 = group.random(ZR_t);
     uf3 = group.random(ZR_t);
+    uf4 = group.random(ZR_t);
+    uf2 = group.random(ZR_t);
     uf0 = group.random(ZR_t);
     uf1 = group.random(ZR_t);
     idBlinded = id;
@@ -146,15 +143,12 @@ void Ibeckrs09::extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf4,
     d3Blinded = group.exp(d3, group.div(1, uf3));
     d4 = group.exp(hashID2r2, t3);
     d4Blinded = group.exp(d4, group.div(1, uf4));
-    d5 = group.mul(group.exp(h, t1), group.exp(h, t2));
-    d5Blinded = group.exp(d5, group.div(1, uf5));
     skBlinded.insert(0, idBlinded);
     skBlinded.insert(1, d0Blinded);
     skBlinded.insert(2, d1Blinded);
     skBlinded.insert(3, d2Blinded);
     skBlinded.insert(4, d3Blinded);
     skBlinded.insert(5, d4Blinded);
-    skBlinded.insert(6, d5Blinded);
     return;
 }
 
@@ -232,7 +226,6 @@ void Ibeckrs09::transform(CharmList & skBlinded, CharmList & ct, CharmList & tra
     G2 d2Blinded;
     G2 d3Blinded;
     G2 d4Blinded;
-    G2 d5Blinded;
     G1 c0;
     G1 c1;
     G1 c2;
@@ -246,7 +239,6 @@ void Ibeckrs09::transform(CharmList & skBlinded, CharmList & ct, CharmList & tra
     d2Blinded = skBlinded[3].getG2();
     d3Blinded = skBlinded[4].getG2();
     d4Blinded = skBlinded[5].getG2();
-    d5Blinded = skBlinded[6].getG2();
     
     c0 = ct[0].getG1();
     c1 = ct[1].getG1();
@@ -263,7 +255,7 @@ void Ibeckrs09::transform(CharmList & skBlinded, CharmList & ct, CharmList & tra
     return;
 }
 
-void Ibeckrs09::decout(CharmList & transformOutputList, ZR & uf3, ZR & uf5, ZR & uf0, ZR & uf1, ZR & uf4, ZR & uf2, GT & M)
+void Ibeckrs09::decout(CharmList & transformOutputList, ZR & uf3, ZR & uf0, ZR & uf1, ZR & uf4, ZR & uf2, GT & M)
 {
     GT cpr = group.init(GT_t);
     GT result = group.init(GT_t);

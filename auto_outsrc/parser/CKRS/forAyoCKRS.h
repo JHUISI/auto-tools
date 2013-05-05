@@ -17,10 +17,10 @@ public:
 	~Ibeckrs09() {};
 	
 	void setup(int n, int l, CharmList & mpk, CharmList & msk);
-	void extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf4, ZR & uf5, ZR & uf2, ZR & uf3, ZR & uf0, ZR & uf1, CharmList & skBlinded);
+	void extract(CharmList & mpk, CharmList & msk, string & id, ZR & uf3, ZR & uf4, ZR & uf2, ZR & uf0, ZR & uf1, CharmList & skBlinded);
 	void encrypt(CharmList & mpk, GT & M, string & id, CharmList & ct);
 	void transform(CharmList & skBlinded, CharmList & ct, CharmList & transformOutputList);
-	void decout(CharmList & transformOutputList, ZR & uf3, ZR & uf5, ZR & uf0, ZR & uf1, ZR & uf4, ZR & uf2, GT & M);
+	void decout(CharmList & transformOutputList, ZR & uf3, ZR & uf0, ZR & uf1, ZR & uf4, ZR & uf2, GT & M);
 };
 
 
