@@ -51,12 +51,22 @@ unSat = "unsat"
 isSet = "isSet"
 
 SS512 = { 'ZR':512, 'G1': 512, 'G2': 512, 'GT': 1024 }
-SS1024 = { 'ZR':1024, 'G1': 1024, 'G2': 1024, 'GT': 2048 } # TODO: need to verify this
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
+SS1536 = { 'ZR':1536, 'G1': 1536, 'G2': 1536, 'GT': 3072 }
 BN256 = { 'ZR':256, 'G1': 256, 'G2': 1024, 'GT': 3072 }
 
-symmetric_curves = {'SS512':SS512, 'SS1024':SS1024}
+symmetric_curves = {'SS512':SS512, 'SS1536':SS1536}
 asymmetric_curves = { 'MNT160':MNT160, 'BN256':BN256 } # TODO: add additional curves 
+
+def estimateSize(theVarTypes, curveDict):
+    sum = 0
+    #print("estimateSize input => ", list(theVarTypes.keys()))
+    for i in theVarTypes.keys():
+        _type = str(theVarTypes[i])
+        if _type in ['ZR', 'G1', 'G2', 'GT']:
+            sum += curveDict[_type]
+    return sum
+    
 
 def getConstraintSAT(vars, mofn, mCount, verbose=False):
     if verbose: print("mCount :", mCount)

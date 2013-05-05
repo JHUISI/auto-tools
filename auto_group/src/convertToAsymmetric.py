@@ -340,8 +340,9 @@ def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, 
 #    os.system("rm -f " + fileTarget + "*")
 #    return results.satisfiable, results.resultDictionary
 
-def getAssignmentForName(var, varTypes):
+def getAssignmentForName(var, varTypes, estimate=False):
     global assignInfo
+    dataTypes = {}
     (funcName, varInfo) = getVarNameEntryFromAssignInfo(assignInfo, var)
     if funcName != None:
         funcStmts = sdl.getVarInfoFuncStmts( funcName )
@@ -358,8 +359,11 @@ def getAssignmentForName(var, varTypes):
             varType = varTypes.get(i)
             theType = varType.getType()
             if theType == types.G1:
-                print(i, ":", theType)
+                if not estimate: print(i, ":", theType)
                 resultVars.append(i)
+
+            if theType in [types.ZR, types.G1, types.G2, types.GT]: dataTypes[ i ] = str(theType)
+            
             if theType in [types.list, types.listG1]:
                 print("Find all refs: ", i)
                 for j,k in Stmts.items():
@@ -367,8 +371,10 @@ def getAssignmentForName(var, varTypes):
                         kvar = k.getAssignVar()
                         if i in kvar and StmtTypes.get(kvar).getType() == types.G1:
                             if kvar not in resultVars: resultVars.append(str(kvar))
+                            if kvar not in dataTypes: dataTypes[ i ] = str(StmtTypes.get(kvar).getType())
                             
-    print("varList: ", resultVars)
+    if not estimate: print("varList: ", resultVars)
+    if estimate: return dataTypes 
     return resultVars
 
 def getOpCost(op_key, xorVarMap, varNames):
@@ -708,7 +714,7 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         pairingSearch += [stmtV] # aka start with verify
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
-        
+            
     info = {}
     info[curveID] = secparam
     gen = Generators(info)
@@ -802,14 +808,41 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
     fileSuffix, resultDict = searchForSolution(info, short, constraintList, txor, varTypes, config, generators)
     
     xorVarMap = txor.getVarMap()
-    if short != SHORT_FORALL:
-        res, resMap = NaiveEvaluation(resultDict, short)
-        print("Group Mapping: ", res)
-        # determine whether to make True = G1 and False = G2. 
-        # It depends on which counts more since they're interchangeable...
-        groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
-    else:
-        groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
+#    if short != SHORT_FORALL:
+#        res, resMap = NaiveEvaluation(resultDict, short)
+#        print("Group Mapping: ", res)
+#        # determine whether to make True = G1 and False = G2. 
+#        # It depends on which counts more since they're interchangeable...
+#        groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
+#    else:
+
+    groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
+#    if config.schemeType == PKENC:   
+#        symDataTypeSK = getAssignmentForName(config.keygenSecVar, varTypes, True)
+#        symDataTypeCT = getAssignmentForName(config.ciphertextVar, varTypes, True)
+#        asymDataTypeSK = {}
+#        asymDataTypeCT = {}
+#        newSol = groupInfo['newSol']
+#        for i in symDataTypeSK:
+#            if i in newSol.keys():
+#               asymDataTypeSK[i] = newSol[i]
+#            else:
+#               asymDataTypeSK[i] = symDataTypeSK[i]
+#               
+#        for i in symDataTypeCT:
+#            if i in newSol.keys():
+#               asymDataTypeCT[i] = newSol[i]
+#            else:
+#               asymDataTypeCT[i] = symDataTypeCT[i]
+#        print("<====================>")
+#        print("SK => ", list(symDataTypeSK.keys()))
+#        print("estimated  sym:  ", estimateSize(symDataTypeSK, symmetric_curves['SS1536']))        
+#        print("estimated asym: ", estimateSize(asymDataTypeSK, asymmetric_curves['BN256']))
+#        print("CT => ", list(symDataTypeCT.keys()))               
+#        print("estimated  sym: ", estimateSize(symDataTypeCT, symmetric_curves['SS1536']))            
+#        print("estimated asym: ", estimateSize(asymDataTypeCT, asymmetric_curves['BN256']))
+#        print("<====================>")
+
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         print("Update: new G1 deps=>", groupInfo['G1'])
@@ -1130,6 +1163,7 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     G1_deps = set()
     G2_deps = set()
     resultMap = {}
+    newSol = {}
     for tupl in resultDict:
         (k, v) = tupl
         resultMap[ k ] = v
@@ -1149,6 +1183,7 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
         else: deps = info['G1_rhs'][1].get(i)
         deps = list(deps); deps.append(i) # var name to the list
         print(i, ":=>", group, ": deps =>", deps)
+        newSol[ i ] = group
         if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
         elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
     print("<===== Deriving Specific Solution from Results =====>")    
@@ -1158,7 +1193,7 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     print("Both G1 & G2: ", both)
     print("Just G1: ", G1)
     print("Just G2: ", G2)
-    return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo }
+    return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 
 def findVarInfo(var, varTypes):

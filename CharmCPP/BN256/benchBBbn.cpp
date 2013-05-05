@@ -1,6 +1,6 @@
 #if TESTBBKY == 1
  #include "TestBBky.h"
- #define PRINT_BANNER "Test Case: Running BB ky test"
+ #define PRINT_BANNER "Test Case: Running BB ky min test"
 #elif TESTBBCT == 1
  #include "TestBBct.h"
  #define PRINT_BANNER "Test Case: Running BB ct test"
@@ -24,18 +24,18 @@ string getID(int len)
 
 void benchmarkBB(Bbibe04 & bb, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
-	Benchmark benchT, benchD, benchK;
+    Benchmark benchT, benchD, benchK;
     CharmList msk, pk, sk, sk2, ct;
     GT M, newM;
     ZR bf0;
-    string id; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
+    string id, id2; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
 	bb.setup(msk, pk);
 	for(int i = 0; i < iterationCount; i++) {
 		id = getID(ID_string_len);
 		benchK.start();
-		bb.keygen(pk, msk, id, sk2);
+		bb.keygen(pk, msk, id, sk);
 		benchK.stop();
 		kg_in_ms = benchK.computeTimeInMilliseconds();
 
@@ -46,23 +46,21 @@ void benchmarkBB(Bbibe04 & bb, ofstream & outfile0, ofstream & outfile1, ofstrea
 	outfile0 << s0.str();
     keygenResults[ID_string_len] = benchK.getRawResultString();
 
+	id2 = getID(ID_string_len);
+	cout << "Final rand selected ID: '" << id2 << "'" << endl;
+	bb.keygen(pk, msk, id2, sk2);
 
-	id = getID(ID_string_len);
-	cout << "Final rand selected ID: '" << id << "'" << endl;
-	bb.keygen(pk, msk, id, sk);
 
-
-    //cout << "ct =\n" << ct << endl;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-	    M = bb.group.random(GT_t);
+	        M = bb.group.random(GT_t);
 		benchT.start();
-	    bb.encrypt(pk, M, id, ct);
+	        bb.encrypt(pk, M, id2, ct);
 		benchT.stop();
 		kg_in_ms = benchT.computeTimeInMilliseconds();
 
 		benchD.start();
-		bb.decrypt(pk, sk, ct, newM);
+		bb.decrypt(pk, sk2, ct, newM);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}

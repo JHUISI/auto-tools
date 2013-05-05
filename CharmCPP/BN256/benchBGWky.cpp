@@ -70,12 +70,13 @@ void benchmarkBGW(Bgw05 & bgw, ofstream & outfile0, ofstream & outfile1, ofstrea
 		K = ct[1].getGT();
 
 		i = S[(rand() % numOfRecs)];
-		cout << i;
+		cout << i << " ";
 		benchD.start();
 		bgw.decrypt(S, i, n, Hdr, pk, sk, KDecrypt);
 		benchD.stop();
 		de_in_ms = benchD.computeTimeInMilliseconds();
 	}
+        cout << endl;
 	cout << "Encrypt avg: " << benchT.getAverage() << " ms" << endl;
     stringstream s1;
 	s1 << numOfRecs << " " << benchT.getAverage() << endl;

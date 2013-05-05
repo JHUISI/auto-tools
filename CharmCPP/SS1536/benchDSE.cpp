@@ -12,17 +12,17 @@ string getID(int len)
 		val = (int) (rand() % alpha_len);
 		id +=  alphabet[val];
 	}
-	cout << "Rand selected ID: '" << id << "'" << endl;
+	//cout << "Rand selected ID: '" << id << "'" << endl;
 	return id;
 }
 
 void benchmarkDSE(Dse09 & dse, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & encryptResults, CharmListStr & decryptResults)
 {
 	Benchmark benchE, benchD, benchK;
-    CharmList msk, mpk, pk, sk, ct;
+    CharmList msk, mpk, pk, sk, sk2, ct;
     GT M, newM;
     ZR bf0;
-    string id = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
+    string id; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
 	dse.setup(mpk, msk);
