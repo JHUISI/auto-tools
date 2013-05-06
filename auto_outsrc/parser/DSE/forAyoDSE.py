@@ -33,55 +33,55 @@ def setup():
     alpha = group.random(ZR)
     gbG1 = (gG1 ** b)
     gbG2 = (gG2 ** b)
-    ga1 = (gG2 ** a1)
-    ga2 = (gG2 ** a2)
-    gba1 = (gbG2 ** a1)
-    gba2 = (gbG2 ** a2)
-    tau1 = (vG2 * (v1G2 ** a1))
-    tau2 = (vG2 * (v2G2 ** a2))
+    ga1 = (gG1 ** a1)
+    ga2 = (gG1 ** a2)
+    gba1 = (gbG1 ** a1)
+    gba2 = (gbG1 ** a2)
+    tau1 = (vG1 * (v1G1 ** a1))
+    tau2 = (vG1 * (v2G1 ** a2))
     tau1b = (tau1 ** b)
     tau2b = (tau2 ** b)
     egga = (pair(gG1, gG2) ** (alpha * (a1 * b)))
-    galpha = (gG1 ** alpha)
-    galphaUSa1 = (galpha ** a1)
+    galpha = (gG2 ** alpha)
+    galphaa1 = (galpha ** a1)
     mpk = [gG1, gG2, gbG1, gbG2, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, wG1, wG2, uG1, uG2, hG1, hG2, egga]
-    msk = [galpha, galphaUSa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha]
+    msk = [galpha, galphaa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha]
     output = (mpk, msk)
     return output
 
 def keygen(mpk, msk, id):
-    uf0 = group.random(ZR)
     bf0 = group.random(ZR)
     uf1 = group.random(ZR)
+    uf0 = group.random(ZR)
     idBlinded = id
     gG1, gG2, gbG1, gbG2, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, wG1, wG2, uG1, uG2, hG1, hG2, egga = mpk
-    galpha, galphaUSa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha = msk
+    galpha, galphaa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha = msk
     r1 = group.random(ZR)
     r2 = group.random(ZR)
     z1 = group.random(ZR)
     z2 = group.random(ZR)
-    tagUSk = group.random(ZR)
-    tagUSkBlinded = (tagUSk ** (1 / bf0))
+    tagk = group.random(ZR)
+    tagkBlinded = (tagk ** (1 / bf0))
     r = (r1 + r2)
-    idUShash = group.hash(idBlinded, ZR)
-    D1 = (galphaUSa1 * (vG1 ** r))
+    idhash = group.hash(idBlinded, ZR)
+    D1 = (galphaa1 * (vG2 ** r))
     D1Blinded = (D1 ** (1 / uf0))
-    D2 = (((gG1 ** -alpha) * (v1G1 ** r)) * (gG1 ** z1))
+    D2 = (((gG2 ** -alpha) * (v1G2 ** r)) * (gG2 ** z1))
     D2Blinded = (D2 ** (1 / bf0))
-    D3 = (gbG1 ** -z1)
+    D3 = (gbG2 ** -z1)
     D3Blinded = (D3 ** (1 / bf0))
-    D4 = ((v2G1 ** r) * (gG1 ** z2))
+    D4 = ((v2G2 ** r) * (gG2 ** z2))
     D4Blinded = (D4 ** (1 / bf0))
-    D5 = (gbG1 ** -z2)
+    D5 = (gbG2 ** -z2)
     D5Blinded = (D5 ** (1 / bf0))
-    D6 = (gbG1 ** r2)
+    D6 = (gbG2 ** r2)
     D6Blinded = (D6 ** (1 / bf0))
-    D7 = (gG1 ** r1)
+    D7 = (gG2 ** r1)
     D7Blinded = (D7 ** (1 / bf0))
-    K = ((((uG1 ** idUShash) * (wG1 ** tagUSkBlinded)) * hG1) ** r1)
+    K = ((((uG2 ** idhash) * (wG2 ** tagkBlinded)) * hG2) ** r1)
     KBlinded = (K ** (1 / uf1))
-    skBlinded = [idBlinded, D1Blinded, D2Blinded, D3Blinded, D4Blinded, D5Blinded, D6Blinded, D7Blinded, KBlinded, tagUSkBlinded]
-    output = (uf0, bf0, uf1, skBlinded)
+    skBlinded = [idBlinded, D1Blinded, D2Blinded, D3Blinded, D4Blinded, D5Blinded, D6Blinded, D7Blinded, KBlinded, tagkBlinded]
+    output = (bf0, uf1, uf0, skBlinded)
     return output
 
 def encrypt(mpk, M, id):
@@ -89,30 +89,30 @@ def encrypt(mpk, M, id):
     s1 = group.random(ZR)
     s2 = group.random(ZR)
     t = group.random(ZR)
-    tagUSc = group.random(ZR)
+    tagc = group.random(ZR)
     s = (s1 + s2)
-    idUShash2 = group.hash(id, ZR)
+    idhash2 = group.hash(id, ZR)
     C0 = (M * (egga ** s2))
-    C1 = (gbG2 ** s)
+    C1 = (gbG1 ** s)
     C2 = (gba1 ** s1)
     C3 = (ga1 ** s1)
     C4 = (gba2 ** s2)
     C5 = (ga2 ** s2)
     C6 = ((tau1 ** s1) * (tau2 ** s2))
-    C7 = (((tau1b ** s1) * (tau2b ** s2)) * (wG2 ** -t))
-    E1 = ((((uG2 ** idUShash2) * (wG2 ** tagUSc)) * hG2) ** t)
-    E2 = (gG2 ** t)
-    ct = [C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagUSc]
+    C7 = (((tau1b ** s1) * (tau2b ** s2)) * (wG1 ** -t))
+    E1 = ((((uG1 ** idhash2) * (wG1 ** tagc)) * hG1) ** t)
+    E2 = (gG1 ** t)
+    ct = [C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc]
     output = ct
     return output
 
 def transform(ct, skBlinded):
     transformOutputList = {}
 
-    idBlinded, D1Blinded, D2Blinded, D3Blinded, D4Blinded, D5Blinded, D6Blinded, D7Blinded, KBlinded, tagUSkBlinded = skBlinded
-    C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagUSc = ct
+    idBlinded, D1Blinded, D2Blinded, D3Blinded, D4Blinded, D5Blinded, D6Blinded, D7Blinded, KBlinded, tagkBlinded = skBlinded
+    C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc = ct
     transformOutputList[6] = C0
-    transformOutputList[0] = ((tagUSc - tagUSkBlinded) ** -1)
+    transformOutputList[0] = ((tagc - tagkBlinded) ** -1)
     tag = transformOutputList[0]
     transformOutputList[1] = pair(C1, D1Blinded)
     transformOutputList[2] = (((pair(C2, D2Blinded) * pair(C3, D3Blinded)) * pair(C4, D4Blinded)) * pair(C5, D5Blinded))
@@ -142,7 +142,7 @@ def main():
     group = PairingGroup('SS512')
 
     (mpk, msk) = setup()
-    (uf0, bf0, uf1, skBlinded) = keygen(mpk, msk, "john@example.com")
+    (bf0, uf1, uf0, skBlinded) = keygen(mpk, msk, "john@example.com")
     M = group.random(GT)
     print(M)
     print("\n\n\n")

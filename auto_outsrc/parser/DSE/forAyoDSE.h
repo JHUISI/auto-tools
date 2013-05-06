@@ -1,5 +1,5 @@
-#ifndef DSEWATERS09_H
-#define DSEWATERS09_H
+#ifndef DSE09_H
+#define DSE09_H
 
 #include "Charm.h"
 #include <iostream>
@@ -9,15 +9,15 @@
 using namespace std;
 
 
-class Dsewaters09
+class Dse09
 {
 public:
 	PairingGroup group;
-	Dsewaters09() { group.setCurve(AES_SECURITY); };
-	~Dsewaters09() {};
+	Dse09() { group.setCurve(AES_SECURITY); };
+	~Dse09() {};
 	
 	void setup(CharmList & mpk, CharmList & msk);
-	void keygen(CharmList & mpk, CharmList & msk, string & id, ZR & uf0, ZR & bf0, ZR & uf1, CharmList & skBlinded);
+	void keygen(CharmList & mpk, CharmList & msk, string & id, ZR & bf0, ZR & uf1, ZR & uf0, CharmList & skBlinded);
 	void encrypt(CharmList & mpk, GT & M, string & id, CharmList & ct);
 	void transform(CharmList & ct, CharmList & skBlinded, CharmList & transformOutputList);
 	void decout(CharmList & transformOutputList, ZR & bf0, ZR & uf0, ZR & uf1, GT & M);
