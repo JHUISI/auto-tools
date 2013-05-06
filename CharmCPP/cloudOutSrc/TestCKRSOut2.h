@@ -13,7 +13,7 @@ class Ibeckrs09
 {
 public:
 	PairingGroup group;
-	Ibeckrs09() { group.setCurve(AES_SECURITY); };
+	Ibeckrs09() { group.setCurve(BN256); };
 	~Ibeckrs09() {};
 	
 	void setup(int n, int l, CharmList & mpk, CharmList & msk);

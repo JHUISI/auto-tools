@@ -13,7 +13,7 @@ class Sw05
 {
 public:
 	PairingGroup group;
-	Sw05() { group.setCurve(AES_SECURITY); };
+	Sw05() { group.setCurve(BN256); };
 	~Sw05() {};
 	SecretUtil util;
 

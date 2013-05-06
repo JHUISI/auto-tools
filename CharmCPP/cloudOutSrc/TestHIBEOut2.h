@@ -13,7 +13,7 @@ class Hibe
 {
 public:
 	PairingGroup group;
-	Hibe() { group.setCurve(AES_SECURITY); };
+	Hibe() { group.setCurve(BN256); };
 	~Hibe() {};
 	
 	void setup(int l, int z, CharmList & mpk, CharmList & mk);

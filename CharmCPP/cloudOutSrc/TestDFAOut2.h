@@ -13,7 +13,7 @@ class Dfa12
 {
 public:
 	PairingGroup group;
-	Dfa12() { group.setCurve(AES_SECURITY); };
+	Dfa12() { group.setCurve(BN256); };
 	~Dfa12() {};
 	DFA dfaUtil;
 

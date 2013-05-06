@@ -13,7 +13,7 @@ class Lw10
 {
 public:
 	PairingGroup group;
-	Lw10() { group.setCurve(AES_SECURITY); };
+	Lw10() { group.setCurve(BN256); };
 	~Lw10() {};
 	SecretUtil util;
 

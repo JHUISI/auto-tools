@@ -13,7 +13,7 @@ class Bsw07
 {
 public:
 	PairingGroup group;
-	Bsw07() { group.setCurve(AES_SECURITY); };
+	Bsw07() { group.setCurve(BN256); };
 	~Bsw07() {};
 	SecretUtil util;
 
