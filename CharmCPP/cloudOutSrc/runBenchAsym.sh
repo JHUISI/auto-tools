@@ -22,22 +22,22 @@ python genMakefile.py ../config.mk MakefileBGW TestBGWOut2.cpp benchBGWOut.cpp
 python genMakefile.py ../config.mk MakefileDFA TestDFAOut2.cpp benchDFAOut.cpp
 
 
-#./TestWATERS 100 100 fixed
+./TestWATERS 100 100 fixed
 
-#./TestBSWOut2 100 100 fixed
+./TestBSWOut2 100 100 fixed
 
-#./TestLWOut2 100 100 fixed
+./TestLWOut2 100 100 fixed
 
-#./TestDSEOut2 100 100 fixed
+./TestDSEOut2 100 100 fixed
 
-#./TestCKRSOut2 100 100 fixed
+./TestCKRSOut2 100 100 fixed
 
-#./TestHIBEOut2 100 100 fixed
+./TestHIBEOut2 100 100 fixed
 
-#./TestSWOut2 100 100 fixed
+./TestSWOut2 100 100 fixed
 
-#./TestBGWOut2 100 100 fixed
+./TestBGWOut2 100 100 fixed
 
-#./TestDFAOut2 100 500 1 fixed
+./TestDFAOut2 100 500 1 fixed
 
 set +x
