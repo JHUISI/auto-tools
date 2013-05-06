@@ -5,9 +5,6 @@ from charm.toolbox.DFA import DFA
 group = None
 
 
-secparam = 80
-
-
 def setup(alphabet):
     hG1 = {}
     hG2 = {}
@@ -26,12 +23,12 @@ def setup(alphabet):
     A = len(alphabet)
     for i in range(0, A):
         a = getString(alphabet[i])
-        ha = group.random(ZR)
-        hG1[a] = (gG1 ** ha)
-        hG2[a] = (gG2 ** ha)
+        h = group.random(ZR)
+        hG1[a] = (gG1 ** h)
+        hG2[a] = (gG2 ** h)
     alpha = group.random(ZR)
     egg = (pair(gG1, gG2) ** alpha)
-    msk = (gG1 ** -alpha)
+    msk = (gG2 ** -alpha)
     mpk = [egg, gG1, gG2, zG1, zG2, hG1, hG2, hstartG1, hstartG2, hendG1, hendG2]
     output = (mpk, msk)
     return output
@@ -43,8 +40,8 @@ def keygen(mpk, msk, Q, T, F):
     KendList2 = {}
     KendList1 = {}
     K3Blinded = {}
+    D = {}
     KendList1Blinded = {}
-    DG1 = {}
     K1Blinded = {}
     K2Blinded = {}
     KendList2Blinded = {}
@@ -53,11 +50,11 @@ def keygen(mpk, msk, Q, T, F):
     egg, gG1, gG2, zG1, zG2, hG1, hG2, hstartG1, hstartG2, hendG1, hendG2 = mpk
     qlen = len(Q)
     for i in range(0, qlen+1):
-        DG1[i] = group.random(G1)
+        D[i] = group.random(G2)
     rstart = group.random(ZR)
-    Kstart1 = (DG1[0] * (hstartG1 ** rstart))
+    Kstart1 = (D[0] * (hstartG2 ** rstart))
     Kstart1Blinded = (Kstart1 ** (1 / bf0))
-    Kstart2 = (gG1 ** rstart)
+    Kstart2 = (gG2 ** rstart)
     Kstart2Blinded = (Kstart2 ** (1 / bf0))
     Tlen = len(T)
     for i in range(0, Tlen):
@@ -67,9 +64,9 @@ def keygen(mpk, msk, Q, T, F):
         t1 = t[1]
         t2 = getString(t[2])
         key = hashToKey(t)
-        K1[key] = ((DG1[t0] ** -1) * (zG1 ** r))
-        K2[key] = (gG1 ** r)
-        K3[key] = (DG1[t1] * (hG1[t2] ** r))
+        K1[key] = ((D[t0] ** -1) * (zG2 ** r))
+        K2[key] = (gG2 ** r)
+        K3[key] = (D[t1] * (hG2[t2] ** r))
     for y in K1:
         K1Blinded[y] = (K1[y] ** (1 / bf0))
     for y in K2:
@@ -80,8 +77,8 @@ def keygen(mpk, msk, Q, T, F):
     for i in range(0, Flen):
         x = F[i]
         rx = group.random(ZR)
-        KendList1[x] = (msk * (DG1[x] * (hendG1 ** rx)))
-        KendList2[x] = (gG1 ** rx)
+        KendList1[x] = (msk * (D[x] * (hendG2 ** rx)))
+        KendList2[x] = (gG2 ** rx)
     for y in KendList1:
         KendList1Blinded[y] = (KendList1[y] ** (1 / bf0))
     for y in KendList2:
@@ -100,14 +97,14 @@ def encrypt(mpk, w, M):
     for i in range(0, l+1):
         s[i] = group.random(ZR)
     Cm = (M * (egg ** s[l]))
-    C1[0] = (gG2 ** s[0])
-    C2[0] = (hstartG2 ** s[0])
+    C1[0] = (gG1 ** s[0])
+    C2[0] = (hstartG1 ** s[0])
     for i in range(1, l+1):
         a = getString(w[i])
-        C1[i] = (gG2 ** s[i])
-        C2[i] = ((hG2[a] ** s[i]) * (zG2 ** s[i-1]))
-    Cend1 = (gG2 ** s[l])
-    Cend2 = (hendG2 ** s[l])
+        C1[i] = (gG1 ** s[i])
+        C2[i] = ((hG1[a] ** s[i]) * (zG1 ** s[i-1]))
+    Cend1 = (gG1 ** s[l])
+    Cend2 = (hendG1 ** s[l])
     ct = [Cend1, Cend2, w, C1, C2, Cm]
     output = ct
     return output
@@ -124,7 +121,6 @@ def transform(skBlinded, ct, dfaM):
     l = len(w)
     if ( ( (accept(dfaM, w)) == (False) ) ):
         pass
-        return False
     Ti = getTransitions(dfaM, w)
     transformOutputList[0] = (pair(C1[0], Kstart1Blinded) * pair((C2[0] ** -1), Kstart2Blinded))
     B[0] = transformOutputList[0]
@@ -146,8 +142,10 @@ def decout(dfaM, transformOutputList, bf0, l, Ti, transformOutputListForLoop):
 
     Cm = transformOutputList[3]
     w = transformOutputList[2]
-    if ( ( (accept(dfaM, w)) == (False) ) ):
+    if ( ( (accept(w)) == (False) ) ):
         pass
+        output = Error
+        return output
     B[0] = (transformOutputList[0] ** bf0)
     for i in range(1, l+1):
         pass

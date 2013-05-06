@@ -17,11 +17,11 @@ public:
 	~Dfa12() {};
 	DFA dfaUtil;
 
-	void setup(CharmListStr & alphabet, CharmList & mpk, G1 & msk);
-	void keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt & T, CharmListInt & F, ZR & bf0, CharmList & skBlinded);
+	void setup(CharmListStr & alphabet, CharmList & mpk, G2 & msk);
+	void keygen(CharmList & mpk, G2 & msk, CharmListInt & Q, CharmMetaListInt & T, CharmListInt & F, ZR & bf0, CharmList & skBlinded);
 	void encrypt(CharmList & mpk, CharmListStr & w, GT & M, CharmList & ct);
-	void transform(CharmList & skBlinded, CharmList & ct, NO_TYPE & dfaM, CharmList & transformOutputList, int & l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop);
-	void decout(NO_TYPE & dfaM, CharmList & transformOutputList, ZR & bf0, int l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop, GT & M);
+	void transform(CharmList & skBlinded, CharmList & ct, CharmList & transformOutputList, int & l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop);
+	void decout(CharmList & transformOutputList, ZR & bf0, int l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop, GT & M);
 };
 
 

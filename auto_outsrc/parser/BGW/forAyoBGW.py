@@ -18,7 +18,7 @@ def setup(n):
         glG1[i] = (gG1 ** (alpha ** i))
         glG2[i] = (gG2 ** (alpha ** i))
     gamma = group.random(ZR)
-    v = (gG2 ** gamma)
+    v = (gG1 ** gamma)
     pk = [gG1, gG2, glG1, glG2, v]
     msk = [gamma]
     output = (pk, msk, n)
@@ -32,7 +32,7 @@ def keygen(pk, msk, n):
     gG1, gG2, glG1, glG2, v = pk
     [gamma] = msk
     for i in range(1, n+1):
-        s[i] = (glG1[i] ** gamma)
+        s[i] = (glG2[i] ** gamma)
     for y in s:
         sBlinded[y] = (s[y] ** (1 / bf0))
     skBlinded = [sBlinded]
@@ -43,11 +43,11 @@ def encrypt(S, pk, n):
     gG1, gG2, glG1, glG2, v = pk
     t = group.random(ZR)
     K = (pair(glG1[n], glG2[1]) ** t)
-    dotProd1 = group.init(G2)
+    dotProd1 = group.init(G1)
     for j in S:
-        dotProd1 = (dotProd1 * glG2[n+1-j])
+        dotProd1 = (dotProd1 * glG1[n+1-j])
     Hdr2 = ((v * dotProd1) ** t)
-    Hdr1 = (gG2 ** t)
+    Hdr1 = (gG1 ** t)
     Hdr = [Hdr1, Hdr2]
     ct = [Hdr, K]
     output = ct
@@ -60,9 +60,9 @@ def transform(S, i, n, Hdr, pk, skBlinded):
     Hdr1, Hdr2 = Hdr
     gG1, gG2, glG1, glG2, v = pk
     [sBlinded] = skBlinded
-    transformOutputList[0] = pair(glG1[i], Hdr2)
+    transformOutputList[0] = pair(glG2[i], Hdr2)
     numerator = transformOutputList[0]
-    transformOutputList[1] = group.init(G1)
+    transformOutputList[1] = group.init(G2)
     dotProd2 = transformOutputList[1]
     lenS = len(S)
     for k in range(0, lenS):
@@ -71,10 +71,10 @@ def transform(S, i, n, Hdr, pk, skBlinded):
         if ( ( (j) != (i) ) ):
             pass
             FLrepVar2 = (10 + (5 * k))
-            transformOutputListForLoop[FLrepVar2] = (dotProd2 * glG1[n+1-j+i])
+            transformOutputListForLoop[FLrepVar2] = (dotProd2 * glG2[n+1-j+i])
             dotProd2 = transformOutputListForLoop[FLrepVar2]
-    transformOutputList[2] = pair(sBlinded[i], Hdr1)
-    transformOutputList[3] = pair(dotProd2, Hdr1)
+    transformOutputList[2] = pair(Hdr1, sBlinded[i])
+    transformOutputList[3] = pair(Hdr1, dotProd2)
     output = (transformOutputList)
     return output
 

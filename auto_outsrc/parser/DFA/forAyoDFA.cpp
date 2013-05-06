@@ -1,6 +1,6 @@
 #include "DFA/forAyoDFA.h"
 
-void Dfa12::setup(CharmListStr & alphabet, CharmList & mpk, G1 & msk)
+void Dfa12::setup(CharmListStr & alphabet, CharmList & mpk, G2 & msk)
 {
     G1 gG1;
     G2 gG2;
@@ -15,7 +15,7 @@ void Dfa12::setup(CharmListStr & alphabet, CharmList & mpk, G1 & msk)
     G2 hendG2;
     int A = 0;
     string a;
-    ZR ha;
+    ZR h;
     CharmListG1 hG1;
     CharmListG2 hG2;
     ZR alpha;
@@ -35,13 +35,13 @@ void Dfa12::setup(CharmListStr & alphabet, CharmList & mpk, G1 & msk)
     for (int i = 0; i < A; i++)
     {
         a = dfaUtil.getString(alphabet[i]);
-        ha = group.random(ZR_t);
-        hG1[a] = group.exp(gG1, ha);
-        hG2[a] = group.exp(gG2, ha);
+        h = group.random(ZR_t);
+        hG1[a] = group.exp(gG1, h);
+        hG2[a] = group.exp(gG2, h);
     }
     alpha = group.random(ZR_t);
     egg = group.exp(group.pair(gG1, gG2), alpha);
-    msk = group.exp(gG1, group.neg(alpha));
+    msk = group.exp(gG2, group.neg(alpha));
     mpk.insert(0, egg);
     mpk.insert(1, gG1);
     mpk.insert(2, gG2);
@@ -56,7 +56,7 @@ void Dfa12::setup(CharmListStr & alphabet, CharmList & mpk, G1 & msk)
     return;
 }
 
-void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt & T, CharmListInt & F, ZR & bf0, CharmList & skBlinded)
+void Dfa12::keygen(CharmList & mpk, G2 & msk, CharmListInt & Q, CharmMetaListInt & T, CharmListInt & F, ZR & bf0, CharmList & skBlinded)
 {
     GT egg;
     G1 gG1;
@@ -70,12 +70,12 @@ void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt
     G1 hendG1;
     G2 hendG2;
     int qlen = 0;
-    CharmListG1 DG1;
+    CharmListG2 D;
     ZR rstart;
-    G1 Kstart1;
-    G1 Kstart1Blinded;
-    G1 Kstart2;
-    G1 Kstart2Blinded;
+    G2 Kstart1;
+    G2 Kstart1Blinded;
+    G2 Kstart2;
+    G2 Kstart2Blinded;
     int Tlen = 0;
     ZR r;
     CharmListInt t;
@@ -83,19 +83,19 @@ void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt
     int t1 = 0;
     string t2;
     string key;
-    CharmListG1 K1;
-    CharmListG1 K2;
-    CharmListG1 K3;
-    CharmListG1 K1Blinded;
-    CharmListG1 K2Blinded;
-    CharmListG1 K3Blinded;
+    CharmListG2 K1;
+    CharmListG2 K2;
+    CharmListG2 K3;
+    CharmListG2 K1Blinded;
+    CharmListG2 K2Blinded;
+    CharmListG2 K3Blinded;
     int Flen = 0;
     int x = 0;
     ZR rx;
-    CharmListG1 KendList1;
-    CharmListG1 KendList2;
-    CharmListG1 KendList1Blinded;
-    CharmListG1 KendList2Blinded;
+    CharmListG2 KendList1;
+    CharmListG2 KendList2;
+    CharmListG2 KendList1Blinded;
+    CharmListG2 KendList2Blinded;
     bf0 = group.random(ZR_t);
     
     egg = mpk[0].getGT();
@@ -112,12 +112,12 @@ void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt
     qlen = Q.length();
     for (int i = 0; i < qlen+1; i++)
     {
-        DG1[i] = group.random(G1_t);
+        D[i] = group.random(G2_t);
     }
     rstart = group.random(ZR_t);
-    Kstart1 = group.mul(DG1[0], group.exp(hstartG1, rstart));
+    Kstart1 = group.mul(D[0], group.exp(hstartG2, rstart));
     Kstart1Blinded = group.exp(Kstart1, group.div(1, bf0));
-    Kstart2 = group.exp(gG1, rstart);
+    Kstart2 = group.exp(gG2, rstart);
     Kstart2Blinded = group.exp(Kstart2, group.div(1, bf0));
     Tlen = T.length();
     for (int i = 0; i < Tlen; i++)
@@ -128,9 +128,9 @@ void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt
         t1 = t[1];
         t2 = dfaUtil.getString(t[2]);
         key = dfaUtil.hashToKey(t);
-        K1[key] = group.mul(group.exp(DG1[t0], -1), group.exp(zG1, r));
-        K2[key] = group.exp(gG1, r);
-        K3[key] = group.mul(DG1[t1], group.exp(hG1[t2], r));
+        K1[key] = group.mul(group.exp(D[t0], -1), group.exp(zG2, r));
+        K2[key] = group.exp(gG2, r);
+        K3[key] = group.mul(D[t1], group.exp(hG2[t2], r));
     }
     CharmListStr K1_keys = K1.strkeys();
     int K1_len = K1_keys.length();
@@ -158,8 +158,8 @@ void Dfa12::keygen(CharmList & mpk, G1 & msk, CharmListInt & Q, CharmMetaListInt
     {
         x = F[i];
         rx = group.random(ZR_t);
-        KendList1[x] = group.mul(msk, group.mul(DG1[x], group.exp(hendG1, rx)));
-        KendList2[x] = group.exp(gG1, rx);
+        KendList1[x] = group.mul(msk, group.mul(D[x], group.exp(hendG2, rx)));
+        KendList2[x] = group.exp(gG2, rx);
     }
     CharmListInt KendList1_keys = KendList1.keys();
     int KendList1_len = KendList1_keys.length();
@@ -201,11 +201,11 @@ void Dfa12::encrypt(CharmList & mpk, CharmListStr & w, GT & M, CharmList & ct)
     int l = 0;
     CharmListZR s;
     GT Cm = group.init(GT_t);
-    CharmListG2 C1;
-    CharmListG2 C2;
+    CharmListG1 C1;
+    CharmListG1 C2;
     string a;
-    G2 Cend1;
-    G2 Cend2;
+    G1 Cend1;
+    G1 Cend2;
     
     egg = mpk[0].getGT();
     gG1 = mpk[1].getG1();
@@ -224,16 +224,16 @@ void Dfa12::encrypt(CharmList & mpk, CharmListStr & w, GT & M, CharmList & ct)
         s[i] = group.random(ZR_t);
     }
     Cm = group.mul(M, group.exp(egg, s[l]));
-    C1[0] = group.exp(gG2, s[0]);
-    C2[0] = group.exp(hstartG2, s[0]);
+    C1[0] = group.exp(gG1, s[0]);
+    C2[0] = group.exp(hstartG1, s[0]);
     for (int i = 1; i < l+1; i++)
     {
         a = dfaUtil.getString(w[i]);
-        C1.insert(i, group.exp(gG2, s[i]));
-        C2.insert(i, group.mul(group.exp(hG2[a], s[i]), group.exp(zG2, s[i-1])));
+        C1.insert(i, group.exp(gG1, s[i]));
+        C2.insert(i, group.mul(group.exp(hG1[a], s[i]), group.exp(zG1, s[i-1])));
     }
-    Cend1 = group.exp(gG2, s[l]);
-    Cend2 = group.exp(hendG2, s[l]);
+    Cend1 = group.exp(gG1, s[l]);
+    Cend2 = group.exp(hendG1, s[l]);
     ct.insert(0, Cend1);
     ct.insert(1, Cend2);
     ct.insert(2, w);
@@ -243,20 +243,20 @@ void Dfa12::encrypt(CharmList & mpk, CharmListStr & w, GT & M, CharmList & ct)
     return;
 }
 
-void Dfa12::transform(CharmList & skBlinded, CharmList & ct, NO_TYPE & dfaM, CharmList & transformOutputList, int & l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop)
+void Dfa12::transform(CharmList & skBlinded, CharmList & ct, CharmList & transformOutputList, int & l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop)
 {
-    G1 Kstart1Blinded;
-    G1 Kstart2Blinded;
-    CharmListG1 KendList1Blinded;
-    CharmListG1 KendList2Blinded;
-    CharmListG1 K1Blinded;
-    CharmListG1 K2Blinded;
-    CharmListG1 K3Blinded;
-    G2 Cend1;
-    G2 Cend2;
+    G2 Kstart1Blinded;
+    G2 Kstart2Blinded;
+    CharmListG2 KendList1Blinded;
+    CharmListG2 KendList2Blinded;
+    CharmListG2 K1Blinded;
+    CharmListG2 K2Blinded;
+    CharmListG2 K3Blinded;
+    G1 Cend1;
+    G1 Cend2;
     CharmListStr w;
-    CharmListG2 C1;
-    CharmListG2 C2;
+    CharmListG1 C1;
+    CharmListG1 C2;
     GT Cm;
     CharmListGT B;
     string key;
@@ -266,29 +266,28 @@ void Dfa12::transform(CharmList & skBlinded, CharmList & ct, NO_TYPE & dfaM, Cha
     int x = 0;
     GT result1 = group.init(GT_t);
     
-    Kstart1Blinded = skBlinded[0].getG1();
-    Kstart2Blinded = skBlinded[1].getG1();
-    KendList1Blinded = skBlinded[2].getListG1();
-    KendList2Blinded = skBlinded[3].getListG1();
-    K1Blinded = skBlinded[4].getListG1();
-    K2Blinded = skBlinded[5].getListG1();
-    K3Blinded = skBlinded[6].getListG1();
+    Kstart1Blinded = skBlinded[0].getG2();
+    Kstart2Blinded = skBlinded[1].getG2();
+    KendList1Blinded = skBlinded[2].getListG2();
+    KendList2Blinded = skBlinded[3].getListG2();
+    K1Blinded = skBlinded[4].getListG2();
+    K2Blinded = skBlinded[5].getListG2();
+    K3Blinded = skBlinded[6].getListG2();
     
-    Cend1 = ct[0].getG2();
-    Cend2 = ct[1].getG2();
+    Cend1 = ct[0].getG1();
+    Cend2 = ct[1].getG1();
     w = ct[2].getListStr();
-    C1 = ct[3].getListG2();
-    C2 = ct[4].getListG2();
+    C1 = ct[3].getListG1();
+    C2 = ct[4].getListG1();
     Cm = ct[5].getGT();
     transformOutputList.insert(3, Cm);
     transformOutputList.insert(2, w);
     l = w.length();
-    if ( ( (dfaUtil.accept(dfaM, w)) == (false) ) )
+    if ( ( (dfaUtil.accept(w)) == (false) ) )
     {
 
-        return false;
     }
-    Ti = dfaUtil.getTransitions(dfaM, w);
+    Ti = dfaUtil.getTransitions(w);
     transformOutputList.insert(0, group.mul(group.pair(C1[0], Kstart1Blinded), group.pair(group.exp(C2[0], -1), Kstart2Blinded)));
     B[0] = transformOutputList[0].getGT();
     for (int i = 1; i < l+1; i++)
@@ -306,7 +305,7 @@ void Dfa12::transform(CharmList & skBlinded, CharmList & ct, NO_TYPE & dfaM, Cha
     return;
 }
 
-void Dfa12::decout(NO_TYPE & dfaM, CharmList & transformOutputList, ZR & bf0, int l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop, GT & M)
+void Dfa12::decout(CharmList & transformOutputList, ZR & bf0, int l, CharmMetaListInt & Ti, CharmList & transformOutputListForLoop, GT & M)
 {
     GT Cm = group.init(GT_t);
     CharmListStr w;
@@ -319,9 +318,11 @@ void Dfa12::decout(NO_TYPE & dfaM, CharmList & transformOutputList, ZR & bf0, in
     GT Bend = group.init(GT_t);
     Cm = transformOutputList[3].getGT();
     w = transformOutputList[2].getListStr();
-    if ( ( (dfaUtil.accept(dfaM, w)) == (false) ) )
+    if ( ( (dfaUtil.accept(w)) == (false) ) )
     {
 
+        cout << "Error occurred!" << endl;
+        return;
     }
     B[0] = group.exp(transformOutputList[0].getGT(), bf0);
     for (int i = 1; i < l+1; i++)
