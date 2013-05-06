@@ -20,14 +20,14 @@ python genMakefile.py ./config.mk MakefileHIBE TestHIBE.cpp benchHIBE.cpp
 python genMakefile.py ./config.mk MakefileSW TestSW.cpp benchSW.cpp
 
 # dfa test 
-python genMakefile.py ../config.mk MakefileDFAct TestDFAct.cpp benchDFA.cpp
+python genMakefile.py ./config.mk MakefileDFAct TestDFAct.cpp benchDFA.cpp
 
 
 ./TestWATERS 100 100 fixed
 
 ./TestBSW 100 100 fixed
 
-#./TestDSE 100 100 fixed
+./TestDSE 100 100 fixed
 
 ./TestLW 100 100 fixed
 
@@ -39,6 +39,6 @@ python genMakefile.py ../config.mk MakefileDFAct TestDFAct.cpp benchDFA.cpp
 
 ./TestSW 100 100 fixed
 
-#./TestDFAct 100 100 25 fixed
+./TestDFAct 100 500 1 fixed
 
 set +x
