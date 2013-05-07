@@ -193,6 +193,7 @@ public:
 	G2 exp(G2, ZR);
 	G2 exp(G2, int);
 	GT pair(G1, G2);
+	GT pair(G2, G1);
 	ZR order(); // returns the order of the group
 
 	// hash -- not done

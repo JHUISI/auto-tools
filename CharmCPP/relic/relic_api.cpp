@@ -736,6 +736,12 @@ GT PairingGroup::pair(G1 g, G2 h)
 	return pairing(g, h);
 }
 
+GT PairingGroup::pair(G2 h, G1 g)
+{
+	return pairing(g, h);
+}
+
+
 GT PairingGroup::pair(G1 g, G1 h)
 {
 	return pairing(g, h);
