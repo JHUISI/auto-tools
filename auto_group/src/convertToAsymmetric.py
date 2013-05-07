@@ -901,6 +901,36 @@ class AsymSDL:
         self.__currentFunc    = None
         self.__funcUsedVar    = {}
 
+    def __getFuncLines(self, funcName):
+        funcConfig = sdl.getVarInfoFuncStmts( funcName )
+        Stmts = funcConfig[0]
+        begin = "BEGIN :: func:" + funcName
+        end   = "END :: func:" + funcName
+        
+        lines = list(Stmts.keys())
+        lines.sort()
+        newLines = [begin]
+        for index, i in enumerate(lines):
+            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
+                newLines.append( str(Stmts[i].getAssignNode()) )
+            elif Stmts[i].getIsForLoopBegin():
+                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+                newLines.append(str(Stmts[i].getAssignNode()))
+            elif Stmts[i].getIsForLoopEnd():
+                newLines.append(str(Stmts[i].getAssignNode()))
+            
+            elif Stmts[i].getIsIfElseBegin():
+                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+                newLines.append( str(Stmts[i].getAssignNode()) )
+            else:
+                newLines.append(str(Stmts[i].getAssignNode()))
+        
+        newLines.append( end )
+        return newLines
+
+
     def recordUsedVar(self, varList):
         assert type(varList) in [set, list], "AsymSDL.recordUsedVar: expected a list or set type."
         if self.__currentFunc != None:

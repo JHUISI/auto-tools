@@ -1,7 +1,6 @@
 #include "TestWaters05orig.h"
 
-// int l = 32;
-int l = 4;
+int l = 128;
 
 void Waters05::keygen(CharmList & pk, G1 & sk)
 {
@@ -49,9 +48,7 @@ void Waters05::sign(CharmList & pk, G1 & sk, ZR & M, CharmList & sig)
     g2 = pk[2].getG1();
     u = pk[3].getListG1();
     ut = pk[4].getG1();
-    cout << "M : " << M << endl;
     m = intToBits(M, l);
-    cout << "m1 : \n" << m << endl;
 
     r = group.random(ZR_t);
     S2 = group.exp(g, r);

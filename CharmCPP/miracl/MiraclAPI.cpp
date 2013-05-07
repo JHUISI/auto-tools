@@ -20,18 +20,17 @@ CharmListZR stringToInt(PairingGroup & group, string strID, int z, int l)
     return zrlist;
 }
 
+// TODO: add same call to RELIC api
 CharmListZR intToBits(ZR id, int l)
 {
-    /* 1. hash string. */
-    CharmListZR zrlist; // = new CharmListZR;
+    CharmListZR zrlist;
     ZR intval;
-    Big mask( 1 );
+    int j = l-1;
 
-    /* 2. cut up result into zz pieces of ll size */
     for(int i = 0; i < l; i++) {
-        intval = land(id, mask);
-        zrlist[l-i-1] = intval; // insert backwards
-        id = id >> 1; // shift to the right by i bits
+    	intval = bit(id, i);
+    	/* store in reverse */
+    	zrlist[j-i] = intval;
     }
     return zrlist;
 }

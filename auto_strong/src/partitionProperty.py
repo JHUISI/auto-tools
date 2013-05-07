@@ -90,8 +90,9 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
         
         #print("Type variables for all: ", varTypes.keys())
         bsw = BSWTransform(assignInfo, origVarTypes, varTypes, msgVar, msgList)
-        bsw.constructSDL(config, sigma)
-
+        newSDL = bsw.constructSDL(config, options, sigma)
+        return newSDL
+    
     elif prop2Result and noSigma2Result:
         #Bellare-Shoup transformation
         print("Signature Scheme Already Strongly Unforgeable!")

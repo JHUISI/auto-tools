@@ -23,7 +23,7 @@ class BSWTransform:
         self.varTypes = theVarTypes
         self.varKeys = list(self.varTypes.keys())
         
-    def constructSDL(self, config, sigma):
+    def constructSDL(self, config, options, sigma):
         self.__chooseVariables(config)
         sdl_name = self.assignInfo[sdl.NONE_FUNC_NAME][sdl.BV_NAME].getAssignNode().getRight().getAttribute()
         setting  = self.assignInfo[sdl.NONE_FUNC_NAME][sdl.ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
@@ -32,8 +32,8 @@ class BSWTransform:
         newLines = None
         new_name = sdl_name + strongSuffix
         metadataLines = ["name := " + new_name, "setting := " + setting]
-        typesLines = self.getTypeLines()
-        newSDL = [ metadataLines, typesLines, chamHashLines]
+        typesLines = self.getTypeLines(self.__newTypeLines)
+        newSDL = [ metadataLines, typesLines]
         for funcName in config.functionOrder:
             if funcName == config.keygenFuncName:
                 newLines  = self.modifyKeygen(config)
@@ -44,16 +44,20 @@ class BSWTransform:
             else:
                 newLines = self.getFuncLines(funcName)
             newSDL.append(newLines)
+        
+        newSDL.append( chamHashLines )
         print_sdl(True, newSDL)
+        options['userFuncList'].append(self.chamH) # assumes it is already a list
         outfile = new_name + sdlSuffix
         write_sdl(outfile, newSDL)
-        return
+        return outfile
         
     def __chooseVariables(self, config):
         suffix = "New"
         self.chamH = "chamH"
         self.chK, self.chT, self.ch0, self.ch1, self.chpk = ch+"K", ch+"t", ch+"0", ch+"1", ch+"pk"
         self.t0, self.t1 = "t0", "t1"
+        self.__newTypeLines = [self.t0 + " := ZR", self.t1 + " := ZR" ]
         self.chZr, self.chVal = ch+"Zr", ch+"Val"
         self.chPrefix = "1"
         seedVar = "s"
@@ -91,10 +95,11 @@ class BSWTransform:
         sdlLines.append( "END :: func:%s" % self.chamH )
         return sdlLines
     
-    def getTypeLines(self):
+    def getTypeLines(self, newTypeLines):
         typesHeadBegin = "BEGIN :: " + sdl.TYPES_HEADER
         typesHeadEnd = "END :: " + sdl.TYPES_HEADER
         newLines = [typesHeadBegin]
+        newLines += newTypeLines
         typeLines = {}
         # extract line numbers
         for i, j in self.origVarTypes.items():
