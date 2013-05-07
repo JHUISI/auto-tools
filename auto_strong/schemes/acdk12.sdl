@@ -83,7 +83,8 @@ END :: func:sign
 
 
 BEGIN :: func:verify
-input := list{vk, M, sig}
+input := list{gk, vk, M, sig}
+ gk := expand{G, C, F, U1, U2}
  vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
  M := expand{M1, M2, M3, M4, M5, M6}
  sig := expand{S0, S1, S2, S3, S4, S5, S6, S7}

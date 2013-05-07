@@ -130,6 +130,7 @@ private:
 };
 
 CharmListZR stringToInt(PairingGroup & group, string strID, int z, int l);
+CharmListZR intToBits(ZR id, int l);
 ZR SmallExp(int bits);
 ZR ceillog(int base, int value);
 

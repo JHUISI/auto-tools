@@ -3,6 +3,7 @@ import hashlib, sys
 from charm.toolbox.pairinggroup import *
 
 from charm.toolbox.secretutil import SecretUtil
+from charm.toolbox.enum import Enum
 from charm.core.math import pairing
 from charm.toolbox.iterate import dotprod2
 from charm.core.math.pairing import hashPair as DeriveKey

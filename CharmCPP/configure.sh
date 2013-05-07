@@ -704,7 +704,7 @@ elif test "$pairing_miracl" = "yes" ; then
         echo "BUILD_PBC=no" >> $config_mk
         echo "underlib=miracl" >> $config_mk
 elif test "$pairing_relic" = "yes" ; then
-	INCLUDES="-Irelic/ $INCLUDES"
+	INCLUDES="-I$incdir/relic -Irelic/ $INCLUDES"
 	CFLAGS="-DBUILD_RELIC=1 -DBUILD_MIRACL=0 $CFLAGS"
 	LIBNAME="libCharmRelic"
         echo "BUILD_MIRACL=no" >> $config_mk

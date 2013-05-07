@@ -20,6 +20,23 @@ CharmListZR stringToInt(PairingGroup & group, string strID, int z, int l)
     return zrlist;
 }
 
+CharmListZR intToBits(ZR id, int l)
+{
+    /* 1. hash string. */
+    CharmListZR zrlist; // = new CharmListZR;
+    ZR intval;
+    Big mask( 1 );
+
+    /* 2. cut up result into zz pieces of ll size */
+    for(int i = 0; i < l; i++) {
+        intval = land(id, mask);
+        zrlist[l-i-1] = intval; // insert backwards
+        id = id >> 1; // shift to the right by i bits
+    }
+    return zrlist;
+}
+
+
 ZR ceillog(int base, int value)
 {
    // logb(x) ==> log(x) / log(b)

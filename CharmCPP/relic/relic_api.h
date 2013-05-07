@@ -4,7 +4,7 @@
 // define classes
 extern "C" {
    #include <stdlib.h>
-   #include "relic/relic.h"
+   #include "relic.h"
    #include "common.h"
 }
 #include <map>

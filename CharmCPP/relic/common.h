@@ -2,7 +2,7 @@
 #define COMMON_H
 
 #include "relic_conf.h"
-#include "relic/relic.h"
+#include "relic.h"
 
 #define DECIMAL 10
 #define BASE	16

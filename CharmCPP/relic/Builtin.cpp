@@ -7,7 +7,7 @@ CharmListZR stringToInt(PairingGroup & group, string strID, int z, int l)
     ZR intval;
     ZR mask( power(ZR(2), l) - 1 );
 
-    ZR id = group.hashListToZR(strID); 
+    ZR id = group.hashListToZR(strID);
 
     /* 2. cut up result into zz pieces of ll size */
     for(int i = 0; i < z; i++) {

@@ -14,6 +14,7 @@
 #include "SecretUtil.h"
 #include "DFA.h"
 #include "Benchmark.h"
+//#include "Builtin.h"
 
 /* sec-level identifiers for security equivalent to AES-80bit or 128-bit security*/
 #define MNT160			80

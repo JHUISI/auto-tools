@@ -431,7 +431,8 @@ GT pairing(const G1& g1, const G2& g2)
 {
 	GT gt;
 	/* compute optimal ate pairing */
-	pp_map_oatep(gt.g, g1.g, g2.g);
+	//pp_map_oatep(gt.g, g1.g, g2.g);
+	pp_map_k12(gt.g, g1.g, g2.g);
 	return gt;
 }
 
