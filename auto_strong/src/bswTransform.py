@@ -7,7 +7,6 @@ import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
 
-
 ch = "ch"
 strongSuffix = "_strong"
 

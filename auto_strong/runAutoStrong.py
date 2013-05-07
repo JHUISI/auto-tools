@@ -46,7 +46,6 @@ def configAutoStrong(sdl_file, cm, option, targetFile, sdlVerbose):
     print("Codegen Output: ", new_output_sdl)
     print("User defined funcs: ", option['userFuncList'])
     codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl, option['userFuncList'])
-
     return
 
 if __name__ == "__main__":
@@ -68,5 +67,5 @@ if __name__ == "__main__":
         configModule = importlib.import_module("schemes." + config)
         configAutoStrong(sdl_file, configModule, option, targetFile, sdlVerbose)
     else:
-        print("python %s [ SDL file ] [ SDL config name ] [ Output Codename ]" % sys.argv[0])
+        print("python %s [ SDL file ] [ SDL config name ] [ Output code name ]" % sys.argv[0])
         sys.exit(-1)

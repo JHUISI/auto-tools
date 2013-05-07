@@ -657,13 +657,16 @@ def transformTypes(typesH, info):
     return newLines
 
 
-def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
+def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     assignInfo = sdl.getAssignInfo()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
+    
+    userCodeBlocks = list(set(list(assignInfo.keys())).difference(config.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
+    options['userFuncList'] += userCodeBlocks
     print("name is", sdl_name)
     print("setting is", setting)
     
@@ -716,7 +719,7 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
     info = {}
-    info[curveID] = secparam
+    info[curveID] = options['secparam']
     gen = Generators(info)
     print("List of generators for scheme")
     if hasattr(config, "extraSetupFuncName"):
@@ -877,18 +880,19 @@ def runAutoGroup(sdlFile, config, secparam, sdlVerbose=False):
         transFunc[ config.signFuncName ] = stmtSi
         transFunc[ config.verifyFuncName ] = stmtV
 
-    newSDL = AsymSDL(assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
-    newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3 = newSDL.construct(config)
-    
+    newSDL = AsymSDL(options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
+    # fix this!!!!
+    newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
+
     # debug 
     print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
-    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3)
+    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
     return outputFile
         
 
 class AsymSDL:
-    def __init__(self, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+    def __init__(self, options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
         self.assignInfo     = assignInfo
         self.groupInfo      = copy.deepcopy(groupInfo)
         self.groupInfo['myAsymSDL'] = self # this is for recording used vars in each function
@@ -897,6 +901,7 @@ class AsymSDL:
         self.generatorLines = copy.deepcopy(generatorLines)
         self.transFunc      = transFunc
         self.transFuncGen   = transFuncGen
+        self.userFuncList   = options['userFuncList']
         self.verbose        = False
         self.__currentFunc    = None
         self.__funcUsedVar    = {}
@@ -939,7 +944,7 @@ class AsymSDL:
             self.__funcUsedVar[ self.__currentFunc ] = self.__funcUsedVar[ self.__currentFunc ].union(varList)
         return
     
-    def construct(self, config):
+    def constructSDL(self, config):
         noChangeList = []
         # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
         for i, j in self.typesH.items():
@@ -1039,7 +1044,13 @@ class AsymSDL:
                 newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
             # 1. retrieve original pk        
-        return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3
+        if len(self.userFuncList) > 0:
+            userFuncLines = []
+            for userFuncs in self.userFuncList:
+                print("processing user defined func: ", userFuncs)
+                userFuncLines.append( self.__getFuncLines(userFuncs) )
+                
+        return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines
 
     def __updatePKList(self, targetVar, newVarNodes, newVarNames, newLinesK):
         nodeLines2 = []
@@ -1699,7 +1710,12 @@ def writeConfig(filename, *args):
     f = open(filename, 'w')
     for block in args:
         for line in block:
-            f.write(str(line) + "\n")
+            if type(line) == list:
+                for subLine in line:
+                    f.write(str(subLine) + "\n")
+                if len(line) > 0: f.write('\n')
+            else:
+                f.write(str(line) + "\n")
         if len(block) > 0: f.write('\n') # in case block = [] (empty)
     f.close()
     return
