@@ -13,7 +13,7 @@ class Waters09
 {
 public:
 	PairingGroup group;
-	Waters09() { group.setCurve(MNT160); };
+	Waters09() { group.setCurve(BN256); };
 	~Waters09() {};
 	void setup(CharmList & msk, CharmList & pk);
 	void keygen(CharmList & pk, CharmList & msk, CharmListStr & S, ZR & bf0, CharmList & skBlinded);
