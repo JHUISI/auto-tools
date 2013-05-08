@@ -13,7 +13,7 @@ class Acdk12
 {
 public:
 	PairingGroup group;
-	Acdk12() { group.setCurve(AES_SECURITY); };
+	Acdk12() { group.setCurve(BN256); };
 	~Acdk12() {};
 	
 	void setup(CharmList & gk);
