@@ -43,18 +43,19 @@ def configAutoGroup(sdl_file, cm, targetFile, sdlVerbose):
     else:
         secparam = cm.secparam
         
-    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':True}
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':False}
     startTime = time.clock()
     outfile = runAutoGroup(sdl_file, cm, options, sdlVerbose)
     endTime = time.clock()
     runningTime = (endTime - startTime) * 1000
+    print("running time: ", runningTime)
     
     new_input_sdl  = outfile
     new_output_sdl = targetFile
     print("Codegen Input: ", new_input_sdl)
     print("Codegen Output: ", new_output_sdl)
     print("User defined funcs: ", options['userFuncList'])
-    codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl, options['userFuncList'])
+    #codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl, options['userFuncList'])
     return
     
 if __name__ == "__main__":

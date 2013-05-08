@@ -635,11 +635,8 @@ class Technique3(AbstractTechnique):
     
     def visit_pair(self, node, data):            
         l = []; r = [];
-        print("view of pairing node: ", node)
         self.getMulTokens2(node.left, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], l)
         self.getMulTokens2(node.right, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], r)
-        print("l: ", l)
-        print("r: ", r)
         if self.debug:
             print("T3: visit_on left list: ")
             for i in l: print(i)

@@ -695,6 +695,7 @@ if test "$pairing_pbc" = "yes" ; then
         echo "BUILD_RELIC=no" >> $config_mk
         echo "BUILD_PBC=yes" >> $config_mk
         echo "underlib=pbc" >> $config_mk
+        echo "CHARM_LIB=$LIBNAME" >> $config_mk
 elif test "$pairing_miracl" = "yes" ; then
 	INCLUDES="-Imiracl/ $INCLUDES"
 	CFLAGS="-DBUILD_RELIC=0 -DBUILD_MIRACL=1 $CFLAGS"
@@ -703,6 +704,7 @@ elif test "$pairing_miracl" = "yes" ; then
         echo "BUILD_RELIC=no" >> $config_mk
         echo "BUILD_PBC=no" >> $config_mk
         echo "underlib=miracl" >> $config_mk
+        echo "CHARM_LIB=$LIBNAME$curve" >> $config_mk
 elif test "$pairing_relic" = "yes" ; then
 	INCLUDES="-I$incdir/relic -Irelic/ $INCLUDES"
 	CFLAGS="-DBUILD_RELIC=1 -DBUILD_MIRACL=0 $CFLAGS"
@@ -711,6 +713,7 @@ elif test "$pairing_relic" = "yes" ; then
         echo "BUILD_RELIC=yes" >> $config_mk
         echo "BUILD_PBC=no" >> $config_mk
         echo "underlib=relic" >> $config_mk
+        echo "CHARM_LIB=$LIBNAME" >> $config_mk
 fi
 
 if test "$pairing_miracl" = "yes" ; then
@@ -759,7 +762,6 @@ echo "AR=$ar" >> $config_mk
 echo "LD=$ld" >> $config_mk
 echo "LIBTOOL=$libtool" >> $config_mk
 echo "INCLUDES=$INCLUDES" >> $config_mk
-echo "CHARM_LIB=$LIBNAME$curve" >> $config_mk
 echo "CFLAGS=$CFLAGS" >> $config_mk
 echo "CXXFLAGS=$CFLAGS" >> $config_mk
 echo "HELPER_CFLAGS=$helper_cflags" >> $config_mk

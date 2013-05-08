@@ -146,7 +146,7 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
         elif blockStmts[i].getIsIfElseBegin():
             newLines.append(parser.parse("BEGIN :: if\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
             assign = blockStmts[i].getAssignNode()
-            print(i, ":", assign, end="")           
+            if info['verbose']: print(i, ":", assign, end="")           
             handleVarInfo(newLines, assign, blockStmts[i], info, noChangeList)
         
         elif blockStmts[i].getIsIfElseEnd():
@@ -157,10 +157,10 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
         
         else:
             assign = blockStmts[i].getAssignNode()
-            print(i, ":", assign, end="")
+            if info['verbose']: print(i, ":", assign, end="")
             handleVarInfo(newLines, assign, blockStmts[i], info, noChangeList, startLines)
 
-        print("")
+        if info['verbose']: print("")
     newLines.append(end)
     return newLines
 
@@ -192,12 +192,12 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         # case B: randomness and varTypeObj != None
         if blockStmt.getHasRandomness() and varTypeObj != None:
             if varTypeObj.getType() in [types.ZR, types.GT]:
-                print(" :-> not a generator, so add to newLines.", end=" ")
+                if info['verbose']: print(" :-> not a generator, so add to newLines.", end=" ")
                 #newLine = str(assign) # unmodified
                 newLines.append(assign) # unmodified
                 return True
             else:
-                print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
+                if info['verbose']: print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
                 if info['varTypes'].get(assignVar).getType() == types.G1:
                     pass # figure out what to do here
         if assignVar == outputKeyword:
@@ -215,30 +215,30 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
                     return True
                 
         if assignVarOccursInBoth(assignVar, info):
-            print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
         elif assignVarOccursInG1(assignVar, info):
-            print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+            if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
         elif assignVarOccursInG2(assignVar, info):
-            print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
-            print(" :-> update pairing.", end=" ")
+            if info['verbose']: print(" :-> update pairing.", end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
-            print(" :-> updating list...", end=" ")
+            if info['verbose']: print(" :-> updating list...", end=" ")
             newLine = updateForLists(blockStmt, assignVar, info)
         elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
-            print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
+            if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
             if assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
                 noChangeList.append(str(assignVar))
                 info['G1'] = info['G1'].union( assignVar )
                 newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
-                print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
+                if info['verbose']: print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
         else:
             newLine = assign
         # add to newLines
@@ -256,10 +256,10 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         if not HasPairings(assign):
             for assignVar in assignVars:
                 if assignVarOccursInG1(assignVar, info):
-                    print(" :-> just in G1:", assignVar, end="")
+                    if info['verbose']: print(" :-> just in G1:", assignVar, end="")
                     assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G1, noChangeList)
                 elif assignVarOccursInG2(assignVar, info):
-                    print(" :-> just in G2:", assignVar, end="")
+                    if info['verbose']: print(" :-> just in G2:", assignVar, end="")
                     assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G2, noChangeList)
             #print("TODO: Not a good sign. how do we handle this case for ", assignVar, "in", assign)
         else: # pairing case
@@ -359,21 +359,23 @@ def getAssignmentForName(var, varTypes, estimate=False):
             varType = varTypes.get(i)
             theType = varType.getType()
             if theType == types.G1:
-                if not estimate: print(i, ":", theType)
+                # JAA: commented out for benchmarking                
+                #if not estimate: print(i, ":", theType)
                 resultVars.append(i)
 
             if theType in [types.ZR, types.G1, types.G2, types.GT]: dataTypes[ i ] = str(theType)
             
             if theType in [types.list, types.listG1]:
-                print("Find all refs: ", i)
+                #print("Find all refs: ", i) # JAA: commented out for benchmarking
                 for j,k in Stmts.items():
                     if Type(k.getAssignNode()) == ops.EQ:
                         kvar = k.getAssignVar()
                         if i in kvar and StmtTypes.get(kvar).getType() == types.G1:
                             if kvar not in resultVars: resultVars.append(str(kvar))
                             if kvar not in dataTypes: dataTypes[ i ] = str(StmtTypes.get(kvar).getType())
-                            
-    if not estimate: print("varList: ", resultVars)
+
+    # JAA: commented out for benchmarking                            
+    #if not estimate: print("varList: ", resultVars)
     if estimate: return dataTypes 
     return resultVars
 
@@ -387,8 +389,8 @@ def getOpCost(op_key, xorVarMap, varNames):
             sdl.ASTVisitor(ceo).preorder(varInfo.getAssignNode())
             v = xorVarMap.get(i)
             varCounts[ v ] = ceo.getCount()
-    
-        print("Final varCount for expOp: ", varCounts)
+        # JAA: commented out for benchmarking    
+        #print("Final varCount for expOp: ", varCounts)
 
     return varCounts
     
@@ -396,14 +398,15 @@ def getConstraintList(info, constraintList, configVarName, xorVarMap, varTypes, 
     VarNames = getAssignmentForName(configVarName, varTypes)
     VarNames = list(set(VarNames).difference(generators))
     VarNames.sort()
-    print("pruned varList: ", VarNames)
+    if info['verbose']: print("pruned varList: ", VarNames)
     if info != None:
         info['notInAPairing'] = list(set(VarNames).difference(xorVarMap.keys()))
         info['notInAPairing'].sort()
         if info[minOp] != None:
             # extract counts for whatever operation
             info[minKeyword] = getOpCost(info[minOp], xorVarMap, VarNames)
-    if len(info['notInAPairing']) > 0: print("Not in a pairing: ", info['notInAPairing'])
+    # JAA: commented out for benchmarking
+    #if len(info['notInAPairing']) > 0: print("Not in a pairing: ", info['notInAPairing'])
     VarNameList = []
     for i in VarNames:
         if xorVarMap.get(i) != None: VarNameList.append( xorVarMap.get(i) )
@@ -435,7 +438,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         minOps = info[minOp]           
     
     while not satisfiable:
-        print("\n<===== Generate Constraints =====>")    
+        #print("\n<===== Generate Constraints =====>")    
         xorVarMap = txor.getVarMap()
         if shortOpt == SHORT_SECKEYS:
             # create constraints around keys
@@ -447,8 +450,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 flexConstraints = getConstraintList(info, [], conf.keygenSecVar, xorVarMap, varTypes, generators, returnList=True)
                 newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
-                print("DEBUG: n-of-n constraints: ", newConstraintList)
-                print("DEBUG: m-of-n constraints: ", flexConstraints)
+                if info['verbose']: 
+                    print("DEBUG: n-of-n constraints: ", newConstraintList)
+                    print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints                        
         elif shortOpt == SHORT_PUBKEYS:
@@ -461,8 +465,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 flexConstraints = getConstraintList(info, [], conf.keygenPubVar, xorVarMap, varTypes, generators, returnList=True)
                 newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
-                print("DEBUG: n-of-n constraints: ", newConstraintList)
-                print("DEBUG: m-of-n constraints: ", flexConstraints)
+                if info['verbose']:
+                    print("DEBUG: n-of-n constraints: ", newConstraintList)
+                    print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints            
         elif shortOpt == SHORT_CIPHERTEXT:
@@ -474,8 +479,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 flexConstraints = getConstraintList(info, [], conf.ciphertextVar, xorVarMap, varTypes, generators, returnList=True)
                 newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
-                print("DEBUG: n-of-n constraints: ", newConstraintList)
-                print("DEBUG: m-of-n constraints: ", flexConstraints)
+                if info['verbose']:
+                    print("DEBUG: n-of-n constraints: ", newConstraintList)
+                    print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints
         elif shortOpt == SHORT_SIGNATURE:
@@ -487,20 +493,21 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 flexConstraints = getConstraintList(info, [], conf.signatureVar, xorVarMap, varTypes, generators, returnList=True)
                 newConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
                 flexConstraints = list(set(flexConstraints).difference(newConstraintList))
-                print("DEBUG: n-of-n constraints: ", newConstraintList)
-                print("DEBUG: m-of-n constraints: ", flexConstraints)
+                if info['verbose']:
+                    print("DEBUG: n-of-n constraints: ", newConstraintList)
+                    print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints
         elif shortOpt == SHORT_FORALL and conf.schemeType == PKENC:
             fileSuffix = 'both' #default
             _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
-            print("default constraints: ", _hardConstraintList)
+            if info['verbose']: print("default constraints: ", _hardConstraintList)
             constraints_ky = getConstraintList(info, [], conf.keygenSecVar, xorVarMap, varTypes, generators, returnList=True)
             constraints_ky = list(set(constraints_ky).difference(_hardConstraintList))
-            print("Constraints for ky: ", constraints_ky)
+            if info['verbose']: print("Constraints for ky: ", constraints_ky)
             constraints_ct = getConstraintList(info, [], conf.ciphertextVar, xorVarMap, varTypes, generators, returnList=True)
             constraints_ct = list(set(constraints_ct).difference(_hardConstraintList))
-            print("Constraints for ct: ", constraints_ct)
+            if info['verbose']: print("Constraints for ct: ", constraints_ct)
             constraints = list(_hardConstraintList) + [conf.keygenSecVar, conf.ciphertextVar]
             bothConstraints[ isSet ] = True
             bothConstraints[ conf.keygenSecVar ] = constraints_ky
@@ -508,19 +515,20 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         elif shortOpt == SHORT_FORALL and conf.schemeType == PKSIG:
             fileSuffix = 'both' #default
             _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
-            print("default constraints: ", _hardConstraintList)
+            if info['verbose']: print("default constraints: ", _hardConstraintList)
             constraints_ky = getConstraintList(info, [], conf.keygenPubVar, xorVarMap, varTypes, generators, returnList=True)
             constraints_ky = list(set(constraints_ky).difference(_hardConstraintList))
-            print("Constraints for ky: ", constraints_ky)
+            if info['verbose']: print("Constraints for ky: ", constraints_ky)
             constraints_sig = getConstraintList(info, [], conf.signatureVar, xorVarMap, varTypes, generators, returnList=True)
             constraints_sig = list(set(constraints_sig).difference(_hardConstraintList))
-            print("Constraints for sig: ", constraints_sig)
+            if info['verbose']: print("Constraints for sig: ", constraints_sig)
             constraints = list(_hardConstraintList) + [conf.keygenPubVar, conf.signatureVar]
             bothConstraints[ isSet ] = True            
             bothConstraints[ conf.keygenPubVar ] = constraints_ky
             bothConstraints[ conf.signatureVar ] = constraints_sig
         else:
-            print("'short' option not specified.\n")
+            # JAA: commented out for benchmarking
+            #print("'short' option not specified.\n")
             shortOpt = ""
         
         # time options
@@ -558,22 +566,22 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         #    print("Unexpected configuration. Run python runAutoGroup.py --help-config")
         #    sys.exit(-1)
                 
-        print("<===== Generate Constraints =====>\n")
+        #print("<===== Generate Constraints =====>\n")
         
-        print("<===== Generate SAT solver input =====>")
+        #print("<===== Generate SAT solver input =====>")
         
         # TODO: process constraints and add to output
-        print("<===== Instantiate Z3 solver =====>")
-        print("map: ", xorVarMap)
-        print("original hard constraint: ", hardConstraintList)
+        #print("<===== Instantiate Z3 solver =====>")
+        #print("map: ", xorVarMap)
+        #print("original hard constraint: ", hardConstraintList)
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
         minOptions = info[curveID] # user should provide this information
         countOpt = info[minKeyword] # the cost of group operations
         (satisfiable, resultDict) = instantiateZ3Solver(shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions)
         if satisfiable == False:
-            print("Adjusing constraints...")
+            #print("Adjusing constraints...")
             adjustConstraints = True
-        print("<===== Instantiate Z3 solver =====>")
+        #print("<===== Instantiate Z3 solver =====>")
 
     return fileSuffix, resultDict
 
@@ -631,14 +639,14 @@ def transformTypes(typesH, info):
         t = j.getType()
         if t in [types.G1, types.listG1]: #, types.int, types.listInt, types.str, types.listStr, types.GT]:
             if assignVarOccursInBoth(i, info):
-                print(i, " :-> split computation in G1 & G2")
+                #print(i, " :-> split computation in G1 & G2")
                 newLines.append( i + G1Prefix + " := " + newTypeFrom(t, G1Prefix) )
                 newLines.append( i + G2Prefix + " := " + newTypeFrom(t, G2Prefix) )
             elif assignVarOccursInG1(i, info):
-                print(i, " :-> just in G1.")
+                #print(i, " :-> just in G1.")
                 newLines.append( i + " := " + newTypeFrom(t, G1Prefix) )
             elif assignVarOccursInG2(i, info):
-                print(i, " :-> just in G2.")
+                #print(i, " :-> just in G2.")
                 newLines.append( i + " := " + newTypeFrom(t, G2Prefix) )
             elif i in info['generators']:
                 if i in info['generatorMapG1']:
@@ -718,10 +726,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
-    info = {}
+    info = {'verbose':False}
     info[curveID] = options['secparam']
     gen = Generators(info)
-    print("List of generators for scheme")
+    # JAA: commented out for benchmarking    
+    #print("List of generators for scheme")
     if hasattr(config, "extraSetupFuncName"):
         (stmtSe, typesSe, depListSe, depListNoExpSe, infListSe, infListNoExpSe) = sdl.getVarInfoFuncStmts( config.extraSetupFuncName )
         gen.extractGens(stmtSe, typesSe)
@@ -735,7 +744,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     else:
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
-    print("Generators extracted: ", generators)
+    # JAA: commented out for benchmarking    
+    #print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt 
@@ -748,11 +758,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         for i in lines:
             if type(eachStmt[i]) == sdl.VarInfo:
                 
-                print("Each: ", eachStmt[i].getAssignNode())
+                #print("Each: ", eachStmt[i].getAssignNode())
                 if HasPairings( eachStmt[i].getAssignNode() ) and CountOfPairings( eachStmt[i].getAssignNode() ) > 1:
                     path_applied = []
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
-                    if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
+                    # JAA: commented out for benchmarking                    
+                    #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case, there's a hashed values...build up list and check later to see if it appears
@@ -766,26 +777,27 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     for i in hashVarList:
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
-    print("pair vars LHS:", pair_vars_G1_lhs)
-    print("pair vars RHS:", pair_vars_G1_rhs) 
-    print("list of gens :", generators)
-    print("constraintList: ", constraintList)
+    # JAA: commented out for benchmarking            
+    #print("pair vars LHS:", pair_vars_G1_lhs)
+    #print("pair vars RHS:", pair_vars_G1_rhs) 
+    #print("list of gens :", generators)
+    #print("constraintList: ", constraintList)
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(generators, varTypes, pair_vars_G1_rhs, constraintList))
-#    elif config.schemeType == PKSIG: # TODO: need to resolve when to incorporate the split pairings technique 
-        
-    print("info => G1 lhs : ", info['G1_lhs'])
-    print("info => G1 rhs : ", info['G1_rhs'])
-        
-    print("<===== Determine Asymmetric Generators =====>")
+   
+    # JAA: commented out for benchmarking     
+    #print("info => G1 lhs : ", info['G1_lhs'])
+    #print("info => G1 rhs : ", info['G1_rhs'])   
+    #print("<===== Determine Asymmetric Generators =====>")
     #(generatorLines, generatorMapG1, generatorMapG2) = Step1_DeriveSetupGenerators(generators, info)
     (generatorMapG1, generatorMapG2) = gen.setupNewGens()
     generatorLines = gen.getGenLines()
-    print("Generators in G1: ", generatorMapG1)
-    print("Generators in G2: ", generatorMapG2)
-    print("<===== Determine Asymmetric Generators =====>\n")
+    # JAA: commented out for benchmarking    
+    #print("Generators in G1: ", generatorMapG1)
+    #print("Generators in G2: ", generatorMapG2)
+    #print("<===== Determine Asymmetric Generators =====>\n")
     
-    print("<===== Generate XOR clauses =====>")  
+    #print("<===== Generate XOR clauses =====>")  
     # let the user's preference for fixing the keys or ciphertext guide this portion of the algorithm.
     # info[ 'G1' ] : represents (varKeyList, depVarMap). 
     assert len(pair_vars_G1_lhs) == len(pair_vars_G1_rhs), "Uneven number of pairings. Please inspect your bv file."
@@ -802,10 +814,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         ANDs[i].left = BinaryNode.copy(xorList[i])
         if i < len(ANDs)-1: ANDs[i].right = ANDs[i+1]
         else: ANDs[i].right = BinaryNode.copy(xorList[i+1])
-    print("XOR clause: ", ANDs[0])
+    # JAA: commented out for benchmarking        
+    #print("XOR clause: ", ANDs[0])
     txor = transformXOR(None) # accepts dictionary of fixed values
     sdl.ASTVisitor(txor).preorder(ANDs[0])
-    print("<===== Generate XOR clauses =====>")
+    #print("<===== Generate XOR clauses =====>")
         
     constraints = "[]"
     fileSuffix, resultDict = searchForSolution(info, short, constraintList, txor, varTypes, config, generators)
@@ -875,8 +888,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
 
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
-        print("Update: new G1 deps=>", groupInfo['G1'])
-    
+        #print("Update: new G1 deps=>", groupInfo['G1'])    
 
     groupInfo['generators'] = generators 
     groupInfo['generatorMapG1'] = generatorMapG1
@@ -887,6 +899,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     groupInfo['varTypes'] = {}
     groupInfo['varTypes'].update(varTypes)
     groupInfo['usedVars'] = set()
+    groupInfo['verbose'] = info['verbose']
     transFunc = {}
     transFuncGen = {}
 
@@ -915,7 +928,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
 
     # debug 
-    print_sdl(True, newLinesS, newLinesK, newLines2, newLines3)
+    print_sdl(info['verbose'], newLinesS, newLinesK, newLines2, newLines3)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
     return outputFile
@@ -940,7 +953,7 @@ class AsymSDL:
             else: self.__sPKdict = None
         else:
             self.__computeSize = False
-        self.verbose        = False
+        self.verbose        = groupInfo['verbose']
         self.__currentFunc    = None
         self.__funcUsedVar    = {}
 
@@ -989,13 +1002,14 @@ class AsymSDL:
             t = j.getType()
             if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
                 noChangeList.append(i)
-    
-        print("Initial noChangeList: ", noChangeList)
+        # JAA: commented out for benchmarking    
+        #print("Initial noChangeList: ", noChangeList)
         #(Stmts, Types, depList, depListNoExp, infList, infListNoExp)
         userFuncLines = []
         if len(self.userFuncList) > 0:
             for userFuncs in self.userFuncList:
-                print("processing user defined func: ", userFuncs)
+                # JAA: commented out for benchmarking                
+                #print("processing user defined func: ", userFuncs)
                 userFuncLines.append( self.__getFuncLines(userFuncs) )
 #                userFuncData = sdl.getVarInfoFuncStmts( userFuncs )
 #                userTypes = userFuncData[1]
@@ -1012,10 +1026,10 @@ class AsymSDL:
         Input = {}
         for funcName in config.functionOrder:
             if funcName in self.transFuncGen.keys():
-                print("<===== processing %s =====>" % funcName)
+                #print("<===== processing %s =====>" % funcName)
                 self.__currentFunc = funcName
                 transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
-                print("<===== processing %s =====>" % funcName)
+                #print("<===== processing %s =====>" % funcName)
                 
         # obtain results
         newLinesT = transformTypes(self.typesH, self.groupInfo)
@@ -1030,10 +1044,10 @@ class AsymSDL:
         if config.schemeType == PKENC:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                     self.__currentFunc = funcName
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
             newLinesK = transFuncRes.get( config.keygenFuncName )
             newLines2 = transFuncRes.get( config.encryptFuncName )
             newLines3 = transFuncRes.get( config.decryptFuncName )
@@ -1041,10 +1055,10 @@ class AsymSDL:
         elif config.schemeType == PKSIG:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                     self.__currentFunc = funcName                    
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList) 
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                 
             newLinesK = transFuncRes.get( config.keygenFuncName )
             newLines2 = transFuncRes.get( config.signFuncName )
@@ -1056,12 +1070,12 @@ class AsymSDL:
             if i in self.generatorMap:
                 # actual generator
                 usedGenerators.append(i)
-        print("usedVars :=> ", usedGenerators)
-        print("generators :=> ", self.generatorMap)
+        #print("usedVars :=> ", usedGenerators)
+        #print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
                 
         if len(deleteMe) > 0:
-            print("Pruning Generators:\t", deleteMe)
+            #print("Pruning Generators:\t", deleteMe)
             newLinesSe = self.__prune(newLinesSe, deleteMe)
             newLinesS  = self.__prune(newLinesS, deleteMe)
             newLinesK  = self.__prune(newLinesK, deleteMe)
@@ -1080,7 +1094,7 @@ class AsymSDL:
                 # apply PKSIG optimizations to pk
                 newVarNames = [sPub, vPub]
                 newVarNodes = [newSignPK, newVerifyPK]
-                print("Public Key defined in ", defInFuncName)
+                #print("Public Key defined in ", defInFuncName)
                 if defInFuncName == "setup":
                     newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
                 elif defInFuncName == "keygen":
@@ -1125,7 +1139,7 @@ class AsymSDL:
         return nodeLines2
 
     def optimizePK(self, config, origPK):
-        print("origPK :", origPK)
+        #print("origPK :", origPK)
         if len(origPK) > 0:
             signUsedVars   = []
             signVars       = self.__funcUsedVar.get(config.signFuncName)
@@ -1134,7 +1148,7 @@ class AsymSDL:
                     if i in origPK: signUsedVars.append(i)
 
             keygenVars       = self.__funcUsedVar.get(config.keygenFuncName)
-            print("keygenVars: ", keygenVars)
+            #print("keygenVars: ", keygenVars)
             if keygenVars != None:
                 for i in keygenVars:
                     if i in origPK:
@@ -1225,7 +1239,7 @@ def NaiveEvaluation(solutionList, preference):
     return { G1:'G1', G2:'G2' }, resMap
 
 def DeriveGeneralSolution(groupMap, resultMap, xorMap, info):
-    print("<===== Deriving Solution from Results =====>")
+    #print("<===== Deriving Solution from Results =====>")
     G1_deps = set()
     G2_deps = set()
     pairingInfo = {}
@@ -1241,20 +1255,20 @@ def DeriveGeneralSolution(groupMap, resultMap, xorMap, info):
         if i in info['G1_lhs'][0]: deps = info['G1_lhs'][1].get(i)
         else: deps = info['G1_rhs'][1].get(i)
         deps = list(deps); deps.append(i) # var name to the list
-        print(i, ":=>", group, ": deps =>", deps)
+        #print(i, ":=>", group, ": deps =>", deps)
         if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
         elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
-    print("<===== Deriving Solution from Results =====>")    
+    #print("<===== Deriving Solution from Results =====>")    
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    #print("Both G1 & G2: ", both)
+    #print("Just G1: ", G1)
+    #print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo }
 
 def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xorMap, info):
-    print("<===== Deriving Specific Solution from Results =====>")
+    #print("<===== Deriving Specific Solution from Results =====>")
     G1_deps = set()
     G2_deps = set()
     resultMap = {}
@@ -1277,17 +1291,17 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
         if i in info['G1_lhs'][0]: deps = info['G1_lhs'][1].get(i)
         else: deps = info['G1_rhs'][1].get(i)
         deps = list(deps); deps.append(i) # var name to the list
-        print(i, ":=>", group, ": deps =>", deps)
+        #print(i, ":=>", group, ": deps =>", deps)
         newSol[ i ] = group
         if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
         elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
-    print("<===== Deriving Specific Solution from Results =====>")    
+    #print("<===== Deriving Specific Solution from Results =====>")    
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    #print("Both G1 & G2: ", both)
+    #print("Just G1: ", G1)
+    #print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 
@@ -1314,8 +1328,8 @@ def assignTraceback(generators, varTypes, listVars, constraintList):
         data[i] = set(varProp)
         varProp = []
     
-    for i in listVars:
-        print("key: ", i, ":=>", data[i])
+    #for i in listVars:
+    #    print("key: ", i, ":=>", data[i])
 #    print("varProp for ", listVars[0], ": ", varProp)
     return data
 
@@ -1324,10 +1338,11 @@ def buildMap(generators, varTypes, varList, var, constraintList):
     global assignInfo
     removeList = []
     if (not set(var).issubset(generators)):
-        print("var keys: ", var)
+        # JAA: commented out for benchmark
+        #print("var keys: ", var)
         (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, var)
         if(name == None): 
-            if varInf != None: print("Var : ", varInf.getVarDepsNoExponents())
+            if varInf != None: pass #print("Var : ", varInf.getVarDepsNoExponents())
             elif var.find(LIST_INDEX_SYMBOL) != -1: varInf = findVarInfo(var, varTypes)
             return
         l = list(varInf.getVarDepsNoExponents())
@@ -1337,18 +1352,18 @@ def buildMap(generators, varTypes, varList, var, constraintList):
             
         # prune 'l' here
         for i in l:
-            print("name: ", i) # uncomment for ckrs09 error
+            #print("name: ", i) # uncomment for ckrs09 error
             typeI = sdl.getVarTypeFromVarName(i, None, True)
-            print("getVarTypeFromVarName:  ", i,":", typeI)
+            #print("getVarTypeFromVarName:  ", i,":", typeI)
             if typeI == types.NO_TYPE:
                 node = BinaryNode(ops.ATTR)
                 node.setAttribute(i)
-                print("getVarNameFromListIndices req node: ", node)
+                #print("getVarNameFromListIndices req node: ", node)
                 (funcName , newVarName) = getVarNameFromListIndices(assignInfo, varTypes, node, True)
-                print("funcName: ", funcName)
-                print("newVarName: ", newVarName)
+                #print("funcName: ", funcName)
+                #print("newVarName: ", newVarName)
                 if newVarName != None: 
-                    print("newVarName := ", newVarName)
+                    #print("newVarName := ", newVarName)
                     resultVarName = sdl.getVarTypeFromVarName(newVarName, None, True)
                     #print("second attempt: ", newVarName, ":", resultVarName)
                     varList.append(newVarName)              
@@ -1361,7 +1376,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
             elif typeI in [types.ZR, types.list, types.pol]: #types.str,
                 (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, i)
                 if varInf.getIsUsedInHashCalc():
-                    print("adding", i, "to the list")
+                    #print("adding", i, "to the list")
                     varList.append(str(i))
                     constraintList.append(str(var))
                 continue
@@ -1378,7 +1393,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
             if lenBefore == lenAfter:
                 node = BinaryNode(ops.ATTR)
                 node.setAttribute(i)
-                print("Node :=>", node)
+                #print("Node :=>", node)
                 (funcName, string) = getVarNameFromListIndices(assignInfo, varTypes, node, True)
                 if string != None: varList.append(string)
 
@@ -1409,14 +1424,14 @@ class Generators:
                 if typ == types.G1:
                     if (stmt[i].getOutsideForLoopObj() != None): inForLoop = True
                     else: inForLoop = False
-                    print(i, ": ", typ, " :=> ", stmt[i].getAssignNode(), ", loop :=> ", inForLoop)
+                    #print(i, ": ", typ, " :=> ", stmt[i].getAssignNode(), ", loop :=> ", inForLoop)
                     if not inForLoop: 
                         self.generators.append(str(stmt[i].getAssignVar()))
                     else:
                         listRef = stmt[i].getAssignVar().split(LIST_INDEX_SYMBOL)[0]
                         self.generators.append(listRef)
                         self.genDict[ listRef ] = str(stmt[i].getAssignVar()) #, str(stmt[i].getAssignNode()))   # str(stmt[i].getOutsideForLoopObj())
-                        print("genDict : ", self.genDict)
+                        #print("genDict : ", self.genDict)
 #                        startLine = stmt[i].getOutsideForLoopObj().getStartLineNo()
 #                        endLine = stmt[i].getOutsideForLoopObj().getEndLineNo()+1
 #                        newLines = sdl.getLinesOfCodeFromLineNos(list(range(startLine, endLine)))
@@ -1472,7 +1487,7 @@ class Generators:
                 genMapG1[ i ] = i + G1Prefix
                 genMapG2[ i ] = i + G2Prefix
             elif i in genOfList:
-                print("setupNewGens: handle list => ", i)
+                #print("setupNewGens: handle list => ", i)
                 oldI = self.genDict[ i ] # 0 : old i
                 self.genLines[ oldI ] = []
                 self.genLines[ oldI ].append(BinaryNode(ops.EQ, iNode, createTree("random(", "ZR", None))) # (i + " := random(ZR)")
@@ -1481,7 +1496,8 @@ class Generators:
                 genMapG1[ i ] = i + G1Prefix
                 genMapG2[ i ] = i + G2Prefix                
             else: #elif i in genCond:
-                print("setupNewGens: handle conditionals => ", i)
+                pass
+                #print("setupNewGens: handle conditionals => ", i)
                 
 #        print("....Start New Generators...")
 #        for line in self.genLines:
@@ -1649,7 +1665,7 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         info['usedVars'] = info['usedVars'].union([new_i])
         info['myAsymSDL'].recordUsedVar([new_i])
         info['newTypes'][new_i] = types.G1
-    print("\n\tChanged: ", new_node2, end="")
+    #print("\n\tChanged: ", new_node2, end="")
     return new_node2
 
 def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[]):
@@ -1694,7 +1710,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
         info['usedVars'] = info['usedVars'].union([new_i])
         info['myAsymSDL'].recordUsedVar([new_i])
         info['newTypes'][new_i] = types.G2        
-    print("\n\tChanged: ", new_node2, end="")
+    #print("\n\tChanged: ", new_node2, end="")
     return new_node2
 
 def updateForLists(varInfo, assignVar, info):
@@ -1711,7 +1727,7 @@ def updateForLists(varInfo, assignVar, info):
             newList.append(i)
     new_node = BinaryNode.copy(varInfo.getAssignNode())
     new_node.right.listNodes = newList
-    print("\n\tnewList: ", new_node)
+    #print("\n\tnewList: ", new_node)
     newListTypeRefs[ str(assignVar) ] = list(newList) # record the updates
     return new_node
 
@@ -1725,7 +1741,7 @@ def updateForPairing(varInfo, info, noChangeList):
         listOfNodes = gen.getNodes()
         for i in listOfNodes:
             tmp = applyPairingUpdate(info, i, noChangeList) # pass reference to eq_tst nodes
-        print("\n\t Final: ", node)
+        #print("\n\t Final: ", node)
         return node
     
     return applyPairingUpdate(info, node, noChangeList)
@@ -1735,7 +1751,7 @@ def applyPairingUpdate(info, node, noChangeList):
     sdl.ASTVisitor( sp ).preorder( node )
     info['usedVars'] = info['usedVars'].union(sp.getUsedGens())
     info['myAsymSDL'].recordUsedVar(GetAttributeVars(node)) # sp.getUsedVars())    
-    print("\n\t Pre techs: ", node, end="")
+    #print("\n\t Pre techs: ", node, end="")
     sdl.ASTVisitor( MaintainOrder(info) ).preorder( node )    
     # combining pairing logic a bit.
     while True:
@@ -1746,7 +1762,7 @@ def applyPairingUpdate(info, node, noChangeList):
         else:
             break
 
-    print("\n\t Changed: ", node)
+    #print("\n\t Changed: ", node)
     return node
 
 def print_sdl(verbose, *args):
