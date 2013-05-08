@@ -55,6 +55,10 @@ void Acdk12::keygen(CharmList & gk, CharmList & sk, CharmList & svk, CharmList &
     G2 U1G2;
     G1 U2G1;
     G2 U2G2;
+    ZR V;
+    ZR V1;
+    ZR V2;
+    ZR H;
     G1 VG1;
     G2 VG2;
     G1 V1G1;
@@ -93,14 +97,18 @@ void Acdk12::keygen(CharmList & gk, CharmList & sk, CharmList & svk, CharmList &
     U1G2 = gk[7].getG2();
     U2G1 = gk[8].getG1();
     U2G2 = gk[9].getG2();
-    VG1 = group.random(G1_t);
-    VG2 = group.random(G2_t);
-    V1G1 = group.random(G1_t);
-    V1G2 = group.random(G2_t);
-    V2G1 = group.random(G1_t);
-    V2G2 = group.random(G2_t);
-    HG1 = group.random(G1_t);
-    HG2 = group.random(G2_t);
+    V = group.random(ZR_t);
+    V1 = group.random(ZR_t);
+    V2 = group.random(ZR_t);
+    H = group.random(ZR_t);
+    VG1 = group.exp(GG1, V);
+    VG2 = group.exp(GG2, V);
+    V1G1 = group.exp(GG1, V1);
+    V1G2 = group.exp(GG2, V1);
+    V2G1 = group.exp(GG1, V2);
+    V2G2 = group.exp(GG2, V2);
+    HG1 = group.exp(GG1, H);
+    HG2 = group.exp(GG2, H);
     a1 = group.random(ZR_t);
     a2 = group.random(ZR_t);
     b = group.random(ZR_t);
@@ -173,14 +181,14 @@ void Acdk12::sign(CharmList & gk, CharmList & svk, CharmList & sk, ZR & m1, ZR &
     G2 VG2;
     G2 K1;
     G2 K2;
-    G1 newM1;
-    G1 newM2;
-    G1 newM3;
-    G1 newM4;
-    G1 M5G1;
-    G2 M5G2;
-    G1 M6G1;
-    G2 M6G2;
+    G1 Mi1;
+    G1 Mi2;
+    G1 Mi3;
+    G1 Mi4;
+    G1 Mi5G1;
+    G2 Mi5G2;
+    G1 Mi6G1;
+    G2 Mi6G2;
     ZR r1;
     ZR r2;
     ZR z1;
@@ -220,20 +228,20 @@ void Acdk12::sign(CharmList & gk, CharmList & svk, CharmList & sk, ZR & m1, ZR &
     
     K1 = sk[0].getG2();
     K2 = sk[1].getG2();
-    newM1 = group.exp(CG1, m1);
-    newM2 = group.exp(CG1, m2);
-    newM3 = group.exp(FG1, m1);
-    newM4 = group.exp(FG1, m2);
-    M5G1 = group.exp(U1G1, m1);
-    M5G2 = group.exp(U1G2, m1);
-    M6G1 = group.exp(U2G1, m2);
-    M6G2 = group.exp(U2G2, m2);
+    Mi1 = group.exp(CG1, m1);
+    Mi2 = group.exp(CG1, m2);
+    Mi3 = group.exp(FG1, m1);
+    Mi4 = group.exp(FG1, m2);
+    Mi5G1 = group.exp(U1G1, m1);
+    Mi5G2 = group.exp(U1G2, m1);
+    Mi6G1 = group.exp(U2G1, m2);
+    Mi6G2 = group.exp(U2G2, m2);
     r1 = group.random(ZR_t);
     r2 = group.random(ZR_t);
     z1 = group.random(ZR_t);
     z2 = group.random(ZR_t);
     r = group.add(r1, r2);
-    S0 = group.exp(group.mul(group.mul(M5G2, M6G2), HG2), r1);
+    S0 = group.exp(group.mul(group.mul(Mi5G2, Mi6G2), HG2), r1);
     S1 = group.mul(K2, group.exp(VG2, r));
     S2 = group.mul(group.mul(group.exp(K1, -1), group.exp(V1G2, r)), group.exp(GG2, z1));
     S3 = group.exp(BG2, group.neg(z1));
@@ -241,14 +249,14 @@ void Acdk12::sign(CharmList & gk, CharmList & svk, CharmList & sk, ZR & m1, ZR &
     S5 = group.exp(BG2, group.neg(z2));
     S6 = group.exp(BG2, r2);
     S7 = group.exp(GG2, r1);
-    M.insert(0, newM1);
-    M.insert(1, newM2);
-    M.insert(2, newM3);
-    M.insert(3, newM4);
-    M.insert(4, M5G1);
-    M.insert(5, M5G2);
-    M.insert(6, M6G1);
-    M.insert(7, M6G2);
+    M.insert(0, Mi1);
+    M.insert(1, Mi2);
+    M.insert(2, Mi3);
+    M.insert(3, Mi4);
+    M.insert(4, Mi5G1);
+    M.insert(5, Mi5G2);
+    M.insert(6, Mi6G1);
+    M.insert(7, Mi6G2);
     sig.insert(0, S0);
     sig.insert(1, S1);
     sig.insert(2, S2);
@@ -262,6 +270,16 @@ void Acdk12::sign(CharmList & gk, CharmList & svk, CharmList & sk, ZR & m1, ZR &
 
 bool Acdk12::verify(CharmList & gk, CharmList & vvk, CharmList & M, CharmList & sig)
 {
+    G1 GG1;
+    G2 GG2;
+    G1 CG1;
+    G2 CG2;
+    G1 FG1;
+    G2 FG2;
+    G1 U1G1;
+    G2 U1G2;
+    G1 U2G1;
+    G2 U2G2;
     G1 A1;
     G1 A2;
     G1 B1;
@@ -274,14 +292,14 @@ bool Acdk12::verify(CharmList & gk, CharmList & vvk, CharmList & M, CharmList & 
     G1 W2;
     G1 X1;
     G2 X2;
-    G1 newM1;
-    G1 newM2;
-    G1 newM3;
-    G1 newM4;
-    G1 M5G1;
-    G2 M5G2;
-    G1 M6G1;
-    G2 M6G2;
+    G1 Mi1;
+    G1 Mi2;
+    G1 Mi3;
+    G1 Mi4;
+    G1 Mi5G1;
+    G2 Mi5G2;
+    G1 Mi6G1;
+    G2 Mi6G2;
     G2 S0;
     G2 S1;
     G2 S2;
@@ -291,17 +309,17 @@ bool Acdk12::verify(CharmList & gk, CharmList & vvk, CharmList & M, CharmList & 
     G2 S6;
     G2 S7;
     
-    G1 GG1 = gk[0].getG1();
-    G2 GG2 = gk[1].getG2();
-    G1 CG1 = gk[2].getG1();
-    G2 CG2 = gk[3].getG2();
-    G1 FG1 = gk[4].getG1();
-    G2 FG2 = gk[5].getG2();
-    G1 U1G1 = gk[6].getG1();
-    G2 U1G2 = gk[7].getG2();
-    G1 U2G1 = gk[8].getG1();
-    G2 U2G2 = gk[9].getG2();
-
+    GG1 = gk[0].getG1();
+    GG2 = gk[1].getG2();
+    CG1 = gk[2].getG1();
+    CG2 = gk[3].getG2();
+    FG1 = gk[4].getG1();
+    FG2 = gk[5].getG2();
+    U1G1 = gk[6].getG1();
+    U1G2 = gk[7].getG2();
+    U2G1 = gk[8].getG1();
+    U2G2 = gk[9].getG2();
+    
     A1 = vvk[0].getG1();
     A2 = vvk[1].getG1();
     B1 = vvk[2].getG1();
@@ -315,14 +333,14 @@ bool Acdk12::verify(CharmList & gk, CharmList & vvk, CharmList & M, CharmList & 
     X1 = vvk[10].getG1();
     X2 = vvk[11].getG2();
     
-    newM1 = M[0].getG1();
-    newM2 = M[1].getG1();
-    newM3 = M[2].getG1();
-    newM4 = M[3].getG1();
-    M5G1 = M[4].getG1();
-    M5G2 = M[5].getG2();
-    M6G1 = M[6].getG1();
-    M6G2 = M[7].getG2();
+    Mi1 = M[0].getG1();
+    Mi2 = M[1].getG1();
+    Mi3 = M[2].getG1();
+    Mi4 = M[3].getG1();
+    Mi5G1 = M[4].getG1();
+    Mi5G2 = M[5].getG2();
+    Mi6G1 = M[6].getG1();
+    Mi6G2 = M[7].getG2();
     
     S0 = sig[0].getG2();
     S1 = sig[1].getG2();
@@ -332,7 +350,7 @@ bool Acdk12::verify(CharmList & gk, CharmList & vvk, CharmList & M, CharmList & 
     S5 = sig[5].getG2();
     S6 = sig[6].getG2();
     S7 = sig[7].getG2();
-    if ( ( (( (( (( (( (( (( (group.pair(group.mul(M5G1, group.mul(M6G1, HG1)), S7)) == (group.pair(GG1, S0)) )) && (( (group.mul(group.pair(BG1, S1), group.mul(group.pair(B1, S2), group.pair(A1, S3)))) == (group.mul(group.pair(R1, S6), group.pair(W1, S7))) )) )) && (( (group.mul(group.mul(group.pair(BG1, S1), group.pair(B2, S4)), group.pair(A2, S5))) == (group.mul(group.mul(group.pair(R2, S6), group.pair(W2, S7)), group.pair(X1, X2))) )) )) && (( (group.pair(newM1, FG2)) == (group.pair(newM3, CG2)) )) )) && (( (group.pair(newM2, FG2)) == (group.pair(newM4, CG2)) )) )) && (( (group.pair(newM1, U1G2)) == (group.pair(M5G1, CG2)) )) )) && (( (group.pair(newM2, U2G2)) == (group.pair(M6G1, CG2)) )) ) )
+    if ( ( (( (( (( (( (( (( (group.pair(group.mul(Mi5G1, group.mul(Mi6G1, HG1)), S7)) == (group.pair(GG1, S0)) )) && (( (group.mul(group.pair(BG1, S1), group.mul(group.pair(B1, S2), group.pair(A1, S3)))) == (group.mul(group.pair(R1, S6), group.pair(W1, S7))) )) )) && (( (group.mul(group.mul(group.pair(BG1, S1), group.pair(B2, S4)), group.pair(A2, S5))) == (group.mul(group.mul(group.pair(R2, S6), group.pair(W2, S7)), group.pair(X1, X2))) )) )) && (( (group.pair(Mi1, FG2)) == (group.pair(Mi3, CG2)) )) )) && (( (group.pair(Mi2, FG2)) == (group.pair(Mi4, CG2)) )) )) && (( (group.pair(Mi1, U1G2)) == (group.pair(Mi5G1, CG2)) )) )) && (( (group.pair(Mi2, U2G2)) == (group.pair(Mi6G1, CG2)) )) ) )
     {
         return true;
     }

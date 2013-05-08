@@ -1,4 +1,4 @@
-import sys, getopt, importlib
+import sys, getopt, importlib, time
 import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
@@ -44,7 +44,11 @@ def configAutoGroup(sdl_file, cm, targetFile, sdlVerbose):
         secparam = cm.secparam
         
     options = {'secparam':secparam, 'userFuncList':[], 'computeSize':False}
+    startTime = time.clock()
     outfile = runAutoGroup(sdl_file, cm, options, sdlVerbose)
+    endTime = time.clock()
+    runningTime = (endTime - startTime) * 1000
+    
     new_input_sdl  = outfile
     new_output_sdl = targetFile
     print("Codegen Input: ", new_input_sdl)

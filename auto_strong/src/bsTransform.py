@@ -6,3 +6,15 @@ import src.sdlpath, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
+
+output = """\n
+require := blah1.sdl
+require := blah2.sdl
+
+BEGIN :: func:newFunc
+input := {None}
+
+s := newFunc( )
+
+
+"""

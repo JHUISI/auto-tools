@@ -5,7 +5,7 @@
 void benchmarkACDK(Acdk12 & acdk, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & signResults, CharmListStr & verifyResults)
 {
 	Benchmark benchS, benchV; // , benchK;
-	CharmList gk, sk, svk, vvk, M, sig;
+	CharmList gk, sk, svk, vvk, sig;
     ZR m1, m2;
     double de_in_ms, kg_in_ms;
 
@@ -32,6 +32,7 @@ void benchmarkACDK(Acdk12 & acdk, ofstream & outfile0, ofstream & outfile1, ofst
 		// run enc and dec
 		m1 = acdk.group.random(ZR_t);
 		m2 = acdk.group.random(ZR_t);
+		CharmList M;
 		benchS.start();
 	    acdk.sign(gk, svk, sk, m1, m2, M, sig);
 		benchS.stop();
