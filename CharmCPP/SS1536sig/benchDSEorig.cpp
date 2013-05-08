@@ -42,7 +42,7 @@ void benchmarkDSE(Waters09sig & dse, ofstream & outfile0, ofstream & outfile1, o
 	bool finalResult;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-		M = "hello world!"; // getID(ID_string_len);
+		M = getID(ID_string_len);
 		benchS.start();
 	    dse.sign(pk, sk, M, sig);
 		benchS.stop();
