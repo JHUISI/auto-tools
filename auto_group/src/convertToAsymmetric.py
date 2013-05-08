@@ -953,6 +953,8 @@ class AsymSDL:
             else: self.__sPKdict = None
         else:
             self.__computeSize = False
+            self.__aPKdict = None
+            self.__sPKdict = None            
         self.verbose        = groupInfo['verbose']
         self.__currentFunc    = None
         self.__funcUsedVar    = {}
