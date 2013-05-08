@@ -6,11 +6,11 @@
 #python genMakefile.py ./config.mk MakefileGky "TESTGIBEKY=1" TestGIBEky.cpp benchGIBEbn.cpp
 #python genMakefile.py ./config.mk MakefileGct "TESTGIBECT=1" TestGIBEct.cpp benchGIBEbn.cpp
 
-#python genMakefile.py ./config.mk MakefileDSEboth   "TESTDSEBOTH=1" TestDSEBoth.cpp benchDSEbn.cpp
+python genMakefile.py ./config.mk MakefileDSEboth   "TESTDSEBOTH=1" TestDSEBoth.cpp benchDSEbn.cpp
 #python genMakefile.py ./config.mk MakefileDSEbothex "TESTDSEBOTHEX=1" TestDSEBothEx.cpp benchDSEbn.cpp
 
 #python genMakefile.py ./config.mk MakefileBGW "DEBUG=0" TestBGWky.cpp benchBGWky.cpp
 
-python genMakefile.py ./config.mk MakefileDFAct TestDFAct.cpp benchDFA.cpp
+#python genMakefile.py ./config.mk MakefileDFAct TestDFAct.cpp benchDFA.cpp
 
 

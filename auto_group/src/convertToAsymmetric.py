@@ -759,11 +759,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
             if type(eachStmt[i]) == sdl.VarInfo:
                 
                 #print("Each: ", eachStmt[i].getAssignNode())
-                if HasPairings( eachStmt[i].getAssignNode() ) and CountOfPairings( eachStmt[i].getAssignNode() ) > 1:
+                if HasPairings( eachStmt[i].getAssignNode() ):
                     path_applied = []
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
+                    print("Each: ", eachStmt[i].getAssignNode())
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case, there's a hashed values...build up list and check later to see if it appears

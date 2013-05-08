@@ -1136,6 +1136,11 @@ def SimplifySDLNode(equation, path, code_block=None, debug=False):
 
 # figures out which optimizations apply
 def SplitPairings(equation, path, code_block=None, debug=False):
+    # first test that we can split pairings
+    test_equation = BinaryNode.copy(equation)
+    (tech, new_eq) = testTechnique(3, test_equation, code_block)
+    if not tech.applied: return equation    
+    
     tech_list = [3, 2, 1] # 4
     # 1. apply the start technique to equation
     new_eq = equation

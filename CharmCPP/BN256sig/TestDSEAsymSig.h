@@ -13,7 +13,7 @@ class Dse09sig
 {
 public:
 	PairingGroup group;
-	Dse09sig() { group.setCurve(AES_SECURITY); };
+	Dse09sig() { group.setCurve(BN256); };
 	~Dse09sig() {};
 	
 	void keygen(CharmList & sk, CharmList & spk, CharmList & vpk);
