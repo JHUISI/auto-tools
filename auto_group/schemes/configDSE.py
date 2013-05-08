@@ -1,8 +1,8 @@
 schemeType = "PKENC"
 #short = "secret_keys"
-short = "ciphertext"
-##short = "both"
-##operation = "exp"
+#short = "ciphertext"
+short = "both"
+operation = "exp"
 
 
 setupFuncName = "setup"
