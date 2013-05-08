@@ -617,10 +617,29 @@ class Technique3(AbstractTechnique):
         self.score   = Tech_db.NoneApplied
         self.debug   = False
     
+    # TODO: AutoBatch update this in AutoBatch original technique implementation!!!!!    
+    def getMulTokens2(self, subtree, parent_type, target_type, _list):
+        if subtree == None: return None
+        elif parent_type == ops.EXP and Type(subtree) == ops.MUL:
+            return               
+        elif parent_type == ops.MUL:
+            if Type(subtree) in target_type: 
+                found = False
+                for i in _list:
+                    if isNodeInSubtree(i, subtree): found = True
+                if not found: _list.append(subtree)
+
+        if subtree.left: self.getMulTokens2(subtree.left, subtree.type, target_type, _list)
+        if subtree.right: self.getMulTokens2(subtree.right, subtree.type, target_type, _list)
+        return
+    
     def visit_pair(self, node, data):            
         l = []; r = [];
-        self.getMulTokens(node.left, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], l)
-        self.getMulTokens(node.right, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], r)
+        print("view of pairing node: ", node)
+        self.getMulTokens2(node.left, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], l)
+        self.getMulTokens2(node.right, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR], r)
+        print("l: ", l)
+        print("r: ", r)
         if self.debug:
             print("T3: visit_on left list: ")
             for i in l: print(i)
@@ -1119,19 +1138,21 @@ def SimplifySDLNode(equation, path, code_block=None, debug=False):
     return new_eq
 
 # figures out which optimizations apply
-def SplitPairings(equation, path, code_block=None, debug=False):
-    tech_list = [2, 3] # 4
+def SplitPairings(equation, path, code_block=None, debug=True):
+    tech_list = [3, 2, 1] # 4
     # 1. apply the start technique to equation
     new_eq = equation
     while True:
         cur_tech = tech_list.pop()
         if debug: print("Testing technique: ", cur_tech)
         (tech, new_eq) = testTechnique(cur_tech, new_eq, code_block)
+        if debug: print("new_eq: ", new_eq)
         
         if tech.applied:
             if debug: print("Technique ", cur_tech, " successfully applied.")
             path.append(cur_tech)
-            tech_list = [2, 3]
+            tech_list = [1, 2, 3]
+            tech_list.remove(cur_tech)
             continue
         else:
             if len(tech_list) == 0: break
@@ -1383,7 +1404,8 @@ class PairInstanceFinderImproved:
                 SP2 = SubstituteFuncCallBack( pairDict )
             ASTVisitor( SP2 ).preorder( equation )
             if SP2.pruneCheck: 
-                ASTVisitor( PruneTree() ).preorder( equation )
+                ASTVisitor( PruneTree() ).postorder( equation )
+                #print("After prune: ", equation)
             if self.failedTechnique(equation): self.applied = False; return equation2
             else: return None 
                 
@@ -1606,7 +1628,12 @@ class PruneTree:
             addAsChildNodeToParent(data, node.left)            
         if Type(node.left) == ops.NONE and Type(node.right) != ops.NONE:
             #print("prune this 2: ", node)
-            addAsChildNodeToParent(data, node.right)            
+            addAsChildNodeToParent(data, node.right)
+        if Type(node.left) == ops.NONE and Type(node.right) == ops.NONE:
+            #print("prune this 2: ", node)
+            addAsChildNodeToParent(data, BinaryNode(ops.NONE))
+
+                  
 
 class SanityCheckT6:
     def __init__(self):

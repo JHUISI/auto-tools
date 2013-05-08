@@ -9,9 +9,9 @@ set -x
 
 #python genMakefile.py ./config.mk MakefileWAT "FOO=1" TestWaters05AsymSig.cpp benchWATAsym.cpp
 
-#python genMakefile.py ./config.mk MakefileDSE "FOO=1" TestDSEAsymSig.cpp benchDSEAsym.cpp
+python genMakefile.py ./config.mk MakefileDSE "FOO=1" TestDSEAsymSig.cpp benchDSEAsym.cpp
 
-python genMakefile.py ./config.mk MakefileACDK "FOO=1" TestACDKBothEx.cpp benchACDK.cpp
+#python genMakefile.py ./config.mk MakefileACDK "FOO=1" TestACDKBothEx.cpp benchACDK.cpp
 
 
 set +x

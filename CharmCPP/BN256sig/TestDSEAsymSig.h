@@ -1,6 +1,6 @@
 #ifndef DSE09SIG_H
 #define DSE09SIG_H
-// REDO: currently broken
+
 #include "Charm.h"
 #include <iostream>
 #include <sstream>
@@ -13,7 +13,7 @@ class Dse09sig
 {
 public:
 	PairingGroup group;
-	Dse09sig() { group.setCurve(BN256); };
+	Dse09sig() { group.setCurve(AES_SECURITY); };
 	~Dse09sig() {};
 	
 	void keygen(CharmList & sk, CharmList & spk, CharmList & vpk);

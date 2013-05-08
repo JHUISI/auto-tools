@@ -1149,14 +1149,15 @@ class AsymSDL:
             verifyUsedVars.sort()
             
             asymDataTypePK = {}
-            for i in self.__aPKdict:
-                if i in verifyUsedVars:
-                    asymDataTypePK[i] = self.__aPKdict[i]
-#            print("verifyUsedVars: ", verifyUsedVars)
-#            print("sym PK => ", list(self.__sPKdict.keys()))
-#            print("asym PK => ", list(asymDataTypePK.keys()))
-#            print("estimated  sym:  ", estimateSize(self.__sPKdict, symmetric_curves['SS1536']))        
-#            print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
+            if self.__aPKdict != None:
+                for i in self.__aPKdict:
+                    if i in verifyUsedVars:
+                        asymDataTypePK[i] = self.__aPKdict[i]
+                print("verifyUsedVars: ", verifyUsedVars)
+                print("sym PK => ", list(self.__sPKdict.keys()))
+                print("asym PK => ", list(asymDataTypePK.keys()))
+                print("estimated  sym:  ", estimateSize(self.__sPKdict, symmetric_curves['SS1536']))        
+                print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
             
             sPub = "s"+config.keygenPubVar
             vPub = "v"+config.keygenPubVar

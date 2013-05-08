@@ -43,7 +43,7 @@ def configAutoGroup(sdl_file, cm, targetFile, sdlVerbose):
     else:
         secparam = cm.secparam
         
-    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':False}
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':True}
     startTime = time.clock()
     outfile = runAutoGroup(sdl_file, cm, options, sdlVerbose)
     endTime = time.clock()
