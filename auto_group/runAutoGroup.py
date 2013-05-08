@@ -52,7 +52,7 @@ def configAutoGroup(sdl_file, cm, targetFile, sdlVerbose):
     
     new_input_sdl  = outfile
     new_output_sdl = targetFile
-    os.system("echo '%s, ' > %s" % (runningTime, targetFile))
+    os.system("echo '%s' >> %s" % (runningTime, targetFile))
     # JAA: commented out for benchmakr purposes
     #print("Codegen Input: ", new_input_sdl)
     #print("Codegen Output: ", new_output_sdl)
