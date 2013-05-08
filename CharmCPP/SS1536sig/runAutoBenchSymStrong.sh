@@ -5,15 +5,21 @@ set -x
 
 python genMakefile.py ./config.mk MakefileCLsu "FOO=1" TestCLsu.cpp benchCLsu.cpp
 
-python genMakefile.py ./config.mk MakefileBBsu "FOO=1" TestBBsu.cpp benchBBsu.cpp
+#python genMakefile.py ./config.mk MakefileBBsu "FOO=1" TestBBsu.cpp benchBBsu.cpp
 
-python genMakefile.py ./config.mk MakefileWATsu "FOO=1" TestWaters05su.cpp benchWATsu.cpp
+#python genMakefile.py ./config.mk MakefileWATsu "FOO=1" TestWaters05su.cpp benchWATsu.cpp
 
 # need to add a few more ... DSS? 
 
 ##python genMakefile.py ./config.mk MakefileDSE "FOO=1" TestDSESigorig.cpp benchDSEorig.cpp
 
 ##python genMakefile.py ./config.mk MakefileACDK "FOO=1" TestACDKorig.cpp benchACDKorig.cpp
+
+./TestCLsu 100 100 fixed
+
+#./TestBBsu 100 100 fixed
+
+#./TestWaters05su 100 128 fixed
 
 
 set +x

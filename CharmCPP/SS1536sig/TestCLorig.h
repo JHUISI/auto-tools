@@ -13,7 +13,7 @@ class Cl04
 {
 public:
 	PairingGroup group;
-	Cl04() { group.setCurve(AES_SECURITY); };
+	Cl04() { group.setCurve(SS1536); };
 	~Cl04() {};
 	
 	void setup(G1 & g);
