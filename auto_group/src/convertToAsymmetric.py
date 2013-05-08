@@ -953,7 +953,19 @@ class AsymSDL:
                 noChangeList.append(i)
     
         print("Initial noChangeList: ", noChangeList)
+        #(Stmts, Types, depList, depListNoExp, infList, infListNoExp)
+        userFuncLines = []
+        if len(self.userFuncList) > 0:
+            for userFuncs in self.userFuncList:
+                print("processing user defined func: ", userFuncs)
+                userFuncLines.append( self.__getFuncLines(userFuncs) )
+#                userFuncData = sdl.getVarInfoFuncStmts( userFuncs )
+#                userTypes = userFuncData[1]
+#                for j in userTypes.keys():
+#                    print("user func vars: ", j)
+#                    noChangeList.append(j)
         
+ 
         newLinesSe = []
         newLinesS = []
         newLinesK = []
@@ -1043,13 +1055,6 @@ class AsymSDL:
                 newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
                 newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
-            # 1. retrieve original pk        
-        userFuncLines = []
-        if len(self.userFuncList) > 0:
-            for userFuncs in self.userFuncList:
-                print("processing user defined func: ", userFuncs)
-                userFuncLines.append( self.__getFuncLines(userFuncs) )
-                
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines
 
     def __updatePKList(self, targetVar, newVarNodes, newVarNames, newLinesK):

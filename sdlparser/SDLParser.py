@@ -2297,7 +2297,7 @@ def getFuncStmts(funcName):
 def getVarInfoFuncStmts(funcName):
     if getVarDepInfListsCalled == False: 
         sys.exit("ERROR: Need to call getVarDepInfLists()")
-    
+
     if (funcName not in assignVarInfo):
         sys.exit("ERROR: Function name passed to getFuncStmts in SDLParser.py as input does not exist in assignVarInfo: %s not in %s." % (funcName, assignVarInfo.keys()))
 
