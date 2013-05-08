@@ -2,14 +2,31 @@
 #include <fstream>
 #include <time.h>
 
-void benchmarkBB(Bbssig04 & bb, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & signResults, CharmListStr & verifyResults)
+string getID(int len)
+{
+	string alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string id = "";
+	int val, alpha_len = alphabet.size();
+	for(int i = 0; i < len; i++)
+	{
+		val = (int) (rand() % alpha_len);
+		id +=  alphabet[val];
+	}
+	cout << "Rand selected ID: '" << id << "'" << endl;
+	return id;
+}
+
+void benchmarkCL(Cl04 & cl, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & signResults, CharmListStr & verifyResults)
 {
 	Benchmark benchS, benchV; // , benchK;
-    CharmList pk, sk, chpk, sig;
-    ZR M;
+    CharmList pk, sk, sig, chpk, spk, vpk;
+    string M; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
+    G2 g;
     double de_in_ms, kg_in_ms;
 
-	bb.keygen(sk, pk, chpk);
+
+    cl.setup(g);
+	cl.keygen(g, sk, chpk, spk, vpk);
 //	for(int i = 0; i < iterationCount; i++) {
 //		id = getID(ID_string_len);
 //		benchK.start();
@@ -22,20 +39,20 @@ void benchmarkBB(Bbssig04 & bb, ofstream & outfile0, ofstream & outfile1, ofstre
 //	outfile0 << s0.str();
 //    keygenResults[ID_string_len] = benchK.getRawResultString();
 //
-//	bb.keygen(mpk, msk, id, sk);
+//	cl.keygen(mpk, msk, id, sk);
 
     //cout << "ct =\n" << ct << endl;
 	bool finalResult;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-		M = bb.group.random(ZR_t);
+		M = getID(ID_string_len);
 		benchS.start();
-	    bb.sign(chpk, pk, sk, M, sig);
+	    cl.sign(chpk, sk, M, sig);
 		benchS.stop();
 		kg_in_ms = benchS.computeTimeInMilliseconds();
 
 		benchV.start();
-		finalResult = bb.verify(chpk, pk, M, sig);
+		finalResult = cl.verify(chpk, vpk, g, M, sig);
 		benchV.stop();
 		de_in_ms = benchV.computeTimeInMilliseconds();
 
@@ -75,7 +92,7 @@ int main(int argc, const char *argv[])
 	cout << "measurement: " << fixOrRange << endl;
 
 	srand(time(NULL));
-	Bbssig04 bb;
+	Cl04 cl;
 	string filename = string(argv[0]);
 	stringstream s2, s3, s4;
 	ofstream outfile0, outfile1, outfile2;
@@ -89,12 +106,12 @@ int main(int argc, const char *argv[])
 	CharmListStr keygenResults, signResults, verifyResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= ID_string_len; i++) {
-			benchmarkBB(bb, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, signResults, verifyResults);
+			benchmarkCL(cl, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, signResults, verifyResults);
 		}
 		s4 << verifyResults << endl;
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
-		benchmarkBB(bb, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, signResults, verifyResults);
+		benchmarkCL(cl, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, signResults, verifyResults);
 //		s2 << "Raw: " << ID_string_len << " " << keygenResults[ID_string_len] << endl;
 		s3 << "Raw: " << ID_string_len << " " << signResults[ID_string_len] << endl;
 		s4 << "Raw: " << ID_string_len << " " << verifyResults[ID_string_len] << endl;
