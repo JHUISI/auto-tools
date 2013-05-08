@@ -1,6 +1,7 @@
 schemeType = "PKENC"
 #short = "secret_keys"
-short = "ciphertext"
+#short = "ciphertext"
+short = "both"
 secparam = "BN256"
 
 setupFuncName = "setup"

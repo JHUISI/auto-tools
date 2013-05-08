@@ -1138,7 +1138,7 @@ def SimplifySDLNode(equation, path, code_block=None, debug=False):
     return new_eq
 
 # figures out which optimizations apply
-def SplitPairings(equation, path, code_block=None, debug=True):
+def SplitPairings(equation, path, code_block=None, debug=False):
     tech_list = [3, 2, 1] # 4
     # 1. apply the start technique to equation
     new_eq = equation
@@ -1779,20 +1779,30 @@ class GetEquqlityNodes:
 class CheckForPairing:
     def __init__(self):
         self.hasPairings = False
-    
+        self.countPairings = 0
+        
     def visit(self, node, data):
         pass
     
     def visit_pair(self, node, data):
         self.hasPairings = True
+        self.countPairings += 1
         
     def getHasPairings(self):
         return self.hasPairings
+    
+    def getPairingCount(self):
+        return self.countPairings
 
 def HasPairings(node):
     cfp = CheckForPairing()
     ASTVisitor(cfp).inorder(node)
     return cfp.getHasPairings()
+
+def CountOfPairings(node):
+    cfp = CheckForPairing()
+    ASTVisitor(cfp).inorder(node)
+    return cfp.getPairingCount()
 
 def CombinePairings(nodeList, _verbose=False):
     # combine then split pairings

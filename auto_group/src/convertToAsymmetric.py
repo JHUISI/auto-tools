@@ -1,7 +1,7 @@
 import src.sdlpath, sys, os, copy, string, re, importlib
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, CountOfPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 from src.solver import *
 
 assignInfo = None
@@ -749,7 +749,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
             if type(eachStmt[i]) == sdl.VarInfo:
                 
                 print("Each: ", eachStmt[i].getAssignNode())
-                if HasPairings( eachStmt[i].getAssignNode() ):
+                if HasPairings( eachStmt[i].getAssignNode() ) and CountOfPairings( eachStmt[i].getAssignNode() ) > 1:
                     path_applied = []
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
                     if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
