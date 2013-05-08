@@ -43,7 +43,7 @@ def configAutoGroup(sdl_file, cm, targetFile, sdlVerbose):
     else:
         secparam = cm.secparam
         
-    options = {'secparam':secparam, 'userFuncList':[]}
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':False}
     outfile = runAutoGroup(sdl_file, cm, options, sdlVerbose)
     new_input_sdl  = outfile
     new_output_sdl = targetFile

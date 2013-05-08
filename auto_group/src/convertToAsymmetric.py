@@ -820,31 +820,58 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
 #    else:
 
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-#    if config.schemeType == PKENC:   
-#        symDataTypeSK = getAssignmentForName(config.keygenSecVar, varTypes, True)
-#        symDataTypeCT = getAssignmentForName(config.ciphertextVar, varTypes, True)
-#        asymDataTypeSK = {}
-#        asymDataTypeCT = {}
-#        newSol = groupInfo['newSol']
-#        for i in symDataTypeSK:
-#            if i in newSol.keys():
-#               asymDataTypeSK[i] = newSol[i]
-#            else:
-#               asymDataTypeSK[i] = symDataTypeSK[i]
-#               
-#        for i in symDataTypeCT:
-#            if i in newSol.keys():
-#               asymDataTypeCT[i] = newSol[i]
-#            else:
-#               asymDataTypeCT[i] = symDataTypeCT[i]
-#        print("<====================>")
-#        print("SK => ", list(symDataTypeSK.keys()))
-#        print("estimated  sym:  ", estimateSize(symDataTypeSK, symmetric_curves['SS1536']))        
-#        print("estimated asym: ", estimateSize(asymDataTypeSK, asymmetric_curves['BN256']))
-#        print("CT => ", list(symDataTypeCT.keys()))               
-#        print("estimated  sym: ", estimateSize(symDataTypeCT, symmetric_curves['SS1536']))            
-#        print("estimated asym: ", estimateSize(asymDataTypeCT, asymmetric_curves['BN256']))
-#        print("<====================>")
+    symDataTypePK  = {}
+    asymDataTypePK = {}
+    if config.schemeType == PKENC and options['computeSize']:   
+        symDataTypeSK = getAssignmentForName(config.keygenSecVar, varTypes, True)
+        symDataTypeCT = getAssignmentForName(config.ciphertextVar, varTypes, True)
+        asymDataTypeSK = {}
+        asymDataTypeCT = {}
+        newSol = groupInfo['newSol']
+        for i in symDataTypeSK:
+            if i in newSol.keys():
+               asymDataTypeSK[i] = newSol[i]
+            else:
+               asymDataTypeSK[i] = symDataTypeSK[i]
+               
+        for i in symDataTypeCT:
+            if i in newSol.keys():
+               asymDataTypeCT[i] = newSol[i]
+            else:
+               asymDataTypeCT[i] = symDataTypeCT[i]
+        print("<====================>")
+        print("SK => ", list(symDataTypeSK.keys()))
+        print("estimated  sym:  ", estimateSize(symDataTypeSK, symmetric_curves['SS1536']))        
+        print("estimated asym: ", estimateSize(asymDataTypeSK, asymmetric_curves['BN256']))
+        print("CT => ", list(symDataTypeCT.keys()))               
+        print("estimated  sym: ", estimateSize(symDataTypeCT, symmetric_curves['SS1536']))            
+        print("estimated asym: ", estimateSize(asymDataTypeCT, asymmetric_curves['BN256']))
+        print("<====================>")
+    elif config.schemeType == PKSIG and options['computeSize']:
+        symDataTypePK = getAssignmentForName(config.keygenPubVar, varTypes, True)
+        symDataTypeSIG = getAssignmentForName(config.signatureVar, varTypes, True)
+        #asymDataTypePK = {}
+        asymDataTypeSIG = {}
+        newSol = groupInfo['newSol']
+        for i in symDataTypePK:
+            if i in newSol.keys():
+               asymDataTypePK[i] = newSol[i]
+            else:
+               asymDataTypePK[i] = symDataTypePK[i] # keep old type
+               
+        for i in symDataTypeSIG:
+            if i in newSol.keys():
+               asymDataTypeSIG[i] = newSol[i]
+            else:
+               asymDataTypeSIG[i] = symDataTypeSIG[i]
+        print("<====================>")
+#        print("PK => ", list(symDataTypePK.keys()))
+#        print("estimated  sym:  ", estimateSize(symDataTypePK, symmetric_curves['SS1536']))        
+#        print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
+        print("SIG => ", list(symDataTypeSIG.keys()))               
+        print("estimated  sym: ", estimateSize(symDataTypeSIG, symmetric_curves['SS1536']))            
+        print("estimated asym: ", estimateSize(asymDataTypeSIG, asymmetric_curves['BN256']))
+        print("<====================>")
 
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
@@ -879,7 +906,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
             transFunc[ config.keygenFuncName ] = stmtK
         transFunc[ config.signFuncName ] = stmtSi
         transFunc[ config.verifyFuncName ] = stmtV
-
+    
+    if options['computeSize']:
+        options['symPK']  = symDataTypePK
+        options['asymPK'] = asymDataTypePK
     newSDL = AsymSDL(options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
     # fix this!!!!
     newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
@@ -902,6 +932,14 @@ class AsymSDL:
         self.transFunc      = transFunc
         self.transFuncGen   = transFuncGen
         self.userFuncList   = options['userFuncList']
+        if options['computeSize']:
+            self.__computeSize = True
+            if options.get('asymPK') != None: self.__aPKdict = options['asymPK']            
+            else: self.__aPKdict = None
+            if options.get('symPK') != None: self.__sPKdict = options['symPK']
+            else: self.__sPKdict = None
+        else:
+            self.__computeSize = False
         self.verbose        = False
         self.__currentFunc    = None
         self.__funcUsedVar    = {}
@@ -1109,6 +1147,16 @@ class AsymSDL:
                 for i in verifyVars:
                     if i in origPK: verifyUsedVars.append(i)
             verifyUsedVars.sort()
+            
+            asymDataTypePK = {}
+            for i in self.__aPKdict:
+                if i in verifyUsedVars:
+                    asymDataTypePK[i] = self.__aPKdict[i]
+#            print("verifyUsedVars: ", verifyUsedVars)
+#            print("sym PK => ", list(self.__sPKdict.keys()))
+#            print("asym PK => ", list(asymDataTypePK.keys()))
+#            print("estimated  sym:  ", estimateSize(self.__sPKdict, symmetric_curves['SS1536']))        
+#            print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
             
             sPub = "s"+config.keygenPubVar
             vPub = "v"+config.keygenPubVar
