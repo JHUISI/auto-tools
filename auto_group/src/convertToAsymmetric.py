@@ -1044,8 +1044,8 @@ class AsymSDL:
                 newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
             # 1. retrieve original pk        
+        userFuncLines = []
         if len(self.userFuncList) > 0:
-            userFuncLines = []
             for userFuncs in self.userFuncList:
                 print("processing user defined func: ", userFuncs)
                 userFuncLines.append( self.__getFuncLines(userFuncs) )
