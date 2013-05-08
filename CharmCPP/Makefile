@@ -19,7 +19,7 @@ MIRACL_OBJECTS := $(msrc)/MiraclAPI.o
 COMMON_OBJECTS := $(util)/util.o $(util)/policy.tab.o $(util)/SecretUtil.o $(util)/DFA.o $(util)/Benchmark.o
 CHARM := charm
 CHARM_LIB1 := libCharmRelic.dylib 
-CHARM_LIB2 := libCharmMiracl.dylib
+CHARM_LIB2 := libCharmMiracl$(CURVE).dylib
 CHARM_LIB := $(CHARM_LIB).dylib
 
 LDFLAGS = -dynamiclib -current_version 0.1 -install_name ./$(CHARM_LIB)

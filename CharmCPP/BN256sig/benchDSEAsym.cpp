@@ -1,44 +1,42 @@
-#include "TestACDKBothEx.h"
+#include "TestDSEAsymSig.h"
 #include <fstream>
 #include <time.h>
 
-void benchmarkACDK(Acdk12 & acdk, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & signResults, CharmListStr & verifyResults)
+string getID(int len)
+{
+	string alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	string id = "";
+	int val, alpha_len = alphabet.size();
+	for(int i = 0; i < len; i++)
+	{
+		val = (int) (rand() % alpha_len);
+		id +=  alphabet[val];
+	}
+	cout << "Rand selected ID: '" << id << "'" << endl;
+	return id;
+}
+
+void benchmarkDSE(Dse09sig & dse, ofstream & outfile0, ofstream & outfile1, ofstream & outfile2, int ID_string_len, int iterationCount, CharmListStr & keygenResults, CharmListStr & signResults, CharmListStr & verifyResults)
 {
 	Benchmark benchS, benchV; // , benchK;
-	CharmList gk, sk, svk, vvk, M, sig;
-    ZR m1, m2;
+    CharmList spk, vpk, sk, sig;
+    string M; // = getID(ID_string_len); // "somebody@example.com and other people!!!!!";
     double de_in_ms, kg_in_ms;
 
-	acdk.setup(gk);
-	acdk.keygen(gk, sk, svk, vvk);
-
-//	for(int i = 0; i < iterationCount; i++) {
-//		id = getID(ID_string_len);
-//		benchK.start();
-//		benchK.stop();
-//		kg_in_ms = benchK.computeTimeInMilliseconds();
-//	}
-//	cout << "Keygen avg: " << benchK.getAverage() << " ms" << endl;
-//    stringstream s0;
-//	s0 << ID_string_len << " " << benchK.getAverage() << endl;
-//	outfile0 << s0.str();
-//    keygenResults[ID_string_len] = benchK.getRawResultString();
-//
-//	acdk.keygen(mpk, msk, id, sk);
+    dse.keygen(sk, spk, vpk);
 
     //cout << "ct =\n" << ct << endl;
-	bool finalResult;
+	bool finalResult = true;
 	for(int i = 0; i < iterationCount; i++) {
 		// run enc and dec
-		m1 = acdk.group.random(ZR_t);
-		m2 = acdk.group.random(ZR_t);
+		M = getID(ID_string_len);
 		benchS.start();
-	    acdk.sign(gk, svk, sk, m1, m2, M, sig);
+	    dse.sign(spk, sk, M, sig);
 		benchS.stop();
 		kg_in_ms = benchS.computeTimeInMilliseconds();
 
 		benchV.start();
-		finalResult = acdk.verify(gk, vvk, M, sig);
+		finalResult = dse.verify(vpk, M, sig);
 		benchV.stop();
 		de_in_ms = benchV.computeTimeInMilliseconds();
 
@@ -78,7 +76,7 @@ int main(int argc, const char *argv[])
 	cout << "measurement: " << fixOrRange << endl;
 
 	srand(time(NULL));
-	Acdk12 acdk;
+	Dse09sig dse;
 	string filename = string(argv[0]);
 	stringstream s2, s3, s4;
 	ofstream outfile0, outfile1, outfile2;
@@ -92,12 +90,12 @@ int main(int argc, const char *argv[])
 	CharmListStr keygenResults, signResults, verifyResults;
 	if(isEqual(fixOrRange, RANGE)) {
 		for(int i = 2; i <= ID_string_len; i++) {
-			benchmarkACDK(acdk, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, signResults, verifyResults);
+			benchmarkDSE(dse, outfile0, outfile1, outfile2, i, iterationCount, keygenResults, signResults, verifyResults);
 		}
 		s4 << verifyResults << endl;
 	}
 	else if(isEqual(fixOrRange, FIXED)) {
-		benchmarkACDK(acdk, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, signResults, verifyResults);
+		benchmarkDSE(dse, outfile0, outfile1, outfile2, ID_string_len, iterationCount, keygenResults, signResults, verifyResults);
 //		s2 << "Raw: " << ID_string_len << " " << keygenResults[ID_string_len] << endl;
 		s3 << "Raw: " << ID_string_len << " " << signResults[ID_string_len] << endl;
 		s4 << "Raw: " << ID_string_len << " " << verifyResults[ID_string_len] << endl;

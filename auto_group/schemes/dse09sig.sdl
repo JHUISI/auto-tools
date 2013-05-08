@@ -79,6 +79,7 @@ input := list{pk, m, sig}
  theta := ((tagc - tagk)^-1)
 
 BEGIN :: if
+
 if { (e(gb^s, S1) * (e(gba1^s1, S2) * (e(ga1^s1, S3) * (e(gba2^s2, S4) * e(ga2^s2, S5))))) == (e(S6, (tau1^s1) * (tau2^s2)) * (e(S7, ((tau1b^s1) * ((tau2b^s2) * w^-t))) * ( ( ( e(S7, ((u^(M * t)) * (w^(tagc * t))) * h^t) * (e(g^-t, SK)) )^theta) * (A^s2)))) }
    output := True
 else
