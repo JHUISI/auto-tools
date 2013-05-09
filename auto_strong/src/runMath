@@ -8,3 +8,4 @@ value=ToExpression[$ScriptCommandLine[[2]]];
 SetSystemOptions["ReduceOptions" -> "MaxModularPoints" -> 1000000000000]
 
 Print[value];
+Export["file.txt", value];

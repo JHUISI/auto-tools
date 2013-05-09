@@ -45,7 +45,7 @@ class BSWTransform:
             newSDL.append(newLines)
         
         newSDL.append( chamHashLines )
-        print_sdl(True, newSDL)
+        print_sdl(False, newSDL)
         options['userFuncList'].append(self.chamH) # assumes it is already a list
         outfile = new_name + sdlSuffix
         write_sdl(outfile, newSDL)

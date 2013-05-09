@@ -5,7 +5,10 @@ from src.sdltechniques import *
 from src.bswTransform import BSWTransform
 from z3 import *
 import subprocess
+from os.path import abspath, dirname, join
 
+#pathToExe = abspath(join(dirname(__file__), '../src/runMath'))
+  
 expTimeout = 60 # 21600 # 6 hours
 stringToInt = "stringToInt"
 intToBits   = "intToBits"
@@ -476,13 +479,24 @@ def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
     for i in vars:
         vars_str += str(i) + ","
     vars_str = vars_str[:-1] # Modulus -> 17, FindInstance
-    reduce_cmd = ["src/runMath", "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Reals], " + str(timeout) + "]"]
+    #reduce_cmd = [pathToExe, "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Reals], " + str(timeout) + "]"]
+    reduce_cmd = "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Reals], " + str(timeout) + "]"
     #reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]    
-    ##print("Mathematica cmd: ", reduce_cmd)
-    p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE)
-    preprocessed, _ = p.communicate()
-    result = preprocessed.strip()
-    ##print("Mathematica output: ", result)
+    print("Mathematica cmd: ", reduce_cmd)
+#    my_env = os.environ
+#    my_env["PATH"] = "/usr/bin:" + my_env["PATH"]
+    #p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE, shell=True, env={'PATH':'/Users/waldoayo/Documents/Projects/auto-tools/auto_strong/src'})
+    #preprocessed, _ = p.communicate()
+    #result = preprocessed.strip()
+    os.system("src/runMath '%s'" % (reduce_cmd))
+    
+    f = open('file.txt', 'r')
+    answer = f.readlines()
+    f.close()
+    if len(answer) == 0: result = b'{}'
+    else: result = answer[0]
+    
+    print("Mathematica output: ", result)
     if result == b'{}': # b'False':
         #print("FindInstance could find NO solutions...")
         print("Signature is PARTITIONED!!!")        
@@ -532,13 +546,25 @@ def testCorrectWithZ3(verifyEqs, varListMap):
             finalExp += result + AND
         
         finalExp = finalExp[:-len(AND)]
-        simplify_cmd = ["src/runMath", "Simplify[" + str(finalExp).replace("\n", " ") + "]"]
-        print("Verify with Mathematica:  ", simplify_cmd )
-        p = subprocess.Popen(simplify_cmd, stdout=subprocess.PIPE)
-        preprocessed, _ = p.communicate()
-        result = preprocessed.strip()
+#        print("PATH: ", os.environ['PATH'])
+#        print("PYTHONPATH: ", os.environ.get('PYTHONPATH'))
+        #simplify_cmd = ["runMath", "Simplify[" + str(finalExp).replace("\n", " ") + "]"]
+        #print("Verify with Mathematica:  ", simplify_cmd )
+        simplify_cmd = "Simplify[" + str(finalExp).replace("\n", " ") + "]"
+        
+        os.system("src/runMath '%s'" % (simplify_cmd))
+        
+        f = open('file.txt', 'r')
+        answer = f.readlines()
+        f.close()
+        if len(answer) == 0: result = b'{}'
+        else: result = answer[0]
+
+#        p = subprocess.Popen(simplify_cmd, stdout=subprocess.PIPE, shell=True)
+#        preprocessed, _ = p.communicate()
+#        result = preprocessed.strip()
         print("Mathematica output: ", result)
-        if result == b'True':
+        if result == 'True':
             continue
         else:
             return result
