@@ -35,7 +35,7 @@ done
 echo "Running BBSig experiment"
 for i in {1..trials}
 do
-    python runAutoGroup.py schemes/bbssig04.sdl configBBSig TimingBBsig.txt
+    python runAutoGroup.py schemes/bbssig04.sdl configBBsig TimingBBsig.txt
 done
 
 echo "Running Waters05 experiment"
