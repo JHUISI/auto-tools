@@ -1,4 +1,4 @@
-import sys, getopt, importlib
+import sys, getopt, importlib, time
 import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
