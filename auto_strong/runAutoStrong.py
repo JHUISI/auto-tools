@@ -39,13 +39,19 @@ def configAutoStrong(sdl_file, cm, option, targetFile, sdlVerbose):
     testForSUCMA = False
     
     option['userFuncList'] = userFuncList
+    startTime = time.clock()
     strong_sdl = runAutoStrong(sdl_file, cm, option, sdlVerbose)
+    endTime = time.clock()
     new_input_sdl = strong_sdl
     new_output_sdl = targetFile
-    print("Codegen Input: ", new_input_sdl)
-    print("Codegen Output: ", new_output_sdl)
-    print("User defined funcs: ", option['userFuncList'])
-    codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl, option['userFuncList'])
+    runningTime = (endTime - startTime) * 1000
+    print("running time: ", runningTime)
+    os.system("echo '%s' >> %s" % (runningTime, targetFile))
+    
+    #print("Codegen Input: ", new_input_sdl)
+    #print("Codegen Output: ", new_output_sdl)
+    #print("User defined funcs: ", option['userFuncList'])
+    #codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl, option['userFuncList'])
     return
 
 if __name__ == "__main__":

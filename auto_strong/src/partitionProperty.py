@@ -61,18 +61,19 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, sigVar)
     if name != config.signFuncName:
         sys.exit("runAutoStrong: '%s' not in the sign function." % sigVar)
-    print("identified signature: ", varInf.getAssignNode())
+    #print("identified signature: ", varInf.getAssignNode())
     listVars = varInf.getListNodesList()
     if len(listVars) == 0:
         listVars.append(sigVar) # probably just one element in signature
-    print("list of possible vars: ", listVars)
+    #print("list of possible vars: ", listVars)
     sigma = property1Extract(config.signFuncName, assignInfo, listVars, msgVar)
     #if testForSUCMA:
         # quick test for whether scheme is SU-CMA secure already
     #    sigma['sigma1'] += sigma['sigma2']
     #    sigma['sigma2'] = []
-    print("sigma1 => ", sigma['sigma1'])
-    print("sigma2 => ", sigma['sigma2'])
+    
+    ##print("sigma1 => ", sigma['sigma1'])
+    ##print("sigma2 => ", sigma['sigma2'])
 
         
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
@@ -81,7 +82,7 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     if options.get(skipTransform): sys.exit(0)            
     
     if prop2Result and not noSigma2Result:
-        print("Applying BSW transformation...")
+        ##print("Applying BSW transformation...")
         # extract types for all variables
         varTypes = sdl.getVarTypes().get(TYPES_HEADER)
         for i in config.functionOrder:
@@ -95,7 +96,7 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     
     elif prop2Result and noSigma2Result:
         #Bellare-Shoup transformation
-        print("Signature Scheme Already Strongly Unforgeable!")
+        #print("Signature Scheme Already Strongly Unforgeable!")
         sys.exit(0)
     else:
         pass
@@ -112,9 +113,6 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
 #        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma2)
 #        sliceListSigma2.sort()
 #        print("sliceList: ", sliceListSigma2)
-            
-    sys.exit(0)
-
     # writeSDL(newSDL)
     return None
         
@@ -480,13 +478,13 @@ def doesPartHoldWithMath(vars, equations, timeout=60): # default is 1 minute
     vars_str = vars_str[:-1] # Modulus -> 17, FindInstance
     reduce_cmd = ["src/runMath", "TimeConstrained[FindInstance[" + equations_str + ", {" + vars_str + "}, Reals], " + str(timeout) + "]"]
     #reduce_cmd = ["src/runMath", "TimeConstrained[Reduce[" + equations_str + ", {" + vars_str + "}, Integers], " + str(timeout) + "]"]    
-    print("Mathematica cmd: ", reduce_cmd)
+    ##print("Mathematica cmd: ", reduce_cmd)
     p = subprocess.Popen(reduce_cmd, stdout=subprocess.PIPE)
     preprocessed, _ = p.communicate()
     result = preprocessed.strip()
-    print("Mathematica output: ", result)
+    ##print("Mathematica output: ", result)
     if result == b'{}': # b'False':
-        print("FindInstance could find NO solutions...")
+        #print("FindInstance could find NO solutions...")
         print("Signature is PARTITIONED!!!")        
         return True
     return False
@@ -570,21 +568,21 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
     
     for i in verifyEqs:
         varList = varListMap[str(i)]
-        print("<====================>")
-        print("Creating Z3 ints for... ", varList)
+        #print("<====================>")
+        #print("Creating Z3 ints for... ", varList)
         for j in varList:
             if j not in varMap.keys(): varMap[ j ] = Int(j)
-        print("varMap: ", varMap)
+        #print("varMap: ", varMap)
         # TODO: need recursive algorithm to model pairings
-        print("Creating Z3 expression for... ", i)
+        #print("Creating Z3 expression for... ", i)
         eqList = retrieveAnds(i)
         eqList.reverse()
         finalExp = ""
         for k in eqList:
             newExp = buildZ3Expression(k, varMap, Z3Funcs)
-            print("Z3 result: ", newExp)
-            print("Z3 simplified: ", M.evaluate(newExp))
-            print("<====================>")
+            #print("Z3 result: ", newExp)
+            #print("Z3 simplified: ", M.evaluate(newExp))
+            #print("<====================>")
             equations.append( M.evaluate(newExp) )
     
     constraints = []
@@ -596,7 +594,7 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
         _var1 = i 
         _var2 = goalCond[i]
         var1, var2 = varMap.get(_var1), varMap.get(_var2)
-        print("constraints: ", var1 != var2)
+        #print("constraints: ", var1 != var2)
         constraints.append(var1 != var2)
         constraints_str += str(var1 != var2) + OR
     
@@ -608,7 +606,7 @@ def testPartWithZ3(verifyEqs, goalCond, varListMap):
         equations1.append( varMap.get(i) != 0 ) 
         #equations2.append( varMap.get(i) != 0 ) 
     
-    print("subGoal list: ", equations)
+    #print("subGoal list: ", equations)
     
     if doesPartHoldWithMath(list(varMap.keys()), equations1, expTimeout):
         return True 
