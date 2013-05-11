@@ -11,5 +11,5 @@ A collection of Python tools being developed towards automatically transforming 
 
 * [CloudSource](https://github.com/JHUISI/auto-tools/tree/master/auto_outsrc): an automated tool for outsourcing the computation of pairing-based schemes to untrusted cloud proxies. 
 
-The above tools take as input a scheme description language (SDL) of a cryptographic algorithm then performs the described transformation. See subdirectories for how to run each tool and sample SDL schemes. Some are more mature than others but in due time all will be ready for public release.
+The above tools take as input a scheme description language (SDL) of a cryptographic algorithm then performs the described transformation. See subdirectories for how to run each tool and sample SDL schemes. Please contact us if you have any questions or comments at akinyelj [ AT ] cs.jhu.edu OR mpagano [ AT ] cs.jhu.edu. 
 
