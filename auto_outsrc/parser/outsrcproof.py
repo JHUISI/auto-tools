@@ -10,6 +10,7 @@ header = """\n
 \\newcommand{\schemename}{{\sf %s}}
 \\newcommand{\schemeref}{%s_proof}
 \\newcommand{\schemecite}{\cite{REF}}
+\\newcommand{\\randomsecretkeys}{ %s }
 \\newcommand{\secretkey}{ %s }
 \\newcommand{\listofbfs}{ %s }
 \\newcommand{\listofmskvalues}{ %s }
@@ -17,7 +18,8 @@ header = """\n
 \\newcommand{\keydefinitions}{ %s }
 \\newcommand{\originalkey}{ %s }
 \\newcommand{\\transformkey}{ %s }
-\\newcommand{\pseudokey}{ %s }
+\\newcommand{\pseudotransformkey}{ %s }
+\\newcommand{\expandedtransformkey}{ %s }
 """
 
 headerCT = "\n\\newcommand{\ciphertext}{ %s }\n"
@@ -53,6 +55,10 @@ class LatexCodeGenerator:
     def getLatexVersion(self, name):
         if name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
             return name.replace(hashtag, underscore)
+        elif name.find("G1") != -1:
+            return name.replace("G1", "_1")
+        elif name.find("G2") != -1:
+            return name.replace("G2", "_2")
         else:
             # matches word + numbers => 'x1' => 'x_1'
             res = re.findall(r"[a-zA-Z]+|\d+", name)
@@ -175,21 +181,43 @@ class GenerateProof:
         self.stepPrefix = prefixStr
         return
         
-    def initLCG(self, skList, bfList, mskList, randList, keyDefsList, originalKeyNodes, transformKeyNodes, pseudoKey):
+    def initLCG(self, rndList, skList, bfList, mskList, randList, keyDefsList): # , originalKeyNodes, transformKeyNodes, pseudoKey):
         if self.lcg == None:
             self.lcg = LatexCodeGenerator()
+            self.rndList = rndList
             self.skList = skList
             self.bfList = bfList
             self.mskList = mskList
             self.randList = randList
             self.keyDefsList = keyDefsList
-            self.originalKeyList = originalKeyNodes
-            self.transformKeyList = transformKeyNodes
-            self.pseudoKey = pseudoKey
+            self.originalKeyList = []
+            self.transformKeyList = []
+            self.pseudoTK = []
+            self.expandedTK = []
             return True
         else:
             # init'ed already
             return False
+    
+    def setOriginalKey(self, originalKeyNodes):
+        assert self.lcg != None, "LatexCodeGen not initialized yet."
+        self.originalKeyList = originalKeyNodes
+        return
+    
+    def setTransformKey(self, transformKeyNodes):
+        assert self.lcg != None, "LatexCodeGen not initialized yet."
+        self.transformKeyList = transformKeyNodes
+        return
+    
+    def setPseudoTK(self, pseudoTK):
+        assert self.lcg != None, "LatexCodeGen not initialized yet."
+        self.pseudoTK = pseudoTK
+        return
+    
+    def setExpandedTK(self, expandedTK):
+        assert self.lcg != None, "LatexCodeGen not initialized yet."
+        self.expandedTK = expandedTK
+        return
     
     def setSDLName(self, name):
         self.latex_file = name
@@ -272,70 +300,19 @@ class GenerateProof:
         self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
         self.__lcg_buckets_pair_cnt += 1
         return
-        
-#    def setUnblindedPairs(self, lineNo, metaSdlList):
-#        assert self.lcg != None, "LatexCodeGen not initialized."
-#        print("DEBUG: ", lineNo)
-#        print("DEBUG: ", metaSdlList)        
-#        msg = "Some Message..."    
-#        CM = ", "
-#        listOfStr = []
-#        for i in range(len(metaSdlList)):
-#            eqStr = "BT" + str(i)
-#            for node in metaSdlList[i]:
-#                eqStr += self.lcg.print_statement( node ) + ", "
-#            eqStr = eqStr[:-len(CM)]
-#            listOfStr.append(eqStr)
-#        self.__lcg_unblinded_pair[ self.__lcg_unblinded_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
-#        self.__lcg_unblinded_pair_cnt += 1
-#        return
-    
-#    def setBreakPoint(self):
-#        self.lcg_data[ self.__lcg_steps ] = {} # how should this work?
-#        self.__lcg_steps += 1
-#        return
-    
-#    def setNextStep(self, msg, equation):
-#        preq = None
-#        if self.single_mode:
-#            if msg == 'consolidate':
-#                msg = 'Consolidate the verification equations (technique 0)'
-#            elif msg == 'smallexponents':
-#                msg = 'Apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$'
-#                preq = small_exp_label
-#            elif msg == 'finalbatcheq':                
-#                self.lcg_data[ self.__lcg_steps-1 ]['preq'] = final_batch_eq
-#                self.lcg_data['batch'] = self.lcg_data[ self.__lcg_steps-1 ]['eq']
-#                return
-#        else: # need to handle multiple equations mode differently!
-#            if msg in ['consolidate', 'smallexponents']:
-#                return
-#            elif msg == 'step1':
-#                msg = 'Consolidate the verification equations (technique 0), merge pairings with common first or second element (technique 6), and apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$ for each equation'
-#            elif msg == "Move the exponent(s) into the pairing (technique 2)" and self.__lcg_steps == 1:
-#                msg = 'Combine $\\numsigs$ signatures (technique 1), move the exponent(s) in pairing (technique 2)'
-#            elif msg == 'finalbatcheq':                
-#                self.lcg_data[ self.__lcg_steps-1 ]['preq'] = final_batch_eq
-#                self.lcg_data['batch'] = self.lcg_data[ self.__lcg_steps-1 ]['eq']
-#                return
-                
-#        self.lcg_data[ self.__lcg_steps ] = {'msg': msg, 'eq': self.lcg.print_statement( equation ), 'preq':preq, 'stepPrefix':self.stepPrefix }
-##        if new_msg != None: self.lcg_data[ self.__lcg_steps ]['new_msg'] = new_msg
-#        self.__lcg_steps += 1
-#        return
     
     # starting point
-    def proofHeader(self, title, list_sks, list_bfs, list_msk, list_rand, key_defs, original_key, transform_key, pseudo_key):
+    def proofHeader(self, title, list_rnds, list_sks, list_bfs, list_msk, list_rand, key_defs, original_key, transform_key, pseudo_key, expanded_tk_key):
         list_sks_str = ""; list_bfs_str = ""; list_msk_str = ""; list_rand_str = ""; key_defs_str = ""; 
         original_key_str = ""; transform_key_str = ""; pseudo_key_str = ""
+        # random secret variable list
+        list_rndsk_str = self.__toList(list_rnds)
         # list of msk values
         list_sks_str = self.__toList(list_sks)
         # list of msk values
         list_bfs_str = self.__toList(list_bfs)
         # list of key definitions
         key_defs_str = self.__toList(key_defs)
-        # pseudo key definition
-        pseudo_key_str = self.__toList(pseudo_key)
         # list of msk values
         list_msk_str = self.__toLaTeX(list_msk)
         # list of random values
@@ -344,8 +321,12 @@ class GenerateProof:
         original_key_str = self.__toPrintStatement(original_key)
         # transform key definition
         transform_key_str = self.__toPrintStatement(transform_key)
-
-        result = header % (title, title, list_sks_str, list_bfs_str, list_msk_str, list_rand_str, key_defs_str, original_key_str, transform_key_str, pseudo_key_str)
+        # pseudo key
+        pseudo_key_str = self.__toPrintStatement(pseudo_key)
+        # expanded tk str
+        expanded_tk_key_str = self.__toPrintStatement(expanded_tk_key)
+        
+        result = header % (title, title, list_rndsk_str, list_sks_str, list_bfs_str, list_msk_str, list_rand_str, key_defs_str, original_key_str, transform_key_str, pseudo_key_str, expanded_tk_key_str)
         return result
 
     def __toLaTeX(self, _list):
@@ -379,19 +360,19 @@ class GenerateProof:
 
     def writeConfig(self, latex_file):
         title = string.capwords(latex_file)
-        outputStr = self.proofHeader(title, self.skList, self.bfList, self.mskList, self.randList, self.keyDefsList, self.originalKeyList, self.transformKeyList, self.pseudoKey)
+        outputStr = self.proofHeader(title, self.rndList, self.skList, self.bfList, self.mskList, self.randList, self.keyDefsList, self.originalKeyList, self.transformKeyList, self.pseudoTK, self.expandedTK)
         # add list of ciphertext names
-        outputStr += headerCT % self.__toLaTeX(self.ctList)
+#        outputStr += headerCT % self.__toLaTeX(self.ctList)
         # build the decrypt portion of proof
-        outputStr += header_decrypt
-        for i in range(self.__lcg_decrypt_count):
-            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
-        outputStr += proof_footer
+#        outputStr += header_decrypt
+#        for i in range(self.__lcg_decrypt_count):
+#            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
+#        outputStr += proof_footer
        # build the transform portion of proof 
-        outputStr += header_transform
-        for i in range(self.__lcg_transform_count):
-            outputStr += self.proofBody(i+1, self.__lcg_transform_data[i])
-        outputStr += proof_footer
+#        outputStr += header_transform
+#        for i in range(self.__lcg_transform_count):
+#            outputStr += self.proofBody(i+1, self.__lcg_transform_data[i])
+#        outputStr += proof_footer
         return outputStr
     
     def writeProof(self, file=None):
@@ -404,7 +385,3 @@ class GenerateProof:
         f.write(output)
         f.close()
         return True
-
-    #def appendDecryptToProof(self, latex_file):
-        #f = open('proof_gen' + latex_file + '.tex', 'a')
-        #output = 

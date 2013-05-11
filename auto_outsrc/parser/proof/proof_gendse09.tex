@@ -1,0 +1,17 @@
+
+
+\catcode`\^ = 13 \def^#1{\sp{#1}{}}
+\newcommand{\newln}{\\&\quad\quad{}}
+\newcommand{\schemename}{{\sf Dse09}}
+\newcommand{\schemeref}{Dse09_proof}
+\newcommand{\schemecite}{\cite{REF}}
+\newcommand{\randomsecretkeys}{ RD_1,RD_2,RD_3,RD_4,RD_5,RD_6,RD_7,RK,Rtagk }
+\newcommand{\secretkey}{ D_1,D_2,D_3,D_4,D_5,D_6,D_7,K,tagk }
+\newcommand{\listofbfs}{ {\sf uf_0},{\sf bf_0},{\sf uf_1} }
+\newcommand{\listofmskvalues}{ \alpha,a_1 }
+\newcommand{\listofrandomvalues}{ r_1,r_2,z_2,z_1,idhash,tagk }
+\newcommand{\keydefinitions}{ D_1' = (D_1 ) ^ { {\sf uf_0}},\alpha' = {\alpha \cdot {\sf bf_0}},z_1' = {z_1 \cdot {\sf bf_0}},r_2' = {r_2 \cdot {\sf bf_0}},r_1' = {r_1 \cdot {\sf bf_0}},z_2' = {z_2 \cdot {\sf bf_0}},K' = (K ) ^ { {\sf uf_1}},tagk' = {tagk \cdot {\sf bf_0}} }
+\newcommand{\originalkey}{ D_1 = g_2^{\alpha \cdot a_1} \cdot v_2^{(r_1 + r_2)},D_2 = g_2^{-\alpha} \cdot v1_2^{(r_1 + r_2)} \cdot g_2^{z_1},D_3 = g_2^{b \cdot -z_1},D_4 = v2_2^{(r_1 + r_2)} \cdot g_2^{z_2},D_5 = g_2^{b \cdot -z_2},D_6 = g_2^{b \cdot r_2},D_7 = g_2^{r_1},K = (u_2^{idhash} \cdot w_2^{tagk} \cdot h_2)^{r_1},tagk = tagk }
+\newcommand{\transformkey}{ {D_1'} = {D_1}^{{{\sf uf_0}}},{D_2'} = {D_2}^{{{\sf bf_0}}},{D_3'} = {D_3}^{{{\sf bf_0}}},{D_4'} = {D_4}^{{{\sf bf_0}}},{D_5'} = {D_5}^{{{\sf bf_0}}},{D_6'} = {D_6}^{{{\sf bf_0}}},{D_7'} = {D_7}^{{{\sf bf_0}}},K' = K^{{{\sf uf_1}}},tagk' = tagk^{{{\sf bf_0}}} }
+\newcommand{\pseudotransformkey}{ {\bar{D_1}} = {RD_1}^{{{\sf uf_0}}},{\bar{D_2}} = {RD_2}^{{{\sf bf_0}}},{\bar{D_3}} = {RD_3}^{{{\sf bf_0}}},{\bar{D_4}} = {RD_4}^{{{\sf bf_0}}},{\bar{D_5}} = {RD_5}^{{{\sf bf_0}}},{\bar{D_6}} = {RD_6}^{{{\sf bf_0}}},{\bar{D_7}} = {RD_7}^{{{\sf bf_0}}},\bar{K} = RK^{{{\sf uf_1}}},\bar{tagk} = Rtagk^{{{\sf bf_0}}} }
+\newcommand{\expandedtransformkey}{ D_1' = (g_2^{\alpha \cdot a_1} \cdot v_2^{(r_1 + r_2)})^{{{\sf uf_0}}},D_2' = g_2^{-\alpha'} \cdot v1_2^{(r_1' + r_2')} \cdot g_2^{z_1'},D_3' = g_2^{b \cdot -z_1'},D_4' = v2_2^{(r_1' + r_2')} \cdot g_2^{z_2'},D_5' = g_2^{b \cdot -z_2'},D_6' = g_2^{b \cdot r_2'},D_7' = g_2^{r_1'},K' = u_2^{idhash} \cdot w_2^{tagk} \cdot h_2^{r_1 \cdot {{\sf uf_1}}},tagk' = tagk' }

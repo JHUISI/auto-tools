@@ -14,8 +14,7 @@
 
 \begin{document}
 % input for automatically generated outsource proof
-\input{proof_genwaters09}
-%\input{proof_gendsewaters09_test}
+\input{proof_gendse09}
 
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
@@ -58,7 +57,11 @@
 
 \newcommand{\Sig}{\mathsf{Sig}}
 \newcommand{\G}{\mathsf{Gen}}
+\newcommand{\TK}{\mathsf{TK}}
+\newcommand{\pseudokey}{{\sf TK}_{sim}}
 \newcommand{\SK}{\mathsf{SK}}
+\newcommand{\PK}{\mathsf{PK}}
+\newcommand{\MSK}{\mathsf{MSK}}
 \newcommand{\CT}{\mathsf{CT}}
 \newcommand{\Screen}{\mathsf{Screen}}
 \newcommand{\Setup}{\mathsf{Setup}}
@@ -77,34 +80,45 @@
 
 \section{$\KeygenOut$ Proof}
 
-Let $\listofmskvalues$ be the MSK variable(s) and $\listofrandomvalues$ be randomness selected in the $\Keygen$ algorithm. The $\Keygen$ algorithm runs to obtain the secret key, \\ $\SK = \{\secretkey\}$ and is computed as follows:
+Let $\listofmskvalues$ be the $\MSK$ variable(s) and $\listofrandomvalues$ be randomness selected in the $\Keygen$ algorithm. The $\Keygen$ algorithm runs to obtain the secret key, \\ $\SK = \{\secretkey\}$ and is computed as follows:
 
 \begin{description}
 \item {\sf SK}: \begin{multline*}  \originalkey \end{multline*}
 \end{description}
 
 \noindent
-The $\KeygenOut$ algorithm selects blinding factors, $\listofbfs \in \Zp^*$. Let $\keydefinitions$ be the new MSK variables and random values selected in $\KeygenOut$ and let the new $\SK'$ be computed as follows:
+The $\KeygenOut$ algorithm selects blinding factors, $\listofbfs \in \Zp^*$. Let the new $\TK$ be computed as follows:
 
 \begin{description}
-\item {\sf SK'}: \begin{multline*}  \transformkey \end{multline*}
+\item {\sf $\TK$}: \begin{multline*}  \transformkey \end{multline*}
 \end{description}
 
 \noindent
-The new $\SK'$ has the same uniform distribution as a randomly generated pseudo-key ($\pseudokey$) without knowledge of the original $\Keygen$. Therefore, the $\SK'$ provides no benefit to an adversary.
+Note that a simulator given only public parameters ($\PK$) can formulate a simulated $\pseudokey$ by randomly selecting $\randomsecretkeys$ and computing: 
 
-\section{$\Transform$ Proof}
+\begin{description}
+\item {\sf $\pseudokey$}: \begin{multline*}  \pseudotransformkey \end{multline*}
+\end{description}
 
-In the ${\schemename}$ scheme, we show the relevant portions to our transformation in the $\Decrypt$ algorithm. The ciphertext, $\CT = \{\ciphertext\}$ and the \\ $\SK = \{\secretkey\}$. 
+Observe that this simulated $\pseudokey$ has an identical distribution to $\TK$.  Let $\keydefinitions$ be the new $\MSK$ variables and random values selected in $\KeygenOut$, and $\TK$ is computed as follows:
 
-%\begin{description}
-%\item {Step 1: Compute tag} \begin{equation*} tag =  \end{equation*}
-%\end{description}
-\gutsofdecrypt
+\begin{description}
+\item {\sf $\TK$}: \begin{multline*}  \expandedtransformkey \end{multline*} 
+\end{description}
 
-% Rework this text...
-Then, we show how the computation of the original $\Decrypt$ algorithm is distributed between the $\Transform$ algorithm and the $\Decout$ algorithm.
-
-\gutsoftransform
+% TODO: fine-tune
+%\section{$\Transform$ Proof}
+%
+%In the ${\schemename}$ scheme, we show the relevant portions to our transformation in the $\Decrypt$ algorithm. The ciphertext, $\CT = \{\ciphertext\}$ and the \\ $\SK = \{\secretkey\}$. 
+%
+%%\begin{description}
+%%\item {Step 1: Compute tag} \begin{equation*} tag =  \end{equation*}
+%%\end{description}
+%\gutsofdecrypt
+%
+%% Rework this text...
+%Then, we show how the computation of the original $\Decrypt$ algorithm is distributed between the $\Transform$ algorithm and the $\Decout$ algorithm.
+%
+%\gutsoftransform
 
 \end{document}

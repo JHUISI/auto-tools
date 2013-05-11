@@ -1258,6 +1258,7 @@ def getLatexVar(index):
 def instantiateBFSolver(config, assignInfo):
     # get random file
     name = ""
+    _verbose = False
     length = 5
     for i in range(length):
         name += random.choice(string.ascii_lowercase + string.digits)
@@ -1297,15 +1298,27 @@ def instantiateBFSolver(config, assignInfo):
     keyDefs = []
     bfList = []
     SKList = []
+    RndList = []
     originalKeyNodes = []
+    expTransformKeyNodes = []
     transformKeyNodes = []
-    pseudoKey = []
+    pseudoTransformKey = []
     for i in skList:
         skElem = bfMap[ i ]
         skLatex = getLatexVar(i)
+        rndLatex = "R" + skLatex
         SKList.append(skLatex)
-        thePseudoKey =  skLatex + "''"
-        if thePseudoKey not in pseudoKey: pseudoKey.append( thePseudoKey )
+        RndList.append(rndLatex)
+        tkVar   =  skLatex + "'"
+        tkVar2  =  "\\bar{" + skLatex + "}"
+        tkBf    = BinaryNode("{\sf " + getLatexVar(skBfMap[i]) + "}")
+        tkAssign  = BinaryNode(ops.EXP, BinaryNode(skLatex), tkBf)
+        tkAssign2 = BinaryNode(ops.EXP, BinaryNode(rndLatex), tkBf)
+        
+        transformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(tkVar), tkAssign) )
+        pseudoTransformKey.append( BinaryNode(ops.EQ, BinaryNode(tkVar2), tkAssign2) )
+#        thePseudoKey =  skLatex + "'"
+#        if thePseudoKey not in pseudoKey: pseudoKey.append( thePseudoKey )
         (funcName, varInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, i)
         if type(skElem) == dict:
             for j, k in skElem.items():
@@ -1319,27 +1332,35 @@ def instantiateBFSolver(config, assignInfo):
             for j, k in skElem.items():
                 InPlaceReplaceAttr(resNode2, j, j + "'")
             originalKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i), resNode) ) # I + " = " + str(resNode) )
-            transformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i + "'"), resNode2) ) # I + " = " + str(resNode2) )
+            expTransformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i + "'"), resNode2) ) # I + " = " + str(resNode2) )
             print("node: ", resNode, type(resNode)) # need the symbolic executed version! 
         else:
             print("UNIQUE BF: ", skElem)
             bfStr = "{\sf " + getLatexVar(skElem) + "}"
             if bfStr not in bfList: bfList.append( bfStr )
-            resNode = varInfoObj.getAssignBaseElemsOnly()            
+            resNode = varInfoObj.getAssignBaseElemsOnly()
             theDef = getLatexVar(i) + "' = (" + getLatexVar(i) + " ) ^ { " + bfStr + "}"
             if theDef not in keyDefs: keyDefs.append( theDef )
             originalKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i), resNode) ) # I + " = " + str(resNode) )
             exp = BinaryNode(ops.EXP, resNode, BinaryNode(bfStr))
-            transformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i + "'"), exp) ) # I + " = " + str(resNode2) )
+            expTransformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i + "'"), exp) ) # I + " = " + str(resNode2) )
 
-    print("\secretkey = ", SKList)
-    print("\\blindingfactors = ", bfList)
-    print("\keydefinitions =", keyDefs)
-    print("\originalkey = ", originalKeyNodes)
-    print("\\transformkey = ", transformKeyNodes)
-    print("\pseudokey = ", pseudoKey, "\n")
+    if _verbose:
+        print("\secretkey = ", SKList)
+        print("\\blindingfactors = ", bfList)
+        print("\keydefinitions =", keyDefs)
+        print("\originalkey = ", originalKeyNodes)
+        print("\\transformkey = ", transformKeyNodes)
+        print("\expandedtransformkey = ", expTransformKeyNodes)
+        print("\pseudotransformkey = ", pseudoTransformKey)
+        print("\\randomsecretkeys = ", RndList)
+    
     proof = GenerateProof()
-    proof.initLCG(SKList, bfList, mskVars, rndVars, keyDefs, originalKeyNodes, transformKeyNodes, pseudoKey)
+    proof.initLCG(RndList, SKList, bfList, mskVars, rndVars, keyDefs)
+    proof.setOriginalKey(originalKeyNodes)
+    proof.setTransformKey(transformKeyNodes)
+    proof.setPseudoTK(pseudoTransformKey)
+    proof.setExpandedTK(expTransformKeyNodes)
     proof.setSDLName(sdlName)
 #    proof.writeProof(sdlName)
     #print(results.resultDictionary)
