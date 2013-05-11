@@ -1,7 +1,7 @@
-Strong Unforgeability
-=====================
+AutoStrong
+===========
 
-- Background
+- Intro/Background: 
 
 - Objective
 

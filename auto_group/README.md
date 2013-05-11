@@ -1,5 +1,5 @@
-AutoGroup Tool
-==============
+AutoGroup
+==========
 
 1. Intro/Install
 
