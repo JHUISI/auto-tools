@@ -1020,16 +1020,15 @@ class AsymSDL:
                 _userFuncLines = userFuncData[0]
                 noChangeList  = list(set(noChangeList).union( userFuncData[1] ))
                 userFuncLines.append( _userFuncLines )
-#                userFuncData = sdl.getVarInfoFuncStmts( userFuncs )
-#                userTypes = userFuncData[1]
-#                for j in userTypes.keys():
-#                    print("user func vars: ", j)
-#                    noChangeList.append(j)
         
-        # update 
+        # update the generator lists if there's a generator in the list
         for i in noChangeList:
             if i in self.generatorLines.keys():
+                # strip from the data structures
                 self.generatorLines[ i ] = None
+                self.groupInfo['G1'] = self.groupInfo['G1'].difference( [i] )
+                self.groupInfo['G2'] = self.groupInfo['G2'].difference( [i] )
+                self.groupInfo['both'] = self.groupInfo['both'].difference( [i] ) 
  
         newLinesSe = []
         newLinesS = []
