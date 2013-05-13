@@ -1059,8 +1059,8 @@ class AsymSDL:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
                     #print("<===== processing %s =====>" % funcName)
-                    self.__currentFunc = funcName                    
-                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList) 
+                    self.__currentFunc = funcName
+                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
                     #print("<===== processing %s =====>" % funcName)
                 
             newLinesK = transFuncRes.get( config.keygenFuncName )
@@ -1092,11 +1092,20 @@ class AsymSDL:
             origPKList = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
             # 3. split pk into two new public keys (sPK, and vPK)
             if len(origPKList) > 0:
-                (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = self.optimizePK(config, origPKList)
+                pkData = self.optimizePK(config, origPKList)
+                (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = pkData
                 
                 # apply PKSIG optimizations to pk
-                newVarNames = [sPub, vPub]
-                newVarNodes = [newSignPK, newVerifyPK]
+                newVarNames = []
+                newVarNodes = []
+                if newSignPK != None:
+                    newVarNames += [sPub]
+                    newVarNodes += [newSignPK]
+                if newVerifyPK != None:
+                    newVarNames += [vPub]
+                    newVarNodes += [newVerifyPK]
+#                    newVarNames = [sPub, vPub]
+#                    newVarNodes = [newSignPK, newVerifyPK]
                 #print("Public Key defined in ", defInFuncName)
                 if defInFuncName == "setup":
                     newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
@@ -1105,10 +1114,13 @@ class AsymSDL:
                 
                 # sPub => keygen AND sign
                 # vPub => verify 
-                if defInFuncName != "keygen":
-                    newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)                
-                newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
-                newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
+                if defInFuncName != "keygen" and newSignPK != None:
+                    newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)
+                
+                if newSignPK != None:
+                    newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
+                if newVerifyPK != None:
+                    newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines
 
@@ -1178,10 +1190,16 @@ class AsymSDL:
             
             sPub = "s"+config.keygenPubVar
             vPub = "v"+config.keygenPubVar
-            newSignPK      = self.__createListNode(sPub, signUsedVars)
-            newSignPKexp   = self.__createExpandNode(sPub, signUsedVars)
-            newVerifyPK    = self.__createListNode(vPub, verifyUsedVars)
-            newVerifyPKexp = self.__createExpandNode(vPub, verifyUsedVars)
+            newSignPK = None
+            newSignPKexp = None
+            if len(signUsedVars) > 0:
+                newSignPK      = self.__createListNode(sPub, signUsedVars)
+                newSignPKexp   = self.__createExpandNode(sPub, signUsedVars)
+            newVerifyPK = None
+            newVerifyPKexp = None
+            if len(verifyUsedVars) > 0:
+                newVerifyPK    = self.__createListNode(vPub, verifyUsedVars)
+                newVerifyPKexp = self.__createExpandNode(vPub, verifyUsedVars)
 
             
         return (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp)

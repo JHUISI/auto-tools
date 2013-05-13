@@ -55,12 +55,12 @@ input := list{gk, vk, sk, m1, m2}
  gk := expand{G, C, F, U1, U2}
  vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
  sk := expand{K1, K2}
- M1 := C ^ m1
- M2 := C ^ m2
- M3 := F ^ m1
- M4 := F ^ m2
- M5 := U1 ^ m1
- M6 := U2 ^ m2
+ Ms1 := C ^ m1
+ Ms2 := C ^ m2
+ Ms3 := F ^ m1
+ Ms4 := F ^ m2
+ Ms5 := U1 ^ m1
+ Ms6 := U2 ^ m2
 
  r1 := random(ZR)
  r2 := random(ZR)
@@ -68,7 +68,7 @@ input := list{gk, vk, sk, m1, m2}
  z2 := random(ZR)
  r := r1 + r2
 
- S0 := (M5 * M6 * H) ^ r1
+ S0 := (Ms5 * Ms6 * H) ^ r1
  S1 := K2 * (V ^ r)
  S2 := ((K1 ^ -1) * (V1 ^ r) * (G ^ z1)) 
  S3 := B ^ -z1
@@ -76,7 +76,7 @@ input := list{gk, vk, sk, m1, m2}
  S5 := B ^ -z2
  S6 := B ^ r2
  S7 := G ^ r1
- M := list{M1, M2, M3, M4, M5, M6}
+ M := list{Ms1, Ms2, Ms3, Ms4, Ms5, Ms6}
  sig := list{S0, S1, S2, S3, S4, S5, S6, S7}
 output := list{M, sig}
 END :: func:sign
@@ -85,11 +85,11 @@ END :: func:sign
 BEGIN :: func:verify
 input := list{vk, M, sig}
  vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
- M := expand{M1, M2, M3, M4, M5, M6}
+ M := expand{Ms1, Ms2, Ms3, Ms4, Ms5, Ms6}
  sig := expand{S0, S1, S2, S3, S4, S5, S6, S7}
  
 BEGIN :: if
-if {{ e(S7, (M5 * (M6 * H))) == e(G, S0) } and { ((e(S1, B) * (e(S2, B1) * e(S3, A1))) == (e(S6, R1) * e(S7, W1))) } and { (e(S1, B) * e(S4, B2) * e(S5, A2)) == ((e(S6, R2) * e(S7, W2)) * e(X1, X2)) } and { e(F, M1) == e(C, M3) } and { e(F, M2) == e(C, M4) } and { e(U1, M1) == e(C, M5) } and { e(U2, M2) == e(C, M6) }} 
+if {{ e(S7, (Ms5 * (Ms6 * H))) == e(G, S0) } and { ((e(S1, B) * (e(S2, B1) * e(S3, A1))) == (e(S6, R1) * e(S7, W1))) } and { (e(S1, B) * e(S4, B2) * e(S5, A2)) == ((e(S6, R2) * e(S7, W2)) * e(X1, X2)) } and { e(F, Ms1) == e(C, Ms3) } and { e(F, Ms2) == e(C, Ms4) } and { e(U1, Ms1) == e(C, Ms5) } and { e(U2, Ms2) == e(C, Ms6) }} 
    output := True
 else
    output := False

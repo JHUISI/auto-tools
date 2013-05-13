@@ -1039,7 +1039,11 @@ class SubstitutePairings:
                 self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs # self.mapG2.get(lhs)
                 varL = [new_lhs]
                 self.usedGens = self.usedGens.union(varL)     
-                self.usedVar  = self.usedVar.union(varL)                       
+                self.usedVar  = self.usedVar.union(varL)          
+                # check if rhs in 
+                if rhs in self.mapG1.keys() and rhs != self.mapG1[rhs]: # in mapG1 and different
+                    # then update as well       
+                    new_rhs = self.updateNode(node.right, rhs, self.mapG1[rhs])
                 return
             elif rhs in self.pairingInfo[G2Prefix]:
 #                node.left.setAttribute( self.mapG1.get(lhs) )
@@ -1048,6 +1052,10 @@ class SubstitutePairings:
                 varL = [new_lhs]
                 self.usedGens = self.usedGens.union(varL)
                 self.usedVar  = self.usedVar.union(varL)                                       
+                # check if rhs in 
+                if rhs in self.mapG2.keys() and rhs != self.mapG2[rhs]: # in mapG1 and different
+                    # then update as well       
+                    new_rhs = self.updateNode(node.right, rhs, self.mapG2[rhs])                                          
                 return
         # if e(X \in G1, g) => e(X, gG2) and vice versa                
         elif lhs not in self.generators and rhs in self.generators:
