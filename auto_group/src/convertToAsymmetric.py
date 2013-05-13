@@ -197,7 +197,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
                 newLines.append(assign) # unmodified
                 return True
             else:
-                if info['verbose']: print(" :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
+                if info['verbose']: print(assignVar, " :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
                 if info['varTypes'].get(assignVar).getType() == types.G1:
                     pass # figure out what to do here
         if assignVar == outputKeyword:
@@ -963,6 +963,7 @@ class AsymSDL:
     def __getFuncLines(self, funcName):
         funcConfig = sdl.getVarInfoFuncStmts( funcName )
         Stmts = funcConfig[0]
+        usedVars = set()
         begin = "BEGIN :: func:" + funcName
         end   = "END :: func:" + funcName
         
@@ -984,10 +985,12 @@ class AsymSDL:
                 newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
                 newLines.append( str(Stmts[i].getAssignNode()) )
             else:
+                if Type(Stmts[i].getAssignNode()) == ops.EQ:
+                    usedVars = usedVars.union( GetAttributeVars(Stmts[i].getAssignNode()) )
                 newLines.append(str(Stmts[i].getAssignNode()))
         
         newLines.append( end )
-        return newLines
+        return newLines, list(usedVars)
 
 
     def recordUsedVar(self, varList):
@@ -1013,13 +1016,20 @@ class AsymSDL:
             for userFuncs in self.userFuncList:
                 # JAA: commented out for benchmarking                
                 #print("processing user defined func: ", userFuncs)
-                userFuncLines.append( self.__getFuncLines(userFuncs) )
+                userFuncData = self.__getFuncLines(userFuncs)
+                _userFuncLines = userFuncData[0]
+                noChangeList  = list(set(noChangeList).union( userFuncData[1] ))
+                userFuncLines.append( _userFuncLines )
 #                userFuncData = sdl.getVarInfoFuncStmts( userFuncs )
 #                userTypes = userFuncData[1]
 #                for j in userTypes.keys():
 #                    print("user func vars: ", j)
 #                    noChangeList.append(j)
         
+        # update 
+        for i in noChangeList:
+            if i in self.generatorLines.keys():
+                self.generatorLines[ i ] = None
  
         newLinesSe = []
         newLinesS = []

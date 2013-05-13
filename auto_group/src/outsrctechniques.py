@@ -1675,7 +1675,7 @@ class GetAttrs:
     
     def visit_attr(self, node, data):
         varName = node.getAttribute()
-        if varName.isdigit(): return
+        if varName.isdigit() or varName in [inputKeyword, outputKeyword]: return
         if varName.find(LIST_INDEX_SYMBOL) != -1:
             newVarName = varName.split(LIST_INDEX_SYMBOL)
             if self.dropPounds: addVarName = newVarName[0]
