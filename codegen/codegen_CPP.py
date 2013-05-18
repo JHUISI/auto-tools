@@ -854,7 +854,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
             userFuncsOutputString += "    " + userGlobalsFuncName + "();\n"
             #userFuncsOutputString += "\treturn;\n}\n\n"
             userFuncsOutputString += "    return;\n}\n\n"
-            userFuncsCPPFile.write(userFuncsOutputString)
+            #userFuncsCPPFile.write(userFuncsOutputString)
         return funcOutputString
         
     return

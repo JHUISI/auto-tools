@@ -3,6 +3,9 @@ import sys, time
 from batcher import sdlpath
 from batcher import batchverify
 
+#import codegen_CPP
+#import codegen_PY
+
 time_in_ms = 1000
 
 version  = '1.0'
@@ -128,4 +131,4 @@ if benchmark != None:
     f.close()
     print("result : ", result)
 else:
-    batchverify.run_main(opts_dict)
+    batchverify.run_main(opts_dict)    

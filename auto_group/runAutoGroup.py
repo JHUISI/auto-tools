@@ -142,7 +142,6 @@ def configAutoGroup(sdl_file, config_file, output_file, verbose, benchmarkOpt, e
 
 # run AutoGroup with the designated options
 configAutoGroup(sdl_file, config_file, output_file, verbose, benchmark, estimateSize)
-
     
 #if __name__ == "__main__":
 #    if len(sys.argv) > 3:

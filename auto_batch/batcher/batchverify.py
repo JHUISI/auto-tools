@@ -16,6 +16,7 @@ from batcher.loopunroll import *
 from batcher.benchmark_interface import getBenchmarkInfo
 from batcher.constructbatch import *
 import time
+import codegen_PY, codegen_CPP
 
 debug = False
 THRESHOLD_FLAG = CODEGEN_FLAG = PRECOMP_CHECK = VERBOSE = CHOOSE_STRATEGY = False
@@ -362,9 +363,14 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     
 def buildSDLBatchVerifier(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting):
     """constructs the SDL batch verifier"""
-    if sdlOutFile == None: sdlOutFile = types['name'] + "-full-batch"
+    if sdlOutFile == None: 
+        sdlOutFile = types['name'] + "-full-batch"
+    codeOutfile = types['name'] + "Batch"
     sdlBatch = SDLBatch(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting)
     sdlBatch.construct(VERBOSE)
+    # write out in current directory: TODO => add 'path' to command line options 
+    codegen_CPP.codegen_CPP_main(sdlOutFile, codeOutfile + ".cpp", [])
+    codegen_PY.codegen_PY_main(sdlOutFile, codeOutfile + ".py", codeOutfile + "User.py")
     return sdlBatch.getVariableCount()
 
 def run_main(opts, start=None, stop=None):
@@ -482,6 +488,6 @@ def run_main(opts, start=None, stop=None):
     #print("technique list: ", applied_technique_list)
     stopTime = time.clock() # in case we're benchmarking
     if benchmark_batcher and stop and type(stop) == list: stop[0] = stopTime
-    return buildSDLBatchVerifier(sdlOutFile, sdl_data, types, finalEq, batch_precompute, global_count, setting)        
-    
+    return buildSDLBatchVerifier(sdlOutFile, sdl_data, types, finalEq, batch_precompute, global_count, setting)
+
 
