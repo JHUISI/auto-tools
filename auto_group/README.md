@@ -6,7 +6,7 @@ Often, pairing-based cryptographic schemes are described using symmetric groups.
 Installation
 ============
 
-To use AutoGroup, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated batch verification algorithm in Python and/or C++.
+To use AutoGroup, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated the asymmetric scheme in Python and/or C++.
 
 AutoGroup also requires the [Z3](https://z3.codeplex.com/) Theorem prover (with Python 3 bindings).
 
