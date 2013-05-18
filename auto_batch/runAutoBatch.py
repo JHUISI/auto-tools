@@ -3,9 +3,6 @@ import sys, time
 from batcher import sdlpath
 from batcher import batchverify
 
-#import codegen_CPP
-#import codegen_PY
-
 time_in_ms = 1000
 
 version  = '1.0'
@@ -40,19 +37,23 @@ help_info   = """
 \t-q, --query [ no-argument ]
 \t\t: takes a test statement for debugging SDL parser
 
+\t--path [ path/to/dir/ ]
+\t\t: destination for AutoBatch output files. Default: current dir.
+
+
 """
 
 verbose = precompute_check = threshold = codegen = proof = print_usage = print_options = False
 strategy = 'bfs' # default strategy
 input_file = test_statement = benchmark = None
-output_file = None
+output_file = dest_path = "./"
 library = 'miracl'
 
 #print('ARGV      :', sys.argv[1:])
 
 try:
     options, remainder = getopt.getopt(sys.argv[1:], 'o:l:cdhpvtb:s:f:', ['outfile=', 'sdl=', 'threshold', 'partial-codegen', 'proof', 'strategy=', 
-                                                                    'verbose', 'library=','query', 'benchmark', 'print', 'help'])
+                                                                    'verbose', 'library=','query', 'benchmark', 'path=', 'print', 'help'])
 except:
     sys.exit("ERROR: Specified invalid arguments.")
     
@@ -82,6 +83,8 @@ for opt, arg in options:
         test_statement = arg
     elif opt in ('-b', '--benchmark'):
         benchmark = arg
+    elif opt == '--path':
+        dest_path = arg
     elif opt == '--print':
         print_options = True
 
@@ -98,6 +101,7 @@ if print_options:
     print('SDL INPUT  :', input_file)
     print('CODEGEN    :', codegen)
     print('SDL OUTPUT :', output_file)
+    print('PATH       :', dest_path)
     print('THRESHOLD  :', threshold)
     print('GEN PROOF  :', proof)
     print('STRATEGY   :', strategy)
@@ -119,6 +123,7 @@ opts_dict['pre_check'] = precompute_check
 opts_dict['test_stmt'] = test_statement
 opts_dict['library']   = library
 opts_dict['benchmark'] = benchmark
+opts_dict['path']      = dest_path
 # execute batcher on the provided options
 if benchmark != None:
     f = open(benchmark, 'a')

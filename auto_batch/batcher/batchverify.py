@@ -361,11 +361,13 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
 
     return (SDL_OUT_FILE, sdl_data, verify2, batch_precompute, global_count)
     
-def buildSDLBatchVerifier(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting):
+def buildSDLBatchVerifier(opts, sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting):
     """constructs the SDL batch verifier"""
+    dest_path = opts['path']
     if sdlOutFile == None: 
         sdlOutFile = types['name'] + "-full-batch"
-    codeOutfile = types['name'] + "Batch"
+    if dest_path[-1] != '/': dest_path += '/'
+    codeOutfile = dest_path + types['name'] + "Batch"
     sdlBatch = SDLBatch(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting)
     sdlBatch.construct(VERBOSE)
     # write out in current directory: TODO => add 'path' to command line options 
@@ -488,6 +490,6 @@ def run_main(opts, start=None, stop=None):
     #print("technique list: ", applied_technique_list)
     stopTime = time.clock() # in case we're benchmarking
     if benchmark_batcher and stop and type(stop) == list: stop[0] = stopTime
-    return buildSDLBatchVerifier(sdlOutFile, sdl_data, types, finalEq, batch_precompute, global_count, setting)
+    return buildSDLBatchVerifier(opts, sdlOutFile, sdl_data, types, finalEq, batch_precompute, global_count, setting)
 
 

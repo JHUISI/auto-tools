@@ -56,10 +56,12 @@ For the help menu, execute the following:
 		-q, --query [ no-argument ]
 			: takes a test statement for debugging SDL parser
 	
+		--path [ path/to/dir/ ]
+			: destination for AutoBatch output files. Default: current dir.
 
 An example for how to execute AutoBatch on the BLS signature scheme with some standard options:
 
-	python runAutoBatch.py --sdl schemes/BLS/bls.sdl --outfile schemes/BLS/bls-full-batch.sdl --proof -v
+	python runAutoBatch.py --sdl schemes/BLS/bls.sdl --outfile schemes/BLS/bls-full-batch.sdl --path schemes/BLS/ --proof -v
 
 
 Disclaimer

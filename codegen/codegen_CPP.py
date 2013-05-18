@@ -84,7 +84,7 @@ def writeCurrentNumTabsIn(outputFile):
 
 def addImportLines(defineAsClass, outputFileName):
     global setupFile
-
+    slash = "/"
     cppImportLines = ""
     cppImportLines += "#include \"Charm.h\"\n"
     cppImportLines += "#include <iostream>\n"
@@ -94,6 +94,8 @@ def addImportLines(defineAsClass, outputFileName):
     cppImportLines += "using namespace std;\n"
     cppImportLines += "\n"
     if defineAsClass:
+        if slash in outputFileName: 
+            outputFileName.split(slash)[-1]
         setupFile.write("#include \"%s\"\n\n" % outputFileName)
         return cppImportLines
     else:
