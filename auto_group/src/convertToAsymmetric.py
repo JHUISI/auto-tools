@@ -726,7 +726,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
-    info = {'verbose':False}
+    info = {'verbose':sdlVerbose}
     info[curveID] = options['secparam']
     gen = Generators(info)
     # JAA: commented out for benchmarking    
