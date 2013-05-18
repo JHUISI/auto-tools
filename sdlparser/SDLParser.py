@@ -82,6 +82,8 @@ builtInTypes["getString"] = types.str
 builtInTypes["getTransitions"] = types.metalistInt
 builtInTypes["strkeys"] = types.listStr
 builtInTypes["chamH"] = types.ZR
+builtInTypes["concat"] = types.list
+
 
 #TODO:  CHANGE THIS TO SYMMAP
 #builtInTypes["getTransitions"] = types.symmap
@@ -165,7 +167,7 @@ class SDLParser:
         Concat = Literal("concat{")
         StrConcat = Literal("strconcat{")
         MultiLine = Literal(";") + Optional(Literal("\\n").suppress())
-        funcName = Word(alphanums + '_')
+        funcName = Word(alphanums + '_.')
         blockName = Word(alphanums + '_:')
         BeginAndEndBlock = CaselessLiteral(START_TOKEN) | CaselessLiteral(END_TOKEN)
         BlockSep   = Literal(BLOCK_SEP)
@@ -251,12 +253,12 @@ class SDLParser:
             ops.reverse()
             newList.listNodes = list(ops)
             return newList
-        elif op in ["random(", "forall{"]: # one argument
+        elif op in ["if {", "elseif {", "random(", "forall{"]: # one argument
             op1 = self.evalStack(stack, line_number)
             return createTree(op, op1, None)
-        elif op in ["if {", "elseif {"]:
-            op1 = self.evalStack(stack, line_number)
-            return createTree(op, op1, None)
+#        elif op in ["if {", "elseif {"]:
+#            op1 = self.evalStack(stack, line_number)
+#            return createTree(op, op1, None)
         elif op in ["else"]:
             startLineNo_ElseBranch = line_number
             lenIfElseBranches = len(ifElseBranches[currentFuncName])
@@ -957,6 +959,10 @@ def getVarTypeInfoForStringVar(nodeAttrFullName):
     if (nodeAttrFullName.isdigit()):
         return types.int # JAA: make int and ZR synonymous although they have separate Enum values. Conceptually the same for our purposes
 
+    # check if the user defined it in types section
+    if (nodeAttrFullName in varTypes[TYPES_HEADER]):
+        return varTypes[TYPES_HEADER][nodeAttrFullName].getType()
+
     return types.NO_TYPE
 
 
@@ -1047,13 +1053,13 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
         return getVarTypeInfoRecursive(node.left)
     if (node.type  == ops.CONCAT):
         for i in node.getListNode():
-            if getVarTypeInfoForStringVar(i) == NO_TYPE:
-                sys.exit("getVarTypeInfoRecursive in SDLParser.py found a variable with NO_TYPE in a CONCAT operation. Variable name: ", i)
+            if getVarTypeInfoForStringVar(i) == types.NO_TYPE:
+                sys.exit("getVarTypeInfoRecursive in SDLParser.py found a variable with NO_TYPE in a CONCAT operation. Variable name: " + i)
         return getVarTypeInfoForStringVar(node.getListNode()[0])
     if (node.type  == ops.STRCONCAT):
         for i in node.getListNode():
             if getVarTypeInfoForStringVar(i) != types.str:
-                sys.exit("getVarTypeInfoRecursive in SDLParser.py found a variable that isn't a STRING type in a STRCONCAT operation. Variable name: ", i)
+                sys.exit("getVarTypeInfoRecursive in SDLParser.py found a variable that isn't a STRING type in a STRCONCAT operation. Variable name: " + i)
         return types.str
 #        for i in node.getListNode():
     if ( (node.type == ops.ADD) or (node.type == ops.SUB) or (node.type == ops.MUL) or (node.type == ops.DIV) ):

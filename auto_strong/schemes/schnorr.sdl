@@ -1,0 +1,50 @@
+name := schnorr
+setting := symmetric
+
+BEGIN :: types
+ m := list
+END :: types
+
+BEGIN :: func:keygenP
+input := list{ppk, psk}
+ k := random(ZR)
+ g := random(G1)
+ x := random(ZR)
+ X := g ^ x
+ ppk := list{k, g, X}
+ psk := list{k, g, x}
+ output := list{ppk, psk}
+END :: func:keygenP
+
+BEGIN :: func:keygenS
+input := list{psk}
+ psk := expand{k, g, x} 
+ y := random(ZR)
+ Y := g ^ y
+ spk := Y
+ ssk := list{Y, y}
+output := list{spk, ssk}
+END :: func:keygenS
+
+BEGIN :: func:sign
+input := list{psk, ssk, m}
+ psk := expand{k, g, x}
+ ssk := expand{Y, y}
+ c := H(concat{k, Y, m}, ZR)
+ s := y + c * x
+output := s 
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{ppk, spk, m, s}
+ ppk := expand{k, g, X}
+ c := H(concat{k, spk, m}, ZR)
+ 
+BEGIN :: if
+ if { (g ^ s) == (spk * (X ^ c)) }
+ output := True
+else
+ output := False
+END :: if
+END :: func:verify
+

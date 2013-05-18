@@ -1,4 +1,4 @@
-name := waters09sig
+name := dse09sig
 setting := symmetric
 
 BEGIN :: types

@@ -9,7 +9,7 @@ masterSecVars = ["msk"]
 
 keygenPubVar = "pk"
 keygenSecVar  = "sk"
-messageVar = "M"
+messageVar = "m"
 signatureVar = "sig"
 
 functionOrder = [keygenFuncName, signFuncName, verifyFuncName]
