@@ -11,7 +11,7 @@ keygenFuncName = "keygen"
 signFuncName   = "sign"
 verifyFuncName = "verify"
 
-def runBSTransform(sdl_file, config):
+def applyBSTransform(sdl_file, config):
     """ read sdl file to determine interfaces and variable types, etc"""
     global assignInfo
     sdl.parseFile(sdl_file, False, ignoreCloudSourcing=True)
@@ -292,5 +292,5 @@ if __name__ == "__main__":
     configName = sys.argv[2]
     configModule = importlib.import_module("schemes." + configName)
     
-    runBSTransform(sdlFile, configModule)
+    applyBSTransform(sdlFile, configModule)
     

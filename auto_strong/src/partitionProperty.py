@@ -3,6 +3,7 @@ import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.sdltechniques import *
 from src.bswTransform import BSWTransform
+from src.bsTransform import applyBSTransform
 from z3 import *
 import subprocess
 from os.path import abspath, dirname, join
@@ -85,7 +86,7 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     if options.get(skipTransform): sys.exit(0)            
     
     if prop2Result and not noSigma2Result:
-        ##print("Applying BSW transformation...")
+        print("Applying BSW transformation...")
         # extract types for all variables
         varTypes = sdl.getVarTypes().get(TYPES_HEADER)
         for i in config.functionOrder:
@@ -102,7 +103,8 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
         #print("Signature Scheme Already Strongly Unforgeable!")
         sys.exit(0)
     else:
-        pass
+        print("Applying BSW transformation...")
+        return applyBSTransform(sdlFile, config)
 #    print("Program Slice for sigma1: ", sigma['sigma1'])
 #    for i in sigma['sigma1']:
 #        sliceListSigma1 = []
