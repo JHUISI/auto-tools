@@ -7,8 +7,6 @@ from src.bsTransform import applyBSTransform
 from z3 import *
 import subprocess
 from os.path import abspath, dirname, join
-
-#pathToExe = abspath(join(dirname(__file__), '../src/runMath'))
   
 expTimeout = 60 # 21600 # 6 hours
 stringToInt = "stringToInt"
@@ -78,7 +76,6 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     
     ##print("sigma1 => ", sigma['sigma1'])
     ##print("sigma2 => ", sigma['sigma2'])
-
         
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     noSigma2Result = noSigma2Check(sigma)
@@ -99,27 +96,11 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
         return newSDL
     
     elif prop2Result and noSigma2Result:
-        #Bellare-Shoup transformation
         #print("Signature Scheme Already Strongly Unforgeable!")
         sys.exit(0)
     else:
         print("Applying BSW transformation...")
         return applyBSTransform(sdlFile, config)
-#    print("Program Slice for sigma1: ", sigma['sigma1'])
-#    for i in sigma['sigma1']:
-#        sliceListSigma1 = []
-#        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma1)
-#        sliceListSigma1.sort()
-#        print("sliceList: ", sliceListSigma1)
-#    print("")    
-#    print("Program Slice for sigma2: ", sigma['sigma2'])
-#    for i in sigma['sigma2']:
-#        sliceListSigma2 = []
-#        getProgramSlice(config.signFuncName, assignInfo, i, sliceListSigma2)
-#        sliceListSigma2.sort()
-#        print("sliceList: ", sliceListSigma2)
-    # writeSDL(newSDL)
-    return None
         
 def extractGenerators(stmt, _types, generators):
     assert type(generators) == list, "generator should a list."
