@@ -1,12 +1,12 @@
 AutoGroup
 =========
 
-Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric pairings represen the state of the art in terms of efficiency and converting schemes from symmetric to an asymmetric setting currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
+Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric pairings represent the state of the art in terms of efficiency and converting schemes from symmetric to an asymmetric setting currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
 
 Installation
 ============
 
-To use AutoGroup, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.42 or newer) to execute the automatically generated batch verification algorithm in Python and/or C++.
+To use AutoGroup, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated batch verification algorithm in Python and/or C++.
 
 AutoGroup also requires the [Z3](https://z3.codeplex.com/) Theorem prover (with Python 3 bindings).
 
@@ -43,7 +43,7 @@ An example for how to execute AutoGroup on the CL signature scheme with basic op
 
 	python runAutoGroup.py -s schemes/cl04.sdl -c configCL -o TestCL 
 
-Note that AutoGroup was designed to handle both encryption and signature schemes with various options.
+Note that AutoGroup was designed to handle both encryption and signature schemes.
 
 Configuration
 =============
