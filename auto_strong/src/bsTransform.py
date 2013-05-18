@@ -16,14 +16,20 @@ def runBSTransform(sdl_file, config):
     global assignInfo
     sdl.parseFile(sdl_file, False, ignoreCloudSourcing=True)
     assignInfo = sdl.getAssignInfo()
-    varTypes   = sdl.getVarTypes().get(sdl.TYPES_HEADER)
+    allTypes   = sdl.getVarTypes()
+    varTypes   = allTypes.get(sdl.TYPES_HEADER)
     # 1. extract each function
     inputSchemeApi = {keygenFuncName:None, signFuncName:None, verifyFuncName:None}
+    funcVars = set()
     for i in config.functionOrder:
         print("processing func: ", i)
-        inputSchemeApi[i] = getInterface(assignInfo, i)
+        inputSchemeApi[i], _funcVars = getInterface(assignInfo, i)
+        funcVars = funcVars.union(_funcVars)
         
-    print("\n\ninterface dict: ", inputSchemeApi)
+    funcVars = list(funcVars)
+    print("funcVars: ", funcVars)    
+    schemeTypes = getInterfaceTypes(allTypes, funcVars)
+    
     name = sdl.assignInfo[sdl.NONE_FUNC_NAME][sdl.SDL_NAME].getAssignNode().getRight().getAttribute()
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][sdl.ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
 
@@ -36,13 +42,14 @@ def runBSTransform(sdl_file, config):
         funcInput[i] = inputSchemeApi[i][inputKeyword]
         funcOutput[i] = inputSchemeApi[i][outputKeyword]
 
-    bsT = BSTransform(assignInfo, varTypes, schemeCalls, funcInput, funcOutput)
+    bsT = BSTransform(assignInfo, varTypes, schemeTypes, schemeCalls, funcInput, funcOutput)
     bsT.setSchemeName(name)
     bsT.setSetting(setting)
     bsT.constructSDL(config)
     return
 
 def getInterface(assignInfo, funcName):
+    funcVars = set()
     inputVarObj = assignInfo[funcName][inputKeyword]
     outputVarObj = assignInfo[funcName][outputKeyword]
     input = GetAttributeVars(inputVarObj.getAssignNode())
@@ -51,8 +58,21 @@ def getInterface(assignInfo, funcName):
     output.remove(outputKeyword)
     print("\t input: ", input)
     print("\t output: ", output)
-    return {inputKeyword:input, outputKeyword:output}
+    funcVars = funcVars.union(input)
+    funcVars = funcVars.union(output)    
+    return {inputKeyword:input, outputKeyword:output}, funcVars
+
+def getInterfaceTypes(allTypes, funcVars):
+    unifiedTypes = {}
+    for i in allTypes.keys():
+        unifiedTypes.update(allTypes[i])
+        
+    schemeTypes = {}
+    for i in funcVars:
+        if i not in ['None', 'False', 'True']:
+            schemeTypes[i] = unifiedTypes.get(i).getType()
     
+    return schemeTypes
 
 def getArgString(args):
     argList = ""
@@ -63,13 +83,14 @@ def getArgString(args):
     return argList
     
 class BSTransform:
-    def __init__(self, assignInfo, varTypes, schemeCalls, funcInput, funcOutput):
+    def __init__(self, assignInfo, varTypes, schemeTypes, schemeCalls, funcInput, funcOutput):
         self.assignInfo  = assignInfo
         self.varTypes    = varTypes
         self.schemeCalls = schemeCalls
         self.funcInput   = funcInput
         self.funcOutput  = funcOutput
         self.__newTypeLines = []
+        self.__schemeType = schemeTypes
         
     def __chooseVariables(self):
         self.ppk, self.psk = "ppk", "psk"
@@ -100,6 +121,9 @@ class BSTransform:
         verifyLines = self.__constructVerify(config)
         typeLines = self.__constructTypes()
         print_sdl(True, head, typeLines, keygenLines, signLines, verifyLines)
+        outfile = self.strongName + ".sdl"
+        write_sdl(outfile, [head, typeLines, keygenLines, signLines, verifyLines])
+        print("output: ", outfile)
         return
     
     def __constructHead(self):
@@ -140,13 +164,17 @@ class BSTransform:
         input  = inputKeyword + " := list{" + getArgString(keygenInArgs) + "}"
         
         keyLine  = [ keyName + " := " + self.schemeCalls[keygenFuncName] ]
+        keyTypes = []
         for j,i in enumerate(self.funcOutput[ keygenFuncName ]):
             keyLine.append( i + " := " + keyName + "#" + str(j) )
+            keyTypes.append( i + " := " + str(self.__schemeType[i]) )
             if i == config.keygenSecVar: # find secret vars
                 self.newSKArgs.append(i)
             else: # all else are public (works for symm and asymm schemes)
                 self.newPKArgs.append(i)
         
+        self.__newTypeLines += keyTypes
+        self.__newTypeLines.append( keyName + " := list{" + getArgString(self.funcOutput[ keygenFuncName ]) + "}" )
         self.newSKArgs.reverse()
         self.newPKArgs.reverse()
         keyLine.append( keyP + " := " + self.schnorr + "." + keygenFuncName + "P(None)" )

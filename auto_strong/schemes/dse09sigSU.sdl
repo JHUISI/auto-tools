@@ -1,0 +1,59 @@
+name := dse09sigSU
+setting := symmetric
+
+
+requires := list{schnorr, dse09sig}
+
+BEGIN :: types
+m := str
+pk := list
+sk := list
+varK := list{pk, sk}
+ppk := list
+psk := list
+keyP := list{ppk, psk}
+spk := G1
+ssk := list
+keyS := list{spk, ssk}
+varM1 := str
+END :: types
+
+BEGIN :: func:keygen
+input := list{None}
+varK := dse09sig.keygen(None)
+pk := varK#0
+sk := varK#1
+keyP := schnorr.keygenP(None)
+ppk := keyP#0
+psk := keyP#1
+suSK := list{sk, psk}
+suPK := list{pk, ppk}
+output := list{suSK, suPK}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{suSK, pk, m}
+suSK := expand{sk, psk}
+keyS := schnorr.keygenS(psk)
+spk := keyS#0
+ssk := keyS#1
+varM := concat{spk, m}
+varM1 := DeriveKey(varM)
+sig1 := dse09sig.sign(pk, sk, varM1)
+sig2 := schnorr.sign(psk, ssk, sig1)
+sig := list{sig1, sig2, spk}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{suPK, m, sig}
+sig := expand{sig1, sig2, spk}
+suPK := expand{pk, ppk}
+BEGIN :: if
+if {{dse09sig.verify(pk, m, sig) == True } and {schnorr.verify(ppk, spk, sig1, sig2) == True }}
+ output := True
+else
+ output := False
+END :: if
+END :: func:verify
+
