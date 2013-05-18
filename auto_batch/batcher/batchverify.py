@@ -366,7 +366,7 @@ def buildSDLBatchVerifier(opts, sdlOutFile, sdl_data, types, verify2, batch_prec
     dest_path = opts['path']
     if sdlOutFile == None: 
         sdlOutFile = types['name'] + "-full-batch"
-    if dest_path[-1] != '/': dest_path += '/'
+    if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
     codeOutfile = dest_path + types['name'] + "Batch"
     sdlBatch = SDLBatch(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting)
     sdlBatch.construct(VERBOSE)

@@ -46,7 +46,7 @@ help_info   = """
 verbose = precompute_check = threshold = codegen = proof = print_usage = print_options = False
 strategy = 'bfs' # default strategy
 input_file = test_statement = benchmark = None
-output_file = dest_path = "./"
+output_file = dest_path = ""
 library = 'miracl'
 
 #print('ARGV      :', sys.argv[1:])
