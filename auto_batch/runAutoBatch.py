@@ -39,8 +39,6 @@ help_info   = """
 
 \t--path [ path/to/dir/ ]
 \t\t: destination for AutoBatch output files. Default: current dir.
-
-
 """
 
 verbose = precompute_check = threshold = codegen = proof = print_usage = print_options = False

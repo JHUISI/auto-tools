@@ -16,7 +16,7 @@ help_info   = """
 \t\t: configuration parameters needed for AutoGroup.
 
 \t-v, --verbose   [ no-argument ]
-\t\t: enable verbose output to highest level for Batcher.
+\t\t: enable verbose mode.
 
 \t-o, --outfile  [ filename prefix ]
 \t\t: generate code of new scheme in C++/Python for Charm.
@@ -26,17 +26,20 @@ help_info   = """
 
 \t-e, --estimate [ no-arguments ]
 \t\t: estimate bandwidth for keys and ciphertext/signatures.
+
+\t--path [ path/to/dir/ ]
+\t\t: destination for AutoGroup output files. Default: current dir.
 """
 
 verbose = print_usage = print_options = benchmark = estimateSize = False
 sdl_file = None
 output_file = None
 config_file = None
+dest_path = ""
 library = 'miracl'
 
-
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'o:s:c:behv', ['outfile=', 'sdl=', 'config=', 'benchmark', 'estimate', 'help', 'verbose', 'print'])
+    options, remainder = getopt.getopt(sys.argv[1:], 'o:s:c:behv', ['outfile=', 'sdl=', 'config=', 'benchmark', 'estimate', 'help', 'verbose', 'path=', 'print'])
 except:
     sys.exit("ERROR: Specified invalid arguments.")
     
@@ -58,6 +61,8 @@ for opt, arg in options:
         benchmark = True
     elif opt in ('-e', '--estimate'):
         estimateSize = True
+    elif opt == '--path':
+        dest_path = arg        
     elif opt == '--print':
         print_options = True
 
@@ -73,11 +78,14 @@ if print_options:
     print('CONFIG     :', config_file)
     print('SDL INPUT  :', sdl_file)
     print('SDL OUTPUT :', output_file)
+    print('PATH:      :', dest_path)
     print('BENCHMARK  :', benchmark)
     print('ESTIMATES  :', estimateSize)
 
 sys.exit("Need to specify SDL file.\nArguments: " + help_info) if sdl_file == None else None
+sys.exit("Need to specify config file.\nArguments: " + help_info) if config_file == None else None
 sys.exit("Need an output file for codegen.\nArguments: " + help_info) if output_file == None else None
+if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
 
 verboseFlag = "-v"
 encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
@@ -86,11 +94,10 @@ sigConfigParams = ["keygenPubVar", "keygenSecVar", "signatureVar", "keygenFuncNa
 def errorOut(keyword):
     sys.exit("configAutoGroup: missing '%s' variable in config." % keyword)
 
-def configAutoGroup(sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
+def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
     #sdl_file, cm, targetFile, sdlVerbose):
     config =  config_file.split('.')[0]
-    cm = importlib.import_module("schemes." + config)
-    
+    cm = importlib.import_module("schemes." + config)    
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
     sdl.masterSecVars = cm.masterSecVars
