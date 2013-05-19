@@ -360,8 +360,8 @@ class GenerateProof:
         #f.close()
         return outputStr
     
-    def compileProof(self, latex_file):
-        f = open('verification_gen' + latex_file + '.tex', 'w')
+    def compileProof(self, dest_path, latex_file):
+        f = open(dest_path + 'verification_gen' + latex_file + '.tex', 'w')
         output = self.writeConfig(latex_file)
         f.write(output)
         f.close()

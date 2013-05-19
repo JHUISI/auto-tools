@@ -366,7 +366,6 @@ def buildSDLBatchVerifier(opts, sdlOutFile, sdl_data, types, verify2, batch_prec
     dest_path = opts['path']
     if sdlOutFile == None: 
         sdlOutFile = types['name'] + "-full-batch"
-    if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
     codeOutfile = dest_path + types['name'] + "Batch"
     sdlBatch = SDLBatch(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting)
     sdlBatch.construct(VERBOSE)
@@ -484,7 +483,7 @@ def run_main(opts, start=None, stop=None):
         genProof.setNextStep('finalbatcheq', None)
         latex_file = types['name'].upper()
         if verbose: print("Generated the proof written to file: verification_gen%s.tex" % latex_file)
-        genProof.compileProof(latex_file)
+        genProof.compileProof(opts['path'], latex_file)
     
     # last step:construct SDL batch verifier
     #print("technique list: ", applied_technique_list)

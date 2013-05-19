@@ -109,6 +109,7 @@ if print_options:
     print('REMAINING  :', remainder)
 
 sys.exit("Need to specify SDL file.") if input_file == None else None
+if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
 
 # construct the option dictionary
 opts_dict = {}

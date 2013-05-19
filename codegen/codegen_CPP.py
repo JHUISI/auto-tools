@@ -95,7 +95,7 @@ def addImportLines(defineAsClass, outputFileName):
     cppImportLines += "\n"
     if defineAsClass:
         if slash in outputFileName: 
-            outputFileName.split(slash)[-1]
+            outputFileName = outputFileName.split(slash)[-1]
         setupFile.write("#include \"%s\"\n\n" % outputFileName)
         return cppImportLines
     else:
