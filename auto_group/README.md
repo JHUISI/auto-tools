@@ -1,7 +1,7 @@
 AutoGroup
 =========
 
-Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric pairings represent the state of the art in terms of efficiency and converting schemes from symmetric to an asymmetric setting currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
+Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric groups represent the state of the art in terms of efficiency and converting schemes from symmetric to an asymmetric setting currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
 
 Installation
 ============

@@ -67,6 +67,6 @@ An example for how to execute AutoBatch on the BLS signature scheme with some st
 Disclaimer
 ==========
 
-AutoBatch is a proof-of-concept tool for assisting cryptographers in automatically designing batch verification algorithms. Although AutoBatch is [Free Software](http://www.gnu.org/philosophy/free-sw.html), released under GNU GPL version 3, keep in mind that it is extensively research-quality software. It has only been thoroughly tested on test cases discussed in our CCS paper and on other internally generated test cases. Thus, take into consideration that it may not work as expected on some signature schemes, if we have not encountered the structure before.
+AutoBatch is a proof-of-concept tool for assisting cryptographers in automatically designing batch verification algorithms. Although AutoBatch is [Free Software](http://www.gnu.org/philosophy/free-sw.html), released under GNU GPL version 3, keep in mind that it is extensively research-quality software. It has only been thoroughly tested on test cases discussed in our CCS paper and on other internally generated test cases. AutoBatch is still considered research-grade software, but we are constantly improving it to be as robust as possible. 
 
-For comments/questions and other inquires, email us at akinyelj [AT] cs.jhu.edu OR mpagano [ AT ] cs.jhu.edu.
+For bug reports, comments/questions and other inquires, email us at akinyelj [AT] cs.jhu.edu OR mpagano [ AT ] cs.jhu.edu.
