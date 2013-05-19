@@ -3,7 +3,7 @@ AutoStrong
 
 Many signature schemes are presented under the existential unforgeability definition wherein an adversary cannot produce a signature on a "new" message. However, strong unforgeability guarantees more - that the adversary cannot produce a "new" signature even on a previously signed message. Strongly-unforgeable signatures are often used as a building block in signcryption and chosen-ciphertext secure encryption. 
 
-There are several general transformations to obtain strongly unforgeable signatures from unforgeable signatures. We focus on the highly-efficient transformation due to Boneh, Shen and Waters (BSW) [1] that only applies if a signature is paritioned and a less efficient transformation due to Bellare-Shoup [2]. AutoStrong first automatically determines whether a given signature satisfies the partitioning property using Z3 and Mathematica. If so, it applies BSW, otherwise, the BS transform to obtain a strongly unforgeable signature.
+There are several general transformations to obtain strongly unforgeable signatures from unforgeable signatures. We focus on the highly-efficient transformation due to Boneh, Shen and Waters (BSW) [1] that only applies if a signature is paritioned and a less efficient transformation due to Bellare-Shoup [2]. AutoStrong first automatically determines whether a given signature satisfies the partitioning property using Z3 and Mathematica. If so, it applies BSW, otherwise, it applies the BS transform to obtain a strongly unforgeable signature.
 
 Installation
 ============
