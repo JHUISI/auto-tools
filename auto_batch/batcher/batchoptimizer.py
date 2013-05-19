@@ -1129,7 +1129,7 @@ class PairInstanceFinderImproved:
                 SP2 = SubstituteFuncCallBack( pairDict )
             batchparser.ASTVisitor( SP2 ).preorder( equation )
             if SP2.pruneCheck: 
-                batchparser.ASTVisitor( PruneTree() ).preorder( equation )
+                batchparser.ASTVisitor( PruneTree() ).postorder( equation )
             if self.failedTechnique(equation): self.applied = False; return equation2
             else: return None 
                 
