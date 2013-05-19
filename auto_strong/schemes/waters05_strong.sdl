@@ -1,0 +1,88 @@
+name := waters05_strong
+setting := symmetric
+
+BEGIN :: types
+t0 := ZR
+t1 := ZR
+alpha := ZR
+m := list{ZR}
+M := ZR
+u := list{G1}
+l := int
+END :: types
+
+BEGIN :: func:keygen
+input := None
+alpha := random(ZR)
+g := random(G1)
+g1 := (g^alpha)
+g2 := random(G1)
+ut := random(G1)
+
+BEGIN :: for
+for{i := 0,l}
+y#i := random(ZR)
+u#i := (g^y#i)
+END :: for
+chK := random(ZR)
+cht := random(ZR)
+ch0 := random(G1)
+ch1 := ch0 ^ cht
+chpk := list{ch0, ch1}
+sk0 := (g2^alpha)
+sk := list{sk0, chK, cht}
+pk := list{chK, g, g1, g2, u, ut}
+output := list{pk, sk, chpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{chpk, pk, sk, M}
+sk := expand{sk0, chK, cht}
+pk := expand{chK, g, g1, g2, u, ut}
+r := random(ZR)
+S2 := (g^r)
+s0 := random(ZR)
+s1 := H(concat{chK, M, S2}, ZR)
+Mpr := chamH(chpk, s1, s0)
+m := intToBits(Mpr, l)
+dotProd1 := init(G1)
+
+BEGIN :: for
+for{i := 0,l}
+dotProd1 := (dotProd1 * (u#i^m#i))
+END :: for
+S1 := (sk0 * ((ut * dotProd1)^r))
+sig := list{S1, S2, s0}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{chpk, pk, M, sig}
+pk := expand{chK, g, g1, g2, u, ut}
+sig := expand{S1, S2, s0}
+s1 := H(concat{chK, M, S2}, ZR)
+Mpr := chamH(chpk, s1, s0)
+m := intToBits(Mpr, l)
+dotProd2 := init(G1)
+
+BEGIN :: for
+for{i := 0,l}
+dotProd2 := (dotProd2 * (u#i^m#i))
+END :: for
+
+BEGIN :: if
+if {(e(S1,g) / e(S2,(ut * dotProd2))) == e(g1,g2)}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+
+BEGIN :: func:chamH
+input := list{chpk, t0, t1}
+chpk := expand{ch0, ch1}
+chVal := (ch0 ^ t0) * (ch1 ^ t1)
+chZr := H(concat{1, chVal}, ZR)
+output := chZr
+END :: func:chamH
+

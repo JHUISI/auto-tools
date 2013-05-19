@@ -1,0 +1,69 @@
+name := bbssig04_strong
+setting := symmetric
+
+BEGIN :: types
+t0 := ZR
+t1 := ZR
+m := ZR
+END :: types
+
+BEGIN :: func:keygen
+input := None
+g := random(G1)
+x := random(ZR)
+y := random(ZR)
+u := (g^x)
+v := (g^y)
+z := e(g,g)
+chK := random(ZR)
+cht := random(ZR)
+ch0 := random(G1)
+ch1 := ch0 ^ cht
+chpk := list{ch0, ch1}
+sk := list{cht, chK, x, y}
+pk := list{chK, g, u, v, z}
+output := list{sk, pk, chpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{chpk, pk, sk, m}
+pk := expand{chK, g, u, v, z}
+sk := expand{cht, chK, x, y}
+r := random(ZR)
+s0 := random(ZR)
+s1 := H(concat{chK, m, r}, ZR)
+mpr := chamH(chpk, s1, s0)
+
+BEGIN :: if
+if {((x + mpr) + (y * r)) != 0}
+S := (g^(1 / ((x + mpr) + (y * r))))
+else 
+output := False
+END :: if
+sig := list{S, r, s0}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{chpk, pk, m, sig}
+pk := expand{chK, g, u, v, z}
+sig := expand{S, r, s0}
+s1 := H(concat{chK, m, r}, ZR)
+mpr := chamH(chpk, s1, s0)
+
+BEGIN :: if
+if {e(S,((u * (g^mpr)) * (v^r))) == z}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+
+BEGIN :: func:chamH
+input := list{chpk, t0, t1}
+chpk := expand{ch0, ch1}
+chVal := (ch0 ^ t0) * (ch1 ^ t1)
+chZr := H(concat{1, chVal}, ZR)
+output := chZr
+END :: func:chamH
+

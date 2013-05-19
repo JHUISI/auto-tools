@@ -13,3 +13,7 @@ A collection of Python tools being developed towards automatically transforming 
 
 The above tools take as input a scheme description language (SDL) of a cryptographic algorithm then performs the described transformation. See subdirectories for how to run each tool and sample SDL schemes. Please contact us if you have any questions or comments at akinyelj [ AT ] cs.jhu.edu OR mpagano [ AT ] cs.jhu.edu. 
 
+Scheme Description Language
+===========================
+
+SDL is a domain-specific language for abstractly describing cryptographic schemes. In the current instantiation, SDL focuses mainly on pairing-based encryption and signature primitives. There are several SDL schemes within this repository which demonstrate the syntax and semantics of the language. 

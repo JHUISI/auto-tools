@@ -39,9 +39,9 @@ For the help menu, execute the following:
 			: estimate bandwidth for keys and ciphertext/signatures.
 			
 
-An example for how to execute AutoGroup on the CL signature scheme with basic options:
+An example for how to execute AutoGroup on the Camenisch-Lysyanskaya signature scheme with basic options:
 
-	python runAutoGroup.py -s schemes/cl04.sdl -c configCL -o TestCL 
+	python runAutoGroup.py -s schemes/cl04.sdl -c configCL -o TestCL
 
 Note that AutoGroup was designed to handle both encryption and signature schemes.
 

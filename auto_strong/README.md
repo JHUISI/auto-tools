@@ -10,7 +10,7 @@ Installation
 
 AutoStrong requires the following external tools: [Mathematica 9](http://www.wolfram.com/) and [Z3](https://z3.codeplex.com/) Theorem Prover.
 
-AutoStrong generates executable code in Charm. Therefore, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated strongly unforegable signature scheme in Python and/or C++.
+AutoStrong generates executable code in Charm. Therefore, you must first install the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated strongly unforgeable signature scheme in Python and/or C++.
 
 
 Z3 Install 
@@ -55,6 +55,11 @@ For the help menu, execute the following:
 		--path [ path/to/dir/ ]
 			: destination for AutoStrong output files. Default: current dir.
 
+An example for how to execute AutoStrong on the Boneh-Boyen (short) signature scheme with basic options:
+
+	python runAutoStrong.py -s schemes/bbssig04.sdl -c configBBSig -o TestBB
+
+
 Configuration
 =============
 
@@ -63,7 +68,7 @@ TODO: add config option details
 References
 ==========
 
-[1]. Dan Boneh, Emily Shen, and Brent Waters. Strongly unforgeable signatures based on computational Diffie-Hellman. In PKC, pages 229Ð240, 2006.
+[1]. Dan Boneh, Emily Shen, and Brent Waters. Strongly unforgeable signatures based on computational Diffie-Hellman. In PKC, pages 229 - 240, 2006.
 
-[2]. Mihir Bellare and Sarah Shoup. Two-tier signatures, strongly unforgeable signatures, and fiat-shamir without random oracles. In PKC, pages 201Ð216, 2007.
+[2]. Mihir Bellare and Sarah Shoup. Two-tier signatures, strongly unforgeable signatures, and fiat-shamir without random oracles. In PKC, pages 201 - 216, 2007.
 

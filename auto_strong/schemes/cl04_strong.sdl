@@ -1,0 +1,69 @@
+name := cl04_strong
+setting := symmetric
+
+BEGIN :: types
+t0 := ZR
+t1 := ZR
+M := str
+END :: types
+
+BEGIN :: func:setup
+input := list{None}
+g := random(G1)
+output := g
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{g}
+x := random(ZR)
+y := random(ZR)
+X := (g^x)
+Y := (g^y)
+chK := random(ZR)
+cht := random(ZR)
+ch0 := random(G1)
+ch1 := ch0 ^ cht
+chpk := list{ch0, ch1}
+sk := list{cht, chK, x, y}
+pk := list{chK, X, Y}
+output := list{pk, sk, chpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{chpk, sk, M}
+sk := expand{cht, chK, x, y}
+a := random(G1)
+m := H(M,ZR)
+b := (a^y)
+s0 := random(ZR)
+s1 := H(concat{chK, m, a, b}, ZR)
+mpr := chamH(chpk, s1, s0)
+c := (a^(x + ((mpr * x) * y)))
+sig := list{a, b, c, s0}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{chpk, pk, g, M, sig}
+sig := expand{a, b, c, s0}
+pk := expand{chK, X, Y}
+m := H(M,ZR)
+s1 := H(concat{chK, m, a, b}, ZR)
+mpr := chamH(chpk, s1, s0)
+
+BEGIN :: if
+if {{e(a,Y) == e(g,b)} and {(e(X,a) * (e(X,b)^mpr)) == e(g,c)}}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+
+BEGIN :: func:chamH
+input := list{chpk, t0, t1}
+chpk := expand{ch0, ch1}
+chVal := (ch0 ^ t0) * (ch1 ^ t1)
+chZr := H(concat{1, chVal}, ZR)
+output := chZr
+END :: func:chamH
+
