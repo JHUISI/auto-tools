@@ -16,4 +16,4 @@ The above tools take as input a scheme description language (SDL) of a cryptogra
 Scheme Description Language
 ===========================
 
-SDL is a domain-specific language for abstractly describing cryptographic schemes. In the current instantiation, SDL focuses mainly on pairing-based encryption and signature primitives. There are several SDL schemes within this repository which demonstrate the syntax and semantics of the language. 
+SDL is a domain-specific language for abstractly representing cryptographic schemes. In the current instantiation, SDL focuses mainly on pairing-based encryption and signature primitives. There are several SDL schemes within this repository which demonstrate the syntax and semantics of the language. 
