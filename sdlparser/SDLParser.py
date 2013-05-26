@@ -85,9 +85,6 @@ builtInTypes["chamH"] = types.ZR
 builtInTypes["concat"] = types.list
 
 
-#TODO:  CHANGE THIS TO SYMMAP
-#builtInTypes["getTransitions"] = types.symmap
-
 def createNode(s, loc, toks):
     print('createNode => ', toks)
     return BinaryNode(toks[0])
