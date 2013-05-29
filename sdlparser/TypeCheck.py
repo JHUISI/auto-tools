@@ -18,6 +18,9 @@ sub = Function('sub', Group, Group, Group)
 sym_pair = Function('sympair', Group, Group, Group)
 asym_pair = Function('asympair', Group, Group, Group)
 
+# will be created uniquely for each list type variable
+# listArray = Array("varName", IntSort(), Group)
+
 refDown = Function('refDown', Group, Group)
 
 def buildList(var, listTypes):
@@ -72,7 +75,7 @@ class TypeCheck:
                    ForAll(x, Implies(x == metalistG1, refDown(x) == listG1)), 
                    ForAll(x, Implies(x == metalistG2, refDown(x) == listG2)), 
                    ForAll(x, Implies(x == metalistGT, refDown(x) == listGT)),            
-                   ForAll(x, Implies(Or(buildList(x, ['sInt', 'ZR', 'G1', 'G2', 'GT', 'Nil'])), refDown(x) == Nil)) ]
+                   ForAll(x, Implies(Or(buildList(x, ['sInt', 'ZR', 'G1', 'G2', 'GT', 'list', 'Nil'])), refDown(x) == Nil)) ]
             
         s = Solver()
         s.add( exp_axioms )
@@ -130,6 +133,8 @@ class TypeCheck:
         elif Type(node) == ops.HASH:
             retHashType = str(node.getRight().attr)
             return mapGroup.get(retHashType)
+        elif Type(node) == ops.LIST:
+            return listType
         elif Type(node) == ops.NON_EQ_TST:
             return (leftNode != rightNode)
         elif Type(node) == ops.EQ_TST:
@@ -215,12 +220,27 @@ class TypeCheck:
         #print(M)
         if Type(binNode) == ops.EQ:
             z3Nodes = self.__buildZ3Expression(binNode.getRight(), varType)
+            print("Z3 expression: ", z3Nodes)
             new_type = self.TypeModel.evaluate(z3Nodes)
             print("Inferred Type: ", new_type)
-            print("lhs: ", binNode.left)
-            # check context of LHS assignment: 
             varName = str(binNode.left)
-            varType[varName] = new_type
+            if LIST_INDEX_SYMBOL in varName:
+                listKey = varName.split(LIST_INDEX_SYMBOL)[0]
+                if listKey in varType.keys():
+                    orig_type = varType.get(listKey)
+                    contextExpr = self.contextType(binNode.left, orig_type)
+                    contextRes  = self.TypeModel.evaluate(contextExpr)
+                    print("LHS: ", binNode.left, contextExpr, contextRes, new_type)
+                    if contextRes.eq( new_type ):
+                        print("Type OK!")
+                    else:
+                        print("ERROR: Invalid SDL statement!")
+                        sys.exit(-1)
+                else:
+                    print("Need type annotation for list type: ", listKey)
+            else:
+                # check context of LHS assignment: 
+                varType[varName] = new_type
 
 
 # need to somehow handle list types => Str, Int, ZR, G1, G2, GT types
@@ -236,7 +256,7 @@ if __name__ == "__main__":
     tc = TypeCheck()
     tc.setupSolver()
     parser = sdl.SDLParser()
-    varType = {'tf':listG1}
+    varType = {} #{'tf0':listG1, 'tf1':listG1}
     args = sys.argv[1:]
     for i in args:
         binNode = parser.parse(i)
