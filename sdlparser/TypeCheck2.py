@@ -59,6 +59,7 @@ class TypeCheck:
         self.__varCount  = 0
         self.listModel   = {}
         self.listVarType = {}
+        self.runSanityTest = False
     
     def setSetting(self, setting):
         if setting == SYMMETRIC_SETTING:
@@ -138,19 +139,20 @@ class TypeCheck:
         if self.verbose: print(self.solver)
         M = self.TypeModel
         if self.verbose: print(M)
-        print()
-        print("Test 1: ", M.evaluate(exp(ZR, ZR)))
-        print("Test 2: ", M.evaluate(exp(G1, ZR)))
-        print("Test 3: ", M.evaluate(exp(G2, ZR)))
-        print("Test 4: ", M.evaluate(exp(GT, ZR)))
-        print("Test 5: ", M.evaluate(exp(GT, GT)))
-        print("Test 6: ", M.evaluate(exp(ZR, sInt)))
-        
-        #result = M.evaluate(exp(x, G1))
-        print("Test 6: ", M.evaluate(mul(ZR, ZR)))
-        print("Test 7: ", M.evaluate(mul(G1, G1)))
-        print("Test 8: ", M.evaluate(mul(G1, ZR)))
-        print("Test 8: ", M.evaluate(mul(sInt, ZR)))
+        if self.runSanityTest:
+            print()
+            print("Test 1: ", M.evaluate(exp(ZR, ZR)))
+            print("Test 2: ", M.evaluate(exp(G1, ZR)))
+            print("Test 3: ", M.evaluate(exp(G2, ZR)))
+            print("Test 4: ", M.evaluate(exp(GT, ZR)))
+            print("Test 5: ", M.evaluate(exp(GT, GT)))
+            print("Test 6: ", M.evaluate(exp(ZR, sInt)))
+            
+            #result = M.evaluate(exp(x, G1))
+            print("Test 6: ", M.evaluate(mul(ZR, ZR)))
+            print("Test 7: ", M.evaluate(mul(G1, G1)))
+            print("Test 8: ", M.evaluate(mul(G1, ZR)))
+            print("Test 8: ", M.evaluate(mul(sInt, ZR)))
         
         return
     

@@ -6,6 +6,7 @@ n := Int
 S := list{Int}
 gl := list{G1}
 s := list{G1}
+i := Int
 END :: types
 
 

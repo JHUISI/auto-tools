@@ -9,6 +9,14 @@ Msg2 := GT
 n := Int
 xVector := list{Int}
 yVector := list{Int}
+t := list{ZR}
+v := list{ZR}
+r := list{ZR}
+m := list{ZR}
+T := list{G1}
+V := list{G1}
+R := list{G1}
+M := list{G1}
 END :: types
 
 BEGIN :: func:setup

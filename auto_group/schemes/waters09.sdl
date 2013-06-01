@@ -5,9 +5,10 @@ BEGIN :: types
 policy_str := Str
 S := list{Str}
 M := GT
-Cn := list
-Dn := list
-Kl := list
+Cn := list{G1}
+Dn := list{G1}
+Kl := list{G1}
+y := Int
 END :: types
 
 BEGIN :: func:setup
@@ -65,7 +66,7 @@ for{y := 0, Y}
 r := random(ZR)
 k := attrs#y
 x := sh#y
-Cn#k := (ga ^ x#1) * (H(k, G1)^-r)
+Cn#k := (ga ^ x) * (H(k, G1)^-r)
 Dn#k := g^r
 END :: for
 
