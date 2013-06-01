@@ -43,7 +43,7 @@ STR_KEYS_FUNC_NAME = "strkeys"
 PRUNE_FUNC_NAME = "prune"
 FUNC_SYMBOL = "def func :"
 START_TOKEN, BLOCK_SEP, END_TOKEN = 'BEGIN','::','END'
-types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'int', 'str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR')
+types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'int', 'str', 'Int', 'Str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR')
 listGroupTypes = ['listStr', 'listInt' , 'listZR', 'listG1', 'listG2', 'listGT']
 metaListGroupTypes = ['metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT']
 downType = {'listStr':'str', 'listInt':'int', 'listZR':'ZR', 'listG1':'G1', 'listG2':'G2', 'listGT':'GT', 
@@ -461,6 +461,8 @@ def createTree(op, node1, node2, op_value=None):
         node = BinaryNode(ops.STRCONCAT)        
     elif(op == "concat{"):
         node = BinaryNode(ops.CONCAT)
+    elif(op == "or"):
+        node = BinaryNode(ops.OR)
     elif(op == "and"):
     	node = BinaryNode(ops.AND)
     elif(op == "list{"):
@@ -494,7 +496,7 @@ class BinaryNode:
 	def __init__(self, value, left=None, right=None):		
 		self.negated = False	
 		if(isinstance(value, str)):
-			if value in ['G1', 'G2', 'GT', 'ZR', 'int', 'str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
+			if value in ['G1', 'G2', 'GT', 'ZR', 'int', 'str', 'Int', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
                 # denotes group type of an attribute value
 				self.type = ops.TYPE
 				self.attr = types[value]

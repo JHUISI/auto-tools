@@ -1,16 +1,8 @@
 from z3 import *
 from SDLang import *
-import SDLParser as sdl
+import SDLParser2 as sdl
 
-#Group, (sInt, ZR, G1, G2, GT, Nil) = EnumSort('GroupType', ('sInt', 'ZR', 'G1', 'G2', 'GT', 'Nil'))
-Group, (Str, sInt, ZR, G1, G2, GT, Nil) = EnumSort('GroupType', ('Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'Nil'))
-
-#, listType, listStr, listInt, listZR, listG1, listG2, listGT, metalist, metalistStr, metalistInt, metalistZR, metalistG1, metalistG2, metalistGT, Nil) = \
-#    EnumSort('GroupType', ('Str','sInt', 'ZR', 'G1', 'G2', 'GT', 'list', 'listStr', 'listInt', 'listZR', 'listG1', 'listG2', 'listGT', \
-#                           'metalist', 'metalistStr', 'metalistInt', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','Nil'))
-
-#'list':listType, 'listStr':listStr, 'listInt':listInt, 'listZR':listZR, 'listG1':listG1, 'listG2':listG2, 'listGT':listGT, 
-#            'metalist':metalist, 'metalistStr':metalistStr, 'metalistInt':metalistInt, 'metalistZR':metalistZR, 'metalistG1':metalistG1, 'metalistG2':metalistG2, 'metalistGT':metalistGT}
+Group, (Str, sInt, ZR, G1, G2, GT, pol, Nil) = EnumSort('GroupType', ('Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'pol', 'Nil'))
 
 exp = Function('exp', Group, Group, Group)
 mul = Function('mul', Group, Group, Group)
@@ -21,12 +13,16 @@ sym_pair = Function('sympair', Group, Group, Group)
 asym_pair = Function('asympair', Group, Group, Group)
 
 # define basic data structure for SDL
+listPrefix = "list"
+metalistPrefix = "metalist"
 listStr = K(IntSort(), Str)
 listInt = K(IntSort(), sInt)
+# JAA: do we need another version in which keys can be "Str" types?
 listZR = K(IntSort(), ZR)
 listG1 = K(IntSort(), G1)
 listG2 = K(IntSort(), G2)
 listGT = K(IntSort(), GT)
+symmapZR = K(IntSort(), ZR)
 
 metalistStr = K(IntSort(), listStr)
 metalistInt = K(IntSort(), listInt)
@@ -35,14 +31,12 @@ metalistG1 = K(IntSort(), listG1)
 metalistG2 = K(IntSort(), listG2)
 metalistGT = K(IntSort(), listGT)
 
+stdTypes = {'sInt':'Int', 'Str':'Str'}
 
 mapGroup = {'Str':Str, 'sInt':sInt, 'ZR':ZR, 'G1':G1, 'G2':G2, 'GT':GT,'Nil':Nil,\
             'listStr':listStr, 'listInt':listInt, 'listZR':listZR, 'listG1':listG1, 'listG2':listG2, 'listGT':listGT,\
-            'metalistStr':metalistStr, 'metalistInt':metalistInt, 'metalistZR':metalistZR, 'metalistG1':metalistG1, 'metalistG2':metalistG2, 'metalistGT':metalistGT}
-
-#intToGroup = {0:'Str', 1:'sInt', 2:'ZR', 3:'G1', 4:'G2', 5:'GT',\
-#            6:'listStr', 7:'listInt', 8:'listZR', 9:'listG1', 10:'listG2', 11:'listGT',\
-#            12:'metalist', 13:'metalistStr', 14:'metalistInt', 15:'metalistZR', 16:'metalistG1', 17:'metalistG2', 18:'metalistGT', 19:'Nil'}
+            'metalistStr':metalistStr, 'metalistInt':metalistInt, 'metalistZR':metalistZR, 'metalistG1':metalistG1, 'metalistG2':metalistG2, 'metalistGT':metalistGT, \
+            'symmapZR':symmapZR, 'pol':pol, 'Int':sInt } # last two are for consistency with SDL types (should make them match though)
 
 groupToInt = ['Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'listStr', 'listInt', 'listZR', 'listG1', 'listG2', 'listGT', 'Nil']
 
@@ -56,30 +50,34 @@ def buildList(var, listTypes):
         cond.append( var == mapGroup[i] )
     return cond
 
-#def buildRefRule(refName, index, typeVar):
-#    keyType = str(typeVar)
-#    if keyType in groupToInt:
-#        typeInt = groupToInt.index(keyType)
-#    else:
-#        print("missing keyType: ", keyType)
-#        sys.exit(-1)
-#    return refName[index] == typeInt
-    
-#isZR = Function('isZR', Group, Group)
-#isGroup = Function('isGroup', Group, Group)
 class TypeCheck:
-    def __init__(self, setting=None, verbose=False):
+    def __init__(self, varType, setting=None, verbose=False):
+        self.varType    = dict(varType) # make copy
+        self.sdlVarType = {}
         self.setting = setting
         self.verbose = verbose
         self.__varCount  = 0
         self.listModel   = {}
         self.listVarType = {}
     
+    def setSetting(self, setting):
+        if setting == SYMMETRIC_SETTING:
+            self.setting = SYMMETRIC_SETTING
+        elif setting == ASYMMETRIC_SETTING:
+            self.setting = ASYMMETRIC_SETTING
+        return
+    
+    def getSDLVarType(self):
+        return self.sdlVarType
+    
+    def getVarType(self):
+        return self.varType
+        
     def __getTypeModel(self):        
         x, y = Consts('x y', Group)
         # rules for exponentiation 
         exp_axioms = [ ForAll([x, y], Implies(And(Or(buildList(x, ['sInt', 'ZR', 'G1', 'G2', 'GT'])), Or(buildList(y, ['sInt', 'ZR']))), exp(x, y) == x)),
-                       ForAll([x, y], Implies(Or(buildList(y, ['Str', 'G1', 'G2', 'GT', 'Nil'])), exp(x, y) == Nil)) ]
+                       ForAll([x, y], Implies(Or(buildList(y, ['Str', 'G1', 'G2', 'GT', 'pol', 'Nil'])), exp(x, y) == Nil)) ]
         
         # rules for mul, div, add, sub
         mul_axioms = [ ForAll([x, y], Implies(And(x == y, Or(buildList(x, ['sInt', 'ZR', 'G1', 'G2', 'GT']))), mul(x, y) == x)), 
@@ -98,34 +96,17 @@ class TypeCheck:
                         ForAll([x, y], Implies(Or(And(x == G1, y != G2), And(x != G1, y == G2)), 
                                                asym_pair(x, y) == Nil)) ]
         sym_axioms = [ ForAll([x, y], Implies(And(x == G1, y == G1), sym_pair(x, y) == GT)),
-                       ForAll([x, y], Implies(And(x != G1, y != G1), sym_pair(x, y) == Nil)) ] 
-        
-#        axioms = [ ForAll(x, Implies(x == listG1, refDown(x) == G1)),
-#                   ForAll(x, Implies(x == listG2, refDown(x) == G2)),
-#                   ForAll(x, Implies(x == listGT, refDown(x) == GT)),
-#                   ForAll(x, Implies(x == listZR, refDown(x) == ZR)),
-#                   ForAll(x, Implies(x == listInt, refDown(x) == sInt)),           
-#                   ForAll(x, Implies(x == listStr, refDown(x) == Str)),
-#                   ForAll(x, Implies(x == metalist, refDown(x) == listType)),                   
-#                   ForAll(x, Implies(x == metalistStr, refDown(x) == listStr)),            
-#                   ForAll(x, Implies(x == metalistZR, refDown(x) == listZR)), 
-#                   ForAll(x, Implies(x == metalistG1, refDown(x) == listG1)), 
-#                   ForAll(x, Implies(x == metalistG2, refDown(x) == listG2)), 
-#                   ForAll(x, Implies(x == metalistGT, refDown(x) == listGT)),            
-#                   ForAll(x, Implies(Or(buildList(x, ['sInt', 'ZR', 'G1', 'G2', 'GT', 'list', 'Nil'])), refDown(x) == Nil)) ]
-            
+                       ForAll([x, y], Implies(Or(And(x != G1, y == G1), And(x == G1, y != G1)), sym_pair(x, y) == Nil)) ] 
+                    
         self.solver = Solver()
         self.solver.add( exp_axioms )
         self.solver.add( mul_axioms )
         self.solver.add( div_axioms )
         self.solver.add( add_axioms )
         self.solver.add( sub_axioms )
-        if self.setting == SYMMETRIC_SETTING:
-            self.solver.add( sym_axioms )        
-        elif self.setting == ASYMMETRIC_SETTING:
-            self.solver.add( asym_axioms )
-        #s.add( axioms )
-        #print(s)
+        self.solver.add( sym_axioms )        
+        self.solver.add( asym_axioms )
+
         satisfy = self.solver.check()
         print("satisfiable: ", satisfy)
         if satisfy == unsat:
@@ -157,7 +138,8 @@ class TypeCheck:
         if self.verbose: print(self.solver)
         M = self.TypeModel
         if self.verbose: print(M)
-        print("\nTest 1: ", M.evaluate(exp(ZR, ZR)))
+        print()
+        print("Test 1: ", M.evaluate(exp(ZR, ZR)))
         print("Test 2: ", M.evaluate(exp(G1, ZR)))
         print("Test 3: ", M.evaluate(exp(G2, ZR)))
         print("Test 4: ", M.evaluate(exp(GT, ZR)))
@@ -168,22 +150,34 @@ class TypeCheck:
         print("Test 6: ", M.evaluate(mul(ZR, ZR)))
         print("Test 7: ", M.evaluate(mul(G1, G1)))
         print("Test 8: ", M.evaluate(mul(G1, ZR)))
-        #print("Test 9: ", M.evaluate(mul(G1, refDown(listG1))))
-        #print("Test 10: ", M.evaluate(mul(Str, refDown(refDown(metalistStr)))))
+        print("Test 8: ", M.evaluate(mul(sInt, ZR)))
+        
+        return
+    
+    def __convertTypeToZ3(self, sdlType):
+        """expects sdlType in the form of a string"""
+        for k,v in stdTypes.items():
+            if sdlType == v:
+                return k
+        return sdlType
     
     def __getUniqueRef(self):
         self.__varCount += 1
-        return "list" + str(self.__varCount) 
+        return listPrefix + str(self.__varCount) 
     
     def __buildRefRule(self, refName, index, typeVar):
         keyType = str(typeVar)
         if keyType in groupToInt:
             typeInt = groupToInt.index(keyType)
         else:
-            print("missing keyType: ", keyType)
-            sys.exit(-1)
+            # attempt #2 : perhaps, one of the list or metalist types
+            keyType2 = str(self.__computeDataType(typeVar))
+            if keyType2 in groupToInt:
+                typeInt = groupToInt.index(keyType2)
+            else:
+                print("missing keyType: ", keyType)
+                sys.exit(-1)
         return refName[index] == typeInt
-
     
     def __buildZ3Expression(self, node, lhs, varType):
         if node == None: return None
@@ -191,10 +185,10 @@ class TypeCheck:
         if node.right != None: rightNode = self.__buildZ3Expression(node.right, lhs, varType)
         
         # visit the root
-        if (node.type == ops.TYPE):
-            the_type = str(node.attr)
+        if (Type(node) == ops.TYPE):
+            the_type = self.__convertTypeToZ3(str(node.attr))
             if the_type not in mapGroup.keys():
-                print("Invalid type."); sys.exit(-1)
+                print("Invalid type: ", the_type, str(node.attr)); return Nil
             return mapGroup.get(the_type)
         elif Type(node) == ops.RANDOM:
             retRandomType = str(node.getLeft().attr)
@@ -202,6 +196,10 @@ class TypeCheck:
         elif Type(node) == ops.HASH:
             retHashType = str(node.getRight().attr)
             return mapGroup.get(retHashType)
+        elif Type(node) == ops.ON:
+            return rightNode
+        elif Type(node) == ops.EXPAND:
+            return Nil        
         elif Type(node) == ops.LIST: # JAA: Document these type semantics
             # create rules for this particular list instance in SDL
             listRules = []
@@ -232,7 +230,7 @@ class TypeCheck:
                 # JAA: untested for now
                 _list = lhsStr.split(LIST_INDEX_SYMBOL)
                 reflhsStr = _list[0] # get the ref name
-                assert len(_list[1:]) == 1, "var#x#y not supported on lhs assignment"
+                assert len(_list[1:]) == 1, "var#x#y not supported on lhs with a LIST on rhs assignment. Please correct."
                 self.listModel[ reflhsStr ] = new_solver.model()
                 refHandle2 = K(IntSort(), refHandle)
                 self.listVarType[ reflhsStr ] = refHandle2
@@ -241,9 +239,8 @@ class TypeCheck:
                 return refHandle2
 
             return refHandle
-        elif Type(node) == ops.NON_EQ_TST:
-            return (leftNode != rightNode)
-        elif Type(node) == ops.EQ_TST:
+        # idea is to verify that both sides have thesame type, so we use the equal operator in Z3
+        elif Type(node) in [ops.EQ, ops.EQ_TST, ops.NON_EQ_TST]: 
             return (leftNode == rightNode)
         elif Type(node) == ops.OR:
             return Or(leftNode, rightNode)
@@ -270,31 +267,34 @@ class TypeCheck:
         elif Type(node) == ops.ATTR:
             varName = str(node).split(LIST_INDEX_SYMBOL)[0]
             theType = self.computeAttrType(varName, varType)
-            return self.contextType(node, varType) # in case it has a '#' symbol
+            if varName.isdigit():
+                return theType
+            else:
+                return self.contextType(node, varType) # in case it has a '#' symbol
         elif Type(node) == ops.CONCAT:
-            return listType
+            return listStr
         elif Type(node) == ops.STRCONCAT:
             return Str            
         elif Type(node) == ops.FUNC:
             currentFuncName = getFullVarName(node, False)
             if (currentFuncName in sdl.builtInTypes):
-                return sdl.builtInTypes[currentFuncName]
+                print("mapGroup type for: ", currentFuncName, " := ", str(sdl.builtInTypes[currentFuncName]))
+                return mapGroup.get( str(sdl.builtInTypes[currentFuncName]) )
             elif (currentFuncName == INIT_FUNC_NAME):
-                initType = node.listNodes[0]
+                initType = str(node.listNodes[0])
                 print("initType : ", initType)
                 if (initType.isdigit() == True):
-                    return sInt
+                    return ZR # by default, must cast down for Int operations
                 elif initType in mapGroup.keys():
                     return mapGroup.get(initType)
                 else:
                     return Nil
             elif (currentFuncName == KEYS_FUNC_NAME):
-                return listType
+                return mapGroup.get("listInt") # default
             elif (currentFuncName == LEN_FUNC_NAME):
                 return sInt
             print("ERROR: require type annotation for func: ", currentFuncName); sys.exit(-1)
             return Nil # Error
-        
         else:
             print("NodeType unsupported: ", Type(node))
             return None
@@ -302,15 +302,23 @@ class TypeCheck:
     def contextType(self, attrNode, varType):
         print("attrNode: ", attrNode)
         attrName = str(attrNode)
+        if attrName == "-1": return sInt
+        if "-" in attrName: attrName = attrName.replace("-", "")
+        
         name = attrName.split(LIST_INDEX_SYMBOL)[0]
         Model = None
+        # 1. check if specific model exists for given attrNode
         if name in self.listModel.keys():
             # check this first b/c the variable also occur in the varType dictionary
             refName = self.listVarType[ name ]
-            Model = self.listModel[ name ]
+            Model = self.listModel[ name ] # use list specific model
+        # 2. if option 1 fails, then check if varType entry exists for attrNode
         elif name in varType.keys():
+            # retrieve type handle and use the default model to evaluate it
             refName = varType[ name ]
+            Model = self.TypeModel
         else:
+            # otherwise, this is an error!
             print("Could not find ref for: ", name); sys.exit(-1)
             
         countHash = len(attrName.split(LIST_INDEX_SYMBOL))-1
@@ -324,13 +332,24 @@ class TypeCheck:
             else:
                 return self.convertType( Model.evaluate( refName[ Int(arg) ]) ) # abstract reference
         elif countHash == 2:
-            return Nil # for now
-        else:
-            return None
+            arg1, arg2 = attrName.split(LIST_INDEX_SYMBOL)[-2:]
+            assert Model != None, "Cannot find model for var: %s" % name
+            isArg1Digit = arg1.isdigit()
+            isArg2Digit = arg2.isdigit()
+            if isArg1Digit and isArg2Digit:
+                return self.convertType( Model.evaluate(refName[ int(arg1) ][ int(arg2) ]) ) # concrete reference
+            elif not isArg1Digit and isArg2Digit:
+                return self.convertType( Model.evaluate( refName[ Int(arg1) ][ int(arg2) ]) ) # abstract reference
+            elif isArg1Digit and not isArg2Digit:
+                return self.convertType( Model.evaluate( refName[ int(arg1) ][ Int(arg2) ]) ) # last reference is abstract
+            elif not isArg1Digit and not isArg2Digit:
+                return self.convertType( Model.evaluate( refName[ Int(arg1) ][ Int(arg2) ]) ) # both references are abstract
+
+        return None
         
     def computeAttrType(self, varName, varType):
-        if varName == "-1": return sInt
-        if "-" in varName: varName.remove("-")
+        if varName == "-1": return ZR
+        if "-" in varName: varName = varName.replace("-", "")
         
         if not varName.isdigit():
             if varName in varType.keys():
@@ -339,7 +358,7 @@ class TypeCheck:
                  print("Need type annotation: ", varName, " := NO_TYPE")
                  sys.exit(-1)
         else:
-            return sInt
+            return ZR # by default, must specifically add Int() call to convert type
     
     def convertType(self, evalType):
         evalTypeStr = str(evalType)
@@ -353,11 +372,83 @@ class TypeCheck:
                 sys.exit(-1)
         return evalType
     
-    def inferType(self, binNode, varType): 
+    def __computeDataType(self, z3_type):
+        """ highly tied to structure of string representation in Z3 Types. Maps Z3 types to SDL types."""
+        sdlType = types.NO_TYPE
+        sortString = str(z3_type.sort())
+        the_type = str(z3_type)
+        listLevel = sortString.count('Array(')        
+        if listLevel == 0:
+            if the_type not in stdTypes.keys():
+                return types[the_type]
+            else:
+                return types[ stdTypes[the_type] ]
+        elif listLevel == 1:
+            #print("LIST: ", listLevel, the_type)
+            if listPrefix in the_type:
+                 return types.list
+            else:
+                the_type = str(z3_type.children()[0])
+                return types[listPrefix + the_type]
+        elif listLevel == 2:
+            #print("METALIST: ", listLevel)
+            if listPrefix in the_type:
+                 return types.metalist
+            else:
+                the_type = str(z3_type.children()[0])
+                return types[metalistPrefix + the_type]
+        return sdlType
+
+    def __buildSDLType(self, node):
+        """interprets type annotations in TYPES header of SDL and maps to Z3 data types counterpart"""
+        if node == None: return None
+        if node.left != None: leftNode   = self.__buildZ3Expression(node.left, lhs, varType)
+        if node.right != None: rightNode = self.__buildZ3Expression(node.right, lhs, varType)
+        
+        if Type(node) == ops.TYPE:
+            the_type = str(node.attr)
+            the_type2 = self.__convertTypeToZ3( the_type )
+            if the_type2 == listPrefix: return # handled properly later 
+            return mapGroup.get( the_type2 )
+        elif Type(node) == ops.LIST:
+            print("LIST TYPE: ", node, ) # TODO: handle metalists
+            the_type = self.__convertTypeToZ3(node.listNodes[0])
+            return mapGroup.get( listPrefix + str(the_type) )
+        elif Type(node) == ops.ATTR: 
+            print("Undefined type: ", node)
+        return
+    
+    def processTypeAnnotations(self, binNode):
         if Type(binNode) == ops.EQ:
-            z3Nodes = self.__buildZ3Expression(binNode.getRight(), binNode.getLeft(), varType)
-            print("Z3 expression: ", z3Nodes)
             lhsStr = str(binNode.getLeft())
+            the_type = self.__buildSDLType(binNode.getRight())
+            if the_type != None:                
+                print("ANNOTATED TYPE: ", lhsStr, " => ", the_type)
+                self.varType[ lhsStr ] = the_type
+        return
+    
+    def evaluateType(self, binNode):
+        if Type(binNode) != ops.EQ:
+            z3Nodes = self.__buildZ3Expression(binNode.getLeft(), None, self.varType)
+            print("DEBUG: Z3 expression = ", z3Nodes)
+            new_type = self.TypeModel.evaluate(z3Nodes)
+            if str(new_type) == 'True': return True
+            elif str(new_type) == 'False': return False
+        elif Type(binNode) == ops.EQ:
+            z3Nodes = self.__buildZ3Expression(binNode, None, self.varType)
+            print("DEBUG: Z3 expression = ", z3Nodes)
+            new_type = self.TypeModel.evaluate(z3Nodes)
+            print("TESTING ==> Final output: ", new_type); sys.exit(-1)
+        return
+        
+    def inferType(self, binNode): 
+        #print("DEBUG: Node Type = ", Type(binNode))
+        if Type(binNode) == ops.EQ:
+            lhsStr = str(binNode.getLeft())
+            if lhsStr in [inputKeyword, outputKeyword]: return
+            #print("DEBUG: original node = ", binNode)
+            z3Nodes = self.__buildZ3Expression(binNode.getRight(), binNode.getLeft(), self.varType)
+            print("DEBUG: Z3 expression = ", z3Nodes)
             if lhsStr in self.listModel.keys():
 #                new_type = self.convertType(self.listModel[lhsStr].evaluate(z3Nodes))
                 if LIST_INDEX_SYMBOL in lhsStr: lhsStr = lhsStr.split(LIST_INDEX_SYMBOL)[0] # JAA: may need to do other things here
@@ -365,46 +456,51 @@ class TypeCheck:
             else:
                 new_type = self.TypeModel.evaluate(z3Nodes)
 
-            print("Inferred Type: ", new_type)
-            varName = str(binNode.left)            
+            print("DEBUG: Inferred Type = ", new_type)
+            varName = str(binNode.left)
+            sortString = str(new_type.sort())
+            listLevel = sortString.count('Array')
+            isAList = True if listLevel == 1 else False
+            isMetaList = True if listLevel == 2 else False
+            # JAA: dealing with LHS :=> var#x := g
+            # 1. look up var#x
+            # 2. then remove, then add a rule for index 'x' iff int => re-run Model?
+            # 3. does this work?
+            
             #if varName == "pk": x = Int('x'); print("Test: ", str(new_type), self.TypeModel.evaluate(new_type[0]), self.TypeModel.evaluate(new_type[1]))
-#            if LIST_INDEX_SYMBOL in varName:
-#                pass
-#                listKey = varName.split(LIST_INDEX_SYMBOL)[0]
-#                if listKey in varType.keys():
-#                    orig_type = varType.get(listKey)
-#                    contextExpr = self.contextType(binNode.left, orig_type)
-#                    contextRes  = self.TypeModel.evaluate(contextExpr)
-#                    print("LHS: ", binNode.left, contextExpr, contextRes, new_type)
-#                    if contextRes.eq( new_type ):
-#                        print("Type OK!")
-#                    else:
-#                        print("ERROR: Invalid SDL statement!")
-#                        sys.exit(-1)
-#                else:
-#                    print("Need type annotation for list type: ", listKey)
-#            else:
+            if LIST_INDEX_SYMBOL in varName:
+                # evaluate the equation          
+                listKey = varName.split(LIST_INDEX_SYMBOL)[0]                
+                if listKey in self.varType.keys():
+                    LHSType = self.contextType(binNode.left, self.varType)
+                    if LHSType.eq( new_type ):
+                        print("Type OK!")
+                    else:
+                        print("ERROR: Type mismatch in SDL statement!")
+                        sys.exit(-1)
+                elif isAList or isMetaList:
+                    self.varType[ listKey ] = new_type
+                    self.sdlVarType[ listKey ] = self.__computeDataType(new_type) # to map back to original SDL types                    
+                else:
+                    print("Missing type annotation for: ", listKey)
+                    print("Inferred Type 2: ", new_type.sort())
+                    sys.exit(-1)
+            else:
+                self.varType[varName] = new_type
+                self.sdlVarType[varName] = self.__computeDataType(new_type) # to map back to original SDL types
                 # check context of LHS assignment: 
-            varType[varName] = new_type
 
-
-# need to somehow handle list types => Str, Int, ZR, G1, G2, GT types
-
-#eq1 = M.evaluate(exp(G1, mul(GT, GT)))
-#print("Test 8: ", eq1)
-#
-#print("Test 9: ", M.evaluate(asym_pair(G1, G2)))
-#
-#print("Test 10: ", )
 
 if __name__ == "__main__":
-    tc = TypeCheck()
+    varType = {} #{'tf0':listG1, 'tf1':listG1}
+    tc = TypeCheck(varType)
     tc.setupSolver()
     parser = sdl.SDLParser()
-    varType = {} #{'tf0':listG1, 'tf1':listG1}
     args = sys.argv[1:]
     for i in args:
         binNode = parser.parse(i)
-        tc.inferType(binNode, varType)
+        tc.inferType(binNode)
     
-    print("VarTypes: ", varType)
+    print("VarTypes:\t", tc.getVarType())
+    print()
+    print("SDL VarTypes:\t", tc.getSDLVarType())

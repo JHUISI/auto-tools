@@ -6,9 +6,9 @@ n := 5
 BEGIN :: types
 Msg := GT
 Msg2 := GT
-n := int
-xVector := list{int}
-yVector := list{int}
+n := Int
+xVector := list{Int}
+yVector := list{Int}
 END :: types
 
 BEGIN :: func:setup

@@ -8,7 +8,7 @@ BEGIN :: types
  Aind := G1
  xind := ZR
  r := list{ZR}
- M := str
+ M := Str
 END :: types
 
 

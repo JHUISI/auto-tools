@@ -5,7 +5,7 @@ setting := symmetric
 requires := list{schnorr, dse09sig}
 
 BEGIN :: types
-m := str
+m := Str
 pk := list
 sk := list
 varK := list{pk, sk}
@@ -15,7 +15,7 @@ keyP := list{ppk, psk}
 spk := G1
 ssk := list
 keyS := list{spk, ssk}
-varM1 := str
+varM1 := Str
 END :: types
 
 BEGIN :: func:keygen

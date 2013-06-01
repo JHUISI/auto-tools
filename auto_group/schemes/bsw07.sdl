@@ -2,12 +2,16 @@ name := bsw07
 setting := symmetric
 
 BEGIN :: types
-policystr := str
-attrs := list{str}
+policystr := Str
+attrs := list{Str}
 sh := symmap
 coeff := list
-S := list{str}
+S := list{Str}
 M := GT
+Dj := list{G1}
+Djp := list{G1}
+Cr := list{G1}
+Cpr := list{G1}
 END :: types
 
 BEGIN :: func:setup

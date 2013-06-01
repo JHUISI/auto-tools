@@ -3,33 +3,33 @@ setting := symmetric
 
 BEGIN :: types
 M := GT
-alphabet := list{str}
+alphabet := list{Str}
 mpk := list
 msk := list
 sk := list
 ct := list
-Q := list{int}
-Tlist := list{int}
+Q := list{Int}
+Tlist := list{Int}
 T := list{Tlist}
-Ti := list{int}
-F := list{int}
-key := int
+Ti := list{Int}
+F := list{Int}
+key := Int
 KendList1 := list{G1}
 KendList2 := list{G1}
 K1 := list{G1}
 K2 := list{G1}
 K3 := list{G1}
-w := list{str}
+w := list{Str}
 B := list{GT}
 C1 := list{G1}
 C2 := list{G1}
 D := list{G1}
 h := list{G1}
-x := int
-t0 := int
-t1 := int
-st := int
-j := int
+x := Int
+t0 := Int
+t1 := Int
+st := Int
+j := Int
 END :: types
 
 

@@ -2,7 +2,7 @@ name := dse09
 setting := symmetric
 
 BEGIN :: types
-id := str
+id := Str
 M := GT
 D := list
 mpk := list

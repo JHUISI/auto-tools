@@ -2,7 +2,7 @@ name := dse09sig
 setting := symmetric
 
 BEGIN :: types
- m := str
+ m := Str
 END :: types
 
 BEGIN :: func:keygen

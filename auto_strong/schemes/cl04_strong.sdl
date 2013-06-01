@@ -4,7 +4,7 @@ setting := symmetric
 BEGIN :: types
 t0 := ZR
 t1 := ZR
-M := str
+M := Str
 END :: types
 
 BEGIN :: func:setup

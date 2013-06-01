@@ -2,13 +2,13 @@ name := cyh
 setting := symmetric
 
 BEGIN :: types
-M := str
-ID := str
-L := str
-ID_list := list{str}
-Lt := str
+M := Str
+ID := Str
+L := Str
+ID_list := list{Str}
+Lt := Str
 h := list{ZR}
-s := int
+s := Int
 END :: types
 
 BEGIN :: func:setup

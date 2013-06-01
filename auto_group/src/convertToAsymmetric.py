@@ -586,14 +586,14 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
     return fileSuffix, resultDict
 
 def convertType(v, i):
-    if i == types.int:
+    if i == types.Int:
         return "int"
     elif i == types.listInt:
         return "list{int}"
-    elif i == types.str:
-        return "str"
+    elif i == types.Str:
+        return "Str"
     elif i == types.listStr:
-        return "list{str}"
+        return "list{Str}"
     elif i == types.GT:
         return "GT"
     elif i == types.listGT:
@@ -637,7 +637,7 @@ def transformTypes(typesH, info):
     for k in typeKeysList:
         (i, j) = typeLines[k]
         t = j.getType()
-        if t in [types.G1, types.listG1]: #, types.int, types.listInt, types.str, types.listStr, types.GT]:
+        if t in [types.G1, types.listG1]: #, types.Int, types.listInt, types.Str, types.listStr, types.GT]:
             if assignVarOccursInBoth(i, info):
                 #print(i, " :-> split computation in G1 & G2")
                 newLines.append( i + G1Prefix + " := " + newTypeFrom(t, G1Prefix) )
@@ -1006,7 +1006,7 @@ class AsymSDL:
         # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
         for i, j in self.typesH.items():
             t = j.getType()
-            if t in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr, types.GT]: 
+            if t in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr, types.GT]: 
                 noChangeList.append(i)
         # JAA: commented out for benchmarking    
         #print("Initial noChangeList: ", noChangeList)
@@ -1403,7 +1403,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
 #                    varList.append(i)
             elif typeI in [types.G1]:
                 varList.append(i)
-            elif typeI in [types.ZR, types.list, types.pol]: #types.str,
+            elif typeI in [types.ZR, types.list, types.pol]: #types.Str,
                 (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, i)
                 if varInf.getIsUsedInHashCalc():
                     #print("adding", i, "to the list")
@@ -1687,7 +1687,7 @@ def updateAllForG1(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
             if v != None: v = v.getType()
             else: print("FIX: no type for G1: ", i); sys.exit(0)
             # prune (as a second effort)
-            if v in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr]: 
+            if v in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr]: 
                 continue
 
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
@@ -1733,7 +1733,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
             if v != None: v = v.getType()
             else: print("FIX: no type for G2: ", i); sys.exit(0)            
             # prune (as a second effort)
-            if v in [types.ZR, types.listZR, types.int, types.listInt, types.str, types.listStr]: 
+            if v in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr]: 
                 continue
         sdl.ASTVisitor( SubstituteVar(i, new_i) ).preorder( new_node2 )
         info['generatorMapG2'][i] = new_i

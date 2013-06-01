@@ -2,7 +2,7 @@ name := bls
 setting := symmetric
 
 BEGIN :: types
- M := str
+ M := Str
 END :: types
 
 BEGIN :: func:keygen

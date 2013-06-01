@@ -138,7 +138,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     
     new_input_sdl  = outfile
     new_output_sdl = output_file
-    # JAA: commented out for benchmakr purposes
+    # JAA: commented out for benchmark purposes
     if verbose:
         print("Codegen Input: ", new_input_sdl)
         print("Codegen Output: ", new_output_sdl)
@@ -148,7 +148,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     return
 
 # run AutoGroup with the designated options
-configAutoGroup(sdl_file, config_file, output_file, verbose, benchmark, estimateSize)
+configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmark, estimateSize)
     
 #if __name__ == "__main__":
 #    if len(sys.argv) > 3:

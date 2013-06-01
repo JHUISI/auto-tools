@@ -3,7 +3,7 @@ setting := symmetric
 
 BEGIN :: types
 M := GT
-id := str
+id := Str
 END :: types
 
 BEGIN :: func:setup

@@ -7,7 +7,7 @@ alpha := ZR
 m := list{ZR}
 M := ZR
 u := list{G1}
-l := int
+l := Int
 END :: types
 
 BEGIN :: func:keygen

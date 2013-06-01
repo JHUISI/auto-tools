@@ -2,17 +2,17 @@ name := lw10
 setting := symmetric
 
 BEGIN :: types
-gid := str
+gid := Str
 sk := list
 ct := list
-policy_str := str
-authS := list{str}
-userS := list{str}
+policy_str := Str
+authS := list{Str}
+userS := list{Str}
 M := GT
-K := list
-C1 := list
-C2 := list
-C3 := list
+K := list{G1}
+C1 := list{GT}
+C2 := list{G1}
+C3 := list{G1}
 END :: types
 
 BEGIN :: func:setup
