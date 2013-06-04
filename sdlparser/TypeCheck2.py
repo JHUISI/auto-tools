@@ -1,5 +1,5 @@
 from z3 import *
-from SDLang import *
+from SDLang import Type,ops,types
 import SDLParser2 as sdl
 
 Group, (Str, sInt, ZR, G1, G2, GT, pol, Nil) = EnumSort('GroupType', ('Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'pol', 'Nil'))
@@ -36,7 +36,7 @@ stdTypes = {'sInt':'Int', 'Str':'Str'}
 mapGroup = {'Str':Str, 'sInt':sInt, 'ZR':ZR, 'G1':G1, 'G2':G2, 'GT':GT,'Nil':Nil,\
             'listStr':listStr, 'listInt':listInt, 'listZR':listZR, 'listG1':listG1, 'listG2':listG2, 'listGT':listGT,\
             'metalistStr':metalistStr, 'metalistInt':metalistInt, 'metalistZR':metalistZR, 'metalistG1':metalistG1, 'metalistG2':metalistG2, 'metalistGT':metalistGT, \
-            'symmapZR':symmapZR, 'pol':pol, 'Int':sInt } # last two are for consistency with SDL types (should make them match though)
+            'symmapZR':symmapZR, 'pol':pol, 'Int':sInt, 'listsInt':listInt } # last two are for consistency with SDL types (should make them match though)
 
 groupToInt = ['Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'listStr', 'listInt', 'listZR', 'listG1', 'listG2', 'listGT', 'Nil']
 
@@ -62,10 +62,10 @@ class TypeCheck:
         self.runSanityTest = False
     
     def setSetting(self, setting):
-        if setting == SYMMETRIC_SETTING:
-            self.setting = SYMMETRIC_SETTING
-        elif setting == ASYMMETRIC_SETTING:
-            self.setting = ASYMMETRIC_SETTING
+        if setting == sdl.SYMMETRIC_SETTING:
+            self.setting = sdl.SYMMETRIC_SETTING
+        elif setting == sdl.ASYMMETRIC_SETTING:
+            self.setting = sdl.ASYMMETRIC_SETTING
         return
     
     def getSDLVarType(self):
@@ -160,6 +160,7 @@ class TypeCheck:
         """expects sdlType in the form of a string"""
         for k,v in stdTypes.items():
             if sdlType == v:
+                print("Return: ", k)
                 return k
         return sdlType
     
@@ -222,7 +223,7 @@ class TypeCheck:
             assert new_solver.check() == sat, "ERROR" 
             lhsStr = str(lhs)
             # map creation of list type object with lhs variable 
-            if LIST_INDEX_SYMBOL not in lhsStr:
+            if sdl.LIST_INDEX_SYMBOL not in lhsStr:
                 self.listModel[ lhsStr ] = new_solver.model()
                 self.listVarType[ lhsStr ] = refHandle
                 groupToInt.append( str(refHandle) )
@@ -230,7 +231,7 @@ class TypeCheck:
                 #print(refHandle, " => Solver: ", new_solver)
             else:
                 # JAA: untested for now
-                _list = lhsStr.split(LIST_INDEX_SYMBOL)
+                _list = lhsStr.split(sdl.LIST_INDEX_SYMBOL)
                 reflhsStr = _list[0] # get the ref name
                 assert len(_list[1:]) == 1, "var#x#y not supported on lhs with a LIST on rhs assignment. Please correct."
                 self.listModel[ reflhsStr ] = new_solver.model()
@@ -249,9 +250,9 @@ class TypeCheck:
         elif Type(node) == ops.AND:
             return And(leftNode, rightNode)
         elif Type(node) == ops.PAIR:
-            if self.setting == SYMMETRIC_SETTING:
+            if self.setting == sdl.SYMMETRIC_SETTING:
                 return sym_pair(leftNode, rightNode)
-            elif self.setting == ASYMMETRIC_SETTING:
+            elif self.setting == sdl.ASYMMETRIC_SETTING:
                 return asym_pair(leftNode, rightNode)
             else:
                 print("TypeCheck: Setting was not specified and using PAIRING.")
@@ -267,7 +268,7 @@ class TypeCheck:
         elif Type(node) == ops.EXP:
             return exp(leftNode, rightNode)
         elif Type(node) == ops.ATTR:
-            varName = str(node).split(LIST_INDEX_SYMBOL)[0]
+            varName = str(node).split(sdl.LIST_INDEX_SYMBOL)[0]
             theType = self.computeAttrType(varName, varType)
             if varName.isdigit():
                 return theType
@@ -278,11 +279,11 @@ class TypeCheck:
         elif Type(node) == ops.STRCONCAT:
             return Str            
         elif Type(node) == ops.FUNC:
-            currentFuncName = getFullVarName(node, False)
+            currentFuncName = sdl.getFullVarName(node, False)
             if (currentFuncName in sdl.builtInTypes):
                 print("mapGroup type for: ", currentFuncName, " := ", str(sdl.builtInTypes[currentFuncName]))
                 return mapGroup.get( str(sdl.builtInTypes[currentFuncName]) )
-            elif (currentFuncName == INIT_FUNC_NAME):
+            elif (currentFuncName == sdl.INIT_FUNC_NAME):
                 initType = str(node.listNodes[0])
                 print("initType : ", initType)
                 if (initType.isdigit() == True):
@@ -291,9 +292,9 @@ class TypeCheck:
                     return mapGroup.get(initType)
                 else:
                     return Nil
-            elif (currentFuncName == KEYS_FUNC_NAME):
+            elif (currentFuncName == sdl.KEYS_FUNC_NAME):
                 return mapGroup.get("listInt") # default
-            elif (currentFuncName == LEN_FUNC_NAME):
+            elif (currentFuncName == sdl.LEN_FUNC_NAME):
                 return sInt
             print("ERROR: require type annotation for func: ", currentFuncName); sys.exit(-1)
             return Nil # Error
@@ -307,7 +308,7 @@ class TypeCheck:
         if attrName == "-1": return sInt
         if "-" in attrName: attrName = attrName.replace("-", "")
         
-        name = attrName.split(LIST_INDEX_SYMBOL)[0]
+        name = attrName.split(sdl.LIST_INDEX_SYMBOL)[0]
         Model = None
         # 1. check if specific model exists for given attrNode
         if name in self.listModel.keys():
@@ -323,18 +324,18 @@ class TypeCheck:
             # otherwise, this is an error!
             print("Could not find ref for: ", name); sys.exit(-1)
             
-        countHash = len(attrName.split(LIST_INDEX_SYMBOL))-1
+        countHash = len(attrName.split(sdl.LIST_INDEX_SYMBOL))-1
         if countHash == 0: # basic case
             return refName
         elif countHash == 1:
-            arg = attrName.split(LIST_INDEX_SYMBOL)[-1]
+            arg = attrName.split(sdl.LIST_INDEX_SYMBOL)[-1]
             assert Model != None, "Cannot find model for var: %s" % name
             if arg.isdigit():
                 return self.convertType( Model.evaluate(refName[ int(arg) ]) ) # concrete reference
             else:
                 return self.convertType( Model.evaluate( refName[ Int(arg) ]) ) # abstract reference
         elif countHash == 2:
-            arg1, arg2 = attrName.split(LIST_INDEX_SYMBOL)[-2:]
+            arg1, arg2 = attrName.split(sdl.LIST_INDEX_SYMBOL)[-2:]
             assert Model != None, "Cannot find model for var: %s" % name
             isArg1Digit = arg1.isdigit()
             isArg2Digit = arg2.isdigit()
@@ -415,6 +416,7 @@ class TypeCheck:
         elif Type(node) == ops.LIST:
             print("LIST TYPE: ", node, ) # TODO: handle metalists
             the_type = self.__convertTypeToZ3(node.listNodes[0])
+            print("the_type : ", the_type)
             return mapGroup.get( listPrefix + str(the_type) )
         elif Type(node) == ops.ATTR: 
             print("Undefined type: ", node)
@@ -424,6 +426,7 @@ class TypeCheck:
         if Type(binNode) == ops.EQ:
             lhsStr = str(binNode.getLeft())
             the_type = self.__buildSDLType(binNode.getRight())
+            print("processTypeAnnotations: ", the_type)
             if the_type != None:                
                 print("ANNOTATED TYPE: ", lhsStr, " => ", the_type)
                 self.varType[ lhsStr ] = the_type
@@ -447,13 +450,13 @@ class TypeCheck:
         #print("DEBUG: Node Type = ", Type(binNode))
         if Type(binNode) == ops.EQ:
             lhsStr = str(binNode.getLeft())
-            if lhsStr in [inputKeyword, outputKeyword]: return
+            if lhsStr in [sdl.inputKeyword, sdl.outputKeyword]: return
             #print("DEBUG: original node = ", binNode)
             z3Nodes = self.__buildZ3Expression(binNode.getRight(), binNode.getLeft(), self.varType)
             print("DEBUG: Z3 expression = ", z3Nodes)
             if lhsStr in self.listModel.keys():
 #                new_type = self.convertType(self.listModel[lhsStr].evaluate(z3Nodes))
-                if LIST_INDEX_SYMBOL in lhsStr: lhsStr = lhsStr.split(LIST_INDEX_SYMBOL)[0] # JAA: may need to do other things here
+                if sdl.LIST_INDEX_SYMBOL in lhsStr: lhsStr = lhsStr.split(sdl.LIST_INDEX_SYMBOL)[0] # JAA: may need to do other things here
                 new_type = self.listVarType[ lhsStr ]
             else:
                 new_type = self.TypeModel.evaluate(z3Nodes)
@@ -470,9 +473,9 @@ class TypeCheck:
             # 3. does this work?
             
             #if varName == "pk": x = Int('x'); print("Test: ", str(new_type), self.TypeModel.evaluate(new_type[0]), self.TypeModel.evaluate(new_type[1]))
-            if LIST_INDEX_SYMBOL in varName:
+            if sdl.LIST_INDEX_SYMBOL in varName:
                 # evaluate the equation          
-                listKey = varName.split(LIST_INDEX_SYMBOL)[0]                
+                listKey = varName.split(sdl.LIST_INDEX_SYMBOL)[0]                
                 if listKey in self.varType.keys():
                     LHSType = self.contextType(binNode.left, self.varType)
                     if LHSType.eq( new_type ):

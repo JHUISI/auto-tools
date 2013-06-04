@@ -1,21 +1,21 @@
 '''SDL Parser: a parser based on pyparsing toolkit for the SDL language'''
 from pyparsing import *
-#try:
-#   from sdlparser.SDLang import *
-#   from sdlparser.VarInfo import *
-#   from sdlparser.VarType import *
-#   from sdlparser.ForLoop import *
-#   from sdlparser.ForLoopInner import *
-#   from sdlparser.IfElseBranch import *
-#   from sdlparser.TypeCheck2 import *
-#except:
-from SDLang import *
-from VarInfo import *
-from VarType import *
-from ForLoop import *
-from ForLoopInner import *   
-from IfElseBranch import *
-from TypeCheck2 import *
+try:
+   from sdlparser.SDLang import *
+   from sdlparser.VarInfo import *
+   from sdlparser.VarType import *
+   from sdlparser.ForLoop import *
+   from sdlparser.ForLoopInner import *
+   from sdlparser.IfElseBranch import *
+   from sdlparser.TypeCheck2 import *
+except:
+    from SDLang import *
+    from VarInfo import *
+    from VarType import *
+    from ForLoop import *
+    from ForLoopInner import *   
+    from IfElseBranch import *
+    from TypeCheck2 import *
 import string,sys
 
 objStack = []

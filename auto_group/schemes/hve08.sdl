@@ -7,16 +7,22 @@ BEGIN :: types
 Msg := GT
 Msg2 := GT
 n := Int
-xVector := list{Int}
-yVector := list{Int}
+xVector := list{ZR}
+yVector := list{ZR}
+a := list{ZR}
 t := list{ZR}
 v := list{ZR}
 r := list{ZR}
 m := list{ZR}
+s2 := list{ZR}
 T := list{G1}
 V := list{G1}
 R := list{G1}
 M := list{G1}
+XVector := list{G1}
+WVector := list{G1}
+YVector := list{G1}
+LVector := list{G1}
 END :: types
 
 BEGIN :: func:setup
