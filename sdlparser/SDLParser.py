@@ -1107,7 +1107,7 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
         rightSideType = getVarTypeInfoRecursive(node.right)
         if (leftSideType != rightSideType):
             sys.exit("getVarTypeInfoRecursive in SDLParser.py found an operation of type EQ_TST in which the left and right side types were unequal.")
-        return leftSideType
+        return types.bool
     if (node.type == ops.TYPE):
         return node.attr
 
