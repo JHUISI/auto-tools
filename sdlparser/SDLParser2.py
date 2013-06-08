@@ -59,32 +59,6 @@ refType = 'refType'
 #generators = []
 
 usedBuiltinsFunc = []
-builtInTypes = {}
-builtInTypes["DeriveKey"] = types.Str
-builtInTypes["stringToInt"] = types.listZR
-builtInTypes["intToBits"] = types.listZR
-builtInTypes["createPolicy"] = types.pol # these are app specific
-builtInTypes["getAttributeList"] = types.listStr
-builtInTypes["calculateSharesDict"] = types.symmapZR
-builtInTypes["calculateSharesList"] = types.listZR
-builtInTypes["prune"] = types.listStr
-builtInTypes["getCoefficients"] = types.symmapZR
-builtInTypes["integer"] = types.Int
-builtInTypes["isList"] = types.Int
-builtInTypes["recoverCoefficientsDict"] = types.listZR
-builtInTypes["genShares"] = types.symmapZR
-builtInTypes["genSharesForX"] = types.listZR
-builtInTypes["intersectionSubset"] = types.listZR
-builtInTypes["GetString"] = types.Str
-builtInTypes["hashToKey"] = types.Str
-builtInTypes["accept"] = types.Int
-builtInTypes["getAcceptState"] = types.Int
-builtInTypes["getString"] = types.Str
-builtInTypes["getTransitions"] = types.metalistInt
-builtInTypes["strkeys"] = types.listStr
-builtInTypes["chamH"] = types.ZR
-builtInTypes["concat"] = types.list
-
 
 def createNode(s, loc, toks):
     print('createNode => ', toks)
@@ -1090,9 +1064,9 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
         return types.NO_TYPE
     if (node.type == ops.FUNC):
         currentFuncName = getFullVarName(node, False)
-        if (currentFuncName in builtInTypes):
+        if (currentFuncName in newBuiltInTypes):
             if currentFuncName not in usedBuiltinsFunc: usedBuiltinsFunc.append(currentFuncName)
-            return builtInTypes[currentFuncName]
+            return newBuiltInTypes[currentFuncName]
         elif (currentFuncName == INIT_FUNC_NAME):
             trythis = node.listNodes[0]
             #return types[trythis] # types[trythis]

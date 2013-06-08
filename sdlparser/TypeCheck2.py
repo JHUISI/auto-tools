@@ -1,6 +1,5 @@
 from z3 import *
-from SDLang import Type,ops,types
-import SDLParser2 as sdl
+import SDLang as sdl
 
 Group, (Str, sInt, ZR, G1, G2, GT, pol, Nil) = EnumSort('GroupType', ('Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'pol', 'Nil'))
 
@@ -15,6 +14,8 @@ asym_pair = Function('asympair', Group, Group, Group)
 # define basic data structure for SDL
 listPrefix = "list"
 metalistPrefix = "metalist"
+listType = Array('list', IntSort(), Group)
+
 listStr = K(IntSort(), Str)
 listInt = K(IntSort(), sInt)
 # JAA: do we need another version in which keys can be "Str" types?
@@ -188,22 +189,22 @@ class TypeCheck:
         if node.right != None: rightNode = self.__buildZ3Expression(node.right, lhs, varType)
         
         # visit the root
-        if (Type(node) == ops.TYPE):
+        if (sdl.Type(node) == sdl.ops.TYPE):
             the_type = self.__convertTypeToZ3(str(node.attr))
             if the_type not in mapGroup.keys():
                 print("Invalid type: ", the_type, str(node.attr)); return Nil
             return mapGroup.get(the_type)
-        elif Type(node) == ops.RANDOM:
+        elif sdl.Type(node) == sdl.ops.RANDOM:
             retRandomType = str(node.getLeft().attr)
             return mapGroup.get(retRandomType)
-        elif Type(node) == ops.HASH:
+        elif sdl.Type(node) == sdl.ops.HASH:
             retHashType = str(node.getRight().attr)
             return mapGroup.get(retHashType)
-        elif Type(node) == ops.ON:
+        elif sdl.Type(node) == sdl.ops.ON:
             return rightNode
-        elif Type(node) == ops.EXPAND:
+        elif sdl.Type(node) == sdl.ops.EXPAND:
             return Nil        
-        elif Type(node) == ops.LIST: # JAA: Document these type semantics
+        elif sdl.Type(node) == sdl.ops.LIST: # JAA: Document these type semantics
             # create rules for this particular list instance in SDL
             listRules = []
             refName = self.__getUniqueRef()
@@ -243,13 +244,13 @@ class TypeCheck:
 
             return refHandle
         # idea is to verify that both sides have thesame type, so we use the equal operator in Z3
-        elif Type(node) in [ops.EQ, ops.EQ_TST, ops.NON_EQ_TST]: 
+        elif sdl.Type(node) in [sdl.ops.EQ, sdl.ops.EQ_TST, sdl.ops.NON_EQ_TST]: 
             return (leftNode == rightNode)
-        elif Type(node) == ops.OR:
+        elif sdl.Type(node) == sdl.ops.OR:
             return Or(leftNode, rightNode)
-        elif Type(node) == ops.AND:
+        elif sdl.Type(node) == sdl.ops.AND:
             return And(leftNode, rightNode)
-        elif Type(node) == ops.PAIR:
+        elif sdl.Type(node) == sdl.ops.PAIR:
             if self.setting == sdl.SYMMETRIC_SETTING:
                 return sym_pair(leftNode, rightNode)
             elif self.setting == sdl.ASYMMETRIC_SETTING:
@@ -257,32 +258,32 @@ class TypeCheck:
             else:
                 print("TypeCheck: Setting was not specified and using PAIRING.")
                 sys.exit(-1)
-        elif Type(node) == ops.ADD:
+        elif sdl.Type(node) == sdl.ops.ADD:
             return add(leftNode, rightNode)
-        elif Type(node) == ops.SUB:
+        elif sdl.Type(node) == sdl.ops.SUB:
             return sub(leftNode, rightNode)
-        elif Type(node) == ops.MUL:
+        elif sdl.Type(node) == sdl.ops.MUL:
             return mul(leftNode, rightNode)
-        elif Type(node) == ops.DIV:
+        elif sdl.Type(node) == sdl.ops.DIV:
             return div(leftNode, rightNode)
-        elif Type(node) == ops.EXP:
+        elif sdl.Type(node) == sdl.ops.EXP:
             return exp(leftNode, rightNode)
-        elif Type(node) == ops.ATTR:
+        elif sdl.Type(node) == sdl.ops.ATTR:
             varName = str(node).split(sdl.LIST_INDEX_SYMBOL)[0]
             theType = self.computeAttrType(varName, varType)
             if varName.isdigit():
                 return theType
             else:
                 return self.contextType(node, varType) # in case it has a '#' symbol
-        elif Type(node) == ops.CONCAT:
-            return listStr
-        elif Type(node) == ops.STRCONCAT:
+        elif sdl.Type(node) == sdl.ops.CONCAT:
+            return listType # listStr
+        elif sdl.Type(node) == sdl.ops.STRCONCAT:
             return Str            
-        elif Type(node) == ops.FUNC:
+        elif sdl.Type(node) == sdl.ops.FUNC:
             currentFuncName = sdl.getFullVarName(node, False)
-            if (currentFuncName in sdl.builtInTypes):
-                print("mapGroup type for: ", currentFuncName, " := ", str(sdl.builtInTypes[currentFuncName]))
-                return mapGroup.get( str(sdl.builtInTypes[currentFuncName]) )
+            if (currentFuncName in sdl.newBuiltInTypes):
+                print("mapGroup type for: ", currentFuncName, " := ", str(sdl.newBuiltInTypes[currentFuncName]))
+                return mapGroup.get( str(sdl.newBuiltInTypes[currentFuncName]) )
             elif (currentFuncName == sdl.INIT_FUNC_NAME):
                 initType = str(node.listNodes[0])
                 print("initType : ", initType)
@@ -299,7 +300,7 @@ class TypeCheck:
             print("ERROR: require type annotation for func: ", currentFuncName); sys.exit(-1)
             return Nil # Error
         else:
-            print("NodeType unsupported: ", Type(node))
+            print("NodeType unsupported: ", sdl.Type(node))
             return None
     
     def contextType(self, attrNode, varType):
@@ -377,29 +378,29 @@ class TypeCheck:
     
     def __computeDataType(self, z3_type):
         """ highly tied to structure of string representation in Z3 Types. Maps Z3 types to SDL types."""
-        sdlType = types.NO_TYPE
+        sdlType = sdl.types.NO_TYPE
         sortString = str(z3_type.sort())
         the_type = str(z3_type)
         listLevel = sortString.count('Array(')        
         if listLevel == 0:
             if the_type not in stdTypes.keys():
-                return types[the_type]
+                return sdl.types[the_type]
             else:
-                return types[ stdTypes[the_type] ]
+                return sdl.types[ stdTypes[the_type] ]
         elif listLevel == 1:
             #print("LIST: ", listLevel, the_type)
             if listPrefix in the_type:
-                 return types.list
+                 return sdl.types.list
             else:
                 the_type = str(z3_type.children()[0])
-                return types[listPrefix + the_type]
+                return sdl.types[listPrefix + the_type]
         elif listLevel == 2:
             #print("METALIST: ", listLevel)
             if listPrefix in the_type:
-                 return types.metalist
+                 return sdl.types.metalist
             else:
                 the_type = str(z3_type.children()[0])
-                return types[metalistPrefix + the_type]
+                return sdl.types[metalistPrefix + the_type]
         return sdlType
 
     def __buildSDLType(self, node):
@@ -408,22 +409,22 @@ class TypeCheck:
         if node.left != None: leftNode   = self.__buildZ3Expression(node.left, lhs, varType)
         if node.right != None: rightNode = self.__buildZ3Expression(node.right, lhs, varType)
         
-        if Type(node) == ops.TYPE:
+        if sdl.Type(node) == sdl.ops.TYPE:
             the_type = str(node.attr)
             the_type2 = self.__convertTypeToZ3( the_type )
             if the_type2 == listPrefix: return # handled properly later 
             return mapGroup.get( the_type2 )
-        elif Type(node) == ops.LIST:
+        elif sdl.Type(node) == sdl.ops.LIST:
             print("LIST TYPE: ", node, ) # TODO: handle metalists
             the_type = self.__convertTypeToZ3(node.listNodes[0])
             print("the_type : ", the_type)
             return mapGroup.get( listPrefix + str(the_type) )
-        elif Type(node) == ops.ATTR: 
+        elif sdl.Type(node) == sdl.ops.ATTR: 
             print("Undefined type: ", node)
         return
     
     def processTypeAnnotations(self, binNode):
-        if Type(binNode) == ops.EQ:
+        if sdl.Type(binNode) == sdl.ops.EQ:
             lhsStr = str(binNode.getLeft())
             the_type = self.__buildSDLType(binNode.getRight())
             print("processTypeAnnotations: ", the_type)
@@ -433,13 +434,13 @@ class TypeCheck:
         return
     
     def evaluateType(self, binNode):
-        if Type(binNode) != ops.EQ:
+        if sdl.Type(binNode) != sdl.ops.EQ:
             z3Nodes = self.__buildZ3Expression(binNode.getLeft(), None, self.varType)
             print("DEBUG: Z3 expression = ", z3Nodes)
             new_type = self.TypeModel.evaluate(z3Nodes)
             if str(new_type) == 'True': return True
             elif str(new_type) == 'False': return False
-        elif Type(binNode) == ops.EQ:
+        elif sdl.Type(binNode) == sdl.ops.EQ:
             z3Nodes = self.__buildZ3Expression(binNode, None, self.varType)
             print("DEBUG: Z3 expression = ", z3Nodes)
             new_type = self.TypeModel.evaluate(z3Nodes)
@@ -448,7 +449,7 @@ class TypeCheck:
         
     def inferType(self, binNode): 
         #print("DEBUG: Node Type = ", Type(binNode))
-        if Type(binNode) == ops.EQ:
+        if sdl.Type(binNode) == sdl.ops.EQ:
             lhsStr = str(binNode.getLeft())
             if lhsStr in [sdl.inputKeyword, sdl.outputKeyword]: return
             #print("DEBUG: original node = ", binNode)
@@ -500,11 +501,11 @@ if __name__ == "__main__":
     varType = {} #{'tf0':listG1, 'tf1':listG1}
     tc = TypeCheck(varType)
     tc.setupSolver()
-    parser = sdl.SDLParser()
-    args = sys.argv[1:]
-    for i in args:
-        binNode = parser.parse(i)
-        tc.inferType(binNode)
+#    parser = sdl.SDLParser()
+#    args = sys.argv[1:]
+#    for i in args:
+#        binNode = parser.parse(i)
+#        tc.inferType(binNode)
     
     print("VarTypes:\t", tc.getVarType())
     print()

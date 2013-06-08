@@ -56,6 +56,32 @@ side = Enum('left', 'right')
 levels = Enum('none', 'some', 'all')
 debug = levels.none
 
+newBuiltInTypes = {}
+newBuiltInTypes["DeriveKey"] = types.Str
+newBuiltInTypes["stringToInt"] = types.listZR
+newBuiltInTypes["intToBits"] = types.listZR
+newBuiltInTypes["createPolicy"] = types.pol # these are app specific
+newBuiltInTypes["getAttributeList"] = types.listStr
+newBuiltInTypes["calculateSharesDict"] = types.symmapZR
+newBuiltInTypes["calculateSharesList"] = types.listZR
+newBuiltInTypes["prune"] = types.listStr
+newBuiltInTypes["getCoefficients"] = types.symmapZR
+newBuiltInTypes["integer"] = types.Int
+newBuiltInTypes["isList"] = types.Int
+newBuiltInTypes["recoverCoefficientsDict"] = types.listZR
+newBuiltInTypes["genShares"] = types.symmapZR
+newBuiltInTypes["genSharesForX"] = types.listZR
+newBuiltInTypes["intersectionSubset"] = types.listZR
+newBuiltInTypes["GetString"] = types.Str
+newBuiltInTypes["hashToKey"] = types.Str
+newBuiltInTypes["accept"] = types.Int
+newBuiltInTypes["getAcceptState"] = types.Int
+newBuiltInTypes["getString"] = types.Str
+newBuiltInTypes["getTransitions"] = types.metalistInt
+newBuiltInTypes["strkeys"] = types.listStr
+newBuiltInTypes["chamH"] = types.ZR
+newBuiltInTypes["concat"] = types.list
+
 # Note: when updating the grammar, there are four places that you have to update:
 # - getBNF: symbol must be represented in the grammar (w/o) breaking the other rules.
 # - batchparser: evalStack routine must be able to identify the new symbol in input file.
