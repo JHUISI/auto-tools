@@ -6,14 +6,15 @@ set size 3,1.33333;
 set output "DoS_Attack.eps";
 set yrange [1 : 825]; set y2range [0:0.55]; set xrange[0 : 75100];
 set y2tics border;
-set title "AutoBatch Performance During DoS Attack" font "Helvetica,28";
-set xlabel "Elapsed Time (ms)" font "Helvetica,28";
+set title "Automatically Generated BLS Batch Verifier: Performance During DoS Attack" font "Helvetica,28";
+set xlabel "Cumulative Time (ms)" font "Helvetica,28";
 set ylabel "Signatures / sec" font "Helvetica,28";
 set y2label "Invalid Signatures as Fraction of Total" font "Helvetica,28";
 
-set style line 1 lt 1 lw 8
-set style line 2 lt 2 lw 8
-set style line 3 lt 7 lw 8
+set style line 1 lt 1 lw 8 pt 3
+set style line 2 lt 4 lw 8 pt 3
+set style line 3 lt 2 lw 8 pt 3
+set style line 4 lt 3 lw 8 pt 3
 
 f(x) = m*x + b
 
