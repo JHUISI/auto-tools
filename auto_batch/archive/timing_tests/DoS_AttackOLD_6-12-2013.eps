@@ -1,7 +1,7 @@
 %!PS-Adobe-2.0 EPSF-2.0
 %%Title: DoS_Attack.eps
-%%Creator: gnuplot 4.6 patchlevel 1
-%%CreationDate: Wed Jun 12 17:27:44 2013
+%%Creator: gnuplot 4.4 patchlevel 3
+%%CreationDate: Thu Feb 16 20:44:09 2012
 %%DocumentFonts: (atend)
 %%BoundingBox: 50 50 1130 385
 %%EndComments
@@ -20,12 +20,10 @@ gnudict begin
 /Level1 false def
 /Rounded false def
 /ClipToBoundingBox false def
-/SuppressPDFMark false def
 /TransparentPatterns false def
 /gnulinewidth 5.000 def
 /userlinewidth gnulinewidth def
 /Gamma 1.0 def
-/BackgroundColor {-1.000 -1.000 -1.000} def
 %
 /vshift -80 def
 /dl1 {
@@ -40,6 +38,22 @@ gnudict begin
 /vpt_ 31.5 def
 /hpt hpt_ def
 /vpt vpt_ def
+Level1 {} {
+/SDict 10 dict def
+systemdict /pdfmark known not {
+  userdict /pdfmark systemdict /cleartomark get put
+} if
+SDict begin [
+  /Title (DoS_Attack.eps)
+  /Subject (gnuplot plot)
+  /Creator (gnuplot 4.4 patchlevel 3)
+  /Author (matt)
+%  /Producer (gnuplot)
+%  /Keywords ()
+  /CreationDate (Thu Feb 16 20:44:09 2012)
+  /DOCINFO pdfmark
+end
+} ifelse
 /doclip {
   ClipToBoundingBox {
     newpath 50 50 moveto 1130 50 lineto 1130 385 lineto 50 385 lineto closepath
@@ -47,7 +61,7 @@ gnudict begin
   } if
 } def
 %
-% Gnuplot Prolog Version 4.6 (September 2012)
+% Gnuplot Prolog Version 4.4 (August 2010)
 %
 %/SuppressPDFMark true def
 %
@@ -314,8 +328,7 @@ gnudict begin
 /PatternFill {gsave /PFa [ 9 2 roll ] def
   PFa 0 get PFa 2 get 2 div add PFa 1 get PFa 3 get 2 div add translate
   PFa 2 get -2 div PFa 3 get -2 div PFa 2 get PFa 3 get Rec
-  TransparentPatterns {} {gsave 1 setgray fill grestore} ifelse
-  clip
+  gsave 1 setgray fill grestore clip
   currentlinewidth 0.5 mul setlinewidth
   /PFs PFa 2 get dup mul PFa 3 get dup mul add sqrt def
   0 0 M PFa 5 get rotate PFs -2 div dup translate
@@ -448,26 +461,8 @@ currentdict end definefont pop
   Blacktext {gsave 0 setgray MFshow grestore} {MFshow} ifelse } bind def
 /XYsave    { [( ) 1 2 true false 3 ()] } bind def
 /XYrestore { [( ) 1 2 true false 4 ()] } bind def
-Level1 SuppressPDFMark or 
-{} {
-/SDict 10 dict def
-systemdict /pdfmark known not {
-  userdict /pdfmark systemdict /cleartomark get put
-} if
-SDict begin [
-  /Title (DoS_Attack.eps)
-  /Subject (gnuplot plot)
-  /Creator (gnuplot 4.6 patchlevel 1)
-  /Author (matt)
-%  /Producer (gnuplot)
-%  /Keywords ()
-  /CreationDate (Wed Jun 12 17:27:44 2013)
-  /DOCINFO pdfmark
-end
-} ifelse
 end
 %%EndProlog
-%%Page: 1 1
 gnudict begin
 gsave
 doclip
@@ -476,7 +471,6 @@ doclip
 0 setgray
 newpath
 (Helvetica) findfont 240 scalefont setfont
-BackgroundColor 0 lt 3 1 roll 0 lt exch 0 lt or or not {BackgroundColor C 1.000 0 0 21600.00 6719.98 BoxColFill} if
 1.000 UL
 LTb
 1176 762 M
@@ -721,11 +715,11 @@ grestore
 LTb
 LCb setrgbcolor
 10618 168 M
-[ [(Helvetica) 280.0 0.0 true true 0 (Elapsed Time \(ms\))]
+[ [(Helvetica) 280.0 0.0 true true 0 (Cumulative Time \(ms\))]
 ] -93.3 MCshow
 LTb
 10618 6359 M
-[ [(Helvetica) 280.0 0.0 true true 0 (AutoBatch Performance During DoS Attack)]
+[ [(Helvetica) 280.0 0.0 true true 0 (Automatically Generated BLS Batch Verifier: Performance During DoS Attack)]
 ] -93.3 MCshow
 1.000 UP
 1.000 UL
@@ -1500,12 +1494,12 @@ stroke 19445 1180 M
 % End plot #1
 % Begin plot #2
 stroke
-LT6
+LT1
 LCb setrgbcolor
 18990 5576 M
 [ [(Helvetica) 240.0 0.0 true true 0 (Batch-Only Verifier)]
 ] -80.0 MRshow
-LT6
+LT1
 19134 5576 M
 639 0 V
 9235 1144 M
@@ -1945,12 +1939,12 @@ stroke 19646 1014 M
 % End plot #2
 % Begin plot #3
 stroke
-LT1
+LT3
 LCb setrgbcolor
 18990 5336 M
 [ [(Helvetica) 240.0 0.0 true true 0 (Invalid Signatures as Fraction of Total)]
 ] -80.0 MRshow
-LT1
+LT3
 19134 5336 M
 639 0 V
 2733 768 M
