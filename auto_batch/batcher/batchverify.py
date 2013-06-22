@@ -243,6 +243,7 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     if VERBOSE: print("setting: ", batch_count)
     
     if VERBOSE: print("variables =>", types)
+    
     # build data inputs for technique classes    
     sdl_data = { SECPARAM: settingObj.getSecParam(), CONST : constants, PUBLIC: pubVars, MESSAGE : msgVars, SETTING : batch_count, BATCH_VERIFY:settingObj.getVerifyInputArgs(), BATCH_VERIFY_MAP:settingObj.getVerifyInputArgsMap() } 
     if PROOFGEN_FLAG:
@@ -453,6 +454,7 @@ def run_main(opts, start=None, stop=None):
             i += 1
 #            print("BATCH EQUATION: ", verify2)
             finalVerifyList.append(verify2)
+#            print("FINAL VERIFY LIST: ", finalVerifyList)
 #            sdl_data.update(sdl_data0)
 #            types.update(types0)
             batch_precompute.update(batch_precompute0)

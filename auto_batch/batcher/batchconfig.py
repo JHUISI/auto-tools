@@ -285,6 +285,8 @@ class SDLSetting():
             return False
 
     def getTypes(self):
+        # TODO: figure out where __builtin__ key is added!
+        self.varTypes['__builtins__'] = None
         return self.varTypes
 
     def getNumSignatures(self):
