@@ -161,7 +161,7 @@ input := list{Mlist, X, Y, alist, blist, clist, g, incorrectIndices}
 BEGIN :: for
 for{z := 0, N}
  delta1#z := SmallExp(secparam)
- delta2#z := SmallExp(secparam)
+delta2#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if

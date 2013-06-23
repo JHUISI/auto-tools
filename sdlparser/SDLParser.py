@@ -747,9 +747,15 @@ def updateKeywordStmts(node, lineNum):
     assignInfo_Func = assignInfo[currentFuncName]
     varName = getFullVarName(node.left, True) # drops anything after '#' symbol in the string
 
+    currentForLoopObj = None
+    if (startLineNo_ForLoop != None) and (startLineNo_ForLoop < lineNum):
+        assert currentFuncName in forLoops.keys(), "No for loop entry for: " + currentFuncName
+        lenForLoops = len(forLoops[currentFuncName])
+        currentForLoopObj = forLoops[currentFuncName][lenForLoops - 1]
+
     varInfoObj = VarInfo()
     varInfoObj.setLineNo(lineNum)
-    varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, None, None)
+    varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, currentForLoopObj, None)
     if (varName in assignInfo[currentFuncName]):
         sys.exit("In updateKeywordStmts in SDLParser.py, found duplicate entries for variable name in HEADER function.")
 
@@ -757,24 +763,6 @@ def updateKeywordStmts(node, lineNum):
     
     getVarTypeInfo(node, lineNum, varName)
     
-    return None
-
-def updatePrecomputeStmts(node, lineNum):
-    global assignInfo
-    
-    if assignInfo.get(currentFuncName) == None:
-        assignInfo[currentFuncName] = {}
-        
-    assignInfo_Func = assignInfo[currentFuncName]
-    varName = getFullVarName(node.left, True) # drops anything after '#' symbol in the string
-
-    varInfoObj = VarInfo()
-    varInfoObj.setLineNo(lineNum)
-    varInfoObj.setAssignNode(generators, assignInfo, varTypes, node, currentFuncName, None, None, traverseAssignNode=False)
-    if (varName in assignInfo[currentFuncName]):
-        sys.exit("In updatePrecomputeStmts in SDLParser.py, found duplicate entries for variable name in PRECOMPUTE_HEADER function.")
-
-    assignInfo[currentFuncName][varName] = varInfoObj
     return None
 
 def updateLatexStmts(lineStr, lineNum):
@@ -1671,7 +1659,8 @@ def updateForLoops(node, lineNo):
 
     retForLoopStruct = ForLoop()
     retForLoopStruct.updateForLoopStruct(node, startLineNo_ForLoop, currentFuncName)
-
+    if currentFuncName not in forLoops.keys():
+        forLoops[currentFuncName] = []
     forLoops[currentFuncName].append(retForLoopStruct)
     
     viForBegin = VarInfo()
@@ -1679,9 +1668,13 @@ def updateForLoops(node, lineNo):
     viForBegin.isForLoopBegin = True
     viForBegin.for_type = node.type
     viForBegin.assignNode = BinaryNode.copy(node)
+    if currentFuncName not in assignVarInfo.keys():
+        assignVarInfo[currentFuncName] = {}
     assignVarInfo[currentFuncName][startLineNo_ForLoop] = viForBegin
     
     loopVarName = str(node.left.left)
+    if currentFuncName not in varTypes.keys():
+        varTypes[currentFuncName] = {}
     if (loopVarName not in varTypes[currentFuncName]):
         varTypeObj = VarType()
         varTypeObj.setType(types.int)

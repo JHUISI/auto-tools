@@ -192,9 +192,10 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     constants, types = settingObj.getConstantVars(), settingObj.getTypes()
     sigVars, pubVars, msgVars = settingObj.getSignatureVars(), settingObj.getPublicVars(), settingObj.getMessageVars()
     latex_subs = settingObj.getLatexVars()
-
-    if settingObj.getPrecomputeVars():
-        (indiv_precompute, batch_precompute) = settingObj.getPrecomputeVars()
+    precomputeVars = settingObj.getPrecomputeVars()
+    
+    if precomputeVars != None:
+        (indiv_precompute, batch_precompute) = precomputeVars # settingObj.getPrecomputeVars()
     else:
         (indiv_precompute, batch_precompute) = {}, {}
     batch_precompute[ "delta" ] = "for{z := 1, N} do prng_z"
@@ -245,7 +246,7 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     if VERBOSE: print("variables =>", types)
     
     # build data inputs for technique classes    
-    sdl_data = { SECPARAM: settingObj.getSecParam(), CONST : constants, PUBLIC: pubVars, MESSAGE : msgVars, SETTING : batch_count, BATCH_VERIFY:settingObj.getVerifyInputArgs(), BATCH_VERIFY_MAP:settingObj.getVerifyInputArgsMap() } 
+    sdl_data = { SECPARAM: settingObj.getSecParam(), CONST : constants, PUBLIC: pubVars, MESSAGE : msgVars, SETTING : batch_count, BATCH_VERIFY:settingObj.getVerifyInputArgs(), BATCH_VERIFY_MAP:settingObj.getVerifyInputArgsMap(), LOOP_INDEX:settingObj.getVerifyVarsLoopIndex() } 
     if PROOFGEN_FLAG:
         # start the LCG
         proofGen.initLCG(constants, types, sigVars, latex_subs)
@@ -402,6 +403,7 @@ def run_main(opts, start=None, stop=None):
     verify_eq, N = [], None
     #for n in ast_struct[ OTHER ]:
     if len(setting.getVerifyEq()) == 0:
+        print(setting.getVerifyEq())
         sys.exit("Could not locate the individual verification equation. Please edit SDL file.\n");
     
     verifyEqDict = setting.getVerifyEq()

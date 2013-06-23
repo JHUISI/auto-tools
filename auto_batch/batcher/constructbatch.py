@@ -1,6 +1,6 @@
 import batcher.sdlpath
 from sdlparser.SDLParser import *
-from batcher.batchoptimizer import SubstituteSigDotProds, SubstituteAttr, DropIndexForPrecomputes, GetVarsInEq, GetDeltaIndex
+from batcher.batchoptimizer import SubstituteSigDotProds, SubstituteAttr, SubstituteAttr2, DropIndexForPrecomputes, GetVarsInEq, GetDeltaIndex
 from batcher.batchconfig import *
 
 membership_check = """\n
@@ -149,11 +149,21 @@ class SDLBatch:
         self.setting = settingObj
         del self.precomputeDict[delta_word]
         self.precomputeVarList = []
+        self.precomputeMap = {} # for cases where we need to strip list index but references need to maintain the '#' in BV calculations 
         self.defaultBatchTypes = {"incorrectIndices" : "list{int}", "startSigNum" : "int", "endSigNum " : "int"}
         for k in list(self.precomputeDict.keys()):
             (i, j) = self.precomputeDict[k]
-            self.precomputeVarList.append(i.getAttribute())
-
+            iVar = i.getAttribute()
+            if iVar.find(LIST_INDEX_SYMBOL) != -1:
+                iVarKey = iVar.split(LIST_INDEX_SYMBOL)[0]
+                self.precomputeVarList.append(iVarKey)
+                self.precomputeMap[ iVarKey ] = iVar
+            else:
+                self.precomputeVarList.append(iVar)
+        
+#        print("DEBUG: precomputeList: ", self.precomputeVarList)
+        self.precomputeVarInfo = self.setting.getPrecomputeVarInfo()
+#        sys.exit(-1)
         self.finalBatchEq = BinaryNode.copy(finalSdlBatchEq)
         self.variableCount = variableCount
         gdi = GetDeltaIndex()
@@ -161,7 +171,7 @@ class SDLBatch:
         self.deltaListFirst, self.deltaListSecond = gdi.getDeltaList() # default is none if single equation
         self.newDeltaList = []
         self.__generateDeltaLines(sigIterator, self.newDeltaList)
-        self.debug = False
+        self.debug = True #False
 
     def getVariableCount(self):
         return self.variableCount
@@ -178,7 +188,7 @@ class SDLBatch:
         exceptList.extend(constList) # add list of constant variables here
         if self.setting.getPublicVarsCount().get(SAME) != None:
             exceptList.extend(self.setting.getPublicVarsCount().get(SAME))
-        dp = DropIndexForPrecomputes(self.precomputeVarList + exceptList, forLoopIndex, self.varTypes)
+        dp = DropIndexForPrecomputes(self.precomputeVarList + exceptList, forLoopIndex, self.varTypes, self.precomputeMap)
         ASTVisitor(dp).preorder(eq)
         return Filter(eq)
 
@@ -196,7 +206,7 @@ class SDLBatch:
         exceptList.extend(constList) # add list of constant variables here
         if self.setting.getPublicVarsCount().get(SAME) != None:
             exceptList.extend(self.setting.getPublicVarsCount().get(SAME)) 
-        dp = DropIndexForPrecomputes(self.precomputeVarList + exceptList, forLoopIndex, self.varTypes)
+        dp = DropIndexForPrecomputes(self.precomputeVarList + exceptList, forLoopIndex, self.varTypes, self.precomputeMap)
         ASTVisitor(dp).preorder(eq)
 
         eqStr = Filter(eq)
@@ -340,10 +350,19 @@ class SDLBatch:
                 outputBeforePrecompute += "END :: if\n"
                 outputBeforePrecompute += end_for_loop + "\n"
             elif str(i) not in dotCacheVarList:
+#                print(i, ":= ", j, self.precomputeVarInfo[str(i)].getOutsideForLoopObj().getLoopVar(), " == ", loopIndex)
 #                print("took this branch: ", i, ":", dotCacheVarList)
-                nonPrecomputeDict[ h ] = (i, j)
-                if self.debug: print(i, ":= ", j)
-                outputBeforePrecompute += "%s := %s\n" % (i, j)
+                vInfo = self.precomputeVarInfo.get(str(i))
+                if vInfo != None and vInfo.getOutsideForLoopObj() != None and vInfo.getOutsideForLoopObj().getLoopVar() in loopIndex:
+                    newPrecomputeDict[ h ] = (i, j)
+                elif vInfo == None: # safe to precompute before signature/signer loops 
+                    nonPrecomputeDict[ h ] = (i, j)
+                    if self.debug: print(i, ":=> ", j)
+                    outputBeforePrecompute += "%s := %s\n" % (i, j)
+                else: # precompute handled already if we reach this case
+                    print("No action needed for this case.")
+                    pass
+                    
             # see if attrs in statement are all constants, if so then non
             elif str(i) != delta_word and self.__isVarDepsAllConstants(j):
                 nonPrecomputeDict[ h ] = (i, j)
@@ -361,11 +380,23 @@ class SDLBatch:
             if str(i) in dotCacheVarList: # JAA:
                 sa = SubstituteAttr(self.sdlData[BATCH_VERIFY_MAP], loopIndex, self.sdlData.get(CONST) + self.precomputeVarList)
                 eq = BinaryNode.copy(j)
-                ASTVisitor(sa).preorder(eq)                
+                ASTVisitor(sa).preorder(eq)
                 line = "%s := %s\n" % (i, Filter(eq))
                 if self.debug: print(line)
                 outputPrecompute += line
-        
+            else:
+                print(i, " not in dotCacheVarList: ", self.sdlData[CONST], self.precomputeVarList)
+#                print(self.sdlData[BATCH_VERIFY_MAP]) 
+#                vInfo = self.precomputeVarInfo.get(str(i))
+                self.sdlData.get(CONST).append( str(i) )
+                print("output: ", self.sdlData[LOOP_INDEX], self.sdlData.get(CONST))
+                sa = SubstituteAttr2(self.sdlData[BATCH_VERIFY_MAP], self.sdlData[LOOP_INDEX], self.sdlData.get(CONST) + self.precomputeVarList)
+                eq = BinaryNode.copy(j)
+                ASTVisitor(sa).preorder(eq)
+                line = "%s := %s\n" % (i, Filter(eq))
+                if self.debug: print(line)
+                outputPrecompute += line
+                
        # mark precompute variables we have already seen
         keysToPrecomputeVars = list(self.precomputeDict.keys())
         for k in keysToPrecomputeVars:

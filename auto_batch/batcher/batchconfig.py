@@ -7,12 +7,16 @@ MESSAGE, SIGNATURE, PUBLIC, SETTING, SETUP, KEYGEN, SIGN, VERIFY = 'message','si
 BATCH_VERIFY = 'batch_verify'
 PRECHECK_HEADER = 'precheck' # special section for computation and variables that need to be check before verification check
 BATCH_VERIFY_MAP = BATCH_VERIFY + "_map"
+LOOP_INDEX = BATCH_VERIFY + "_index"
 BATCH_VERIFY_OTHER_TYPES = BATCH_VERIFY + "_other_types"
 SCHEME_NAME, BATCH_COUNT, SECPARAM = 'name', 'count', 'secparam'
 MSG_CNT, SIG_CNT, PUB_CNT = 'message_count', 'signature_count', 'public_count'
 MEMBERSHIP_TEST_CHECK = 'membership'
 # qualifier (means only one instance of that particular keyword exists)
 SAME = 'one'
+sigIterator = 'z'
+signerIterator = 'y'
+
 NUM_SIGNATURES = 'N'
 NUM_SIGNER_TYPES = ['L', 'l']
 linkVar = "link"
@@ -23,11 +27,12 @@ class SDLSetting():
     def __init__(self, debug=False):
         self.verifyEqList = []
         self.latex_symbols = {}
-        self.data = { CONST : None, PUBLIC: None, MESSAGE : None, SIGNATURE: None, SETTING : None, MEMBERSHIP_TEST_CHECK:{} }
+        self.data = { CONST : None, PUBLIC: None, MESSAGE : None, SIGNATURE: None, SETTING : None, MEMBERSHIP_TEST_CHECK:{}, LOOP_INDEX:{} }
         self.numSignatures = 0
         self.varTypes = {}
         self.indiv_precompute = {}
         self.batch_precompute = {}
+        self.precompute_varinfo = {}
         self.debug = debug
         self.partialSDL = False
         
@@ -113,9 +118,21 @@ class SDLSetting():
                 for k in self.data[VERIFY]:
                     if (k in self.data[CONST]) or (k in self.data[SIGNATURE] and self.data[COUNT_HEADER][SIG_CNT] != NUM_SIGNATURES) or (k in self.data[PUBLIC] and self.data[COUNT_HEADER][PUB_CNT] != NUM_SIGNATURES) or (k in self.data[MESSAGE] and self.data[COUNT_HEADER][MSG_CNT] != NUM_SIGNATURES):
                         self.data[BATCH_VERIFY][k] = self.returnRealType(self.varTypes[k])
+                        if k not in self.data[CONST]:
+                            # determine whether variables are over signatures only or signers and signatures                            
+                            if listVar in self.varTypes[k]: 
+                                self.data[LOOP_INDEX][k] = LIST_INDEX_SYMBOL + sigIterator + LIST_INDEX_SYMBOL + signerIterator
+                            else:
+                                self.data[LOOP_INDEX][k] = LIST_INDEX_SYMBOL + sigIterator
                     else:
                         # change type into a list
                         self.setTypeString(k, self.varTypes[k]) # "list{%s}" % self.varTypes[k]  # it is variable
+                        if k not in self.data[CONST]:
+                            # determine whether variables are over signatures only or signers and signatures
+                            if listVar in self.varTypes[k]:
+                                self.data[LOOP_INDEX][k] = LIST_INDEX_SYMBOL + sigIterator + LIST_INDEX_SYMBOL + signerIterator
+                            else:
+                                self.data[LOOP_INDEX][k] = LIST_INDEX_SYMBOL + sigIterator
 
 #                print("batchverify input types: ", self.data[BATCH_VERIFY], "\n", self.data[BATCH_VERIFY].items()) 
 #                print("Sorted: ", self.data[BATCH_VERIFY].keys())
@@ -191,11 +208,15 @@ class SDLSetting():
         index = 0
         if type(precomp) == dict:
             for k,v in precomp.items():
+#                print("k: ", k, ", v: ", v.getAssignNode(), ", inForLoop: ", v.getOutsideForLoopObj())
                 node = v.getAssignNode() # might need 
                 if(node.type == ops.EQ):
                     self.indiv_precompute[ node.left ] = node.right
 #                    self.batch_precompute[ BinaryNode.copy(node.left) ] = BinaryNode.copy(node.right)
                     self.batch_precompute [ index ] = (BinaryNode.copy(node.left), BinaryNode.copy(node.right)) 
+                    # only set if it has for loop
+                    if v.getOutsideForLoopObj() != None:
+                        self.precompute_varinfo[ str(node.left) ] = v
                     index += 1
         return
         
@@ -313,6 +334,9 @@ class SDLSetting():
     def getPrecomputeVars(self):
         return self.indiv_precompute, self.batch_precompute
 
+    def getPrecomputeVarInfo(self):
+        return self.precompute_varinfo
+
     def getTransformList(self):
         return self.data.get(TRANSFORM)
     
@@ -324,6 +348,9 @@ class SDLSetting():
     
     def getVerifyInputArgsMap(self):
         return self.data.get(BATCH_VERIFY_MAP)
+    
+    def getVerifyVarsLoopIndex(self):
+        return self.data.get(LOOP_INDEX)
     
     def getPublicVarsCount(self):
         return self.data.get(PUB_CNT)

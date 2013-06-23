@@ -847,7 +847,7 @@ class SubstituteAttr:
     
     def visit_concat(self, node, data):
         varList = node.getListNode()
-        if self.loopVar != None:
+        if self.loopVar != None:                
             newVarList = [self.variable_map[ x ] + self.loopVarStmt if x in self.variable_keys else x for x in varList]
         elif self.loopDict != None:
             for i in self.loopDict[x]:
@@ -869,11 +869,115 @@ class SubstituteAttr:
             newVarList = [self.variable_map[ x ] if x in self.variable_keys else x for x in varList]
         node.listNodes = newVarList
 
+class SubstituteAttr2:
+    def __init__(self, variable_map, loopVar=None, constants=None, loopDict=None):
+        self.variable_map = variable_map
+        if loopDict != None:
+            self.loopDict = loopDict
+        elif loopVar != None:
+            # if loopDict not provided
+            self.loopVar = loopVar
+            if type(loopVar) == dict:
+                self.loopVarStmt = loopVar
+            else:
+                self.loopVarStmt = ""
+                if loopVar and type(loopVar) == list:
+                    for i in loopVar:
+                        self.loopVarStmt += "#" + str(i)
+                elif loopVar and type(loopVar) == str:
+                    self.loopVarStmt += "#" + loopVar
+
+        self.constants = constants
+        self.variable_keys = list(variable_map.keys())
+        
+    def getAttrString(self, _list):
+        newVar = ""
+        for i in _list:
+            newVar += i + "#"
+        newVar = newVar[:-1]
+        return newVar
+        
+    def visit(self, node, data):
+        pass
+    
+    def visit_attr(self, node, data):
+        varName = node.getAttribute() # just retrieve the name and do not include any index info
+        if varName.isdigit(): return
+        # rewrite if it has a "#" baked into it.
+        appendix = None
+        if varName.find(LIST_INDEX_SYMBOL) != -1:
+            varResults = varName.split(LIST_INDEX_SYMBOL)
+            varName = varResults[0]
+            appendix = varResults[1:]
+
+        if varName in self.variable_map.keys():
+            node.setAttribute(self.variable_map[varName])
+#        print("final node after: ", node)
+        if self.constants: # if variable is a constant, then no need adding the loopVar index since it is always the same value.
+            if varName in self.constants: return
+        if self.loopVar != None:            
+            node.setAttrIndex(self.loopVar)
+            node.attr_index.reverse()
+        elif self.loopDict != None:
+            node.setAttrIndex(self.loopDict[ varName ])
+
+        if appendix: # handles case in which "#" appears in attr definition
+            node.attr_index.extend(appendix)
+            #if LIST_INDEX_END_SYMBOL not in node.attr_index: node.attr_index[-1] = node.attr_index[-1] + LIST_INDEX_END_SYMBOL
+    
+    def visit_concat(self, node, data):
+        varList = node.getListNode()
+        if self.loopVar != None: # for this case, self.loopVarStmt is expected to be a dictionary
+            assert type(self.loopVarStmt) == dict, "invalid type for SubstituteAttr2.loopVarStmt"
+            newVarList = []
+            for x in varList:
+                if x in self.variable_keys:
+                    newVarList.append( self.variable_map[x] + self.loopVarStmt[x] )
+                elif x.find(LIST_INDEX_SYMBOL) != -1 and x.split(LIST_INDEX_SYMBOL)[0] in self.variable_keys:
+                    var = x.split(LIST_INDEX_SYMBOL)[0]
+                    newVar = self.variable_map[ var ]
+                    newVar += self.loopVarStmt[ var ]
+                    newVarList.append( newVar ) 
+                else:
+                    newVarList.append( x )
+        elif self.loopDict != None:
+            for i in self.loopDict[x]:
+                loopVarStmt += "#" + str(i)
+            newVarList = [self.variable_map[ x ] + loopVarStmt if x in self.variable_keys else x for x in varList]
+        else:
+            newVarList = [self.variable_map[ x ] if x in self.variable_keys else x for x in varList]
+        node.listNodes = newVarList
+    
+    def visit_func(self, node, data):
+        varList = node.getListNode()
+        if self.loopVar != None:
+            assert type(self.loopVarStmt) == dict, "invalid type for SubstituteAttr2.loopVarStmt"
+            newVarList = []
+            for x in varList:
+                if x in self.variable_keys:
+                    newVarList.append( self.variable_map[x] + self.loopVarStmt[x] )
+                elif x.find(LIST_INDEX_SYMBOL) != -1 and x.split(LIST_INDEX_SYMBOL)[0] in self.variable_keys:
+                    var = x.split(LIST_INDEX_SYMBOL)[0]
+                    newVar = self.variable_map[ var ]
+                    newVar += self.loopVarStmt[ var ]
+                    newVarList.append( newVar ) 
+                else:
+                    newVarList.append( x )
+        elif self.loopDict != None:
+            for i in self.loopDict[x]:
+                loopVarStmt += "#" + str(i)
+            newVarList = [self.variable_map[ x ] + loopVarStmt if x in self.variable_keys else x for x in varList]
+        else:
+            newVarList = [self.variable_map[ x ] if x in self.variable_keys else x for x in varList]
+        node.listNodes = newVarList
+
+
 class DropIndexForPrecomputes:
-    def __init__(self, variable_list, loopVarTarget, varTypes={}):
+    def __init__(self, variable_list, loopVarTarget, varTypes={}, precomputeMap={}):
         self.variable_list = variable_list
         self.loopVarTarget = loopVarTarget
         self.varTypes = varTypes
+        self.precomputeMap  = precomputeMap
     
     def __isNotOfTypeList(self, varName):
         theType = self.varTypes.get(varName)
@@ -888,6 +992,11 @@ class DropIndexForPrecomputes:
     
     def visit_attr(self, node, data):
         varName = node.getAttribute()
+        if varName in self.precomputeMap.keys():
+            node.setAttribute( self.precomputeMap[varName] )
+            del node.attr_index[:] # remove all index numbers
+            return
+        
         if varName == delta_word and varName in self.variable_list:
             node.attr_index.remove(self.loopVarTarget)
         elif varName in self.variable_list and self.__isNotOfTypeList(varName):

@@ -642,6 +642,7 @@ def getListOfAttrNamesFromConcatNode(node, replacementsDict, returnList):
     returnList.append(processATTR_CPP(node.right, replacementsDict))
 
 def returnAllUpToLeftBrace(varName):
+    if varName == None: return "ERROR"
     leftBracePos = varName.find("[")
     if (leftBracePos == -1):
         return varName
@@ -772,7 +773,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
         if (areBothSidesStringVars(leftSide, rightSide) == True):
             return "( isNotEqual(" + leftSide + ", " + rightSide + ") )"
         else:
-            return "( (" + leftSide + ") != (" + rightSide + ") )"
+            return "( (" + str(leftSide) + ") != (" + str(rightSide) + ") )"
     elif (node.type == ops.PAIR):
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
