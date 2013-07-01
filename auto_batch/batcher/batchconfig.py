@@ -293,6 +293,7 @@ class SDLSetting():
         return
     
     def __isListNode(self, node):
+        if node == None: return False
         if node.type == ops.EQ:
             if node.getRight().type == ops.LIST:
                 return True
