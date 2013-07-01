@@ -1,28 +1,28 @@
 name := cl04
 setting := asymmetric
-N := 2
+N := 100
 
 BEGIN :: types
 M := str
 sig := list{G2}
+delta1 := list{ZR}
 incorrectIndices := list{int}
 endSigNum := int
 delta2 := list{ZR}
 startSigNum := int
-delta1 := list{ZR}
 dotCLoopVal := G2
-dotALoopVal := G2
 dotBLoopVal := G2
-dotBCache := list{G2}
+dotALoopVal := G2
 dotACache := list{G2}
+dotBCache := list{G2}
 dotCCache := list{G2}
-g := G1
+X := G1
+Y := G1
 alist := list{G2}
 Mlist := list{str}
-clist := list{G2}
 blist := list{G2}
-Y := G1
-X := G1
+clist := list{G2}
+g := G1
 END :: types
 
 BEGIN :: func:setup
@@ -37,11 +37,14 @@ input := list{g}
  y := random(ZR)
  X := g^x
  Y := g^y
-output := list{X, Y, x, y}
+ pk := list{X, Y}
+ sk := list{x, y}
+output := list{pk, sk}
 END :: func:keygen
 
 BEGIN :: func:sign
-input := list{x, y, M}
+input := list{sk, M}
+sk := expand{x, y}
  a := random(G2)
  m := H(M, ZR)
  b := a^y
@@ -50,10 +53,11 @@ input := list{x, y, M}
 output := sig
 END :: func:sign
 
-# sig := expand{a, b, c}
-# pk := expand{X, Y}
 BEGIN :: func:verify
-input := list{X, Y, g, M, a, b, c}
+input := list{pk, g, M, sig}
+sig := expand{a, b, c}
+pk := expand{X, Y}
+
  m := H(M, ZR)
 BEGIN :: if
 if {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
@@ -68,8 +72,8 @@ m := H(M, ZR)
 END :: precompute
 
 constant := g
-public := list{X, Y}
-signature := list{a, b, c}
+public := pk
+signature := sig
 message := m
 
 BEGIN :: count
@@ -82,8 +86,26 @@ verify := {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
 secparam := 80
 
 BEGIN :: func:membership
- input := list{X, Y, alist, blist, clist, g}
+ input := list{X, Y, g, alist, blist, clist}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: if
+if { ismember(alist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(blist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(clist#z) == False }
+    output := False
+END :: if
+END :: for
 
 BEGIN :: if
 if { ismember(X) == False }
@@ -96,24 +118,10 @@ if { ismember(Y) == False }
 END :: if
 
 BEGIN :: if
-if { ismember(alist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(blist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(clist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
 if { ismember(g) == False }
     output := False
 END :: if
+
 
  output := True
 END :: func:membership
@@ -156,16 +164,17 @@ END ::func:dividenconquer
 
 
 BEGIN :: func:batchverify
-input := list{Mlist, X, Y, alist, blist, clist, g, incorrectIndices}
+input := list{pk, g, Mlist, alist, blist, clist, incorrectIndices}
+pk := expand{X, Y}
 
 BEGIN :: for
 for{z := 0, N}
- delta1#z := SmallExp(secparam)
+delta1#z := SmallExp(secparam)
 delta2#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if
- if {(membership(X, Y, alist, blist, clist, g) == False)}
+ if {(membership(X, Y, g, alist, blist, clist) == False)}
      output := False
 END :: if
 

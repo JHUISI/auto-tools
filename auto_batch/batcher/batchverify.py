@@ -372,8 +372,8 @@ def buildSDLBatchVerifier(opts, sdlOutFile, sdl_data, types, verify2, batch_prec
     sdlBatch = SDLBatch(sdlOutFile, sdl_data, types, verify2, batch_precompute, var_count, setting)
     sdlBatch.construct(VERBOSE)
     # write out in current directory: TODO => add 'path' to command line options 
-    codegen_CPP.codegen_CPP_main(sdlOutFile, codeOutfile + ".cpp", [])
-    codegen_PY.codegen_PY_main(sdlOutFile, codeOutfile + ".py", codeOutfile + "User.py")
+    codegen_CPP.codegen_CPP_main(sdlOutFile, codeOutfile + ".cpp", []) # small exp built-in in CPP
+    codegen_PY.codegen_PY_main(sdlOutFile, codeOutfile + ".py", codeOutfile + "User.py", {'NumSigs':True, 'SmallExp':True})
     return sdlBatch.getVariableCount()
 
 def run_main(opts, start=None, stop=None):

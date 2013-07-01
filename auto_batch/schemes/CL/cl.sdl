@@ -1,6 +1,6 @@
 name := cl04
 setting := asymmetric
-N := 2
+N := 100
 
 BEGIN :: types
  M := str
@@ -19,11 +19,14 @@ input := list{g}
  y := random(ZR)
  X := g^x
  Y := g^y
-output := list{X, Y, x, y}
+ pk := list{X, Y}
+ sk := list{x, y}
+output := list{pk, sk}
 END :: func:keygen
 
 BEGIN :: func:sign
-input := list{x, y, M}
+input := list{sk, M}
+sk := expand{x, y}
  a := random(G2)
  m := H(M, ZR)
  b := a^y
@@ -32,10 +35,11 @@ input := list{x, y, M}
 output := sig
 END :: func:sign
 
-# sig := expand{a, b, c}
-# pk := expand{X, Y}
 BEGIN :: func:verify
-input := list{X, Y, g, M, a, b, c}
+input := list{pk, g, M, sig}
+sig := expand{a, b, c}
+pk := expand{X, Y}
+
  m := H(M, ZR)
 BEGIN :: if
 if {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
@@ -50,8 +54,8 @@ m := H(M, ZR)
 END :: precompute
 
 constant := g
-public := list{X, Y}
-signature := list{a, b, c}
+public := pk
+signature := sig
 message := m
 
 BEGIN :: count

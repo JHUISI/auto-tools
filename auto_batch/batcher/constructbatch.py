@@ -3,7 +3,7 @@ from sdlparser.SDLParser import *
 from batcher.batchoptimizer import SubstituteSigDotProds, SubstituteAttr, SubstituteAttr2, DropIndexForPrecomputes, GetVarsInEq, GetDeltaIndex
 from batcher.batchconfig import *
 
-membership_check = """\n
+membership_check = """
 BEGIN :: if
 if { ismember(%s) == False }
     output := False
@@ -17,7 +17,6 @@ membership_footer = """\n
  output := True
 END :: func:membership\n
 """
-
 
 # delta, dotACache, dotBCache, startSigNum, endSigNum, incorrectIndices, pk, Mlist, siglist, g (e.g)
 dc_header = """
@@ -89,7 +88,9 @@ delta_lhs = delta_word + "%s := "
 batch_verify_header = """
 BEGIN :: func:batchverify
 input := list{%s, incorrectIndices}
-%s %sEND :: for
+%s"""
+
+small_exp_header = """%s%sEND :: for
 """
 
 membershipTestLine = """
@@ -213,29 +214,54 @@ class SDLBatch:
         for k,v in exceptMap.items():
             eqStr = eqStr.replace(k, v)
         return eqStr
-
+    
+    def __getMapByValue(self, value):
+        for k,v in self.sdlData[BATCH_VERIFY_MAP].items():
+            if v == value:
+                return k
+        return None
 
     def __generateMembershipTest(self, verifyArgKeys, verifyArgTypes):
         output = ""
         strTypeList = ["str", "list{str}", "int", "list{int}"]
         verifyArgList = []
+        nonListTypeArgs = []
+        ListTypeArgs = []
         modTypes = self.setting.getModifiedTypes()
         # prune "str" and "list{str}" types out of membership test
         for i in verifyArgKeys:
             if self.varTypes.get(i) not in strTypeList and verifyArgTypes.get(i) not in strTypeList:
                 # add to lists
                 if modTypes.get(i) not in strTypeList:
-                    if self.debug: print("verify membership of: ", i)
+                    if self.debug: print("verify membership of: ", i, " : ", verifyArgTypes.get(i))
+                    if listVar in str(verifyArgTypes.get(i)):
+                        ListTypeArgs.append(i)
+                    else:
+                        nonListTypeArgs.append(i)
                     verifyArgList.append(i)
                  
-        verifyArgs = str(list(verifyArgList)).replace("[", '').replace("]",'').replace("'", '')        
+        verifyArgs = self.__getListString(verifyArgList)        
+        # 1. always applies to every scheme
         output += membership_header % verifyArgs
-        for eachArg in verifyArgList:
+        
+        sigVars = self.setting.getSignatureVars()
+        forLoopStmtOverSigs = sigForLoop % (sigIterator, NUM_SIGNATURES)
+        output += forLoopStmtOverSigs
+        for eachArg in ListTypeArgs:
+            if self.__getMapByValue(eachArg) in sigVars:
+                output += membership_check % (eachArg + "#" + sigIterator) # adding #z
+                output += "\n"
+        output += end_for_loop + "\n"
+        
+        # 2. public values, and 'constant' variables (make public checks OPTIONAL)
+        for eachArg in nonListTypeArgs: # verifyArgList:
             output += membership_check % eachArg
+            output += "\n"
         output += membership_footer 
         if self.debug: 
             print("Membership Test :=>")
             print(output)
+            
         return (verifyArgList, output)
     
     def __generateTypes(self, dotLoopValTypesSig, dotCacheTypesSig, verifyArgTypes):
@@ -259,7 +285,7 @@ class SDLBatch:
     def __generateDivideAndConquer(self, dotInitStmtDivConqSig,  divConqLoopValStmtSig, eqStr, divConqArgList):
         """think about how to make this more flexible"""
         newDivConqArgList = self.__stripListIndex(divConqArgList)
-        divConqArgs = str(newDivConqArgList).replace("[", '').replace("]",'').replace("'", '')
+        divConqArgs = self.__getListString(newDivConqArgList)
         output = ""
         output += dc_header % divConqArgs
         for l in dotInitStmtDivConqSig:
@@ -287,7 +313,7 @@ class SDLBatch:
     def __generateDivideAndConquerFlexible(self, eqStr, divConqArgList, divAndConqBodyFunction, *args):
         """think about how to make this more flexible"""
         newDivConqArgList = self.__stripListIndex(divConqArgList)
-        divConqArgs = str(newDivConqArgList).replace("[", '').replace("]",'').replace("'", '')
+        divConqArgs = self.__getListString(newDivConqArgList)
         output = ""
         output += dc_header % divConqArgs
         
@@ -482,19 +508,20 @@ class SDLBatch:
                 self.defaultBatchTypes[delta_word] = delta_type
         return output
     
-    def __generateBatchVerify(self, batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalcList, dotCacheVarList, dotDepComputationMap=None):
+    def __generateBatchVerify(self, expandStatements, batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalcList, dotCacheVarList, dotDepComputationMap=None):
         output = ""
-        bVerifyArgs = str(list(batchVerifyArgList)).replace("[", '').replace("]",'').replace("'", '')
+        bVerifyArgs = self.__getListString(batchVerifyArgList)        
         newdivConqArgList = self.__stripListIndex(divConqArgList)
-        divConqArgs = str(list(newdivConqArgList)).replace("[", '').replace("]",'').replace("'", '')
+        divConqArgs = self.__getListString(newdivConqArgList)
         # pruned list of values we need to pass on to the membership test.
-        membershipTest = str(list(membershipTestList)).replace("[", '').replace("]",'').replace("'", '')
+        membershipTest = self.__getListString(membershipTestList)
 
         outputBeforePrecompute, outputPrecompute = self.__generatePrecomputeLinesForBV(sigIterator, dotCacheVarList)
         deltaLines = self.__generateDeltaLines(sigIterator)
         
         forLoopStmtOverSigs = sigForLoop % (sigIterator, NUM_SIGNATURES)
-        output += batch_verify_header % (bVerifyArgs, forLoopStmtOverSigs, deltaLines)# membershipTest)
+        output += batch_verify_header % (bVerifyArgs, expandStatements)
+        output += small_exp_header % (forLoopStmtOverSigs, deltaLines) # membershipTest)
         output += membershipTestLine % membershipTest
         output += outputBeforePrecompute # if non empty
         output += forLoopStmtOverSigs
@@ -863,15 +890,55 @@ class SDLBatch:
         if self.sdlData[SECPARAM] == None: secparamLine = "secparam := 80\n" # means NOT already defined in SDL        
         return secparamLine
 
+    def __argsInList(self, _list, theMap):
+        for i in _list:
+            if i in theMap.keys():
+                return True
+        return False
+
+    def __getListString(self, argList):
+        output = ""
+        SEP = ", "
+        for i in argList:
+            output += i + SEP
+        output = output[:-len(SEP)] # remove trailing separator
+        return output
+    
     def __constructSDLBatchOverSignaturesGeneric(self, VarsForDotOverSigs, VarsForDotTypesOverSigs, VarsForDotASTOverSigs):
         secparamLine = self.__getSecParamLine()
-        batchVerifyArgList = []
-        _batchVerifyArgList = list(self.sdlData[BATCH_VERIFY].keys())
-        for i in _batchVerifyArgList:
-            if linkVar not in str(i):
-                batchVerifyArgList.append(i)
         batchVerifyArgTypes = self.sdlData[BATCH_VERIFY]
-        batchVerifyArgList.sort()
+        batchVerifyArgList = []
+        membershipArgList = []
+        expandStatements = ""
+        if self.setting.getUsesExpand():
+            # relies on some expand nodes, therefore, must take that into consideration
+            originalArgs = self.setting.getVerifyOrigArgs()
+            expandArgs = self.setting.getExpandInfo()
+            for i in originalArgs:
+                if i in self.sdlData[BATCH_VERIFY_MAP].keys():
+                    batchVerifyArgList.append(self.sdlData[BATCH_VERIFY_MAP][i])
+                    membershipArgList.append(self.sdlData[BATCH_VERIFY_MAP][i])
+                elif i in expandArgs.keys() and not self.__argsInList(expandArgs[i], self.sdlData[BATCH_VERIFY_MAP]):
+                    # add expand reference and create expand statement for batch verify
+                    batchVerifyArgList.append(i)
+                    expandStatements += str(i) + " := expand{" + self.__getListString(expandArgs[i]) + "}\n"
+                    for j in expandArgs[i]: # we want the expanded vars 
+                        membershipArgList.append( j )
+                elif i in expandArgs.keys() and self.__argsInList(expandArgs[i], self.sdlData[BATCH_VERIFY_MAP]):
+                    for j in expandArgs[i]: # add the list elements as opposed to the expand reference
+                        batchVerifyArgList.append( self.sdlData[BATCH_VERIFY_MAP][j] )
+                        membershipArgList.append( self.sdlData[BATCH_VERIFY_MAP][j] )
+                else:
+                    batchVerifyArgList.append(i)
+                    membershipArgList.append(i)
+        else:
+            # spell out everything in batch verify function input ( no need for expand nodes)
+            _batchVerifyArgList = list(self.sdlData[BATCH_VERIFY].keys())
+            for i in _batchVerifyArgList:
+                if linkVar not in str(i):
+                    batchVerifyArgList.append(i)
+            batchVerifyArgList.sort()
+            membershipArgList = list(batchVerifyArgList)
         
         refSignatureDict, refSignerDict = self.__searchForDependenciesGeneric(VarsForDotASTOverSigs, {})
         dotKeys = list(refSignatureDict.keys())
@@ -937,9 +1004,9 @@ class SDLBatch:
             eqStr = eqStr.replace(k, v)
         if self.debug: print("Final eq: ", eqStr)
 
-        membershipTestList, outputLines1 = self.__generateMembershipTest(batchVerifyArgList, batchVerifyArgTypes) 
+        membershipTestList, outputLines1 = self.__generateMembershipTest(membershipArgList, batchVerifyArgTypes) 
         outputLines2 = self.__generateDivideAndConquer(dotInitStmtDivConqSig,  divConqLoopValStmtSig, eqStr, divConqArgList)
-        outputLines3 = self.__generateBatchVerify(batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalc, dotCacheVarList, dotDepComputationMap)
+        outputLines3 = self.__generateBatchVerify(expandStatements, batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalc, dotCacheVarList, dotDepComputationMap)
 
         typeOutputLines = self.__generateTypes(dotLoopValTypesSig, dotCacheTypesSig, batchVerifyArgTypes)
         output = secparamLine + outputLines1 + outputLines2 + outputLines3
@@ -966,69 +1033,6 @@ class SDLBatch:
         #print(my_output)
         return my_output
     
-#    def __constructSDLBatchOverSignaturesOnly(self, VarsForDotOverSigs, VarsForDotTypesOverSigs, VarsForDotASTOverSigs):
-#        secparamLine = self.__getSecParamLine()
-#        verifyArgTypes = self.sdlData[BATCH_VERIFY]
-#        if verifyArgTypes: verifyArgKeys = verifyArgTypes.keys()
-#        else: verifyArgKeys = verifyArgTypes = {}
-#        # everything as before
-#        dotLoopValTypesSig = {}
-#        dotCacheTypesSig = {}
-#        dotInitStmtDivConqSig = []
-#        divConqLoopValStmtSig = []
-#        dotVerifyEq = {}
-#        dotCacheCalc = []
-#        dotList = []
-#        dotCacheVarList = [] # list of variables that appear in dotCache list of precompute section
-#        divConqArgList = self.newDeltaList + ["startSigNum", "endSigNum", "incorrectIndices"] # JAA: make variable names more configurable
-#        gvi = GetVarsInEq([])
-#        
-#        print("Pre-compute over signatures...")
-#        for i in VarsForDotOverSigs:
-#            if self.debug: print(i,":=", VarsForDotTypesOverSigs[i])
-#            loopVal = "%sLoopVal" % i
-#            dotCache = "%sCache" % i
-#            dotLoopValTypesSig[ loopVal ] = str(VarsForDotTypesOverSigs[i])
-#            dotInitStmtDivConqSig.append("%s := init(%s)\n" % (loopVal, VarsForDotTypesOverSigs[i]))
-#            divConqLoopValStmtSig.append("%s := %s * %s#%s\n" % (loopVal, loopVal, dotCache, sigIterator)) # this is mul specifically
-#            dotVerifyEq[str(i)] = loopVal
-#            dotCacheTypesSig[dotCache] = "list{%s}" % VarsForDotTypesOverSigs[i]
-#            divConqArgList.append(dotCache)
-#            dotList.append(str(i))
-#            dotCacheRHS = VarsForDotASTOverSigs[i].getRight()
-#            ASTVisitor(gvi).preorder(dotCacheRHS)
-#            dotCacheVarList.extend(gvi.getVarList())
-#            dotCacheVarList = list(set(dotCacheVarList))
-#            dotCacheCalc.append("%s#%s := %s\n" % (dotCache, sigIterator, self.ReplaceAppropArgs(self.sdlData[BATCH_VERIFY_MAP], sigIterator, dotCacheRHS))) # JAA: need to write Filter function
-#        
-#        # get divide and conquer argument list and append to divConqArgList list
-#        # these are the values that are needed in the divide and conquer routine
-#        gvi2 = GetVarsInEq(dotList)
-#        ASTVisitor(gvi2).preorder(self.finalBatchEq)
-#        divConqArgList.extend(gvi2.getVarList())
-#        print("Results over signatures...")
-#        num_types = len(dotInitStmtDivConqSig)
-#        for i in range(num_types):
-#            print(i, ": ", dotInitStmtDivConqSig[i], end='')
-#
-#        num_types = len(divConqLoopValStmtSig)
-#        for i in range(num_types):
-#            print(i, ": ", divConqLoopValStmtSig[i], end='')
-#
-#        eqStr = str(self.finalBatchEq)
-#        for k,v in dotVerifyEq.items():
-#            eqStr = eqStr.replace(k, v)
-#        print("Final eq: ", eqStr)
-#        
-#        membershipTestList, outputLines1 = self.__generateMembershipTest(verifyArgKeys, verifyArgTypes) 
-#        outputLines2 = self.__generateDivideAndConquer(dotInitStmtDivConqSig,  divConqLoopValStmtSig, eqStr, divConqArgList)
-#        outputLines3 = self.__generateBatchVerify(verifyArgKeys, membershipTestList, divConqArgList, dotCacheCalc, dotCacheVarList)
-#        
-#        typeOutputLines = self.__generateTypes(dotLoopValTypesSig, dotCacheTypesSig, verifyArgTypes)
-#        output = secparamLine + outputLines1 + outputLines2 + outputLines3
-#        self.__generateNewSDL(typeOutputLines, output)
-#        return
-
     def __constructSDLBatchOverSignaturesAndSigners(self, VarsForDotOverSigs, VarsForDotTypesOverSigs, VarsForDotASTOverSigs, VarsForDotOverSign, VarsForDotTypesOverSign, VarsForDotASTOverSign):
         secparamLine = self.__getSecParamLine()
         refSignatureDict, refSignerDict = self.__searchForDependencies(VarsForDotASTOverSigs, VarsForDotASTOverSign) # replace with generic (TODO)
@@ -1037,15 +1041,41 @@ class SDLBatch:
 #        print("refSignerDict", refSignerDict)
 
         batchVerifyArgList = []
-        _batchVerifyArgList = list(self.sdlData[BATCH_VERIFY].keys())
-        for i in _batchVerifyArgList:
-            if linkVar not in str(i):
-                batchVerifyArgList.append(i)
-        batchVerifyArgTypes = self.sdlData[BATCH_VERIFY]
-        batchVerifyArgList.sort()
+        membershipArgList = []
+        expandStatements = ""
+        if self.setting.getUsesExpand():
+            # relies on some expand nodes, therefore, must take that into consideration
+            originalArgs = self.setting.getVerifyOrigArgs()
+            expandArgs = self.setting.getExpandInfo()
+            for i in originalArgs:
+                if i in self.sdlData[BATCH_VERIFY_MAP].keys():
+                    batchVerifyArgList.append(self.sdlData[BATCH_VERIFY_MAP][i])
+                    membershipArgList.append(self.sdlData[BATCH_VERIFY_MAP][i])
+                elif i in expandArgs.keys() and not self.__argsInList(expandArgs[i], self.sdlData[BATCH_VERIFY_MAP]):
+                    # add expand reference and create expand statement for batch verify
+                    batchVerifyArgList.append(i)
+                    expandStatements += str(i) + " := expand{" + self.__getListString(expandArgs[i]) + "}\n"
+                    for j in expandArgs[i]: # we want the expanded vars 
+                        membershipArgList.append( j )
+                elif i in expandArgs.keys() and self.__argsInList(expandArgs[i], self.sdlData[BATCH_VERIFY_MAP]):
+                    for j in expandArgs[i]: # add the list elements as opposed to the expand reference
+                        batchVerifyArgList.append( self.sdlData[BATCH_VERIFY_MAP][j] )
+                        membershipArgList.append( self.sdlData[BATCH_VERIFY_MAP][j] )
+                else:
+                    batchVerifyArgList.append(i)
+                    membershipArgList.append(i)
+        else:
+            _batchVerifyArgList = list(self.sdlData[BATCH_VERIFY].keys())
+            for i in _batchVerifyArgList:
+                if linkVar not in str(i):
+                    batchVerifyArgList.append(i)
+            batchVerifyArgTypes = self.sdlData[BATCH_VERIFY]
+            batchVerifyArgList.sort()
+            membershipArgList = list(batchVerifyArgList)
+            
         if self.debug: print("batch: ", batchVerifyArgList, batchVerifyArgTypes)
         # get the membership list
-        membershipTestList, outputLines1 = self.__generateMembershipTest(batchVerifyArgList, batchVerifyArgTypes)
+        membershipTestList, outputLines1 = self.__generateMembershipTest(membershipArgList, batchVerifyArgTypes)
         if self.debug:
             print("membership test ...")
             print("outputLines: ", outputLines1, end="\n\n")
@@ -1075,7 +1105,7 @@ class SDLBatch:
         
         outputLines2 = self.__generateDivideAndConquerFlexible(eqStr, divConqArgList, self.callBackForDVSignerThenSignature, statementForSig, statementForSigner)
         
-        outputLines3 = self.__generateBatchVerify(batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalc, dotCacheVarList)
+        outputLines3 = self.__generateBatchVerify(expandStatements, batchVerifyArgList, membershipTestList, divConqArgList, dotCacheCalc, dotCacheVarList)
         output = secparamLine + outputLines1 + outputLines2 + outputLines3
         
         dotLoopValTypesSig.update(listForSigs[0])

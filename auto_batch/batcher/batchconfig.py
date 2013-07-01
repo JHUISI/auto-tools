@@ -12,6 +12,7 @@ BATCH_VERIFY_OTHER_TYPES = BATCH_VERIFY + "_other_types"
 SCHEME_NAME, BATCH_COUNT, SECPARAM = 'name', 'count', 'secparam'
 MSG_CNT, SIG_CNT, PUB_CNT = 'message_count', 'signature_count', 'public_count'
 MEMBERSHIP_TEST_CHECK = 'membership'
+EXPAND = 'expand_nodes'
 # qualifier (means only one instance of that particular keyword exists)
 SAME = 'one'
 sigIterator = 'z'
@@ -27,7 +28,7 @@ class SDLSetting():
     def __init__(self, debug=False):
         self.verifyEqList = []
         self.latex_symbols = {}
-        self.data = { CONST : None, PUBLIC: None, MESSAGE : None, SIGNATURE: None, SETTING : None, MEMBERSHIP_TEST_CHECK:{}, LOOP_INDEX:{} }
+        self.data = { CONST : None, PUBLIC: None, MESSAGE : None, SIGNATURE: None, SETTING : None, MEMBERSHIP_TEST_CHECK:{}, LOOP_INDEX:{}, EXPAND:{} }
         self.numSignatures = 0
         self.varTypes = {}
         self.indiv_precompute = {}
@@ -35,6 +36,8 @@ class SDLSetting():
         self.precompute_varinfo = {}
         self.debug = debug
         self.partialSDL = False
+        self.usesExpand = False
+        self.verifyArgs = None
         
     def parse(self, assignInfoDict, theVarTypes):
         self.__parseVerifyEq(assignInfoDict)
@@ -56,7 +59,7 @@ class SDLSetting():
         self.__parseValuesInKey(assignInfoDict, SIGNATURE)
         self.__parseValuesInKey(assignInfoDict, MESSAGE)
         self.__parseValuesInKey(assignInfoDict, TRANSFORM)
-
+        
         # this part will fail if Batch Count and CONST, PUBLIC, SIGNATURE and MESSAGE sections are not filled in.
         self.__processPublicVars()   
 #        self.__processSignatureVars()
@@ -78,6 +81,9 @@ class SDLSetting():
             print("transform: ", self.data.get(TRANSFORM))
             print("latex: ", self.latex_symbols)
             print("verify args: ", self.data.get(VERIFY))
+        
+        if len(self.data[EXPAND].keys()) > 0:
+            self.usesExpand = True
         
     def __processPublicVars(self):
         batchCount = self.data[COUNT_HEADER]
@@ -114,8 +120,17 @@ class SDLSetting():
                 self.data[BATCH_VERIFY] = {}
                 self.data[BATCH_VERIFY_MAP] = {}
 #                self.data[BATCH_VERIFY_OTHER_TYPES] = {}
-                # figure out which bach verify args are constant and which ones are not
+                # pre-process the verify args (in case there are expand nodes)
+                realVerifyList = []
                 for k in self.data[VERIFY]:
+                    if k in self.data[EXPAND].keys():
+                        realVerifyList.extend( self.data[EXPAND][k] )
+                    else:
+                        realVerifyList.append( k ) # keep as before
+
+                # figure out which bach verify args are constant and which ones are not
+                for k in realVerifyList: # self.data[VERIFY]:
+                    if self.debug: print("Processing: ", k)
                     if (k in self.data[CONST]) or (k in self.data[SIGNATURE] and self.data[COUNT_HEADER][SIG_CNT] != NUM_SIGNATURES) or (k in self.data[PUBLIC] and self.data[COUNT_HEADER][PUB_CNT] != NUM_SIGNATURES) or (k in self.data[MESSAGE] and self.data[COUNT_HEADER][MSG_CNT] != NUM_SIGNATURES):
                         self.data[BATCH_VERIFY][k] = self.returnRealType(self.varTypes[k])
                         if k not in self.data[CONST]:
@@ -276,7 +291,18 @@ class SDLSetting():
             assert numSigs.isdigit(), "variable '%s' needs to be an integer." % (NUM_SIGNATURES)
             self.varTypes[NUM_SIGNATURES] = int(numSigs)                 
         return
-        
+    
+    def __isListNode(self, node):
+        if node.type == ops.EQ:
+            if node.getRight().type == ops.LIST:
+                return True
+        return False
+    
+    
+    def __extractListDecl(self, node):
+        if node.type == ops.EQ:
+            return node.getRight().getListNode()
+    
     def __parseValuesInKey(self, assignInfoDict, key):
         non_funcDict = assignInfoDict.get(NONE_FUNC_NAME)
         self.data[key] = []
@@ -288,7 +314,14 @@ class SDLSetting():
                 if values.type == ops.LIST:
                     self.data[key].extend(values.getAssignNode().getRight().getListNode())
                 else:
-                    self.data[key].append(values.getAssignNode().getRight().getAttribute())
+                    varName = values.getAssignNode().getRight().getAttribute()
+                    (name, varInf) = getVarNameEntryFromAssignInfo(assignInfoDict, varName)
+                    if varInf != None and self.__isListNode(varInf.getAssignNode()):
+                        if self.debug: print("Found LIST node for expansion: ", varInf.getAssignNode())
+                        self.data[EXPAND][varName] = self.__extractListDecl(varInf.getAssignNode()) # TODO: may need to populate in other places as well.
+                        self.data[key].extend( self.__extractListDecl(varInf.getAssignNode()) )
+                    else:
+                        self.data[key].append(varName)
             return True
         else:
             return False
@@ -336,12 +369,21 @@ class SDLSetting():
 
     def getPrecomputeVarInfo(self):
         return self.precompute_varinfo
-
+    
     def getTransformList(self):
         return self.data.get(TRANSFORM)
     
     def getBatchCount(self):
         return self.data.get(COUNT_HEADER)
+    
+    def getExpandInfo(self):
+        return self.data.get(EXPAND)
+    
+    def getUsesExpand(self):
+        return self.usesExpand
+    
+    def getVerifyOrigArgs(self):
+        return self.data.get(VERIFY)
     
     def getVerifyInputArgs(self):
         return self.data.get(BATCH_VERIFY)

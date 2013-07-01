@@ -1,6 +1,6 @@
 name := chp
 setting := asymmetric
-N := 2
+N := 100
 
 BEGIN :: types
 t1 := str
