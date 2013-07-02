@@ -81,6 +81,12 @@ BEGIN :: for
 for{%s := 0, %s}
 """
 
+sigForInnerLoop = """
+BEGIN :: forinner
+forinner{%s := 0, %s}
+"""
+
+
 #delta_word = "delta"
 delta_stmt = delta_word + "%s := SmallExp(secparam)\n"
 delta_lhs = delta_word + "%s := "
@@ -219,7 +225,7 @@ class SDLBatch:
         for k,v in self.sdlData[BATCH_VERIFY_MAP].items():
             if v == value:
                 return k
-        return None
+        return None # since we didn't find it
 
     def __generateMembershipTest(self, verifyArgKeys, verifyArgTypes):
         output = ""
@@ -227,6 +233,7 @@ class SDLBatch:
         verifyArgList = []
         nonListTypeArgs = []
         ListTypeArgs = []
+        InnerListTypeArgs = []
         modTypes = self.setting.getModifiedTypes()
         # prune "str" and "list{str}" types out of membership test
         for i in verifyArgKeys:
@@ -234,7 +241,9 @@ class SDLBatch:
                 # add to lists
                 if modTypes.get(i) not in strTypeList:
                     if self.debug: print("verify membership of: ", i, " : ", verifyArgTypes.get(i))
-                    if listVar in str(verifyArgTypes.get(i)):
+                    if linkVar in str(verifyArgTypes.get(i)):
+                        InnerListTypeArgs.append(i)
+                    elif listVar in str(verifyArgTypes.get(i)):
                         ListTypeArgs.append(i)
                     else:
                         nonListTypeArgs.append(i)
@@ -245,12 +254,28 @@ class SDLBatch:
         output += membership_header % verifyArgs
         
         sigVars = self.setting.getSignatureVars()
+        pubVars = self.setting.getPublicVars()
         forLoopStmtOverSigs = sigForLoop % (sigIterator, NUM_SIGNATURES)
         output += forLoopStmtOverSigs
-        for eachArg in ListTypeArgs:
-            if self.__getMapByValue(eachArg) in sigVars:
+        for eachArg in ListTypeArgs: # just over signatures
+            if self.__getMapByValue(eachArg) in sigVars or self.__getMapByValue(eachArg) in pubVars:
                 output += membership_check % (eachArg + "#" + sigIterator) # adding #z
                 output += "\n"
+            else:
+                # add here b/c it won't show up under sig loop 
+                # no problem that it'll show up twice below
+                nonListTypeArgs.insert(0, eachArg) 
+        if self.debug:
+            print("ListTypeArgs: ", ListTypeArgs)
+            print("InnerListTypeArgs: ", InnerListTypeArgs)
+            print("nonListTypeArgs: ", nonListTypeArgs)
+        if len(InnerListTypeArgs) > 0:
+            forLoopStmtOverSigners = sigForInnerLoop % (signerIterator, NUM_SIGNERS)
+            output += forLoopStmtOverSigners
+            for eachArg in InnerListTypeArgs:
+                output += membership_check % (eachArg + "#" + sigIterator + "#" + signerIterator) # adding #z
+                output += "\n"
+            output += end_for_inner_loop + "\n\n"
         output += end_for_loop + "\n"
         
         # 2. public values, and 'constant' variables (make public checks OPTIONAL)

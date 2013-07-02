@@ -12,6 +12,7 @@ BATCH_VERIFY_OTHER_TYPES = BATCH_VERIFY + "_other_types"
 SCHEME_NAME, BATCH_COUNT, SECPARAM = 'name', 'count', 'secparam'
 MSG_CNT, SIG_CNT, PUB_CNT = 'message_count', 'signature_count', 'public_count'
 MEMBERSHIP_TEST_CHECK = 'membership'
+MEMBERSHIP_TEST = MEMBERSHIP_TEST_CHECK + '_test'
 EXPAND = 'expand_nodes'
 # qualifier (means only one instance of that particular keyword exists)
 SAME = 'one'
@@ -403,3 +404,6 @@ class SDLSetting():
     
     def getModifiedTypes(self): # e.g., someVar := list{someVarLink}; someVarLink := list{ZR} # or G1, etc
         return self.data.get(MEMBERSHIP_TEST_CHECK)
+
+    def getMembershipTest(self):
+        return self.data.get(MEMBERSHIP_TEST)
