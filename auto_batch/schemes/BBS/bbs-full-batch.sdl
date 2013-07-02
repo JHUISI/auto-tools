@@ -26,27 +26,27 @@ sbeta := ZR
 sgamma1 := ZR
 sgamma2 := ZR
 c := ZR
-incorrectIndices := list{int}
-endSigNum := int
 startSigNum := int
 delta := list{ZR}
-dotCLoopVal := GT
+endSigNum := int
+incorrectIndices := list{int}
 dotALoopVal := G1
 dotBLoopVal := G1
+dotCLoopVal := GT
+dotCCache := list{GT}
 dotBCache := list{G1}
 dotACache := list{G1}
-dotCCache := list{GT}
-R3list := list{GT}
-sbetalist := list{ZR}
-salphalist := list{ZR}
 sxlist := list{ZR}
-Mlist := list{str}
+sgamma1list := list{ZR}
+sgamma2list := list{ZR}
 clist := list{ZR}
+T2list := list{G1}
 T1list := list{G1}
 T3list := list{G1}
-sgamma1list := list{ZR}
-T2list := list{G1}
-sgamma2list := list{ZR}
+Mlist := list{str}
+salphalist := list{ZR}
+R3list := list{GT}
+sbetalist := list{ZR}
 END :: types
 
 
@@ -177,31 +177,59 @@ secparam := 80
 BEGIN :: func:membership
  input := list{R3list, T1list, T2list, T3list, clist, g1, g2, h, salphalist, sbetalist, sgamma1list, sgamma2list, sxlist, u, v, w}
 
+BEGIN :: for
+for{z := 0, N}
 
 BEGIN :: if
-if { ismember(R3list) == False }
+if { ismember(R3list#z) == False }
     output := False
 END :: if
 
 BEGIN :: if
-if { ismember(T1list) == False }
+if { ismember(T1list#z) == False }
     output := False
 END :: if
 
 BEGIN :: if
-if { ismember(T2list) == False }
+if { ismember(T2list#z) == False }
     output := False
 END :: if
 
 BEGIN :: if
-if { ismember(T3list) == False }
+if { ismember(T3list#z) == False }
     output := False
 END :: if
 
 BEGIN :: if
-if { ismember(clist) == False }
+if { ismember(clist#z) == False }
     output := False
 END :: if
+
+BEGIN :: if
+if { ismember(salphalist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sbetalist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sgamma1list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sgamma2list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sxlist#z) == False }
+    output := False
+END :: if
+END :: for
 
 BEGIN :: if
 if { ismember(g1) == False }
@@ -219,31 +247,6 @@ if { ismember(h) == False }
 END :: if
 
 BEGIN :: if
-if { ismember(salphalist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sbetalist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sgamma1list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sgamma2list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sxlist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
 if { ismember(u) == False }
     output := False
 END :: if
@@ -257,6 +260,7 @@ BEGIN :: if
 if { ismember(w) == False }
     output := False
 END :: if
+
 
  output := True
 END :: func:membership
@@ -303,7 +307,7 @@ input := list{Mlist, R3list, T1list, T2list, T3list, clist, g1, g2, h, salphalis
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if

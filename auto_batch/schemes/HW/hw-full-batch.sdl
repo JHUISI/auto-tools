@@ -20,30 +20,30 @@ A := G2
 r := ZR
 n := ZR
 i := int
-incorrectIndices := list{int}
 endSigNum := int
-startSigNum := int
 delta := list{ZR}
-sumBLoopVal := ZR
-sumCLoopVal := ZR
-dotELoopVal := G1
-dotFLoopVal := G1
+startSigNum := int
+incorrectIndices := list{int}
+dotALoopVal := G1
 dotGLoopVal := G1
 sumDLoopVal := ZR
-dotALoopVal := G1
-dotFCache := list{G1}
+sumBLoopVal := ZR
+dotFLoopVal := G1
+sumCLoopVal := ZR
+dotELoopVal := G1
+sumBCache := list{ZR}
+dotGCache := list{G1}
 dotECache := list{G1}
 sumDCache := list{ZR}
-dotGCache := list{G1}
-dotACache := list{G1}
-sumBCache := list{ZR}
 sumCCache := list{ZR}
-ilist := list{int}
-rlist := list{ZR}
-mlist := list{str}
-sig2list := list{G1}
+dotACache := list{G1}
+dotFCache := list{G1}
 sig1list := list{G1}
+rlist := list{ZR}
 g2 := G2
+sig2list := list{G1}
+mlist := list{str}
+ilist := list{int}
 END :: types
 
 BEGIN :: func:setup
@@ -128,6 +128,24 @@ secparam := 80
 BEGIN :: func:membership
  input := list{D, U, V, g2, h2, rlist, sig1list, sig2list, w2, z2}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: if
+if { ismember(rlist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sig1list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(sig2list#z) == False }
+    output := False
+END :: if
+END :: for
 
 BEGIN :: if
 if { ismember(D) == False }
@@ -155,21 +173,6 @@ if { ismember(h2) == False }
 END :: if
 
 BEGIN :: if
-if { ismember(rlist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sig1list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(sig2list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
 if { ismember(w2) == False }
     output := False
 END :: if
@@ -178,6 +181,7 @@ BEGIN :: if
 if { ismember(z2) == False }
     output := False
 END :: if
+
 
  output := True
 END :: func:membership
@@ -232,7 +236,7 @@ input := list{D, U, V, g2, h2, ilist, mlist, rlist, sig1list, sig2list, w2, z2, 
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if
@@ -243,8 +247,8 @@ END :: if
 
 BEGIN :: for
 for{z := 0, N}
-M := H(mlist#z,ZR)
 n := ceillog(2, ilist#z)
+M := H(mlist#z,ZR)
 dotACache#z := (sig1list#z^delta#z)
 dotECache#z := (sig2list#z^(delta#z * n))
 dotFCache#z := (sig2list#z^(delta#z * ilist#z))

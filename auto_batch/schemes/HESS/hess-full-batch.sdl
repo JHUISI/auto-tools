@@ -12,19 +12,19 @@ a := ZR
 P := G2
 ID := str
 M := str
-incorrectIndices := list{int}
 endSigNum := int
 startSigNum := int
 delta := list{ZR}
-dotCLoopVal := GT
+incorrectIndices := list{int}
 dotALoopVal := G1
 dotBLoopVal := G1
+dotCLoopVal := GT
 dotBCache := list{G1}
 dotACache := list{G1}
 dotCCache := list{GT}
+S1list := list{GT}
 pklist := list{G1}
 Mlist := list{str}
-S1list := list{GT}
 S2list := list{G1}
 END :: types
 
@@ -84,19 +84,27 @@ verify := {e(S2, g2) == ((e(pk, P)^a) * S1)}
 BEGIN :: func:membership
  input := list{P, S1list, S2list, g2, pklist}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: if
+if { ismember(S1list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S2list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(pklist#z) == False }
+    output := False
+END :: if
+END :: for
 
 BEGIN :: if
 if { ismember(P) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S1list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S2list) == False }
     output := False
 END :: if
 
@@ -105,10 +113,6 @@ if { ismember(g2) == False }
     output := False
 END :: if
 
-BEGIN :: if
-if { ismember(pklist) == False }
-    output := False
-END :: if
 
  output := True
 END :: func:membership
@@ -155,7 +159,7 @@ input := list{Mlist, P, S1list, S2list, g2, pklist, incorrectIndices}
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if

@@ -8,57 +8,57 @@ incorrectIndices := list{int}
 endSigNum := int
 startSigNum := int
 delta := list{ZR}
+dotKLoopVal := G1
+dotHLoopVal := G1
+dotBLoopVal := G2
+dotFLoopVal := G1
+dotJLoopVal := G1
+dotDLoopVal := G2
+dotALoopVal := G2
+dotELoopVal := G2
+dotLLoopVal := G1
+dotILoopVal := G1
 dotCLoopVal := G2
 dotMLoopVal := G2
-dotILoopVal := G1
-dotKLoopVal := G1
 sumNLoopVal := ZR
 dotGLoopVal := G1
-dotBLoopVal := G2
-dotDLoopVal := G2
-dotJLoopVal := G1
-dotLLoopVal := G1
-dotELoopVal := G2
-dotFLoopVal := G1
-dotHLoopVal := G1
-dotALoopVal := G2
-dotLCache := list{G1}
-dotKCache := list{G1}
-dotFCache := list{G1}
-dotECache := list{G2}
 sumNCache := list{ZR}
-dotDCache := list{G2}
+dotLCache := list{G1}
 dotCCache := list{G2}
-dotJCache := list{G1}
-dotICache := list{G1}
-dotHCache := list{G1}
+dotDCache := list{G2}
 dotGCache := list{G1}
-dotBCache := list{G2}
-dotACache := list{G2}
+dotFCache := list{G1}
+dotICache := list{G1}
+dotJCache := list{G1}
 dotMCache := list{G2}
-SKlist := list{G2}
+dotACache := list{G2}
+dotBCache := list{G2}
+dotECache := list{G2}
+dotHCache := list{G1}
+dotKCache := list{G1}
+h := G2
 tau1b := G2
-S5list := list{G2}
-S6list := list{G1}
-g1b := G1
-tau2 := G2
-tau1 := G2
+tagklist := list{ZR}
+S3list := list{G2}
 g1ba1 := G1
 g1ba2 := G1
+S4list := list{G2}
+SKlist := list{G2}
+g1b := G1
 u := G2
+w := G2
+S2list := list{G2}
+S7list := list{G1}
+S5list := list{G2}
+tau2 := G2
+mlist := list{str}
+tau1 := G2
+S6list := list{G1}
+g1a2 := G1
+g1a1 := G1
 A := GT
 g2 := G2
 g1 := G1
-tagklist := list{ZR}
-mlist := list{str}
-S2list := list{G2}
-S3list := list{G2}
-w := G2
-h := G2
-g1a2 := G1
-g1a1 := G1
-S4list := list{G2}
-S7list := list{G1}
 S1list := list{G2}
 tau2b := G2
 END :: types
@@ -211,49 +211,57 @@ secparam := 80
 BEGIN :: func:membership
  input := list{A, S1list, S2list, S3list, S4list, S5list, S6list, S7list, SKlist, g1, g1a1, g1a2, g1b, g1ba1, g1ba2, g2, h, tagklist, tau1, tau1b, tau2, tau2b, u, w}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: if
+if { ismember(S1list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S2list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S3list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S4list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S5list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S6list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(S7list#z) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(SKlist#z) == False }
+    output := False
+END :: if
+END :: for
+
+BEGIN :: if
+if { ismember(tagklist) == False }
+    output := False
+END :: if
 
 BEGIN :: if
 if { ismember(A) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S1list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S2list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S3list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S4list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S5list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S6list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(S7list) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(SKlist) == False }
     output := False
 END :: if
 
@@ -298,11 +306,6 @@ if { ismember(h) == False }
 END :: if
 
 BEGIN :: if
-if { ismember(tagklist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
 if { ismember(tau1) == False }
     output := False
 END :: if
@@ -331,6 +334,7 @@ BEGIN :: if
 if { ismember(w) == False }
     output := False
 END :: if
+
 
  output := True
 END :: func:membership
@@ -399,7 +403,7 @@ input := list{A, S1list, S2list, S3list, S4list, S5list, S6list, S7list, SKlist,
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if
@@ -410,13 +414,13 @@ END :: if
 
 BEGIN :: for
 for{z := 0, N}
-s2 := random(ZR)
-s1 := random(ZR)
-M := H(mlist#z,ZR)
-s := (s1 + s2)
-t := random(ZR)
-tagc := random(ZR)
 theta := ((tagc - tagklist#z)^-1)
+M := H(mlist#z,ZR)
+tagc := random(ZR)
+s2 := random(ZR)
+s := (s1 + s2)
+s1 := random(ZR)
+t := random(ZR)
 dotACache#z := (S1list#z^(s * delta#z))
 dotBCache#z := (S2list#z^(s1 * delta#z))
 dotCCache#z := (S3list#z^(s1 * delta#z))

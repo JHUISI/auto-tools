@@ -20,22 +20,25 @@ P := G2
 S := G1
 g := G2
 r := ZR
-incorrectIndices := list{int}
-endSigNum := int
-startSigNum := int
 delta := list{ZR}
-dotCLoopVal := G1
+startSigNum := int
+endSigNum := int
+incorrectIndices := list{int}
 dotBLoopVal := G1
-dotBCache := list{G1}
+dotCLoopVal := G1
 dotCCache := list{G1}
+dotBCache := list{G1}
 Slist := list{G1}
-Mlist := list{str}
-ulink := list{G1}
 ulist := list{ulink}
+ulink := list{G1}
+Mlist := list{str}
 END :: types
 
 BEGIN :: precompute
-h := H(concat{M, Lt, u}, ZR)
+BEGIN :: for
+for{y := 0, l}
+ h#y := H(concat{M, Lt, u#y}, ZR)
+END :: for
 END :: precompute
 
 constant := list{P, g, Lt}
@@ -131,14 +134,32 @@ END :: func:verify
 BEGIN :: func:membership
  input := list{P, Slist, g, pklist, ulist}
 
+BEGIN :: for
+for{z := 0, N}
 
 BEGIN :: if
-if { ismember(P) == False }
+if { ismember(Slist#z) == False }
+    output := False
+END :: if
+
+BEGIN :: forinner
+forinner{y := 0, l}
+
+BEGIN :: if
+if { ismember(ulist#z#y) == False }
+    output := False
+END :: if
+END :: forinner
+
+END :: for
+
+BEGIN :: if
+if { ismember(pklist) == False }
     output := False
 END :: if
 
 BEGIN :: if
-if { ismember(Slist) == False }
+if { ismember(P) == False }
     output := False
 END :: if
 
@@ -147,15 +168,6 @@ if { ismember(g) == False }
     output := False
 END :: if
 
-BEGIN :: if
-if { ismember(pklist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(ulist) == False }
-    output := False
-END :: if
 
  output := True
 END :: func:membership
@@ -200,7 +212,7 @@ input := list{Lt, Mlist, P, Slist, g, pklist, ulist, incorrectIndices}
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if

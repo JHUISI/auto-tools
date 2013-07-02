@@ -5,11 +5,11 @@ N := 100
 BEGIN :: types
 M := str
 sig := list{G2}
-delta1 := list{ZR}
-incorrectIndices := list{int}
 endSigNum := int
 delta2 := list{ZR}
+delta1 := list{ZR}
 startSigNum := int
+incorrectIndices := list{int}
 dotCLoopVal := G2
 dotBLoopVal := G2
 dotALoopVal := G2

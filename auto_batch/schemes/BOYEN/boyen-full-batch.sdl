@@ -26,20 +26,20 @@ t := list{ZR}
 result1 := GT
 index := int
 incorrectIndices := list{int}
-endSigNum := int
 startSigNum := int
+endSigNum := int
 delta := list{ZR}
 dotCLoopVal := G1
 dotDLoopVal := GT
-dotELoopVal := GT
 dotALoopVal := G1
 dotBLoopVal := G1
+dotELoopVal := GT
 dotDCache := list{GT}
 tlink := list{ZR}
-Slist := list{Slink}
 Slink := list{G1}
-Mlist := list{str}
 tlist := list{tlink}
+Mlist := list{str}
+Slist := list{Slink}
 END :: types
 
 
@@ -159,9 +159,27 @@ END :: func:verify
 BEGIN :: func:membership
  input := list{Atlist, Btlist, Ctlist, Slist, g1, g2, tlist}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: forinner
+forinner{y := 0, l}
 
 BEGIN :: if
-if { ismember(Atlist) == False }
+if { ismember(Slist#z#y) == False }
+    output := False
+END :: if
+
+BEGIN :: if
+if { ismember(tlist#z#y) == False }
+    output := False
+END :: if
+END :: forinner
+
+END :: for
+
+BEGIN :: if
+if { ismember(Ctlist) == False }
     output := False
 END :: if
 
@@ -171,12 +189,7 @@ if { ismember(Btlist) == False }
 END :: if
 
 BEGIN :: if
-if { ismember(Ctlist) == False }
-    output := False
-END :: if
-
-BEGIN :: if
-if { ismember(Slist) == False }
+if { ismember(Atlist) == False }
     output := False
 END :: if
 
@@ -190,10 +203,6 @@ if { ismember(g2) == False }
     output := False
 END :: if
 
-BEGIN :: if
-if { ismember(tlist) == False }
-    output := False
-END :: if
 
  output := True
 END :: func:membership
@@ -254,7 +263,7 @@ input := list{Atlist, Btlist, Ctlist, Mlist, Slist, g1, g2, tlist, incorrectIndi
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if

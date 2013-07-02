@@ -8,8 +8,8 @@ setting := asymmetric
 BEGIN :: types
 M := str
 incorrectIndices := list{int}
-endSigNum := int
 startSigNum := int
+endSigNum := int
 delta := list{ZR}
 dotALoopVal := G1
 dotBLoopVal := G1
@@ -17,8 +17,8 @@ dotBCache := list{G1}
 dotACache := list{G1}
 Mlist := list{str}
 pk := G2
-siglist := list{G1}
 g := G2
+siglist := list{G1}
 END :: types
 
 # description of key generation and signing algorithms
@@ -73,6 +73,14 @@ secparam := 80
 BEGIN :: func:membership
  input := list{g, pk, siglist}
 
+BEGIN :: for
+for{z := 0, N}
+
+BEGIN :: if
+if { ismember(siglist#z) == False }
+    output := False
+END :: if
+END :: for
 
 BEGIN :: if
 if { ismember(g) == False }
@@ -84,10 +92,6 @@ if { ismember(pk) == False }
     output := False
 END :: if
 
-BEGIN :: if
-if { ismember(siglist) == False }
-    output := False
-END :: if
 
  output := True
 END :: func:membership
@@ -132,7 +136,7 @@ input := list{Mlist, g, pk, siglist, incorrectIndices}
 
 BEGIN :: for
 for{z := 0, N}
- delta#z := SmallExp(secparam)
+delta#z := SmallExp(secparam)
 END :: for
 
 BEGIN :: if
