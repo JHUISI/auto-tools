@@ -618,7 +618,7 @@ def writeMathStatement(leftSide, rightSide, opString):
     elif ( (leftNeedsStar == False) and (rightNeedsStar == True) ):
         return groupObjName + "." + opString + "(" + leftSide + ", *" + rightSide + ")"
     elif ( (leftNeedsStar == False) and (rightNeedsStar == False) ):
-        return groupObjName + "." + opString + "(" + leftSide + ", " + rightSide + ")"
+        return groupObjName + "." + opString + "(" + str(leftSide) + ", " + str(rightSide) + ")"
 
 def processATTR_CPP(node, replacementsDict):
     returnString = processAttrOrTypeAssignStmt(node, replacementsDict)
@@ -1192,6 +1192,7 @@ def getVarDeclForListVar(variableName):
     return outputString_Types
 
 def getRidOfAllListIndices(variableName):
+    if variableName == None: return "ERROR"
     loc = variableName.find(LIST_INDEX_SYMBOL)
     if (loc == -1):
         return variableName

@@ -1,7 +1,7 @@
 name := vrf
 N := 100
 setting := asymmetric
-l := 8 
+l := 8
 secparam := 80
 
 BEGIN :: types
@@ -36,8 +36,6 @@ END :: count
 #transform := list{2, 3, 5, 3, 6}
 
 verify1 := {{ e(pi#1?, g2) == e((g1^(1 - x#1?)) * (U1^x#1?), Ub) } and {{ e(pi#0?, g2) == e(pi#l?, U0) } and { e(pi#0?, h) == y0 }}}
-
-#verify1 := { e(pi#1?, g2) == e((g1^(1 - x#1?)) * (U1^x#1?), Ub) } and {{ e(pi#0?, g2 * (h^-1)) == (e(pi#l?, U0) * (y0^-1)) }}
 
 # l + 1
 BEGIN :: for

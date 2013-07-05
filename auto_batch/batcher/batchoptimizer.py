@@ -12,6 +12,9 @@ import string
 InvertedPairing = "invertedPairing"
 ParentExpNode   = "parentExpAttr"                                                         
 keyParentExp    = "keyParentExp"
+Alphabet = list(string.ascii_uppercase)
+AlphabetSet = 10
+
 class ExpInstanceFinder:
     def __init__(self):
         # keys must match
@@ -571,13 +574,17 @@ class SanityCheckT6:
     def visit_pair(self, node, data):
         if node.left == None or node.right == None:
             self.foundError = True
-    
-        
-        
+            
 class SubstituteSigDotProds:
     def __init__(self, vars, index='z', sig='N', cnt=0 ):
         self.prefix = 'dot' # self.prefix + self.alpha[cnt]; cnt += 1
-        self.alpha = string.ascii_uppercase
+        self.alpha = []
+        for i in range(0, AlphabetSet):
+            for j in Alphabet:
+                if i == 0:
+                    self.alpha.append(j)
+                else:
+                    self.alpha.append(j + str(i))
         self.cnt = cnt        
         self.sig = sig 
         self.index = index 
