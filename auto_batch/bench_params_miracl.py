@@ -34,14 +34,16 @@ def mul_in_grp(group, grpChoice):
 
 def exp_in_grp(group, grpChoice):
     assert group.InitBenchmark(), "failed to init benchmark"
-    a, b = group.random(getGroupConst(grpChoice)), group.random(ZR)
+    g, a = group.random(getGroupConst(grpChoice)), group.random(ZR)
+    g.initPP() 
 
     group.StartBenchmark(["CpuTime"])
     for i in range(0, trials):
-        c = a ** b
+        c = g ** (a * i)
 
     group.EndBenchmark()
     result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
+    del g
     return result
 
 def hash_in_grp(group, grpChoice):
