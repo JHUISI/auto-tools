@@ -2,7 +2,7 @@ from charm.toolbox.pairinggroup import *
 from charm.core.math.integer import randomBits
 import sys
 
-paramList = ['SS512'] # ['BN256'] #160]
+paramList = ['BN256']
 trials = 1
 curve = {}
 time_in_ms = 1000
