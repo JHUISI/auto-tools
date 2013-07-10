@@ -4,6 +4,7 @@ from batcher import sdlpath
 from batcher import batchverify
 
 time_in_ms = 1000
+max_recursive = 10000000
 
 version  = '1.0'
 help_info   = """
@@ -135,4 +136,5 @@ if benchmark != None:
     f.close()
     print("result : ", result)
 else:
+    sys.setrecursionlimit(max_recursive)
     batchverify.run_main(opts_dict)    

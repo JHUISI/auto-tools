@@ -1,9 +1,8 @@
 from charm.toolbox.pairinggroup import *
-from charm.core.math.pairing import InitBenchmark,StartBenchmark,EndBenchmark,GetBenchmark,GetGeneralBenchmarks,GetGranularBenchmarks,ClearBenchmark,RealTime,Mul,Div,Exp,Pair
 from charm.core.math.integer import randomBits
 import sys
 
-paramList = ['BN256'] #160]
+paramList = ['SS512'] # ['BN256'] #160]
 trials = 1
 curve = {}
 time_in_ms = 1000
@@ -22,67 +21,62 @@ def getGroupConst(groupStr):
         return NULL
 
 def mul_in_grp(group, grpChoice):
-    bID1 = InitBenchmark()
+    assert group.InitBenchmark(), "failed to init benchmark"
     a, b = group.random(getGroupConst(grpChoice)), group.random(getGroupConst(grpChoice))
 
-    StartBenchmark(bID1, [RealTime])
+    group.StartBenchmark(["CpuTime"])
     for i in range(0, trials):
         c = a * b
 
-    EndBenchmark(bID1)
-    result = (GetBenchmark(bID1, RealTime) / trials) * time_in_ms
-    ClearBenchmark(bID1)
+    group.EndBenchmark()
+    result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
     return result
 
 def exp_in_grp(group, grpChoice):
-    bID2 = InitBenchmark()
+    assert group.InitBenchmark(), "failed to init benchmark"
     a, b = group.random(getGroupConst(grpChoice)), group.random(ZR)
 
-    StartBenchmark(bID2, [RealTime])
+    group.StartBenchmark(["CpuTime"])
     for i in range(0, trials):
         c = a ** b
 
-    EndBenchmark(bID2)
-    result = (GetBenchmark(bID2, RealTime) / trials) * time_in_ms
-    ClearBenchmark(bID2)
+    group.EndBenchmark()
+    result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
     return result
 
 def hash_in_grp(group, grpChoice):
-    bID3 = InitBenchmark()
+    assert group.InitBenchmark(), "failed to init benchmark"
     _hash = group.hash
     _grp = getGroupConst(grpChoice)
     m = "this is some message of a good length!!!" # 40 bytes
-    StartBenchmark(bID3, [RealTime])
+    group.StartBenchmark(["CpuTime"])
     for i in range(trials):
         res = _hash(m, _grp)
-    EndBenchmark(bID3)
-    result = (GetBenchmark(bID3, RealTime) / trials) * time_in_ms
-    ClearBenchmark(bID3)
+    group.EndBenchmark()
+    result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
     return result
 
 def prng_bits(group, bits=80):
-    bID4 = InitBenchmark()
-    StartBenchmark(bID4, [RealTime])
+    assert group.InitBenchmark(), "failed to init benchmark"
+    group.StartBenchmark(["CpuTime"])
     for i in range(trials):
         a = group.init(ZR, randomBits(bits))
-    EndBenchmark(bID4)
-    result = (GetBenchmark(bID4, RealTime) / trials) * time_in_ms
-    ClearBenchmark(bID4)
+    group.EndBenchmark()
+    result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
     return result
 
 def bench(param):
     group = PairingGroup(param)
 
-    bID = InitBenchmark()
+    assert group.InitBenchmark(), "failed to init benchmark"
     a, b = group.random(G1), group.random(G2)
 
-    StartBenchmark(bID, [RealTime])
+    group.StartBenchmark(["CpuTime"])
     for i in range(0, trials):
         c = pair(a, b)
-    EndBenchmark(bID)
+    group.EndBenchmark()
 
-    curve[param]['pair'] = (GetBenchmark(bID, RealTime) / trials) * time_in_ms
-    ClearBenchmark(bID)
+    curve[param]['pair'] = (group.GetBenchmark("CpuTime") / trials) * time_in_ms
 
     
     for i in ['G1', 'G2', 'GT']:

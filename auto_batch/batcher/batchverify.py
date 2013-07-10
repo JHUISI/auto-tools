@@ -329,8 +329,8 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
         if PROOFGEN_FLAG:
             proofGen.setNextStep(Tech10.rule, verify2)
         applied_technique_list.append(10) # add to list
-    ##################################################################
-        
+    ##################################################################    
+    
     if PRECOMP_CHECK:
         countDict = countInstances(verify2) 
         if not isOptimized(countDict):

@@ -82,7 +82,7 @@ class BatchOrder:
         # first determine whether we can combine some pairings
         # if so, no point distributing products first           
         path = []; all_paths = []; self.batch_time = {}
-        self.BFStrategy(self.verify, path, all_paths)
+        self.BFStrategy(self.verify, path, all_paths, option)
         remove_list = []
         for i in all_paths:
             for j in all_paths:

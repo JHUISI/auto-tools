@@ -301,12 +301,19 @@ class Technique10(AbstractTechnique):
                 #print("Combine: %d => %s =?= %s" % (t, lhsNode, rhsNode))
                 cie = CombineIntoEq(lhsNode, rhsNode)
                 ASTVisitor(cie).preorder(testEq)
-
+                
+                # TODO: make less iterative -- change to once at the end but 
+                # need to add code for combining (prod on x^y) * (prod on a^c) ==> (prod on (x^y * a^c))
+                print(t, ": Applying tech 6")
                 tech6      = PairInstanceFinderImproved()
-                ASTVisitor(tech6).preorder(testEq)        
+                ASTVisitor(tech6).preorder(testEq) 
                 if tech6.testForApplication(): 
                     tech6.makeSubstitution(testEq, SubstitutePairs3)
+                    # check for NONE nodes
+                    #ASTVisitor( PruneTree() ).postorder( testEq )
+                    
                 # simplify exponents    
+                print(t, ": Applying tech 2")
                 tech2 = Technique2(self.sdl_data, self.types)
                 ASTVisitor(tech2).preorder(testEq)
         
