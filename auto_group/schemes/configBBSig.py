@@ -1,5 +1,5 @@
 schemeType = "PKSIG"
-short = "public_keys"
+short = "public-keys"
 
 keygenFuncName 	= "keygen"
 signFuncName 	= "sign"

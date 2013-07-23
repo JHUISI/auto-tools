@@ -57,7 +57,7 @@ For the help menu, execute the following:
 
 An example for how to execute AutoStrong on the Boneh-Boyen (short) signature scheme with basic options:
 
-	python runAutoStrong.py -s schemes/bbssig04.sdl -c configBBSig -o TestBB
+	python runAutoStrong.py --sdl schemes/bbssig04.sdl --config configBBSig -o TestBB -v
 
 
 Configuration

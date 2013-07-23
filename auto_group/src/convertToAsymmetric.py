@@ -5,8 +5,8 @@ from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairing
 from src.solver import *
 
 assignInfo = None
-SHORT_SECKEYS = "secret_keys" # for
-SHORT_PUBKEYS = "public_keys"
+SHORT_SECKEYS = "secret-keys" # for
+SHORT_PUBKEYS = "public-keys"
 SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
 SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
