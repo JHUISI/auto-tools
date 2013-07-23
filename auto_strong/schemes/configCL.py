@@ -10,5 +10,5 @@ masterSecVars = ["sk"]
 
 keygenPubVar = "pk"
 keygenSecVar = "sk" 
-messageVar = "m"
+messageVar = "M"
 signatureVar = "sig" 

@@ -59,7 +59,7 @@ refType = 'refType'
 
 usedBuiltinsFunc = []
 builtInTypes = {}
-builtInTypes["DeriveKey"] = types.str
+builtInTypes["DeriveKey"] = types.Str
 builtInTypes["stringToInt"] = types.listZR
 builtInTypes["intToBits"] = types.listZR
 builtInTypes["createPolicy"] = types.pol # these are app specific
@@ -68,17 +68,17 @@ builtInTypes["calculateSharesDict"] = types.symmapZR
 builtInTypes["calculateSharesList"] = types.listZR
 builtInTypes["prune"] = types.listStr
 builtInTypes["getCoefficients"] = types.symmapZR
-builtInTypes["integer"] = types.int
-builtInTypes["isList"] = types.int
+builtInTypes["integer"] = types.Int
+builtInTypes["isList"] = types.Int
 builtInTypes["recoverCoefficientsDict"] = types.listZR
 builtInTypes["genShares"] = types.symmapZR
 builtInTypes["genSharesForX"] = types.listZR
 builtInTypes["intersectionSubset"] = types.listZR
-builtInTypes["GetString"] = types.str
-builtInTypes["hashToKey"] = types.str
-builtInTypes["accept"] = types.int
-builtInTypes["getAcceptState"] = types.int
-builtInTypes["getString"] = types.str
+builtInTypes["GetString"] = types.Str
+builtInTypes["hashToKey"] = types.Str
+builtInTypes["accept"] = types.Int
+builtInTypes["getAcceptState"] = types.Int
+builtInTypes["getString"] = types.Str
 builtInTypes["getTransitions"] = types.metalistInt
 builtInTypes["strkeys"] = types.listStr
 builtInTypes["chamH"] = types.ZR
@@ -529,8 +529,8 @@ def getVarTypeFromVarName(varName, functionNameArg_TieBreaker, failSilently=Fals
             return types.GT
         if ( (retVarType == types.listZR) or (retVarType == types.ZR) ):
             return types.ZR
-        if ( (retVarType == types.listStr) or (retVarType == types.str) ):
-            return types.str
+        if ( (retVarType == types.listStr) or (retVarType == types.Str) ):
+            return types.Str
         return types.NO_TYPE
 
     if ( (retVarType != types.NO_TYPE) or (varName.count(LIST_INDEX_SYMBOL) != 1) ):
@@ -554,12 +554,12 @@ def setVarTypeObjForTypedList(varTypeObj, listType):
         varTypeObj.setType(types.listGT)
     elif (listType == "ZR"):
         varTypeObj.setType(types.listZR)
-    elif (listType == "str"):
+    elif (listType == "Str"):
         varTypeObj.setType(types.listStr)
-    elif (listType == "int"):
+    elif (listType =="Int"):
         varTypeObj.setType(types.listInt)
     else:
-        sys.exit("setVarTypeObjForTypedList in SDLParser.py:  listType passed in is not one of the supported types.")
+        sys.exit("setVarTypeObjForTypedList in SDLParser.py:  listType passed in is not one of the supported types: " + listType)
 
 def setVarTypeObjForTypedMetaList(varTypeObj, listType):
     if (listType == types.listG1):
@@ -686,7 +686,7 @@ def updateVarTypes(node, i, newType=types.NO_TYPE):
         value = varTypes[currentFuncName].get(refCount2Name[0])
         #print("DEBUG: refCount2Name: ", refCount2Name[0], value)
         if refCount2Name[0].isdigit():
-            varTypeObj.setRefType( types.int )
+            varTypeObj.setRefType( types.Int )
         elif value != None:
             #print("refCount2Name: ", refCount2Name[0], ", type: ", value.getType())            
             varTypeObj.setRefType( value.getType() )
@@ -881,9 +881,9 @@ def getVarTypeFromVarTypesDict(possibleFuncName, nodeAttrFullName):
     elif typeDef in [types.listGT, types.metalistGT]:
         return types.GT
 #    elif typeDef in [types.listStr, types.metalistStr]:
-#        return types.str
+#        return types.Str
 #    elif typeDef in [types.listInt, types.metalistInt]:
-#        return types.int
+#        return types.Int
     
     return typeDef
 
@@ -901,7 +901,7 @@ def getVarTypeInfoForAttr_List(node):
             elif firstReturnType in [types.listGT, types.metalistGT]: 
                 return types.GT
             elif firstReturnType in [types.listStr, types.metalistStr]:
-                return types.str
+                return types.Str
             secondReturnType_ListNodes = varTypes[funcNameOfVar][varNameInList].getListNodesList()
             if (len(secondReturnType_ListNodes) == 1):
                 if (secondReturnType_ListNodes[0] == "G1"):
@@ -912,8 +912,8 @@ def getVarTypeInfoForAttr_List(node):
                     return types.GT
                 if (secondReturnType_ListNodes[0] == "ZR"):
                     return types.ZR
-                if (secondReturnType_ListNodes[0] == "str"):
-                    return types.str
+                if (secondReturnType_ListNodes[0] in ["str", "Str"]):
+                    return types.Str
             return firstReturnType
 
         (outsideFunctionName, retVarInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, varNameInList)
@@ -942,7 +942,7 @@ def getVarTypeInfoForStringVar(nodeAttrFullName):
         return getVarTypeFromVarTypesDict(possibleFuncName, nodeAttrFullName)   # varTypes[possibleFuncName][nodeAttrFullName].getType()
 
     if (nodeAttrFullName.isdigit()):
-        return types.int # JAA: make int and ZR synonymous although they have separate Enum values. Conceptually the same for our purposes
+        return types.Int # JAA: make int and ZR synonymous although they have separate Enum values. Conceptually the same for our purposes
 
     # check if the user defined it in types section
     if (nodeAttrFullName in varTypes[TYPES_HEADER]):
@@ -976,7 +976,7 @@ def getVarTypeInfoForAttr(node, funcNameInputParam=currentFuncName):
         return getVarTypeInfoForAttr_List(node)
     
     if (nodeAttrFullName.isdigit()):
-        return types.int # JAA: make int and ZR synonymous although they have separate Enum values. Conceptually the same for our purposes
+        return types.Int # JAA: make int and ZR synonymous although they have separate Enum values. Conceptually the same for our purposes
 #    if (nodeAttrFullName == "1"): 
 #        return types.ZR
     
@@ -987,10 +987,10 @@ def getVarTypeInfoForAttr(node, funcNameInputParam=currentFuncName):
     return types.NO_TYPE
 
 def checkForIntAndZR(leftSideType, rightSideType):
-    if ( (leftSideType == types.int) and (rightSideType == types.ZR) ):
+    if ( (leftSideType == types.Int) and (rightSideType == types.ZR) ):
         return True
 
-    if ( (leftSideType == types.ZR) and (rightSideType == types.int) ):
+    if ( (leftSideType == types.ZR) and (rightSideType == types.Int) ):
         return True
 
     return False
@@ -1008,9 +1008,9 @@ def checkWhetherThesame(firstType, secondType):
         return True  
     elif "list" not in strSecond and key2 in typeKeys and firstType == types[key2]:
         return True
-    elif (firstType == types.int and secondType == types.listInt) or (firstType == types.listInt and secondType == types.int):
+    elif (firstType == types.Int and secondType == types.listInt) or (firstType == types.listInt and secondType == types.Int):
         return True
-    elif (firstType == types.str and secondType == types.listStr) or (firstType == types.listStr and secondType == types.str):
+    elif (firstType == types.Str and secondType == types.listStr) or (firstType == types.listStr and secondType == types.Str):
         return True
     elif (strFirst.lstrip("meta") == strSecond) or (strFirst == strSecond.lstrip("meta")):
         # test for "metalist*" == "list*" or vice versa
@@ -1028,7 +1028,7 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
     if (node.type == ops.LIST):
         return node
     if (node.type == ops.AND):
-        return types.int
+        return types.Int
     #TODO:  THIS MUST BE FIXED!!!!  MODEL SYMMAP AFTER LIST
     if (node.type == ops.SYMMAP):
         return types.symmap
@@ -1043,9 +1043,9 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
         return getVarTypeInfoForStringVar(node.getListNode()[0])
     if (node.type  == ops.STRCONCAT):
         for i in node.getListNode():
-            if getVarTypeInfoForStringVar(i) != types.str:
+            if getVarTypeInfoForStringVar(i) != types.Str:
                 sys.exit("getVarTypeInfoRecursive in SDLParser.py found a variable that isn't a STRING type in a STRCONCAT operation. Variable name: " + i)
-        return types.str
+        return types.Str
 #        for i in node.getListNode():
     if ( (node.type == ops.ADD) or (node.type == ops.SUB) or (node.type == ops.MUL) or (node.type == ops.DIV) ):
         leftSideType = getVarTypeInfoRecursive(node.left, funcNameInputParam)
@@ -1054,7 +1054,7 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
             if (checkForIntAndZR(leftSideType, rightSideType) == True):
                 return types.ZR
             if ( (str(node.left).find(transformOutputList) != -1) or (str(node.right).find(transformOutputList) != -1) ):
-                return types.int
+                return types.Int
             print("left side: ", leftSideType, ":", node.left)
             print("right side: ", rightSideType, ":", node.right)
             sys.exit("getVarTypeInfoRecursive in SDLParser.py found an operation of type ADD, SUB, MUL, or DIV in which the left and right sides were not of the same type.")
@@ -1069,7 +1069,7 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
         return retHashType
     if (node.type == ops.ATTR):
         if (str(node) in ["True", "true", "False", "false"]):
-            return types.int
+            return types.Int
         return getVarTypeInfoForAttr(node, funcNameInputParam)
     if (node.type == ops.EXPAND):
         return types.NO_TYPE
@@ -1082,13 +1082,13 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
             trythis = node.listNodes[0]
             #return types[trythis] # types[trythis]
             if (trythis.isdigit() == True):
-                return types.int
+                return types.Int
             else:
                 return types[trythis]
         elif (currentFuncName == KEYS_FUNC_NAME):
             return types.list
         elif (currentFuncName == LEN_FUNC_NAME):
-            return types.int
+            return types.Int
         return types.NO_TYPE
     if (node.type == ops.EQ_TST):
         leftSideType = getVarTypeInfoRecursive(node.left)
@@ -1107,9 +1107,9 @@ def upgradeToNextListLevel(count, _list):
     for i in _list:
         if i in standardTypes:
            j.append(types["list" + str(i)])
-        elif i == types.int:
+        elif i == types.Int:
            j.append(types.listInt)
-        elif i == types.str:
+        elif i == types.Str:
            j.append(types.listStr)
         else:
            j.append(i)
@@ -1125,7 +1125,7 @@ def updateRefTypes(refDict, refList, varName, newType):
 #        finalType = "list" + str(newType)
     if len(_refList) == 2 and newType in standardTypes:
         finalType = "metalist" + str(newType)
-    elif len(_refList) == 2 and newType == [types.int, types.str]:        
+    elif len(_refList) == 2 and newType == [types.Int, types.Str]:        
         print("updateRefTypes in SDLParser.py: can't handle int and str types as metalists."); sys.exit(-1)
     else:
         print("updateRefTypes in SDLParser.py: too many references. Consider breaking up structure. count=", len(_refList)); sys.exit(-1) 
@@ -1199,7 +1199,7 @@ def postTypeCleanup():
                 #print("UPDATE2: ii=", ii, ", needs to be updated accordingly: ", _listRawTypes.get(ii[0]) )
                 
             #print("RESULT2: rawType=", _listRawTypes.get(ii[0]))
-        elif iInList and iType == types.int:
+        elif iInList and iType == types.Int:
             if _listRawTypes.get(i) == None:
                 _listRawTypes[i] = []
             _listRawTypes[i].append(types.listInt)
@@ -1677,7 +1677,7 @@ def updateForLoops(node, lineNo):
         varTypes[currentFuncName] = {}
     if (loopVarName not in varTypes[currentFuncName]):
         varTypeObj = VarType()
-        varTypeObj.setType(types.int)
+        varTypeObj.setType(types.Int)
         varTypeObj.setLineNo(lineNo)
         varTypes[currentFuncName][loopVarName] = varTypeObj
 
@@ -1705,7 +1705,7 @@ def updateForLoopsInner(node, lineNo):
     loopVarName = str(node.left.left)
     if (loopVarName not in varTypes[currentFuncName]):
         varTypeObj = VarType()
-        varTypeObj.setType(types.int)
+        varTypeObj.setType(types.Int)
         varTypeObj.setLineNo(lineNo)
         varTypes[currentFuncName][loopVarName] = varTypeObj
 

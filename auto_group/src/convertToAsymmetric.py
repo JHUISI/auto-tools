@@ -587,9 +587,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
 
 def convertType(v, i):
     if i == types.Int:
-        return "int"
+        return "Int"
     elif i == types.listInt:
-        return "list{int}"
+        return "list{Int}"
     elif i == types.Str:
         return "Str"
     elif i == types.listStr:
@@ -606,6 +606,8 @@ def convertType(v, i):
         return "ZR"
     elif i == types.listZR:
         return "list{ZR}"
+    elif i == types.metalistInt:
+        pass
     print("DEBUG: convertType error: ", v, " = ", i)
     return False
 
@@ -672,7 +674,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
-    
+    info = {'verbose':sdlVerbose}
+
     userCodeBlocks = list(set(list(assignInfo.keys())).difference(config.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
     options['userFuncList'] += userCodeBlocks
     print("name is", sdl_name)
@@ -726,7 +729,6 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
-    info = {'verbose':sdlVerbose}
     info[curveID] = options['secparam']
     gen = Generators(info)
     # JAA: commented out for benchmarking    
@@ -764,7 +766,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
-                    #print("Each: ", eachStmt[i].getAssignNode())
+                    if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case, there's a hashed values...build up list and check later to see if it appears
@@ -783,8 +785,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     #print("pair vars RHS:", pair_vars_G1_rhs) 
     #print("list of gens :", generators)
     #print("constraintList: ", constraintList)
-    info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(generators, varTypes, pair_vars_G1_lhs, constraintList))
-    info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(generators, varTypes, pair_vars_G1_rhs, constraintList))
+    info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
+    info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
    
     # JAA: commented out for benchmarking     
     #print("info => G1 lhs : ", info['G1_lhs'])
@@ -796,6 +798,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     # JAA: commented out for benchmarking    
     #print("Generators in G1: ", generatorMapG1)
     #print("Generators in G2: ", generatorMapG2)
+    #print("Generator Lines: ", generatorLines)
     #print("<===== Determine Asymmetric Generators =====>\n")
     
     #print("<===== Generate XOR clauses =====>")  
@@ -889,7 +892,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
 
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
-        #print("Update: new G1 deps=>", groupInfo['G1'])    
+        print("Update: new G1 deps=>", groupInfo['G1'])    
 
     groupInfo['generators'] = generators 
     groupInfo['generatorMapG1'] = generatorMapG1
@@ -924,8 +927,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     if options['computeSize']:
         options['symPK']  = symDataTypePK
         options['asymPK'] = asymDataTypePK
+    
     newSDL = AsymSDL(options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
-    # fix this!!!!
     newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
 
     # debug 
@@ -961,17 +964,28 @@ class AsymSDL:
         self.__funcUsedVar    = {}
 
     def __getFuncLines(self, funcName):
-        funcConfig = sdl.getVarInfoFuncStmts( funcName )
-        Stmts = funcConfig[0]
         usedVars = set()
-        begin = "BEGIN :: func:" + funcName
-        end   = "END :: func:" + funcName
+        if funcName != LATEX_HEADER:
+            funcConfig = sdl.getVarInfoFuncStmts( funcName )
+            Stmts = funcConfig[0]
+            funcName = "func:" + funcName
+        else:
+            Latex = self.assignInfo[LATEX_HEADER]
+            Stmts = {}
+            for i,j in Latex.items():
+                Stmts[ int(j.getLineNo()) ] = j
+
+        begin = "BEGIN :: " + funcName
+        end   = "END :: " + funcName            
         
         lines = list(Stmts.keys())
         lines.sort()
         newLines = [begin]
         for index, i in enumerate(lines):
             assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if LATEX_HEADER in funcName:
+                newLines.append( Stmts[i].getLineStrKey() + " := " + Stmts[i].getLineStrValue() )
+                continue
             if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
                 newLines.append( str(Stmts[i].getAssignNode()) )
             elif Stmts[i].getIsForLoopBegin():
@@ -988,7 +1002,7 @@ class AsymSDL:
                 if Type(Stmts[i].getAssignNode()) == ops.EQ:
                     usedVars = usedVars.union( GetAttributeVars(Stmts[i].getAssignNode()) )
                 newLines.append(str(Stmts[i].getAssignNode()))
-        
+                
         newLines.append( end )
         return newLines, list(usedVars)
 
@@ -1025,6 +1039,7 @@ class AsymSDL:
         for i in noChangeList:
             if i in self.generatorLines.keys():
                 # strip from the data structures
+                print(i, " : ", self.generatorLines[i])
                 self.generatorLines[ i ] = None
                 self.groupInfo['G1'] = self.groupInfo['G1'].difference( [i] )
                 self.groupInfo['G2'] = self.groupInfo['G2'].difference( [i] )
@@ -1095,10 +1110,10 @@ class AsymSDL:
             newLines3  = self.__prune(newLines3, deleteMe)
         
         if config.schemeType == PKSIG:
-            # 1. find out where pk was originally defined
-            (defInFuncName, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)
-            # 2. get new pk list if defined in scheme
+            # 1. get new pk list if defined in scheme
             origPKList = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
+            # 2. find out where pk was originally defined
+            (defInFuncName, varInf) = getVarNameEntryFromAssignInfo(self.assignInfo, config.keygenPubVar)
             # 3. split pk into two new public keys (sPK, and vPK)
             if len(origPKList) > 0:
                 pkData = self.optimizePK(config, origPKList)
@@ -1163,7 +1178,7 @@ class AsymSDL:
         return nodeLines2
 
     def optimizePK(self, config, origPK):
-        #print("origPK :", origPK)
+        #print("origPK :", origPK) # JAA debug
         if len(origPK) > 0:
             signUsedVars   = []
             signVars       = self.__funcUsedVar.get(config.signFuncName)
@@ -1232,7 +1247,9 @@ class AsymSDL:
         for node in funcs:
             if Type(node) == ops.EQ:
                 if str(node.left) == varPK and Type(node.right) == ops.LIST:
-                    return node.right.listNodes
+                    newList = list(node.right.listNodes)
+                    #print("__getOriginalPK : ", newList)
+                    return newList
         return []    
                 
     
@@ -1347,36 +1364,35 @@ def findVarInfo(var, varTypes):
 #        print("levels :", levelsOfIndirection)
         return varTypes.get(vName)
         
-def assignTraceback(generators, varTypes, listVars, constraintList):
+def assignTraceback(assignInfo, generators, varTypes, listVars, constraintList):
     varProp = []
     data = {}
     # get variable names from all pairing
     for i in listVars:
-        #print("var name := ", i)
+        #print("var name := ", i) # JAA debug
         var = i
-        buildMap(generators, varTypes, varProp, var, constraintList)
+        buildMap(assignInfo, generators, varTypes, varProp, var, constraintList)
         data[i] = set(varProp)
         varProp = []
-    
-    #for i in listVars:
-    #    print("key: ", i, ":=>", data[i])
+
+#JAA debug    
+#    for i in listVars:
+#        print("key: ", i, ":=>", data[i])
 #    print("varProp for ", listVars[0], ": ", varProp)
     return data
 
         
-def buildMap(generators, varTypes, varList, var, constraintList):
-    global assignInfo
+def buildMap(assignInfo, generators, varTypes, varList, var, constraintList):
     removeList = []
     if (not set(var).issubset(generators)):
-        # JAA: commented out for benchmark
-        #print("var keys: ", var)
+        #print("var keys: ", var) # JAA debug
         (name, varInf) = getVarNameEntryFromAssignInfo(assignInfo, var)
         if(name == None): 
             if varInf != None: pass #print("Var : ", varInf.getVarDepsNoExponents())
             elif var.find(LIST_INDEX_SYMBOL) != -1: varInf = findVarInfo(var, varTypes)
             return
         l = list(varInf.getVarDepsNoExponents())
-#        print("var:", var, ", output: ", l)
+        #print("var:", var, ", output: ", l) # JAA debug
         if var in l: l.remove(var)
         if G1Prefix in l: l.remove(G1Prefix)
             
@@ -1384,7 +1400,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
         for i in l:
             #print("name: ", i) # uncomment for ckrs09 error
             typeI = sdl.getVarTypeFromVarName(i, None, True)
-            #print("getVarTypeFromVarName:  ", i,":", typeI)
+            #print("getVarTypeFromVarName:  ", i,":", typeI) # JAA debug
             if typeI == types.NO_TYPE:
                 node = BinaryNode(ops.ATTR)
                 node.setAttribute(i)
@@ -1418,7 +1434,7 @@ def buildMap(generators, varTypes, varList, var, constraintList):
         varsToCheck = list(l)
         for i in varsToCheck:
             lenBefore = len(varList)
-            buildMap(generators, varTypes, varList, i, constraintList)
+            buildMap(assignInfo, generators, varTypes, varList, i, constraintList)
             lenAfter  = len(varList)
             if lenBefore == lenAfter:
                 node = BinaryNode(ops.ATTR)
@@ -1454,11 +1470,13 @@ class Generators:
                 if typ == types.G1:
                     if (stmt[i].getOutsideForLoopObj() != None): inForLoop = True
                     else: inForLoop = False
-                    #print(i, ": ", typ, " :=> ", stmt[i].getAssignNode(), ", loop :=> ", inForLoop)
+                    # JAA comment out for benchmarking
+                    if self.info['verbose']: print(i, ": ", typ, " :=> ", stmt[i].getAssignNode(), ", loop :=> ", inForLoop)
                     if not inForLoop: 
                         self.generators.append(str(stmt[i].getAssignVar()))
                     else:
                         listRef = stmt[i].getAssignVar().split(LIST_INDEX_SYMBOL)[0]
+                        if self.info['verbose']: print("Found generator in for loop: ", listRef)
                         self.generators.append(listRef)
                         self.genDict[ listRef ] = str(stmt[i].getAssignVar()) #, str(stmt[i].getAssignNode()))   # str(stmt[i].getOutsideForLoopObj())
                         #print("genDict : ", self.genDict)

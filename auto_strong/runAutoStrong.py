@@ -133,7 +133,7 @@ def configAutoStrong(dest_path, sdl_file, config_file, output_file, verbose, ben
     print("Codegen Input: ", new_input_sdl)
     print("Codegen Output: ", new_output_sdl)
     print("User defined funcs: ", option['userFuncList'])
-    codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl + ".cpp", options['userFuncList'])
+    codegen_CPP.codegen_CPP_main(new_input_sdl, new_output_sdl + ".cpp", option['userFuncList'])
     codegen_PY.codegen_PY_main(new_input_sdl, new_output_sdl + ".py", new_output_sdl + "User.py")
     return
 

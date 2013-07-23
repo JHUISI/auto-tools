@@ -39,7 +39,7 @@ def exp_in_grp(group, grpChoice):
 
     group.StartBenchmark(["CpuTime"])
     for i in range(0, trials):
-        c = g ** (a * i)
+        c = g ** (a * (i+1))
 
     group.EndBenchmark()
     result = (group.GetBenchmark("CpuTime") / trials) * time_in_ms

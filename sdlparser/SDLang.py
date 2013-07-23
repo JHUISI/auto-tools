@@ -43,10 +43,10 @@ STR_KEYS_FUNC_NAME = "strkeys"
 PRUNE_FUNC_NAME = "prune"
 FUNC_SYMBOL = "def func :"
 START_TOKEN, BLOCK_SEP, END_TOKEN = 'BEGIN','::','END'
-types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'int', 'str', 'Int', 'Str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR', 'bool')
+types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'Int', 'Str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR', 'bool')
 listGroupTypes = ['listStr', 'listInt' , 'listZR', 'listG1', 'listG2', 'listGT']
 metaListGroupTypes = ['metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT']
-downType = {'listStr':'str', 'listInt':'int', 'listZR':'ZR', 'listG1':'G1', 'listG2':'G2', 'listGT':'GT', 
+downType = {'listStr':'Str', 'listInt':'Int', 'listZR':'ZR', 'listG1':'G1', 'listG2':'G2', 'listGT':'GT', 
             'metalist':'list', 'metalistInt':'listInt', 'metalistStr':'listStr', 'metalistZR':'listZR', 
             'metalistG1':'listG1', 'metalistG2':'listG2', 'metalistGT':'listGT' }
 standardTypes = [ types.ZR, types.G1, types.G2, types.GT ] # types.int, types.str
@@ -55,6 +55,7 @@ ops = Enum('BEGIN', 'ERROR', 'TYPE','AND', 'OR', 'XOR', 'ADD', 'SUB', 'MUL', 'DI
 side = Enum('left', 'right')
 levels = Enum('none', 'some', 'all')
 debug = levels.none
+blacklist = [LATEX_HEADER]
 
 newBuiltInTypes = {}
 newBuiltInTypes["DeriveKey"] = types.Str
@@ -96,7 +97,7 @@ newBuiltInTypes["concat"] = types.list
 def getNextListName(assignInfo, origListName, index):
     (listFuncNameInAssignInfo, listEntryInAssignInfo) = getVarNameEntryFromAssignInfo(assignInfo, origListName)
     if ( (listFuncNameInAssignInfo == None) or (listEntryInAssignInfo == None) ):
-        sys.exit("Problem with return values from getVarNameEntryFromAssignInfo in getNextListName in SDLang.py.")
+        sys.exit("Problem with return values from getVarNameEntryFromAssignInfo in getNextListName in SDLang.py: " + origListName)
     if ( (listEntryInAssignInfo.getIsList() == False) or (len(listEntryInAssignInfo.getListNodesList()) == 0) ):
         #sys.exit("Problem with list obtained from assignInfo in getNextListName in SDLParser.")
         return (None, None)
@@ -211,9 +212,11 @@ def getVarNameEntryFromAssignInfo(assignInfo, varName):
     retVarInfoObj = None
     currentRetVarInfoObjIsExpandNode = False
 
-    for funcName in assignInfo:
+    for funcName in assignInfo.keys():
 #        for currentVarName in assignInfo[funcName]:
 #        if (currentVarName == varName):
+        if (funcName in blacklist): # blacklisted func headers that we don't want to search
+            continue
         if varName in assignInfo[funcName].keys():
             currentVarName = varName
             if ( (retVarInfoObj != None) or (retFuncName != None) ):
@@ -522,7 +525,7 @@ class BinaryNode:
 	def __init__(self, value, left=None, right=None):		
 		self.negated = False	
 		if(isinstance(value, str)):
-			if value in ['G1', 'G2', 'GT', 'ZR', 'int', 'str', 'Int', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
+			if value in ['G1', 'G2', 'GT', 'ZR', 'Int', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
                 # denotes group type of an attribute value
 				self.type = ops.TYPE
 				self.attr = types[value]

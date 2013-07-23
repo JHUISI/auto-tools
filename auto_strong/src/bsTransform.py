@@ -217,6 +217,7 @@ class BSTransform:
         # prepare new regular signature input
         signLines.append( varM + " := concat{" + getArgString([self.spk, config.messageVar]) + "}" ) 
         MsgType = self.varTypes.get(config.messageVar).getType()
+#        print("type: ", self.varTypes, config.messageVar)
         if MsgType == types.str:
             signLines.append( varM1 + " := DeriveKey(" + varM + ")" )
         elif MsgType in [types.ZR, types.G1]:
@@ -231,7 +232,7 @@ class BSTransform:
         signLines.append( self.schnorrSig + " := " + self.schnorr + "." + signFuncName + "(" + getArgString(schnorrSignArgs) + ")" )
         signLines.append( self.newSig + " := list{" + getArgString(signOutArgs) + "}" )
         output = outputKeyword + " := " + self.newSig 
-        end    = "END :: func:" + signFuncName        
+        end    = "END :: func:" + signFuncName
         
         newLines = [begin, input] + signLines + [output, end]
         return newLines

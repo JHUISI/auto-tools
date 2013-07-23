@@ -362,7 +362,7 @@ def writeUserFunctionDecl_CPP(outputFile, functionName, defineAsClass, className
         outputVariable = outputVariables[0]
         varIsAList = isFuncDeclVarAList(outputVariable, functionName)
         currentType = getFinalVarType(outputVariable, currentFuncName)
-        if (currentType in [types.int]):
+        if (currentType in [types.Int]):
             outputString = "int " + classNameStr + functionName + "(" # probably an error?
         else:
             outputString = makeTypeReplacementsForCPP(currentType, varIsAList) + " " + classNameStr + functionName + "("
@@ -372,7 +372,7 @@ def writeUserFunctionDecl_CPP(outputFile, functionName, defineAsClass, className
     for inputVariable in inputVariables:
         varIsAList = isFuncDeclVarAList(inputVariable, functionName)
         currentType = getFinalVarType(inputVariable, currentFuncName)
-        if (currentType in [types.int]):
+        if (currentType in [types.Int]):
             outputString += makeTypeReplacementsForCPP(currentType) + " " + inputVariable + ", "
         else:
             outputString += makeTypeReplacementsForCPP(currentType, varIsAList) + " & " + inputVariable + ", "
@@ -387,7 +387,7 @@ def writeUserFunctionDecl_CPP(outputFile, functionName, defineAsClass, className
             if ( (outputVariable not in ["True", "False", "Error"]) ):            
                 varIsAList = isFuncDeclVarAList(outputVariable, functionName)
                 currentType = getFinalVarType(outputVariable, currentFuncName)
-                if (currentType in [types.int]):
+                if (currentType in [types.Int]):
                     outputString += makeTypeReplacementsForCPP(currentType) + " & " + outputVariable + ", "
                 else:
                     outputString += makeTypeReplacementsForCPP(currentType, varIsAList) + " & " + outputVariable + ", "
@@ -427,7 +427,7 @@ def writeFunctionDecl_CPP(outputFile, functionName, defineAsClass, className):
     for inputVariable in inputVariables:
         varIsAList = isFuncDeclVarAList(inputVariable, functionName)
         currentType = getFinalVarType(inputVariable, currentFuncName)
-        if (currentType in [types.int]):
+        if (currentType in [types.Int]):
             outputString += makeTypeReplacementsForCPP(currentType) + " " + inputVariable + ", "
         else:
             outputString += makeTypeReplacementsForCPP(currentType, varIsAList) + " & " + inputVariable + ", "
@@ -439,7 +439,7 @@ def writeFunctionDecl_CPP(outputFile, functionName, defineAsClass, className):
         if ( (outputVariable not in ["True", "False", "Error"]) ):            
             varIsAList = isFuncDeclVarAList(outputVariable, functionName)
             currentType = getFinalVarType(outputVariable, currentFuncName)
-            if (currentType in [types.int]):
+            if (currentType in [types.Int]):
                 outputString += makeTypeReplacementsForCPP(currentType) + " & " + outputVariable + ", "
             else:
                 outputString += makeTypeReplacementsForCPP(currentType, varIsAList) + " & " + outputVariable + ", "
@@ -684,7 +684,7 @@ def addGetTypeToAttrNode(inputString, variableType):
     if (variableType == types.listStr):
         return inputString + ".getListStr()"
 
-    if (variableType in [types.str, types.int, types.listInt, types.listZR, types.listG1, types.listG2, types.listGT, types.metalistInt, types.metalistZR, types.metalistG1, types.metalistG2, types.metalistGT]):
+    if (variableType in [types.Str, types.Int, types.listInt, types.listZR, types.listG1, types.listG2, types.listGT, types.metalistInt, types.metalistZR, types.metalistG1, types.metalistG2, types.metalistGT]):
         return inputString # + ".strPtr"
     
     print(variableType)
@@ -781,7 +781,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
     elif (node.type == ops.ADD):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
         return writeMathStatement(leftSide, rightSide, "add")
@@ -789,7 +789,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
     elif (node.type == ops.SUB):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
         return writeMathStatement(leftSide, rightSide, "sub")
@@ -797,7 +797,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
     elif (node.type == ops.MUL):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame        
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
         return writeMathStatement(leftSide, rightSide, "mul")
@@ -805,7 +805,7 @@ def getCondStmtAsString_CPP(node, replacementsDict):
     elif (node.type == ops.DIV):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame        
         leftSide = getCondStmtAsString_CPP(node.left, replacementsDict)
         rightSide = getCondStmtAsString_CPP(node.right, replacementsDict)
         return writeMathStatement(leftSide, rightSide, "div")
@@ -914,7 +914,7 @@ def getAssignStmtAsString_CPP(node, replacementsDict, variableName, leftSideName
     elif (node.type == ops.ADD):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame
         leftSide = getAssignStmtAsString_CPP(node.left, replacementsDict, variableName, leftSideNameForInit)
         rightSide = getAssignStmtAsString_CPP(node.right, replacementsDict, variableName, leftSideNameForInit)
         return writeMathStatement(leftSide, rightSide, "add")
@@ -922,7 +922,7 @@ def getAssignStmtAsString_CPP(node, replacementsDict, variableName, leftSideName
     elif (node.type == ops.SUB):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame
         leftSide = getAssignStmtAsString_CPP(node.left, replacementsDict, variableName, leftSideNameForInit)
         rightSide = getAssignStmtAsString_CPP(node.right, replacementsDict, variableName, leftSideNameForInit)
         return writeMathStatement(leftSide, rightSide, "sub")
@@ -930,7 +930,7 @@ def getAssignStmtAsString_CPP(node, replacementsDict, variableName, leftSideName
     elif (node.type == ops.MUL):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame        
         leftSide = getAssignStmtAsString_CPP(node.left, replacementsDict, variableName, leftSideNameForInit)
         rightSide = getAssignStmtAsString_CPP(node.right, replacementsDict, variableName, leftSideNameForInit)
         return writeMathStatement(leftSide, rightSide, "mul")
@@ -938,7 +938,7 @@ def getAssignStmtAsString_CPP(node, replacementsDict, variableName, leftSideName
     elif (node.type == ops.DIV):
         testLeftSide = getFinalVarType(str(node.left), currentFuncName)
         testRightSide = getFinalVarType(str(node.right), currentFuncName)
-        if testLeftSide == types.int or testRightSide == types.int: return str(node) # literally keep it thesame        
+        if testLeftSide == types.Int or testRightSide == types.Int: return str(node) # literally keep it thesame        
         leftSide = getAssignStmtAsString_CPP(node.left, replacementsDict, variableName, leftSideNameForInit)
         rightSide = getAssignStmtAsString_CPP(node.right, replacementsDict, variableName, leftSideNameForInit)
         return writeMathStatement(leftSide, rightSide, "div")
@@ -1127,7 +1127,7 @@ def getCPPAsstStringForExpand(node, variableName, replacementsDict):
                     outputString += "getListZR()"
                 elif (listNodeType == types.list):
                     outputString += "getList()"
-                elif (listNodeType in [types.str, types.listStr]):
+                elif (listNodeType in [types.Str, types.listStr]):
                     outputString += "getListStr()"
                 else:
                     print(node)
@@ -1144,11 +1144,11 @@ def getCPPAsstStringForExpand(node, variableName, replacementsDict):
                     outputString += "getGT()"
                 elif (listNodeType == types.ZR):
                     outputString += "getZR()"
-                elif (listNodeType == types.str):
+                elif (listNodeType == types.Str):
                     outputString += "strPtr"
                 elif (listNodeType == types.listStr):
                     outputString += "getListStr()"
-                elif (listNodeType == types.int):
+                elif (listNodeType == types.Int):
                     outputString += "getInt()"                    
                 elif (listNodeType == types.listInt):
                     outputString += "getListInt()"                    
@@ -1179,7 +1179,7 @@ def getVarDeclForListVar(variableName):
         outputString_Types += "    CharmListGT " + trueVarName + ";\n"
     elif (listVarType in [types.ZR, types.listZR]):
         outputString_Types += "    CharmListZR " + trueVarName + ";\n"
-    elif (listVarType in [types.int, types.listInt]):
+    elif (listVarType in [types.Int, types.listInt]):
         outputString_Types += "    CharmListInt " + trueVarName + ";\n"
     elif (listVarType == types.list):
         outputString_Types += "    CharmList " + trueVarName + ";\n"
@@ -1270,10 +1270,10 @@ def writeAssignStmt_CPP(outputFile, binNode):
     variableType = getFinalVarType(variableName, currentFuncName)
 
     if ( (variableName.find(LIST_INDEX_SYMBOL) == -1) and (binNode.right.type != ops.EXPAND) and (variableName not in nonListVarsDeclaredInThisFunc) ):
-        if ( (variableName not in currentFuncOutputVars) and (variableType != types.int) ):
+        if ( (variableName not in currentFuncOutputVars) and (variableType != types.Int) ):
             outputString_Types += "    " + makeTypeReplacementsForCPP(variableType) + " "
             _outputString_Types = outputString_Types.strip(" ").split(' ')[0] # cleanup empty strings
-        elif ( (variableName not in currentFuncOutputVars) and (variableType == types.int) ):
+        elif ( (variableName not in currentFuncOutputVars) and (variableType == types.Int) ):
             outputString_Types += "    int "
             _outputString_Types = outputString_Types.strip(" ").split(' ')[0] # cleanup empty strings
         
@@ -1283,14 +1283,14 @@ def writeAssignStmt_CPP(outputFile, binNode):
         listVarsDeclaredInThisFunc.append(variableNameWOListIndices)
 
     if ( (binNode.right.type != ops.EXPAND) and (variableName not in currentFuncOutputVars) and (variableName not in SDLListVars) and (variableName not in nonListVarsDeclaredInThisFunc) ):
-        if (variableType == types.int):
+        if (variableType == types.Int):
             outputString_Types += variableName + " = 0;\n"
         else:
             if (variableName.startswith(DOT_PROD_WORD) == True):
                 outputString_Types += variableName + " = " + groupObjName + "." + INIT_FUNC_NAME + "(" + makeTypeReplacementsForCPP(variableType) + "_t, 1);\n"
             elif (variableName.startswith(SUM_PROD_WORD) == True):
                 outputString_Types += variableName + " = " + groupObjName + "." + INIT_FUNC_NAME + "(" + makeTypeReplacementsForCPP(variableType) + "_t, 0);\n"
-            elif variableType in [types.ZR, types.G1, types.G2, types.str, types.listStr, types.pol, types.list, types.listInt, types.listZR, types.listG1, types.listG2, types.listGT, types.metalist, types.metalistInt, types.metalistZR, types.metalistG1, types.metalistG2, types.metalistGT, types.symmapZR]:
+            elif variableType in [types.ZR, types.G1, types.G2, types.Str, types.listStr, types.pol, types.list, types.listInt, types.listZR, types.listG1, types.listG2, types.listGT, types.metalist, types.metalistInt, types.metalistZR, types.metalistG1, types.metalistG2, types.metalistGT, types.symmapZR]:
                 outputString_Types += variableName + ";\n"
             else:
                 outputString_Types += variableName + " = " + groupObjName + "." + INIT_FUNC_NAME + "(" + makeTypeReplacementsForCPP(variableType) + "_t);\n"
@@ -1312,12 +1312,12 @@ def writeAssignStmt_CPP(outputFile, binNode):
         skipTheRest = True
 
     if not skipTheRest:    
-        if ( (variableType == types.int) and (variableNamePounds not in integerVars) ):
+        if ( (variableType == types.Int) and (variableNamePounds not in integerVars) ):
             integerVars.append(variableNamePounds)
     
         leftSideNameForInit = None
         if ( (binNode.right.type != ops.EXPAND) and (binNode.right.type != ops.LIST) ):
-            if ( (variableNamePounds in currentFuncOutputVars) or (variableName in SDLListVars) or (variableType == types.int) ):
+            if ( (variableNamePounds in currentFuncOutputVars) or (variableName in SDLListVars) or (variableType == types.Int) ):
                 leftSideNameForInit = variableNamePounds
                 if (isInitCall(binNode) == False):
                     outputString_Body += variableNamePounds  
@@ -1445,10 +1445,10 @@ def writeForLoopDecl_CPP(outputFile, binNode):
             varNameTypeObj = getVarTypes()[TYPES_HEADER].get(curLoopVarName)
         
         if varNameTypeObj != None:
-            if varNameTypeObj.getRefType() == types.str or varNameTypeObj.getType() == types.listStr:
+            if varNameTypeObj.getRefType() == types.Str or varNameTypeObj.getType() == types.listStr:
                 outputString += "CharmListStr " + curLoopVarName + KeysListSuffix_CPP + " = " + curLoopVarName + ".strkeys();\n"
                 curLoopIncVarType = "string"
-            elif varNameTypeObj.getRefType() == types.int or varNameTypeObj.getType() == types.listInt:
+            elif varNameTypeObj.getRefType() == types.Int or varNameTypeObj.getType() == types.listInt:
                 outputString += "CharmListInt " + curLoopVarName + KeysListSuffix_CPP + " = " + curLoopVarName + ".keys();\n"
                 curLoopIncVarType = "int"
             else:

@@ -99,7 +99,7 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
         #print("Signature Scheme Already Strongly Unforgeable!")
         sys.exit(0)
     else:
-        print("Applying BSW transformation...")
+        print("Applying BS transformation...")
         return applyBSTransform(sdlFile, config)
         
 def extractGenerators(stmt, _types, generators):
