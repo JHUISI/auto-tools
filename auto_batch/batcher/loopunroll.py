@@ -47,7 +47,7 @@ class EvaluateAtIntValue:
 #    rnode : the first right node that was found during traversal
 #    
 class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unrolling technique
-    def __init__(self, pairDict):
+    def __init__(self, pairDict, metadata):
         self.pairDict = pairDict
         self.key = pairDict['key']
         self.left = pairDict['lnode']
@@ -66,10 +66,10 @@ class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unroll
             self.extra = pairDict['rnode1']
             self.extra_parent = pairDict['rnode1_parent']
             self.extra_inverted = pairDict.get('rnode1_' + InvertedPairing)
-#        print("DEBUG: ", self.extra_inverted)
-            
+#        print("DEBUG: ", self.extra_inverted)            
         self.deleteOtherPair = self.pruneCheck = False
         self.debug = False
+        self.metadata = metadata
         
     def visit(self, node, data):
         if self.deleteOtherPair:
@@ -305,7 +305,8 @@ class Technique10(AbstractTechnique):
                 # TODO: make less iterative -- change to once at the end but 
                 # need to add code for combining (prod on x^y) * (prod on a^c) ==> (prod on (x^y * a^c))
                 print(t, ": Applying tech 6")
-                tech6      = PairInstanceFinderImproved()
+                metadata = {}
+                tech6      = PairInstanceFinderImproved(metadata)
                 ASTVisitor(tech6).preorder(testEq) 
                 if tech6.testForApplication(): 
                     tech6.makeSubstitution(testEq, SubstitutePairs3)
@@ -314,7 +315,7 @@ class Technique10(AbstractTechnique):
                     
                 # simplify exponents    
                 print(t, ": Applying tech 2")
-                tech2 = Technique2(self.sdl_data, self.types)
+                tech2 = Technique2(self.sdl_data, self.types, metadata)
                 ASTVisitor(tech2).preorder(testEq)
         
         return testEq
@@ -346,7 +347,8 @@ def CombineEqWithoutNewDelta(eq1, eq2):
 #        cie = CombineIntoEq(eq2.left, eq2.right)
 #        ASTVisitor(cie).preorder(eq1)
 #        print("COMBINED: ", eq1, "\n")
-        tech6 = PairInstanceFinderImproved()
+        metadata = {}
+        tech6 = PairInstanceFinderImproved(metadata)
         ASTVisitor(tech6).preorder(eq1)
         if tech6.testForApplication(): 
             tech6.makeSubstitution(eq1, SubstitutePairs3)    

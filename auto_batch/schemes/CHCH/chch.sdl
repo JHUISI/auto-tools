@@ -9,8 +9,8 @@ BEGIN :: types
  pk := G1
  a := ZR
  P := G2
- ID := str
- M := str
+ ID := Str
+ M := Str
 END :: types
 
 BEGIN :: func:setup

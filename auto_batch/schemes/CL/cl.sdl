@@ -3,7 +3,7 @@ setting := asymmetric
 N := 100
 
 BEGIN :: types
- M := str
+ M := Str
  sig := list{G2}
 END :: types
 

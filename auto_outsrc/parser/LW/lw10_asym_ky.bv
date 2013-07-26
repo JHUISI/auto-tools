@@ -2,12 +2,12 @@ name := lw10
 setting := asymmetric
 
 BEGIN :: types
-gid := str
+gid := Str
 sk := list
 ct := list
-policy_str := str
-authS := list{str}
-userS := list{str}
+policy_str := Str
+authS := list{Str}
+userS := list{Str}
 M := GT
 K := list
 C1 := list
@@ -92,10 +92,10 @@ Y := len(attrs)
 dotProd := init(GT)
 BEGIN :: for
 for{y := 0,Y}
-kDecrypt := GetString(attrs#y)
-result0 := e(h_gid,C3#kDecrypt)
-numerator := ((result0^coeff#kDecrypt) * (C1#kDecrypt^coeff#kDecrypt))
-denominator := ((e(K#kDecrypt,C2#kDecrypt))^coeff#kDecrypt)
+k := GetString(attrs#y)
+result0 := e(h_gid,C3#k)
+numerator := ((result0^coeff#k) * (C1#k^coeff#k))
+denominator := ((e(K#k,C2#k))^coeff#k)
 fraction := (numerator / denominator)
 dotProd := (dotProd * fraction)
 END :: for

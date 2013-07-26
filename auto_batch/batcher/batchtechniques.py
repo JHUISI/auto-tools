@@ -6,6 +6,7 @@ Tech_db = Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing', 'Produ
 
 #TODO: code up reverse 2 : pull values from pairing outside, 
 delta_word = "delta"
+CombinedAlreadyMarker = 'CombinedAlreadyMarker'
 
 class AbstractTechnique:
     def __init__(self, sdl_data, variables):
@@ -564,16 +565,34 @@ class AbstractTechnique:
             if self.debug: print("continue...", node)
             pass
         
+class TestforTechnique8(AbstractTechnique):
+    def __init__(self, sdl_data, variables, metadata):
+        AbstractTechnique.__init__(self, sdl_data, variables)
+        self.rule    = "Test if we can pre-compute any pairings"
+        self.applied = False
+        self.count   = 0
+    
+    def visit(self, node, data):
+        pass
+    
+    def visit_pair(self, node, data):
+        if Type(node.left) == ops.ATTR and Type(node.right) == ops.ATTR and self.isConstant(node.left) and self.isConstant(node.right):
+            self.count += 1
+            return # bail
+    
+    def getCount(self):
+        return self.count
+
 tech2 = Tech_db # Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing')
 
 class Technique2(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
+    def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)
         self.rule    = "Move the exponent(s) into the pairing (technique 2)"
         self.applied = False 
         self.score   = tech2.NoneApplied
         self.debug   = False
-        
+        self.metadata = metadata
         # TODO: in cases of chp.bv, where you have multiple exponents outside a pairing, move them all into the e().
     
     # find: 'e(g, h)^d_i' transform into ==> 'e(g^d_i, h)' iff g or h is constant
@@ -590,6 +609,9 @@ class Technique2(AbstractTechnique):
             if left_check == right_check and left_check == False:
                 #print("T2: handle this case :=>", pair_node)
                 # move to first by default since both are constant!
+#                if Type(pair_node.left) == ops.ATTR and Type(pair_node.right) == ops.ATTR and self.isConstant(pair_node.left) and self.isConstant(pair_node.right):
+#                        return # bail
+#                else:
                 addAsChildNodeToParent(data, pair_node) # move pair node one level up
                 pair_node.left = self.createExp(pair_node.left, node.right)
                 self.applied = True
@@ -755,14 +777,17 @@ class Technique2(AbstractTechnique):
 tech3 = Tech_db # Enum('NoneApplied', 'ProductToSum','CombinePairing', 'SplitPairing')
 
 class Technique3(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
+    def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)
         self.rule    = "Move dot products inside pairings to reduce $\\numsigs$ pairings to 1 (technique 3)"
         self.applied = False
         self.score   = tech3.NoneApplied
         self.debug   = False
         self.tech_list = set()
-
+        self.metadata = metadata # stores info regarding nodes that have been combined
+        if self.metadata.get(CombinedAlreadyMarker) == None:
+            self.metadata[CombinedAlreadyMarker] = []
+        
     def checkSubtreeForSameBase(self, node, parent, data):
         if node.left: 
             result = self.checkSubtreeForSameBase(node.left, node, data)
@@ -851,6 +876,9 @@ class Technique3(AbstractTechnique):
 #                self.applied = True
 #                self.score   = tech3.SplitPairing
 ##                self.rule += "split one pairing into two pairings. "
+            if self.debug: print("DEBUG: checking if combined previously: ", self.metadata[CombinedAlreadyMarker])
+            if str(node) in self.metadata[CombinedAlreadyMarker]:
+                return # bail
             r = []
             self.getMulTokens(right, ops.NONE, [ops.EXP, ops.HASH, ops.ATTR, ops.ON], r)
             # count # of nodes in list. criteria: len(r) >= 2                                
@@ -892,6 +920,9 @@ class Technique3(AbstractTechnique):
             # into the smallest group G1. Therefore, if there are indeed more than two MUL nodes on the left side
             # of pairing, then that's actually a great thing and will give us the most savings.
             if len(r) > 2 and len(l) < 2:
+                if self.debug: print("DEBUG: checking if combined previously: ", self.metadata[CombinedAlreadyMarker])
+                if str(node) in self.metadata[CombinedAlreadyMarker]:
+                    return # bail                
                 # special case: reverse split a \single\ pairing into two or more pairings to allow for application of 
                 # other techniques. pair(a, b * c * d?) => p(a, b) * p(a, c) * p(a, d)
                 # pair with a child node with more than two mult's?
@@ -927,7 +958,17 @@ class Technique3(AbstractTechnique):
                     loop_left_check = self.isLoopOverTarget(pair_node.left, target)
                     loop_right_check = self.isLoopOverTarget(pair_node.right, target)
                     if self.debug: print("loop on left: ", loop_left_check, ", loop on right: ", loop_right_check)
-                    if loop_left_check: # move dot prod to left side
+                    if loop_left_check and loop_right_check:
+                        # can copy the product to both sides
+                        addAsChildNodeToParent(data, pair_node) # move pair one level up
+                        extra_prod = BinaryNode.copy(node) 
+                        node.right       = pair_node.left # set dot prod right to pair_node left
+                        pair_node.left   = node # pair node moves up and set pair left to dot prod
+                        extra_prod.right = pair_node.right # set dot prod right to pair_node right
+                        pair_node.right  = extra_prod # pair node move up and set pair right to dot prod
+                        self.score       = tech3.CombinePairing
+                        self.tech_list.update([3])                    
+                    elif loop_left_check: # move dot prod to left side
                         #print("move dot prod to left: ", pair_node.left)
                         addAsChildNodeToParent(data, pair_node) # move pair one level up  
                         node.right      = pair_node.left # set dot prod right to pair_node left
@@ -979,6 +1020,7 @@ class Technique3(AbstractTechnique):
         elif Type(node.right) == ops.EXP:
             exp = node.right
             isattr = exp.left
+            #print("DEBUG: Checking tech 7 out: ", node)
             if Type(isattr) == ops.ATTR and isattr.attr_index == None and self.isConstant(isattr):
                 bp = SDLParser()
                 prod = node.left
@@ -1081,13 +1123,13 @@ class Technique3(AbstractTechnique):
 tech4 = Tech_db # Enum('NoneApplied', 'ConstantPairing')
 
 class Technique4(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
+    def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)
         self.rule = "Applied waters hash technique (technique 4)"
         self.applied = False
         self.score   = tech4.NoneApplied
         self.debug   = False
-    
+        self.metadata = metadata
     # need to handle cases where there are more than one dot product nodes that need to be switched!
     def visit_on(self, node, data):
         # if see our parent is a PAIR node. if so, BAIL no point applying waters hash
@@ -1184,12 +1226,34 @@ class Technique4(AbstractTechnique):
     
 class Technique7(AbstractTechnique):
     """ looks for e( a^c_z, b^d_z ) where a and b are constants and c and d are variable"""
-    def __init__(self, sdl_data, variables):
+    def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
         self.rule    = "Reverse technique 2. Move exponents outside pairing"
-        
+        self.metadata = metadata
+    
+    def visit_on(self, node, data):
+        # prod{} on x^y ... node.right of 'on' node should be an 'exp'
+        if Type(node.right) == ops.EXP:
+            exp = node.right
+            isattr = exp.left
+            #print("DEBUG: Checking tech 7 out: ", node)
+            if Type(isattr) == ops.ATTR and isattr.attr_index == None and self.isConstant(isattr):
+                bp = SDLParser()
+                prod = node.left
+                sumOf = bp.parse("sum{x,y} of z")
+                sumOf.left = node.left
+                sumOf.right = exp.right
+                sumOf.left.type = ops.SUM
+                exp.right = sumOf
+                #print("output =>", exp)
+                addAsChildNodeToParent(data, exp)
+                self.applied = True
+                self.score   = tech3.ProductToSum
+                #self.tech_list.update([7])
+
+    
     def visit_pair(self, node, data):
         left = node.left
         right = node.right
@@ -1204,11 +1268,11 @@ class Technique7(AbstractTechnique):
                     addAsChildNodeToParent(data, new_exp)
                     del node # clean up
                     self.applied = True
-                    self.score   = Tech_db.MoveExpOutPairing
-                    
+                    self.score   = Tech_db.MoveExpOutPairing            
+
     
 class Technique8(AbstractTechnique):
-    def __init__(self, sdl_data, variables):
+    def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
@@ -1216,6 +1280,7 @@ class Technique8(AbstractTechnique):
         self.prefix  = "preP"
         self.ctr     = 0 # in case there are more than one. go from 0 to N intances
         self.precompute = {}
+        self.metadata  = metadata
     
     def visit_pair(self, node, data):
         left = node.left
@@ -1224,6 +1289,8 @@ class Technique8(AbstractTechnique):
             if self.isConstant(left) and self.isConstant(right):
                 #print("Candidate for technique 8:")
                 precomp_key = self.record(node)
+                print("node delta index: ", node.getDeltaIndex())
+                if node.getDeltaIndex() != None: precomp_key.setDeltaIndexFromSet(node.getDeltaIndex())
                 addAsChildNodeToParent(data, precomp_key)
                 del node
                 self.applied = True
@@ -1232,7 +1299,7 @@ class Technique8(AbstractTechnique):
     def record(self, node):
         key      = self.prefix + str(self.ctr)
         keyNode  = BinaryNode(key)
-        self.precompute[ keyNode ] = BinaryNode.copy(node)
+        self.precompute[ keyNode ] = (keyNode, BinaryNode.copy(node))
         # take note in the other dictionaries: vars and consts
         self.vars[ key ] = 'GT' 
         self.consts.append( key )

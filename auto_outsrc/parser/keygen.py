@@ -1390,7 +1390,7 @@ def removeStringEntriesFromKeygenElemToSMTExp(config):
 
     for keygenElem in keygenElemToSMTExp:
         varType = getVarTypeInfoRecursive(BinaryNode(keygenElem), config.keygenFuncName)
-        if (varType in [types.str, types.listStr]):
+        if (varType in [types.Str, types.listStr]):
             retList.append(keygenElem)
         else:
             newKeygenElemToSMTExp[keygenElem] = keygenElemToSMTExp[keygenElem]

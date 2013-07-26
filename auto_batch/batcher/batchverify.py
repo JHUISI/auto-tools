@@ -9,7 +9,7 @@ from batcher.batchtechniques import *
 from batcher.batchproof import *
 from batcher.batchconfig import *
 from batcher.batchorder import BatchOrder
-from batcher.batchcomboeq import TestForMultipleEq,CombineMultipleEq,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
+from batcher.batchcomboeq import TestForMultipleEq,CombineMultipleEq,CombineMultipleEqImproved,StripExp,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
 from batcher.batchsyntax import BasicTypeExist,PairingTypeCheck
 from batcher.batchoptimizer import PairInstanceFinderImproved
 from batcher.loopunroll import *
@@ -65,7 +65,7 @@ def handleVerifyEq(equation, index, verbose):
             #sys.exit("Testing stuff!!")
         else:
             # may need to combine them further? or batch separaely
-            print("Note: multiple equations left. Either batch each equation separately OR combine further.")
+            print("Note: multiple equations left. Either batch each equation separately OR combine further. Eq left: ", len(cme.finalAND))
             if len(cme.finalAND) == 2:
                 if VERBOSE: # since we did post-order traversal it should be the same way
                     print("equation 1: ", cme.finalAND[1])
@@ -75,6 +75,8 @@ def handleVerifyEq(equation, index, verbose):
                 cme2 = CombineMultipleEq(addIndex=False)
                 ASTVisitor(cme2).preorder(combined_equation2)
                 combined = cme2.finalAND.pop()
+                stripExpTo1 = StripExp()
+                ASTVisitor(stripExpTo1).preorder(combined)                
                 if VERBOSE: print("Combined: ", combined)
                 se_test = SmallExpTestMul()
                 combined2 = BinaryNode.copy(combined)
@@ -89,7 +91,39 @@ def handleVerifyEq(equation, index, verbose):
                 flags[ 'step1' ] = combined2 # add delta index #s here
                 #sys.exit("Testing Stuff 2!!!")
                 return (combined, multipleEquationsHere)
+            elif len(cme.finalAND) > 2:
+                while len(cme.finalAND) > 1:
+                    ANDs = [ BinaryNode(ops.AND) for i in range(len(cme.finalAND)-1) ]
+                    for i in range(len(ANDs)):
+                        print("equation ", i, " : ", cme.finalAND[i])
+                        ANDs[i].left = BinaryNode.copy(cme.finalAND[i])
+                        if i < len(ANDs)-1: ANDs[i].right = ANDs[i+1]
+                        else: ANDs[i].right = BinaryNode.copy(cme.finalAND[i+1])
+                    
+                    combined_equation2 = ANDs[0]
+                    cme2 = CombineMultipleEq(addIndex=False)
+                    ASTVisitor(cme2).preorder(combined_equation2)                    
+                    if VERBOSE: print("Combined: ", cme2.finalAND)
+                    cme = cme2
+                
+                combined = cme.finalAND.pop() # final combined equation
+                stripExpTo1 = StripExp()
+                ASTVisitor(stripExpTo1).preorder(combined)
+                print("FINAL: ", combined)
+                se_test = SmallExpTestMul()
+                combined2 = BinaryNode.copy(combined) # copy for the purposes of demonstrating SET
+                ASTVisitor(se_test).preorder(combined2)
+                aftTech2 = UpdateDeltaIndex()
+                ASTVisitor(aftTech2).preorder(combined2)
+                if VERBOSE: print("SET added: ", combined2)
+                flags['multiple' + str(index)] = True
+                flags[ str(index) ] = combined2
+                flags[ 'verify' + str(index) ] = equation.right # used for verify in tex        
+                flags[ 'step1' ] = combined2 # add delta index #s here
 
+                return (combined, multipleEquationsHere)
+            
+            if VERBOSE: print("ERROR: Something went wrong!...")
             return (cme.finalAND, multipleEquationsHere)
     return (combined_equation, multipleEquationsHere)
 
@@ -266,12 +300,27 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
         proofGen.setNextStep( 'consolidate', verify2 )
     # check whether this step is necessary!    
     verify_test = BinaryNode.copy(verify2)
-    pif = PairInstanceFinder()
+    metadata = {}
+    pif = PairInstanceFinder(metadata)
     ASTVisitor(pif).preorder(verify_test)
     if pif.testForApplication(): # if we can combine some pairings, then no need to distribute just yet
         pass
     else:
         ASTVisitor(SimplifyDotProducts()).preorder(verify2)
+        
+    preTech8 = TestforTechnique8(sdl_data, types, metadata)
+    ASTVisitor(preTech8).preorder(verify2)
+#    print("Result: ", preTech7.getCount())
+    pre_search = []
+    if preTech8.getCount() == 1:
+        # safe to pre-compute as there's a possibility 
+        # we won't need to combine it with other pairings
+        print("Applying Technique 8 in pre-processing stage.")
+        Tech = techniques['8'](sdl_data, types, metadata)
+        ASTVisitor(Tech).preorder(verify2)
+        if hasattr(Tech, 'precompute'):
+            batch_precompute.update(Tech.precompute)
+        pre_search += ['8']        
 
     if VERBOSE: print("\nStage A: Combined Equation =>", verify2)
     ASTVisitor(SmallExponent(constants, vars)).preorder(verify2)
@@ -289,13 +338,13 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     for option in algorithm:
         if option == '5':
             option_str = "Simplifying =>"
-            Tech = techniques[option]()
+            Tech = techniques[option](metadata)
         elif option == '6':
             option_str = "Combine Pairings:"
-            Tech = techniques[option]()            
+            Tech = techniques[option](metadata)            
         elif option in techniques.keys():
             option_str = "Applying technique " + option
-            Tech = techniques[option](sdl_data, types)
+            Tech = techniques[option](sdl_data, types, metadata)
         else:
             print("Unrecognized technique selection.")
             continue

@@ -1,0 +1,128 @@
+name := dse09rcs
+setting := asymmetric
+N := 100
+
+BEGIN :: types
+ m := ZR
+END :: types
+
+BEGIN :: func:setup
+input := list{None}
+ g1 := random(G1)
+ g2 := random(G2)
+ f2 := random(ZR)
+ f3 := random(ZR)
+ u := random(ZR)
+ 
+ F2G1 := g1 ^ f2
+ F2G2 := g2 ^ f2
+ F3G1 := g1 ^ f3
+ F3G2 := g2 ^ f3
+ U1 := g1 ^ u
+ U2 := g2 ^ u
+ gk := list{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2}
+output := gk
+END :: func:setup
+
+
+BEGIN :: func:keygen
+input := list{gk}
+ gk := expand{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2}
+ v := random(ZR)
+ VG1 := g1 ^ v
+ VG2 := g2 ^ v
+ v1 := random(ZR)
+ V1G1 := g1 ^ v1
+ V1G2 := g2 ^ v1
+ h := random(ZR)
+ HG1 := g1 ^ h
+ HG2 := g2 ^ h
+ 
+ a := random(ZR)
+ b := random(ZR)
+ alpha := random(ZR)
+ rho := random(ZR) 
+ 
+ RG1 := VG1 * (V1G1 ^ a)
+ RG2 := VG2 * (V1G2 ^ a)
+ Rb := RG2 ^ b
+ galpha := g1 ^ alpha
+ g1b := g1 ^ b
+ g2b := g2 ^ b
+ g1a := g2 ^ a 
+ g2a := g2 ^ a
+ g2ba := g2 ^ (b * a)
+ g1rho := g1 ^ rho
+ g2abrho := g2 ^ ((alpha * b) / rho)
+ 
+ vk := list{g1b, g2b, g2a, g2ba, RG2, Rb, HG1, HG2, VG1, VG2, V1G1, V1G2, g1rho, g2abrho}
+ sk := list{galpha, g1a, g1b}
+output := list{vk, sk}
+END :: func:keygen
+
+
+BEGIN :: func:sign
+input := list{gk, vk, sk, m}
+ gk := expand{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2}
+ vk := expand{g1b, g2b, g2a, g2ba, RG2, Rb, HG1, HG2, VG1, VG2, V1G1, V1G2, g1rho, g2abrho}
+ sk := expand{galpha, g1a, g1b}
+ 
+ M0 := U2 ^ m
+ M1 := F2G2 ^ m
+ M2 := F3G2 ^ m
+
+ r1 := random(ZR)
+ r2 := random(ZR)
+ r := r1 + r2
+ z := random(ZR)
+ 
+ S0 := (M0 * HG2) ^ r1
+ S1 := galpha * (VG1 ^ r)
+ S2 := ((V1G1 ^ r) * (g1 ^ -z)) 
+ S3 := g1b ^ z
+ S4 := g1b ^ r2
+ S5 := g1 ^ r1
+ sig := list{S0, S1, S2, S3, S4, S5}
+output := sig
+END :: func:sign
+
+
+BEGIN :: func:verify
+input := list{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2, vk, m, sig}
+ vk := expand{g1b, g2b, g2a, g2ba, RG2, Rb, HG1, HG2, VG1, VG2, V1G1, V1G2, g1rho, g2abrho}
+ sig := expand{S0, S1, S2, S3, S4, S5}
+
+ M0 := U2 ^ m
+ M1 := F2G2 ^ m
+ M2 := F3G2 ^ m
+ 
+BEGIN :: if
+if {{ e(S5, M0*HG2) == e(g1, S0) } and { (e(S1, g2b) * e(S2, g2ba) * e(S3, g2a)) == (e(S4, RG2) * e(S5, Rb) * e(g1rho, g2abrho))} and { e(F2G1, M0) == e(U1, M1) } and { e(F3G1, M0) == e(U1, M2) }}
+   output := True
+else
+   output := False
+END :: if
+END :: func:verify
+
+
+BEGIN :: precompute
+ M0 := U2 ^ m
+ M1 := F2G2 ^ m
+ M2 := F3G2 ^ m
+END :: precompute
+
+constant := list{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2}
+public := vk 
+signature := sig
+message := m
+#transform := list{2, 6, 3, 5, 3, 8, 3}
+
+BEGIN :: count
+message_count := N
+public_count := one
+signature_count := N
+END :: count
+
+verify := {{ e(S5, M0*HG2) == e(g1, S0) } and { (e(S1, g2b) * e(S2, g2ba) * e(S3, g2a)) == (e(S4, RG2) * e(S5, Rb) * e(g1rho, g2abrho))} and { e(F2G1, M0) == e(U1, M1) } and { e(F3G1, M0) == e(U1, M2) }}
+
+

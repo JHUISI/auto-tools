@@ -3,10 +3,10 @@ setting := asymmetric
 N := 100
 
 BEGIN :: types
-t1 := str
-t2 := str
-t3 := str
-M := str
+t1 := Str
+t2 := Str
+t3 := Str
+M := Str
 g2 := G2
 pk := G2
 sig := G1

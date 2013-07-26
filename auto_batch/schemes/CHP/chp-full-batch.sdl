@@ -3,10 +3,10 @@ setting := asymmetric
 N := 100
 
 BEGIN :: types
-t1 := str
-t2 := str
-t3 := str
-M := str
+t1 := Str
+t2 := Str
+t3 := Str
+M := Str
 g2 := G2
 pk := G2
 sig := G1
@@ -14,9 +14,9 @@ b := ZR
 a := G1
 h := G1
 delta := list{ZR}
-startSigNum := int
-incorrectIndices := list{int}
-endSigNum := int
+startSigNum := Int
+incorrectIndices := list{Int}
+endSigNum := Int
 dotBLoopVal := G2
 dotALoopVal := G1
 dotCLoopVal := G2
@@ -25,7 +25,7 @@ dotBCache := list{G2}
 dotCCache := list{G2}
 siglist := list{G1}
 pklist := list{G2}
-Mlist := list{str}
+Mlist := list{Str}
 END :: types
 
 BEGIN :: func:setup

@@ -9,11 +9,11 @@ S1 := G1
 pk := G1
 a := ZR
 P := G2
-ID := str
-M := str
-incorrectIndices := list{int}
-endSigNum := int
-startSigNum := int
+ID := Str
+M := Str
+incorrectIndices := list{Int}
+endSigNum := Int
+startSigNum := Int
 delta := list{ZR}
 dotALoopVal := G1
 dotBLoopVal := G1
@@ -22,7 +22,7 @@ dotACache := list{G1}
 S1list := list{G1}
 S2list := list{G1}
 pklist := list{G1}
-Mlist := list{str}
+Mlist := list{Str}
 END :: types
 
 BEGIN :: func:setup

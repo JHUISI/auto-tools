@@ -3,13 +3,13 @@ setting := asymmetric
 N := 100
 
 BEGIN :: types
-M := str
+M := Str
 sig := list{G2}
-endSigNum := int
+endSigNum := Int
 delta2 := list{ZR}
 delta1 := list{ZR}
-startSigNum := int
-incorrectIndices := list{int}
+startSigNum := Int
+incorrectIndices := list{Int}
 dotCLoopVal := G2
 dotBLoopVal := G2
 dotALoopVal := G2
@@ -19,7 +19,7 @@ dotCCache := list{G2}
 X := G1
 Y := G1
 alist := list{G2}
-Mlist := list{str}
+Mlist := list{Str}
 blist := list{G2}
 clist := list{G2}
 g := G1

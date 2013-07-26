@@ -8,7 +8,7 @@ BEGIN :: types
  pi := list{G1} 
  g1 := G1
  g2 := G2
- x := list{int}
+ x := list{Int}
  Ub := G2
  U0 := G2
  U1 := G1

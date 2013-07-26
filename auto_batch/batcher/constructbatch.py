@@ -149,6 +149,7 @@ def Filter(node):
 
 class SDLBatch:
     def __init__(self, sdlOutfile, sdlData, varTypes, finalSdlBatchEq, precompDict, variableCount=0, settingObj=None):
+        self.debug = False
         self.sdlOutfile = sdlOutfile
         self.sdlData = sdlData
         self.varTypes = varTypes
@@ -157,8 +158,9 @@ class SDLBatch:
         del self.precomputeDict[delta_word]
         self.precomputeVarList = []
         self.precomputeMap = {} # for cases where we need to strip list index but references need to maintain the '#' in BV calculations 
-        self.defaultBatchTypes = {"incorrectIndices" : "list{int}", "startSigNum" : "int", "endSigNum " : "int"}
+        self.defaultBatchTypes = {"incorrectIndices" : "list{Int}", "startSigNum" : "Int", "endSigNum " : "Int"}
         for k in list(self.precomputeDict.keys()):
+            if self.debug: print("DEBUG: ", self.precomputeDict[k])
             (i, j) = self.precomputeDict[k]
             iVar = i.getAttribute()
             if iVar.find(LIST_INDEX_SYMBOL) != -1:
@@ -178,7 +180,6 @@ class SDLBatch:
         self.deltaListFirst, self.deltaListSecond = gdi.getDeltaList() # default is none if single equation
         self.newDeltaList = []
         self.__generateDeltaLines(sigIterator, self.newDeltaList)
-        self.debug = True #False
 
     def getVariableCount(self):
         return self.variableCount
@@ -189,6 +190,7 @@ class SDLBatch:
         eq = BinaryNode.copy(node)
         ASTVisitor(sa).preorder(eq)
         constList = []
+
         for i in self.sdlData.get(CONST): # prune constants that 
             if self.varTypes[i] not in listGroupTypes:
                 constList.append(i)
@@ -229,7 +231,7 @@ class SDLBatch:
 
     def __generateMembershipTest(self, verifyArgKeys, verifyArgTypes):
         output = ""
-        strTypeList = ["str", "list{str}", "int", "list{int}"]
+        strTypeList = ["Str", "list{Str}", "Int", "list{Int}"]
         verifyArgList = []
         nonListTypeArgs = []
         ListTypeArgs = []

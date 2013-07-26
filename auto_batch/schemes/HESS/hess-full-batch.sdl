@@ -10,12 +10,12 @@ S1 := GT
 pk := G1
 a := ZR
 P := G2
-ID := str
-M := str
-endSigNum := int
-startSigNum := int
+ID := Str
+M := Str
+endSigNum := Int
+startSigNum := Int
 delta := list{ZR}
-incorrectIndices := list{int}
+incorrectIndices := list{Int}
 dotALoopVal := G1
 dotBLoopVal := G1
 dotCLoopVal := GT
@@ -24,7 +24,7 @@ dotACache := list{G1}
 dotCCache := list{GT}
 S1list := list{GT}
 pklist := list{G1}
-Mlist := list{str}
+Mlist := list{Str}
 S2list := list{G1}
 END :: types
 

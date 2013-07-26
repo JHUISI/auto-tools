@@ -5,7 +5,7 @@ setting := asymmetric
 BEGIN :: types
  sig1 := G1
  sig2 := G1
- m := str
+ m := Str
  M := ZR
  D := GT
  V := GT
@@ -19,7 +19,7 @@ BEGIN :: types
  A := G2
  r := ZR
  n := ZR
- i := int
+ i := Int
 END :: types
 
 BEGIN :: func:setup

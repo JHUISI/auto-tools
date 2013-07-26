@@ -53,14 +53,14 @@ class BatchOrder:
                 order.append(k)
         return (order, eq)
     
-    def testTechnique(self, tech_option, equation):
+    def testTechnique(self, tech_option, equation, metadata):
         eq2 = BinaryNode.copy(equation)
         
         tech = None
         if tech_option in self.techMap.keys():
-            tech = self.techMap[tech_option](self.sdl_data, self.vars)
+            tech = self.techMap[tech_option](self.sdl_data, self.vars, metadata)
         elif tech_option in self.techMap2.keys():
-            tech = self.techMap2[tech_option]()
+            tech = self.techMap2[tech_option](metadata)
         else:
             return None
         
@@ -156,10 +156,10 @@ class BatchOrder:
         if tech_obj.applied:
             if tech_applied == 2:
                 if tech_obj.score in [Tech_db.ExpIntoPairing, Tech_db.DistributeExpToPairing]:
-                    suggest = [4, 5, 6, 3] # move on to tech3 or distribute dot products if possible
+                    suggest = [8, 4, 5, 6, 3] # move on to tech3 or distribute dot products if possible
             elif tech_applied == 3:
                 if tech_obj.score in [Tech_db.CombinePairing, Tech_db.ProductToSum, Tech_db.SplitPairing]:
-                    suggest = [4, 7, 5, 2]
+                    suggest = [8, 4, 7, 5, 2]
                     # if history already does not have 3 to 6, then it is ok to suggest
                     if not self.checkForTechniqueComboInPath(3, 6, history): suggest.insert(0, 6)
             elif tech_applied == 4:
@@ -172,12 +172,12 @@ class BatchOrder:
                 if tech_obj.testForApplication:
                     suggest = [2, 5, 4, 3, 6]
             #        suggest = [5, 4, 3, 6]
-            #elif tech_applied == 7:
-            #    if tech_obj.score == Tech_db.MoveExpOutPairing:
-            #        suggest = [8]
-            #elif tech_applied == 8:
-            #    if tech_obj.score == Tech_db.ConstantPairing:
-            #        suggest = [7, 3, 2]
+            elif tech_applied == 7:
+                if tech_obj.score == Tech_db.ProductToSum:
+                    suggest = [3, 2, 6]
+            elif tech_applied == 8:
+                if tech_obj.score == Tech_db.ConstantPairing:
+                    suggest = [7, 2]
             else:
                 return
         else:
@@ -197,14 +197,13 @@ class BatchOrder:
     
     # TODO: finish algorithm and figure out when it is BEST to distribute dot products 
     # Recursively determine all the paths that might apply until we converge (e.g., no more techniques apply)
-    def BFStrategy(self, equation, path, all_paths, cur_tech=None):
+    def BFStrategy(self, equation, path, all_paths, cur_tech=None, metadata={}):
 #        techniques = list(self.detectMap2.keys())
         if not cur_tech: cur_tech = 2
-
         # 1. apply the start technique to equation
         #print("Starting path: ", path)
         if self.debug: print("Testing technique: ", cur_tech)
-        (tech, verify_eq) = self.testTechnique(cur_tech, equation)
+        (tech, verify_eq) = self.testTechnique(cur_tech, equation, {})
         
         if tech.applied:
             if self.debug: print("Technique ", cur_tech, " successfully applied.")
@@ -218,7 +217,7 @@ class BatchOrder:
             if next_tech_list:
                 while len(next_tech_list) > 0:
                     try_tech = next_tech_list.pop()
-                    result = self.BFStrategy(verify_eq, list(path), all_paths, try_tech)
+                    result = self.BFStrategy(verify_eq, list(path), all_paths, try_tech, {})
 
             #if self.debug: print("Final Path: ", path, "\n")
             return True

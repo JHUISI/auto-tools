@@ -5,11 +5,11 @@ l := 3
 secparam := 80
 
 BEGIN :: types
-M := str
-ID := str
-L := str
-ID_list := list{str}
-Lt := str
+M := Str
+ID := Str
+L := Str
+ID_list := list{Str}
+Lt := Str
 u := list{G1}
 h := list{ZR}
 s := int

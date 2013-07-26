@@ -6,7 +6,7 @@ setting := asymmetric
 # types for variables used in verification.
 # all other variable types are inferred by SDL parser
 BEGIN :: types
- M := str
+ M := Str
 END :: types
 
 # description of key generation and signing algorithms

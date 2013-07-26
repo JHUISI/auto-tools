@@ -5,7 +5,7 @@ setting := asymmetric
 BEGIN :: types
 sig1 := G1
 sig2 := G1
-m := str
+m := Str
 M := ZR
 D := GT
 V := GT
@@ -19,11 +19,11 @@ h2 := G2
 A := G2
 r := ZR
 n := ZR
-i := int
-endSigNum := int
+i := Int
+endSigNum := Int
 delta := list{ZR}
-startSigNum := int
-incorrectIndices := list{int}
+startSigNum := Int
+incorrectIndices := list{Int}
 dotALoopVal := G1
 dotGLoopVal := G1
 sumDLoopVal := ZR
@@ -42,8 +42,8 @@ sig1list := list{G1}
 rlist := list{ZR}
 g2 := G2
 sig2list := list{G1}
-mlist := list{str}
-ilist := list{int}
+mlist := list{Str}
+ilist := list{Int}
 END :: types
 
 BEGIN :: func:setup

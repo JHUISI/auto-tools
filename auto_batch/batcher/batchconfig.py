@@ -1,7 +1,6 @@
 import batcher.sdlpath
 from sdlparser.SDLParser import *
 
-
 TYPE, CONST, PRECOMP, TRANSFORM = 'types', 'constant', 'precompute', 'transform'
 MESSAGE, SIGNATURE, PUBLIC, SETTING, SETUP, KEYGEN, SIGN, VERIFY = 'message','signature', 'public','setting', 'setup', 'keygen', 'sign', 'verify'
 BATCH_VERIFY = 'batch_verify'
@@ -71,6 +70,29 @@ class SDLSetting():
         self.__parseLatexAssign(assignInfoDict)
         self.__parseVerifyInputArgs(assignInfoDict)
         
+        # exit if the following keys are none
+        required = [PUBLIC, SIGNATURE, MESSAGE, COUNT_HEADER]
+        missing  = []
+        for i in required:
+            if self.data.get(i) == None or len(self.data.get(i)) == 0:
+                missing.append(i)
+        
+        if len(missing) > 0:
+            sys.exit("Need to specify the following in SDL: " + str(missing))
+
+        if len(self.data[EXPAND].keys()) > 0:
+            self.usesExpand = True
+        # add precompute vars in signature iff message_count != one
+        if self.data[COUNT_HEADER][MSG_CNT] != SAME:
+            for i in self.batch_precompute.keys():
+                (k, v) = self.batch_precompute[i]
+                # if message is to N and not a public constant then we can safely add it to the signature list 
+                # and it will be treated as a list
+                if str(k) not in self.data[MESSAGE] and str(k) not in self.data[CONST]:
+                    self.data[SIGNATURE].append(str(k))
+        #if self.data[COUNT_HEADER][PUB_CNT] == SAME:
+        #        self.data[CONST].extend(self.data[PUBLIC])
+                
         if self.debug: 
             print("variable types: ", self.varTypes)
             print("constants: ", self.data.get(CONST))
@@ -82,10 +104,8 @@ class SDLSetting():
             print("transform: ", self.data.get(TRANSFORM))
             print("latex: ", self.latex_symbols)
             print("verify args: ", self.data.get(VERIFY))
-        
-        if len(self.data[EXPAND].keys()) > 0:
-            self.usesExpand = True
-        
+        return
+    
     def __processPublicVars(self):
         batchCount = self.data[COUNT_HEADER]
         self.data[PUB_CNT] = {SAME:[], NUM_SIGNATURES:[], }
@@ -169,9 +189,9 @@ class SDLSetting():
         elif typeVar == "listGT":
             newTypeTmp = "list{GT}"
         elif typeVar == "listStr":
-            newTypeTmp = "list{str}"
+            newTypeTmp = "list{Str}"
         elif typeVar == "listInt":
-            newTypeTmp = "list{int}"
+            newTypeTmp = "list{Int}"
         else:
             return typeVar
         return newTypeTmp
@@ -188,9 +208,9 @@ class SDLSetting():
         elif typeVar == "listGT":
             newTypeTmp = "list{GT}"
         elif typeVar == "listStr":
-            newTypeTmp = "list{str}"
+            newTypeTmp = "list{Str}"
         elif typeVar == "listInt":
-            newTypeTmp = "list{int}"
+            newTypeTmp = "list{Int}"
         
         
         if newTypeTmp != "":

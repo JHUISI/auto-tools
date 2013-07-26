@@ -3,7 +3,7 @@ N := 100
 setting := asymmetric
 
 BEGIN :: types
- m := str
+ m := Str
 END :: types
 
 BEGIN :: func:keygen

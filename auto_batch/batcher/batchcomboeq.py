@@ -3,6 +3,18 @@ from sdlparser.SDLParser import *
 from batcher.batchtechniques import AbstractTechnique
 from batcher.batchoptimizer import PairInstanceFinder, PairInstanceFinderImproved, ParentExpNode, keyParentExp, InvertedPairing
 
+class StripExp(AbstractTechnique):
+    def __init__(self):
+        pass
+    
+    def visit(self, node, data):
+        pass
+    
+    def visit_exp(self, node, data):
+        if str(node.right) == "1": # as in no negation, then save to move up node.left
+            addAsChildNodeToParent(data, node.left) # move pair node one level up
+        return
+
 # BEGIN: Small Exponent Related classes to assist with tracking index numbers assigned to delta variables 
 # across multiple verification equations. 
 class ApplyEqIndex(AbstractTechnique):
@@ -121,7 +133,8 @@ def CombineEqWithoutNewDelta(eq1, eq2):
 #        cie = CombineIntoEq(eq2.left, eq2.right)
 #        ASTVisitor(cie).preorder(eq1)
 #        print("COMBINED: ", eq1, "\n")
-        tech6 = PairInstanceFinderImproved()
+        metadata = {}
+        tech6 = PairInstanceFinderImproved(metadata)
         ASTVisitor(tech6).preorder(eq1)
         if tech6.testForApplication(): 
             tech6.makeSubstitution(eq1, SubstitutePairs3)    
@@ -176,10 +189,11 @@ class CombineMultipleEq(AbstractTechnique):
 #        ASTVisitor(tech6).preorder(combined_eq)
 #        if tech6.testForApplication(): tech6.makeSubstitution(combined_eq); print("Result: ", combined_eq)# ; exit(-1)
 #        if self.debug: print("Combined eq: ", combined_eq)
-        tech6      = PairInstanceFinderImproved()
-        ASTVisitor(tech6).preorder(combined_eq)
-        if tech6.testForApplication(): tech6.makeSubstitution(combined_eq); print("Result: ", combined_eq)# ; exit(-1)
-        if self.debug: print("Combined eq: ", combined_eq)
+
+#        tech6      = PairInstanceFinderImproved()
+#        ASTVisitor(tech6).preorder(combined_eq)
+#        if tech6.testForApplication(): tech6.makeSubstitution(combined_eq); print("Result: ", combined_eq)# ; exit(-1)
+#        if self.debug: print("Combined eq: ", combined_eq)
         self.finalAND.append(combined_eq)
         return
     
@@ -202,10 +216,13 @@ class CombineMultipleEq(AbstractTechnique):
 #            print("rhs: ", node.right)
         if (lsize == 1 and rsize > 1): # or (lsize == rsize):
             # move from left to right
-            if self.debug: print("Moving from L to R: ", node)
-            new_left = self.createExp2(BinaryNode.copy(node.left), BinaryNode.copy(self.inverse), _list)
-            new_node = self.createMul(BinaryNode.copy(node.right), new_left)
-            if self.debug: print("Result L to R: ", new_node)
+            if str(node.left) != "1": # handles cases where 1 == e(A, B) * e(C, D) * ... * etc
+                if self.debug: print("Moving from L to R: ", node)
+                new_left = self.createExp2(BinaryNode.copy(node.left), BinaryNode.copy(self.inverse), _list)
+                new_node = self.createMul(BinaryNode.copy(node.right), new_left)
+                if self.debug: print("Result L to R: ", new_node)
+            else:
+                new_node = node.right # just return the right side
             return new_node
         elif lsize > 1 and rsize == 1:
             # move from right to left
@@ -236,6 +253,115 @@ class CombineMultipleEq(AbstractTechnique):
                 sys.exit(0)
             return
 
+class CombineMultipleEqImproved(AbstractTechnique):
+    def __init__(self, sdl_data=None, variables=None, addIndex=True):
+        if sdl_data:
+            AbstractTechnique.__init__(self, sdl_data, variables)
+        self.inverse = BinaryNode("-1")
+        self.finalAND   = [ ]
+        self.attr_index = 0
+        self.addIndex = addIndex
+        self.debug      = False
+        
+    def visit_and(self, node, data):
+        left = BinaryNode("1")
+        right = BinaryNode("1")
+        combined_eq = None
+        marked = False
+        if Type(node.left) == ops.EQ_TST and Type(node.right) == ops.EQ_TST:
+            if getIfEqCountTheSame(node.left) and getIfEqCountTheSame(node.right):
+                print("Next phase: ", node)
+                combined_eq = CombineEqWithoutNewDelta(BinaryNode.copy(node.left), BinaryNode.copy(node.right))
+                self.attr_index += 1
+                aei = ApplyEqIndex(self.attr_index)
+                ASTVisitor(aei).preorder(combined_eq)
+                marked = True
+            #else:
+        #print("handle left :=>", node.left, node.left.type)
+        #print("handle right :=>", node.right, node.right.type)        
+        if not marked and Type(node.left) == ops.EQ_TST:
+             self.attr_index += 1
+             pair_eq_index = self.attr_index
+             left = self.visit_equality(node.left, pair_eq_index)
+
+        if not marked and Type(node.right) == ops.EQ_TST:
+             self.attr_index += 1
+             pair_eq_index2 = self.attr_index
+             right = self.visit_equality(node.right, pair_eq_index2)
+        if not marked: combined_eq = BinaryNode(ops.EQ_TST, left, right)
+        if self.debug: print("combined_eq first: ", combined_eq)
+        
+#        metadata = {}
+#        while True:
+#            # test whether technique 6 applies
+#            tech6      = PairInstanceFinderImproved(metadata)
+#            ASTVisitor(tech6).preorder(combined_eq)
+#            if tech6.testForApplication(): 
+#                tech6.makeSubstitution(combined_eq)
+#                if self.debug: print("Combined eq: ", combined_eq)
+#            else:
+#                if self.debug: print("Result: ", combined_eq)
+#                break
+        self.finalAND.append(combined_eq)
+        return
+    
+    # won't be called automatically (ON PURPOSE)
+    def visit_equality(self, node, index):
+        #print("index :=", index, " => ", node)
+        if self.addIndex:
+            aei = ApplyEqIndex(index)
+            ASTVisitor(aei).preorder(node)
+        # count number of nodes on each side
+        lchildnodes = []
+        rchildnodes = []
+        getListNodes(node.left, Type(node), lchildnodes)
+        getListNodes(node.right, Type(node), rchildnodes)
+        lsize = len(lchildnodes)
+        rsize = len(rchildnodes)
+        _list = [ops.EXP, ops.PAIR, ops.ATTR]
+#        if (lsize == 1 and rsize == 1):
+#            print("lhs: ", node.left)
+#            print("rhs: ", node.right)
+        if (lsize == 1 and rsize > 1): # or (lsize == rsize):
+            # move from left to right
+            if str(node.left) != "1": # handles cases where 1 == e(A, B) * e(C, D) * ... * etc
+                if self.debug: print("Moving from L to R: ", node)
+                new_left = self.createExp2(BinaryNode.copy(node.left), BinaryNode.copy(self.inverse), _list)
+                new_node = self.createMul(BinaryNode.copy(node.right), new_left)
+                if self.debug: print("Result L to R: ", new_node)
+            else:
+                new_node = node.right # just return the right side
+            return new_node
+        elif lsize > 1 and rsize == 1:
+            # move from right to left
+            if str(node.right) != "1": # handles cases where e(A, B) * e(C, D) * ... * etc == 1
+                if self.debug: print("Moving from R to L: ", node)
+                new_right = self.createExp2(BinaryNode.copy(node.right), BinaryNode.copy(self.inverse), _list)
+                new_node = self.createMul(BinaryNode.copy(node.left), new_right)
+            else:
+                new_node = node.left
+            if self.debug: print("Result R to L: ", new_node)
+            return new_node
+        else:
+            lsize_pair = 0
+            rsize_pair = 0
+            for i in lchildnodes:
+                if Type(i) == ops.PAIR: lsize_pair += 1
+            for i in rchildnodes:
+                if Type(i) == ops.PAIR: rsize_pair += 1
+            if lsize_pair <= rsize_pair:
+                if self.debug: print("Moving from L to R: ", node)
+                new_left = self.createExp2(BinaryNode.copy(node.left), BinaryNode.copy(self.inverse), _list)
+                new_node = self.createMul(BinaryNode.copy(node.right), new_left)
+                if self.debug: print("Result L to R: ", new_node)
+                return new_node
+            else:
+                print("ERROR: something went wrong...") # count pairings?
+                print("node: ", lsize_pair, rsize_pair, node)
+                sys.exit(-1)
+            return
+
+
 class SmallExpTestMul:
     def __init__(self, prefix=None):
         self.prefix = prefix
@@ -260,7 +386,7 @@ class SmallExpTestMul:
 
 
 class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unrolling technique
-    def __init__(self, pairDict):
+    def __init__(self, pairDict, metadata):
         self.pairDict = pairDict
         self.key = pairDict['key']
         self.left = pairDict['lnode']
@@ -283,6 +409,7 @@ class SubstitutePairs3: # modified SubstitutePairs2 specifically for loop unroll
             
         self.deleteOtherPair = self.pruneCheck = False
         self.debug = False
+        self.metadata = metadata
         
     def visit(self, node, data):
         if self.deleteOtherPair:

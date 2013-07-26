@@ -56,7 +56,7 @@ class ExpInstanceFinder:
 
 # Technique 6 - combining pairings with common elements (1st or 2nd)
 class PairInstanceFinder:
-    def __init__(self):
+    def __init__(self, metadata):
         # keys must match
         self.instance = {}
         self.index = 0
@@ -64,6 +64,7 @@ class PairInstanceFinder:
         self.applied = False
         self.side = { 'left':[] }
         self.debug = False
+        self.metadata = metadata
         
     def visit(self, node, data):
         pass
@@ -203,13 +204,16 @@ class PairInstanceFinder:
 #                        print("\tnodes:", j)
 #                else:
 #                    print(i, ":=>", pairDict[i])
-            SP2 = SubstitutePairs2( pairDict )
+            SP2 = SubstitutePairs2( pairDict, self.metadata )
             batchparser.ASTVisitor( SP2 ).preorder( equation )
             if SP2.pruneCheck: 
                 batchparser.ASTVisitor( PruneTree() ).preorder( equation )
             if self.failedTechnique(equation): self.applied = False; return equation2
             else: return None 
-                
+
+    def getMetadata(self):
+        return self.metadata
+
     def failedTechnique(self, equation):
         check = SanityCheckT6()
         batchparser.ASTVisitor( check ).preorder( equation )
@@ -352,7 +356,7 @@ class SubstituteExps:
 #    rnode : the first right node that was found during traversal
 #    
 class SubstitutePairs2:
-    def __init__(self, pairDict):
+    def __init__(self, pairDict, metadata):
         self.pairDict = pairDict
         self.key = pairDict['key']
         self.left = pairDict['lnode']
@@ -374,14 +378,25 @@ class SubstitutePairs2:
 #        print("DEBUG: ", self.extra_inverted)
             
         self.deleteOtherPair = self.pruneCheck = False
+        self.current_pair_ptr = ops.NONE
+        self.metadata = metadata # stores info regarding nodes that have been combined
+        self.__CombinedAlreadyMarker = batcher.batchtechniques.CombinedAlreadyMarker
+        if self.metadata.get(self.__CombinedAlreadyMarker) == None:
+            self.metadata[self.__CombinedAlreadyMarker] = []
         self.debug = False
-        
+    
+    def addToMeta(self, node):
+        if node not in self.metadata[self.__CombinedAlreadyMarker]:
+            self.metadata[self.__CombinedAlreadyMarker].append(str(node))
+        return
+
     def visit(self, node, data):
         if self.deleteOtherPair:
 #            print("Type(node) :=", Type(node), node)
-#            print("visit: node.right: ", node.right)        
-#            print("visit: node.left: ", node.left)    
-            if node.left in self.extra_parent:
+            #print("visit: node.right: ", node.right)        
+            #print("visit: node.left: ", node.left)
+            if node.left != None and node.left in self.extra_parent:
+                #print("DELETE: ", node.left)
                 if Type(node) != ops.EXP:
                     batchparser.addAsChildNodeToParent(data, node.right)
                     BinaryNode.clearNode(node.left)
@@ -392,7 +407,8 @@ class SubstitutePairs2:
                     BinaryNode.clearNode(node.left)
                     BinaryNode.clearNode(node.right)
                 self.pruneCheck = True 
-            elif node.right in self.extra_parent:
+            elif node.right != None and node.right in self.extra_parent:
+                #print("DELETE: ", node.right)                
                 batchparser.addAsChildNodeToParent(data, node.left)
                 BinaryNode.clearNode(node.right)
                 self.pruneCheck = True 
@@ -400,6 +416,8 @@ class SubstitutePairs2:
                 pass
         
     def visit_pair(self, node, data):
+        self.current_pair = node
+        self.current_pair_parent = data['parent']
 #        print("complete list: ", self.extra_side)
         if self.key == 'rnode':
             # find the attribute node on the right
@@ -419,7 +437,8 @@ class SubstitutePairs2:
                     node.left = BinaryNode.copy(self.left)
                     #print("node =>", node)
                     self.deleteOtherPair = True
-                
+                    # store 
+                    self.addToMeta(node)
                 elif node.left == self.left: # found the target node
                     #print("Need another case: ", node.left, self.left)
                     self.extra.insert(0, BinaryNode.copy(self.left))
@@ -433,7 +452,7 @@ class SubstitutePairs2:
                     if self.debug: print("modified nodes: ", node, node.getDeltaIndex())                    
                     #print("new pairing node: ", muls[0], self.right) # MUL nodes absorb the exponent
                     self.deleteOtherPair = True                    
-
+                    self.addToMeta(node)
                 elif node.left in self.extra: # foudn the other nodes we want to delete                    
                     del node.left, node.right
                     node.left = None
@@ -460,11 +479,12 @@ class SubstitutePairs2:
                     node.left = BinaryNode.copy(self.left)
                     #print("node =>", node)
                     self.deleteOtherPair = True
+                    self.addToMeta(node)
                 elif node.right == self.right:
 #                    print("Type of parent: ", Type(data['parent'])) # in case of e(a,b)^c and we're about to merge the pairing...we need to move c into pairing first                    
                     self.extra.insert(0, BinaryNode.copy(self.right))
                     muls = [ BinaryNode(ops.MUL) for i in range(len(self.extra)-1) ]
-                    for i in range(len(muls)):                        
+                    for i in range(len(muls)):
                         muls[i].left = BinaryNode.copy(self.checkForInverse(self.extra[i]))
                         if i < len(muls)-1: muls[i].right = muls[i+1]
                         else: 
@@ -473,7 +493,8 @@ class SubstitutePairs2:
                     if self.extra_index: node.setDeltaIndexFromSet(self.extra_index)
                     if self.debug: print("modified nodes: ", node, node.getDeltaIndex())
                     #print("new pairing node: ", self.left, muls[0]) # MUL nodes absorb the exponent
-                    self.deleteOtherPair = True                    
+                    self.deleteOtherPair = True             
+                    self.addToMeta(node) 
 #                    print("New node: ", node)
                 elif node.right in self.extra:
                     #print("delete node: ", node)
@@ -487,23 +508,39 @@ class SubstitutePairs2:
 #                if Type(data['parent']) != ops.ON:
                     # potentially prevent infinite loop of reverse split tech 3 and combine pairing of tech 6
 #                    return
-                if self.debug: print("warning: this code has not been fully tested yet.", self.left, node.left, self.right)
+                if self.debug: print("warning: this code has not been fully tested yet.", self.left, node.left, node.right, self.right)
                 target = self.right
+                # check if this particular node has been marked for deletion?
+                if self.deleteOtherPair and node in self.extra_parent:
+                    BinaryNode.clearNode(node.left)
+                    BinaryNode.clearNode(node.right)
+                    node.type = ops.NONE
+                    self.pruneCheck = True                
+                    return 
+                if str(target) != str(node.right):
+                    return
                 for i in self.extra:
                     target = self.combine(target, BinaryNode.copy(self.checkForInverse(i)))
 #                    print("mul: ", target)
                     node.right = target
                     self.deleteOtherPair = True
+                    self.addToMeta(node)                    
         else:
             print("invalid or unrecognized key: ", self.key)
+    
+    def checkIfDestPairInverted(self):
+        if self.current_pair_parent.type == ops.EXP:
+            if str(self.current_pair_parent.right) == "-1":
+                return True
+        return False
     
     def checkForInverse(self, node):
         if self.extra_side.get(str(node)):
             if self.node_side != self.extra_side[str(node)]:
                 if self.debug:
                     print('different side! take inverse')
-                    print("node: ", node, self.extra_side[str(node)])
-                if self.extra_inverted: 
+                    print("node: ", node, self.extra_side[str(node)], node.getDeltaIndex())
+                if self.extra_inverted and not self.checkIfDestPairInverted(): 
                     #print("The CL fix: ", self.extra_inverted)
                     return node
                     # this means we shouldn't invert the node because we're combining from another node
@@ -611,6 +648,12 @@ class SubstituteSigDotProds:
         self.dotprod[ 'types' ][ str(key) ] = the_type
         self.dotprod[ 'list' ].append( str(key) )
     
+    def findExistingKey(self, node):
+        for i in self.dotprod['dict'].keys():
+            if str(self.dotprod['dict'][i]) == str(node):
+                return i
+        return None
+    
     def visit(self, node, data):
         pass
     
@@ -640,8 +683,12 @@ class SubstituteSigDotProds:
                 p.right = subkey
         
         if index == self.sig:
-            key = BinaryNode(self.getkey())
-            self.store(key, node, dot_type)
+            existingKey = self.findExistingKey(node)
+            if existingKey == None:
+                key = BinaryNode(self.getkey())
+                self.store(key, node, dot_type)
+            else:
+                key = BinaryNode(existingKey)
             
             batchparser.addAsChildNodeToParent(data, key)
 
@@ -704,9 +751,10 @@ class SubstituteSigDotProds:
 # Focuses on simplifying dot products of the form
 # prod{} on (x * y)
 class DotProdInstanceFinder:
-    def __init__(self):
+    def __init__(self, metadata):
         self.rule = "Distribute dot products (technique 5)"
         self.applied = False
+        self.metadata = metadata
 
     def getMulTokens(self, subtree, parent_type, target_type, _list):
         if subtree == None: return None
@@ -1061,7 +1109,7 @@ class GetDeltaIndex:
 # Technique 6 - combining pairings with common elements (1st or 2nd)
 # THE NEW AND IMPROVED TECHNIQUE 6: only should be used for technique 0 (combining multiple verification equations properly)
 class PairInstanceFinderImproved:
-    def __init__(self):
+    def __init__(self, metadata):
         # keys must match
         self.instance = {}
         self.index = 0
@@ -1069,6 +1117,7 @@ class PairInstanceFinderImproved:
         self.applied = False
         self.side = { 'left':[] }
         self.debug = False
+        self.metadata = metadata
         
     def visit(self, node, data):
         pass        
@@ -1240,15 +1289,18 @@ class PairInstanceFinderImproved:
 #                else:
 #                    print(i, ":=>", pairDict[i])
             if SubstituteFuncCallBack == None:
-                SP2 = SubstitutePairs2( pairDict )
+                SP2 = SubstitutePairs2( pairDict, self.metadata )
             else:
-                SP2 = SubstituteFuncCallBack( pairDict )
+                SP2 = SubstituteFuncCallBack( pairDict, self.metadata )
             batchparser.ASTVisitor( SP2 ).preorder( equation )
             if SP2.pruneCheck: 
                 batchparser.ASTVisitor( PruneTree() ).preorder( equation )
             if self.failedTechnique(equation): self.applied = False; return equation2
             else: return None 
-                
+    
+    def getMetadata(self):
+        return self.metadata
+    
     def failedTechnique(self, equation):
         check = SanityCheckT6()
         batchparser.ASTVisitor( check ).preorder( equation )

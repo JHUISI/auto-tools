@@ -6,16 +6,16 @@ setting := asymmetric
 # types for variables used in verification.
 # all other variable types are inferred by SDL parser
 BEGIN :: types
-M := str
-incorrectIndices := list{int}
-startSigNum := int
-endSigNum := int
+M := Str
+incorrectIndices := list{Int}
+startSigNum := Int
+endSigNum := Int
 delta := list{ZR}
 dotALoopVal := G1
 dotBLoopVal := G1
 dotBCache := list{G1}
 dotACache := list{G1}
-Mlist := list{str}
+Mlist := list{Str}
 pk := G2
 g := G2
 siglist := list{G1}
