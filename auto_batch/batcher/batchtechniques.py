@@ -588,7 +588,7 @@ tech2 = Tech_db # Enum('NoneApplied', 'ExpIntoPairing', 'DistributeExpToPairing'
 class Technique2(AbstractTechnique):
     def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)
-        self.rule    = "Move the exponent(s) into the pairing (technique 2)"
+        self.rule    = "Move the exponent(s) inside pairing (technique 2)"
         self.applied = False 
         self.score   = tech2.NoneApplied
         self.debug   = False
@@ -779,7 +779,7 @@ tech3 = Tech_db # Enum('NoneApplied', 'ProductToSum','CombinePairing', 'SplitPai
 class Technique3(AbstractTechnique):
     def __init__(self, sdl_data, variables, metadata):
         AbstractTechnique.__init__(self, sdl_data, variables)
-        self.rule    = "Move dot products inside pairings to reduce $\\numsigs$ pairings to 1 (technique 3)"
+        self.rule    = "Move products inside pairings to reduce $\\numsigs$ pairings to 1 (technique 3)"
         self.applied = False
         self.score   = tech3.NoneApplied
         self.debug   = False
@@ -1230,7 +1230,7 @@ class Technique7(AbstractTechnique):
         AbstractTechnique.__init__(self, sdl_data, variables)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
-        self.rule    = "Reverse technique 2. Move exponents outside pairing"
+        self.rule    = "Move exponent(s) outside pairing"
         self.metadata = metadata
     
     def visit_on(self, node, data):
@@ -1276,7 +1276,7 @@ class Technique8(AbstractTechnique):
         AbstractTechnique.__init__(self, sdl_data, variables)        
         self.applied = False
         self.score   = Tech_db.NoneApplied
-        self.rule    = "Precompute pairings with constant first and second elements."
+        self.rule    = "Precompute pairings with constant first and second arguments."
         self.prefix  = "preP"
         self.ctr     = 0 # in case there are more than one. go from 0 to N intances
         self.precompute = {}

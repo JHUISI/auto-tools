@@ -115,7 +115,6 @@ constant := list{g1, g2, F2G1, F2G2, F3G1, F3G2, U1, U2}
 public := vk 
 signature := sig
 message := m
-#transform := list{2, 6, 3, 5, 3, 8, 3}
 
 BEGIN :: count
 message_count := N

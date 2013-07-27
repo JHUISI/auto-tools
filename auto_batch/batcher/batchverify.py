@@ -9,7 +9,7 @@ from batcher.batchtechniques import *
 from batcher.batchproof import *
 from batcher.batchconfig import *
 from batcher.batchorder import BatchOrder
-from batcher.batchcomboeq import TestForMultipleEq,CombineMultipleEq,CombineMultipleEqImproved,StripExp,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
+from batcher.batchcomboeq import TestForMultipleEq,CombineMultipleEq,StripExp,SmallExpTestMul,AfterTech2AddIndex,UpdateDeltaIndex
 from batcher.batchsyntax import BasicTypeExist,PairingTypeCheck
 from batcher.batchoptimizer import PairInstanceFinderImproved
 from batcher.loopunroll import *
@@ -28,7 +28,7 @@ filePrefix = None
 crypto_library = curve = param_id = None
 applied_technique_list = []
 
-def handleVerifyEq(equation, index, verbose):
+def handleVerifyEq(equation, index, settingObj, verbose):
     global singleVE, flags
     VERBOSE = verbose
     multipleEquationsHere = False
@@ -44,7 +44,7 @@ def handleVerifyEq(equation, index, verbose):
     flags['multiple' + str(index)] = False
     if tme.multiple:
         singleVE = False        
-        cme = CombineMultipleEq()
+        cme = CombineMultipleEq(settingObj)
         ASTVisitor(cme).postorder(combined_equation)
         #print("Equation: ", combined_equation)
         if len(cme.finalAND) == 1: 
@@ -72,7 +72,7 @@ def handleVerifyEq(equation, index, verbose):
                     print("equation 2: ", cme.finalAND[0])                
                 multipleEquationsHere = True
                 combined_equation2 = BinaryNode(ops.AND, cme.finalAND[1], cme.finalAND[0])
-                cme2 = CombineMultipleEq(addIndex=False)
+                cme2 = CombineMultipleEq(settingObj, addIndex=False)
                 ASTVisitor(cme2).preorder(combined_equation2)
                 combined = cme2.finalAND.pop()
                 stripExpTo1 = StripExp()
@@ -101,7 +101,7 @@ def handleVerifyEq(equation, index, verbose):
                         else: ANDs[i].right = BinaryNode.copy(cme.finalAND[i+1])
                     
                     combined_equation2 = ANDs[0]
-                    cme2 = CombineMultipleEq(addIndex=False)
+                    cme2 = CombineMultipleEq(settingObj, addIndex=False)
                     ASTVisitor(cme2).preorder(combined_equation2)                    
                     if VERBOSE: print("Combined: ", cme2.finalAND)
                     cme = cme2
@@ -311,7 +311,6 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
     preTech8 = TestforTechnique8(sdl_data, types, metadata)
     ASTVisitor(preTech8).preorder(verify2)
 #    print("Result: ", preTech7.getCount())
-    pre_search = []
     if preTech8.getCount() == 1:
         # safe to pre-compute as there's a possibility 
         # we won't need to combine it with other pairings
@@ -320,7 +319,7 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
         ASTVisitor(Tech).preorder(verify2)
         if hasattr(Tech, 'precompute'):
             batch_precompute.update(Tech.precompute)
-        pre_search += ['8']        
+        applied_technique_list += [8]
 
     if VERBOSE: print("\nStage A: Combined Equation =>", verify2)
     ASTVisitor(SmallExponent(constants, vars)).preorder(verify2)
@@ -379,6 +378,7 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
             proofGen.setNextStep(Tech10.rule, verify2)
         applied_technique_list.append(10) # add to list
     ##################################################################    
+    print("Final Technique list: ", applied_technique_list)
     
     if PRECOMP_CHECK:
         countDict = countInstances(verify2) 
@@ -464,7 +464,7 @@ def run_main(opts, start=None, stop=None):
     for k in verifyList:
 #        print("k := ", k, ", v := ", verifyEqDict[k])
         if VERIFY in k:
-            (result, singleEq) = handleVerifyEq(verifyEqDict[k].get(VERIFY), delta_count, verbose)
+            (result, singleEq) = handleVerifyEq(verifyEqDict[k].get(VERIFY), delta_count, setting, verbose)
             delta_count += 1 # where we do actual verification on # of eqs
             verifyEqUpdated[ k ] = result
             isSingleEquation[ k ] = singleEq 
