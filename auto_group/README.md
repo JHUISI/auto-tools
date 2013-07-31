@@ -54,4 +54,6 @@ AutoGroup provides several configuration parameters to tune conversion to an asy
 
 ``short`` : to find a solution that shortens the representation of the ``"ciphertext"``, ``"secret-keys"`` or ``"both"`` for encryption. For signature schemes, ``"signatures"`` or ``"public-keys"`` or ``"both"``
 
-``time`` : to find a solution that reduces the computation time for ``exponentiation`` or ``multiplication`` or ``"both"``. 
+``operation`` : to find a solution that reduces the computation time for ``exp``(exponentiation) or ``mul``(multiplication). 
+
+
