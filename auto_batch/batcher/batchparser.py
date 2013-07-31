@@ -641,7 +641,7 @@ class CVForMultiSigner:
 # prod{} on (x * y)
 class SimplifyDotProducts:
     def __init__(self):
-        self.rule = "Distribute dot products: "
+        self.rule = "Distribute products: "
 
     def getMulTokens(self, subtree, parent_type, target_type, _list):
         if subtree == None: return None

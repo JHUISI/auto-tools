@@ -60,7 +60,7 @@ class PairInstanceFinder:
         # keys must match
         self.instance = {}
         self.index = 0
-        self.rule = "Merge pairings with common first or second element (technique 6)"
+        self.rule = "Merge pairings with common first or second argument (technique 6)"
         self.applied = False
         self.side = { 'left':[] }
         self.debug = False
@@ -752,7 +752,7 @@ class SubstituteSigDotProds:
 # prod{} on (x * y)
 class DotProdInstanceFinder:
     def __init__(self, metadata):
-        self.rule = "Distribute dot products (technique 5)"
+        self.rule = "Distribute products (technique 5)"
         self.applied = False
         self.metadata = metadata
 
@@ -1113,7 +1113,7 @@ class PairInstanceFinderImproved:
         # keys must match
         self.instance = {}
         self.index = 0
-        self.rule = "Merge pairings with common first or second element (technique 6)"
+        self.rule = "Merge pairings with common first or second argument (technique 6)"
         self.applied = False
         self.side = { 'left':[] }
         self.debug = False

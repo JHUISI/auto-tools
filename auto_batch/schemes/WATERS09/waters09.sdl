@@ -75,13 +75,15 @@ input := list{pk, sk, m}
  S6 := g1b ^ r2
  S7 := g1 ^ r1
  SK := (((u ^ M) * (w ^ tagk)) * h)^ r1
-
- output := list{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+ sig := list{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+ output := sig
 END :: func:sign
 
-# pk := expand{g1, g2, g1b, g1a1, g1a2, g1ba1, g1ba2, tau1, tau2, tau1b, tau2b, uG1, u, wG1, hG1, w, h, A}
+# input := list{g1, g2, g1b, g1a1, g1a2, g1ba1, g1ba2, tau1, tau2, tau1b, tau2b, u, w, h, A, S1, S2, S3, S4, S5, S6, S7, SK, tagk, m}
 BEGIN :: func:verify
-input := list{g1, g2, g1b, g1a1, g1a2, g1ba1, g1ba2, tau1, tau2, tau1b, tau2b, u, w, h, A, S1, S2, S3, S4, S5, S6, S7, SK, tagk, m}
+input := list{pk, m, sig}
+ pk := expand{g1, g2, g1b, g1a1, g1a2, g1ba1, g1ba2, tau1, tau2, tau1b, tau2b, uG1, u, wG1, hG1, w, h, A}
+ sig := expand{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
 
  s1 := random(ZR)
  s2 := random(ZR)
@@ -110,9 +112,11 @@ BEGIN :: precompute
 END :: precompute
 
 constant := list{g1, g2}
-public := list{g1b, g1ba1, g1a1, g1a2, g1ba1, g1ba2, g1a2, tau1, tau2, tau1b, tau2b, w, u, h, A}
-signature := list{theta, S1, S2, S3, S4, S5, S6, S7, SK, s, s1, s2, t, tagc}
+public := pk
+signature := sig
 message := M
+# list{theta, S1, S2, S3, S4, S5, S6, S7, SK, s, s1, s2, t, tagc}
+# list{g1b, g1ba1, g1a1, g1a2, g1ba1, g1ba2, g1a2, tau1, tau2, tau1b, tau2b, w, u, h, A}
 
 BEGIN :: count
 message_count := N

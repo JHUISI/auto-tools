@@ -1,6 +1,7 @@
 # This class generates the latex macros for the batch verification proofs of security
 import batcher.sdlpath
 from sdlparser.SDLParser import *
+import re
 
 header = """\n
 \\catcode`\^ = 13 \def^#1{\sp{#1}{}}
@@ -13,6 +14,7 @@ header = """\n
 \\newcommand{\indivverificationeqn}{ %s }
 
 \\newcommand{\\batchverificationeqn}{ %s  }
+\\newcommand{\precomputes}{ %s }
 
 \\newcommand{\gutsoftheproof}{
 """ 
@@ -34,6 +36,8 @@ final_batch_eq  = "\label{eqn:finalequation}\n"
 footer = "\n}\n"
 
 main_proof_header_standalone = """\n"""
+hashtag = '#'
+underscore = '_'
 
 class PrintLambdaStatement:
     def __init__(self, constants):
@@ -62,7 +66,6 @@ class PrintLambdaStatement:
             if n.getAttribute() == node.getAttribute(): return True
         return False
 
-
     def args(self):
         if self.order:
             result = ""
@@ -71,7 +74,6 @@ class PrintLambdaStatement:
             result = result.rstrip(',')
             return result
         return None
-    
     # handles arguments used to instantiate the lambda
     # i, a, b, c,... where i represents the counter to N (signatures), and
     # a,b,c represents the number of arguments expected by the labmda.
@@ -143,11 +145,30 @@ class LatexCodeGenerator:
         self.consts = constants
         self.vars   = variables
         self.latex  = latex_info # used for substituting attributes
+        self.latexVars  = {'alpha':'\\alpha', 'beta':'\beta', 'gamma':'\gamma', 'delta':'\delta', 'epsilon':'\epsilon',
+             'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
+             'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
+             'tau':'\\tau', 'phi':'\phi', 'chi':'\\chi', 'psi':'\psi', 'omega':'\omega'}
     
     def getLatexVersion(self, name):
-        if self.latex != None and self.latex.get(name):
-            return self.latex[ name ]
-        return name
+        if self.latex != None and self.latex.get(name) != None:
+            return self.latex[ name ]        
+        elif name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
+            return name.replace(hashtag, underscore)
+        elif name.find("G1") != -1:
+            return "\hat{" + self.getLatexVersion( name.replace("G1", "") ) + "}"
+        elif name.find("G2") != -1:
+            return "\\bar{" + self.getLatexVersion( name.replace("G2", "") ) + "}"
+        else:
+            # matches word + numbers => 'x1' => 'x_1'
+            res = re.findall(r"[a-zA-Z]+|\d+", name)
+            if len(res) == 2:
+                return name.replace(res[0] + res[1], res[0] + "_" + res[1])
+            else:
+                for i,j in self.latexVars.items():
+                    if i in name: return name.replace(i, j)
+#            return self.latexVars.get(name)
+        return name    
     
     def print_statement(self, node, parent=None):
         if node == None:
@@ -254,6 +275,7 @@ class GenerateProof:
         self.__lcg_steps = 0
         self.lcg = None
         self.stepPrefix = ''
+        self.precompute = None
     
     def setPrefix(self, prefixStr):
         assert type(prefixStr) == str, "expecting string for the step prefix."
@@ -297,6 +319,19 @@ class GenerateProof:
 #        self.__lcg_steps += 1
 #        return
     
+    def setPrecompute(self, precomp_dict):
+        assert precomp_dict != None, "invalid input"
+        if self.precompute == None:
+            self.precompute = ""
+            for i in precomp_dict.keys():
+                if str(i) == "delta": 
+                    continue
+                (k, v) = precomp_dict[i]
+                #print("k: ", k, " = v: ", v)
+                self.precompute += self.lcg.print_statement(k) + " = " + self.lcg.print_statement(v) + ","
+            self.precompute = self.precompute[:len(self.precompute)-1]
+        return
+    
     def setNextStep(self, msg, equation):
         preq = None
         if self.single_mode:
@@ -313,7 +348,7 @@ class GenerateProof:
             if msg in ['consolidate', 'smallexponents']:
                 return
             elif msg == 'step1':
-                msg = 'Consolidate the verification equations (technique 0), merge pairings with common first or second element (technique 6), and apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$ for each equation'
+                msg = 'Consolidate the verification equations (technique 0), merge pairings with common first or second argument (technique 6), and apply the small exponents test, using exponents $\delta_1, \dots \delta_\\numsigs \in \left[1, 2^\lambda\\right]$ for each equation'
             elif msg == "Move the exponent(s) into the pairing (technique 2)" and self.__lcg_steps == 1:
                 msg = 'Combine $\\numsigs$ signatures (technique 1), move the exponent(s) in pairing (technique 2)'
             elif msg == 'finalbatcheq':                
@@ -334,7 +369,11 @@ class GenerateProof:
         for i in sigs:
             sig_str += self.lcg.getLatexVersion(i) + ","
         sig_str = sig_str[:len(sig_str)-1]
-        result = header % (title, title, const_str, sig_str, indiv_eq, batch_eq)
+        if self.precompute != None:
+            precompute = self.precompute
+        else:
+            precompute = ""
+        result = header % (title, title, const_str, sig_str, indiv_eq, batch_eq, precompute)
         #print("header =>", result)
         return result
 

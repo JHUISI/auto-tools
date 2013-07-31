@@ -124,4 +124,19 @@ END :: count
 
 verify := {{ e(S5, M0*HG2) == e(g1, S0) } and { (e(S1, g2b) * e(S2, g2ba) * e(S3, g2a)) == (e(S4, RG2) * e(S5, Rb) * e(g1rho, g2abrho))} and { e(F2G1, M0) == e(U1, M1) } and { e(F3G1, M0) == e(U1, M2) }}
 
+BEGIN :: latex
+g1b := {g_1}^b
+g2b := {g_2}^b
+g2a := {g_2}^a
+g2ba := {g_2}^{b \cdot a}
+Rb := {R}^b
+g1rho := {g_1}^{\rho}
+g2abrho := {g_2}^{(\alpha \cdot b) /\ \rho}
+S0 := \sigma_0
+S1 := \sigma_1
+S2 := \sigma_2
+S3 := \sigma_3
+S4 := \sigma_4
+S5 := \sigma_5
+END :: latex
 

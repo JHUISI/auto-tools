@@ -3,21 +3,7 @@ N := 100
 setting := asymmetric
 
 BEGIN :: types
- sig1 := G1
- sig2 := G1
  m := Str
- M := ZR
- D := GT
- V := GT
- U := GT
- w1 := G1
- w2 := G2
- z1 := G1
- z2 := G2
- h1 := G1
- h2 := G2
- A := G2
- r := ZR
  n := ZR
  i := Int
 END :: types
@@ -49,27 +35,33 @@ input := list{g1, g2}
  h1 := g1 ^ h
  h2 := g2 ^ h
  i := 0
- pk := list{U, V, D, g1, g2, w1, w2, z1, z2, h1, h2, u, v, d}
+ pk := list{U, V, D}
+ spk := list{g1, w1, z1, h1, u, v, d} 
+ vpk := list{g2, w2, z2, h2}
  sk := a
 output := list{i, pk, sk}
-END :: func:keygen 
+END :: func:keygen
 
 BEGIN :: func:sign
-input := list{pk, sk, i, m}
- pk := expand{U, V, D, g1, g2, w1, w2, z1, z2, h1, h2, u, v, d}
+input := list{spk, sk, i, m}
+ spk := expand{g1, w1, z1, h1, u, v, d}
  i := i + 1
  M := H(m, ZR)
  r := random(ZR)
  t := random(ZR)
  n := ceillog(2, i)
- sig1:= (((u^M)*(v^r)*d)^sk)*((w1^n)*(z1^i)*h1)^t 
+ sig1:= (((u^M)*(v^r)*d)^sk)*((w1^n)*(z1^i)*h1)^t
  sig2 := g1 ^ t
-output := list{sig1, sig2, r, i}
+sig := list{sig1, sig2, r, i}
+output := sig
 END :: func:sign
 
 
 BEGIN :: func:verify
-input := list{U, V, D, g2, w2, z2, h2, m, sig1, sig2, r, i}
+input := list{pk, g2, w2, z2, h2, m, sig}
+ pk := expand{U, V, D}
+ sig := expand{sig1, sig2, r, i}
+
  M := H(m, ZR)
  n := ceillog(2, i)
 
@@ -81,9 +73,9 @@ BEGIN :: if
 END :: if
 END :: func:verify
 
-constant := list{g1, g2, w2, z2, h2}
-public := list{U, V, D}
-signature := list{sig1, sig2, r, i, n}
+constant := list{g2, w2, z2, h2}
+public := pk
+signature := sig 
 message := M
 
 BEGIN :: precompute

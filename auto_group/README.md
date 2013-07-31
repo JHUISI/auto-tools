@@ -48,8 +48,10 @@ Note that AutoGroup was designed to handle both encryption and signature schemes
 Configuration
 =============
 
-AutoGroup provides several configuration parameters for tuning the translation to an asymmetric solution. The configuration is a Python file with the following variables set:
+AutoGroup provides several configuration parameters to tune conversion to an asymmetric solution. The configuration file is specified in Python with the following options:
 
-``schemeType`` : describes the type of scheme. For public-key encryption types, ``"PKENC"`` and for signature types, ``"PKSIG"``.
+``schemeType`` : for describing the type of input scheme. For public-key encryption, ``"PKENC"`` and for signature types, ``"PKSIG"``.
 
-``short`` : describes whether to shorten the representation of the ``"ciphertext"``, ``"secret-keys"`` or ``"both"`` for encryption. For signature schemes, ``"signatures"`` or ``"public-keys"`` or ``"both"``
+``short`` : to find a solution that shortens the representation of the ``"ciphertext"``, ``"secret-keys"`` or ``"both"`` for encryption. For signature schemes, ``"signatures"`` or ``"public-keys"`` or ``"both"``
+
+``time`` : to find a solution that reduces the computation time for ``exponentiation`` or ``multiplication`` or ``"both"``. 

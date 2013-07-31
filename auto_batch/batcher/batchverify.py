@@ -388,6 +388,9 @@ def runBatcher2(opts, proofGen, file, verify, settingObj, loopDetails, eq_number
         else:
             print("Final batch eq:", verify2)
 
+    if PROOFGEN_FLAG:
+        proofGen.setPrecompute(batch_precompute)
+
     # START BENCHMARK : THRESHOLD ESTIMATOR
     if THRESHOLD_FLAG:
         print("<== Running threshold estimator ==>")

@@ -1277,7 +1277,7 @@ class Technique8(AbstractTechnique):
         self.applied = False
         self.score   = Tech_db.NoneApplied
         self.rule    = "Precompute pairings with constant first and second arguments."
-        self.prefix  = "preP"
+        self.prefix  = "P" # TODO: need code to verify that symbol doesn't exist in SDL input
         self.ctr     = 0 # in case there are more than one. go from 0 to N intances
         self.precompute = {}
         self.metadata  = metadata
