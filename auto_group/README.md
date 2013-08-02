@@ -54,8 +54,41 @@ AutoGroup provides several configuration parameters to tune conversion to an asy
 
 ``short`` : to find a solution that shortens the representation of the ``"ciphertext"``, ``"secret-keys"`` or ``"both"`` for encryption. For signature schemes, ``"signatures"`` or ``"public-keys"`` or ``"both"``
 
-``operation`` : to find a solution that reduces the computation time based on ``exp``(exponentiation) or ``mul``(multiplication). 
+``operation`` : to find a solution that reduces the computation time based on cost of ``"exp"``(exponentiation) or ``"mul"``(multiplication). 
 
+The next set of variables describe basic aspects of the signature or encryption scheme:
 
+``keygenPubVar``: denotes the user's public-key
 
+``keygenSecVar``: denotes the user's secret-key 
 
+``signatureVar``: denotes the signature if scheme type is ``PKSIG``
+
+``ciphertextVar``: denotes the ciphertext if scheme type is ``PKENC``
+
+``masterPubVars``: denotes the public parameters available to all users of the system
+
+``masterSecVars``: denotes the master secret-key
+
+Finally, AutoGroup requires algorithm names specified in the SDL that it should analyze such as ``setupFuncName`` and ``keygenFuncName``. Also, for signature schemes, must specify the ``signFuncName`` and ``verifyFuncName``. For encryption, must specify the ``encryptFuncName`` and ``decryptFuncName``. 
+
+We provide a complete configuration file example for the CL signature:
+
+	schemeType = "PKSIG"
+	short = "signature"
+	operation = "exp"
+	
+	setupFuncName 	= "setup"
+	keygenFuncName 	= "keygen"
+	signFuncName 	= "sign"
+	verifyFuncName 	= "verify"
+	
+	masterPubVars = ["pk"]
+	masterSecVars = ["sk"]
+	
+	keygenPubVar = "pk"
+	keygenSecVar = "sk" 
+	signatureVar = "sig" 
+
+See more examples in the ``schemes`` directory.
+ 
