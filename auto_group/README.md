@@ -66,9 +66,9 @@ The next set of variables describe basic aspects of the signature or encryption 
 
 ``ciphertextVar``: denotes the ciphertext if scheme type is ``PKENC``
 
-``masterPubVars``: denotes the public parameters available to all users of the system
+``masterPubVars``: denotes the public parameters available to all users of the system (if applicable)
 
-``masterSecVars``: denotes the master secret-key
+``masterSecVars``: denotes the master secret-key (if applicable)
 
 Finally, AutoGroup requires algorithm names specified in the SDL that it should analyze such as ``setupFuncName`` and ``keygenFuncName``. Also, for signature schemes, must specify the ``signFuncName`` and ``verifyFuncName``. For encryption, must specify the ``encryptFuncName`` and ``decryptFuncName``. 
 
@@ -83,8 +83,8 @@ We provide a complete configuration file example for the CL signature:
 	signFuncName 	= "sign"
 	verifyFuncName 	= "verify"
 	
-	masterPubVars = ["pk"]
-	masterSecVars = ["sk"]
+	masterPubVars = None
+	masterSecVars = None
 	
 	keygenPubVar = "pk"
 	keygenSecVar = "sk" 

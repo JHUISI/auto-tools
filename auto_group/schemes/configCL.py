@@ -9,8 +9,8 @@ keygenFuncName 	= "keygen"
 signFuncName 	= "sign"
 verifyFuncName 	= "verify"
 
-masterPubVars = ["pk"]
-masterSecVars = ["sk"]
+masterPubVars = None
+masterSecVars = None
 
 keygenPubVar = "pk"
 keygenSecVar = "sk" 
