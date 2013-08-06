@@ -25,8 +25,8 @@ searchBoth = True # mode that forces the solver to come up w/ a bunch of solutio
 satisfiable = True or False
 resultDictionary = [('x', True), ('y', False), ... ]
 """
-SHORT_SECKEYS = "secret_keys" # for
-SHORT_PUBKEYS = "public_keys"
+SHORT_SECKEYS = "secret-keys" # for minimizing secret-key representation
+SHORT_PUBKEYS = "public-keys" # for minimizing public-key representation
 SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
 SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
