@@ -2,7 +2,7 @@ name := bbs
 setting := symmetric
 
 BEGIN :: types
- n := int
+ n := Int
  x := list{ZR}
  A := list{G1}
  Aind := G1

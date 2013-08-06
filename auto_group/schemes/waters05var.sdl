@@ -17,7 +17,7 @@ ub := list{G1}
 u1b := list{G1}
 u2b := list{G1}
 A := GT
-zz := int
+zz := Int
 END :: types
 
 BEGIN :: func:setup
