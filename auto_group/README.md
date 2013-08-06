@@ -56,6 +56,8 @@ AutoGroup provides several configuration parameters to tune conversion to an asy
 
 ``operation`` : to find a solution that reduces the computation time based on cost of ``"exp"``(exponentiation) or ``"mul"``(multiplication). 
 
+``dropFirst`` : in the event that there are multiple solutions that satisfy the ``"both"`` option of the ``short`` representation requirement, users must specify what option to relax to constrain the options further. The options are ``"public-key"`` or ``"signatures"`` for signatures and ``"secret-keys"`` or ``"ciphertext"`` for encryption.
+
 The next set of variables describe basic aspects of the signature or encryption scheme:
 
 ``keygenPubVar``: denotes the user's public-key
