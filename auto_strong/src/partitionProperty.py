@@ -80,7 +80,7 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     noSigma2Result = noSigma2Check(sigma)
 
-    if options.get(skipTransform): sys.exit(0)            
+    if options.get(skipTransform): return "skip_transform"
     
     if prop2Result and not noSigma2Result:
         print("Applying BSW transformation...")
