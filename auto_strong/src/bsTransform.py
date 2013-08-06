@@ -218,7 +218,7 @@ class BSTransform:
         signLines.append( varM + " := concat{" + getArgString([self.spk, config.messageVar]) + "}" ) 
         MsgType = self.varTypes.get(config.messageVar).getType()
 #        print("type: ", self.varTypes, config.messageVar)
-        if MsgType == types.str:
+        if MsgType == types.Str:
             signLines.append( varM1 + " := DeriveKey(" + varM + ")" )
         elif MsgType in [types.ZR, types.G1]:
             signLines.append( varM1 + " := H(" + varM1 + ", " + str(MsgType) + ")" )
