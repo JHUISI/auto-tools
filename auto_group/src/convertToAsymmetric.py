@@ -1144,6 +1144,7 @@ class AsymSDL:
                 if newSignPK != None:
                     newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
                 if newVerifyPK != None:
+#                    print("Actual Verify PK: ", newVerifyPKexp.getRight().listNodes)
                     newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
             
         return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines

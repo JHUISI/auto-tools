@@ -64,6 +64,7 @@ def estimateSize(theVarTypes, curveDict):
     for i in theVarTypes.keys():
         _type = str(theVarTypes[i])
         if _type in ['ZR', 'G1', 'G2', 'GT']:
+            #print("Adding ", _type, " = ", curveDict[_type])
             sum += curveDict[_type]
     return sum
     

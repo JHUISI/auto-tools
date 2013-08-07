@@ -73,9 +73,9 @@ def runAutoStrong(sdlFile, config, options, sdlVerbose=False):
         # quick test for whether scheme is SU-CMA secure already
     #    sigma['sigma1'] += sigma['sigma2']
     #    sigma['sigma2'] = []
-    
-    ##print("sigma1 => ", sigma['sigma1'])
-    ##print("sigma2 => ", sigma['sigma2'])
+    if sdlVerbose:
+        print("sigma1 => ", sigma['sigma1'])
+        print("sigma2 => ", sigma['sigma2'])
         
     prop2Result = property2Extract(config.verifyFuncName, assignInfo, baseGen, generators, sigma)
     noSigma2Result = noSigma2Check(sigma)
