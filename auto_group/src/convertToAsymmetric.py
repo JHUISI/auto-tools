@@ -240,6 +240,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
                 newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
                 if info['verbose']: print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
         else:
+            info['myAsymSDL'].recordUsedVar(blockStmt.getVarDepsNoExponents())                
             newLine = assign
         # add to newLines
         if type(newLine) == list:
@@ -1792,7 +1793,6 @@ def updateForPairing(varInfo, info, noChangeList):
             tmp = applyPairingUpdate(info, i, noChangeList) # pass reference to eq_tst nodes
         #print("\n\t Final: ", node)
         return node
-    
     return applyPairingUpdate(info, node, noChangeList)
 
 def applyPairingUpdate(info, node, noChangeList):
@@ -1800,7 +1800,7 @@ def applyPairingUpdate(info, node, noChangeList):
     sdl.ASTVisitor( sp ).preorder( node )
     info['usedVars'] = info['usedVars'].union(sp.getUsedGens())
     info['myAsymSDL'].recordUsedVar(GetAttributeVars(node)) # sp.getUsedVars())    
-    #print("\n\t Pre techs: ", node, end="")
+    if info['verbose']: print("\n\t Pre techs: ", node, end="")
     sdl.ASTVisitor( MaintainOrder(info) ).preorder( node )    
     # combining pairing logic a bit.
     while True:
@@ -1811,7 +1811,7 @@ def applyPairingUpdate(info, node, noChangeList):
         else:
             break
 
-    #print("\n\t Changed: ", node)
+    if info['verbose']: print("\n\t Changed: ", node)
     return node
 
 def print_sdl(verbose, *args):

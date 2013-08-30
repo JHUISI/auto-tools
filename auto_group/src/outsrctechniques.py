@@ -1460,9 +1460,9 @@ class SubstitutePairs2:
         
     def visit(self, node, data):
         if self.deleteOtherPair:
-#            print("Type(node) :=", Type(node), node)
-#            print("visit: node.right: ", node.right)        
-#            print("visit: node.left: ", node.left)    
+            #print("Type(node) :=", Type(node), node)
+            #print("visit: node.right: ", node.right)        
+            #print("visit: node.left: ", node.left)    
             if node.left in self.extra_parent:
                 if Type(node) != ops.EXP:
                     addAsChildNodeToParent(data, node.right)
@@ -1482,6 +1482,12 @@ class SubstitutePairs2:
                 pass
         
     def visit_pair(self, node, data):
+        # in case we don't hit the parent of the other PAIR node
+        if self.deleteOtherPair:
+            if node in self.extra_parent:
+                BinaryNode.clearNode(node)
+                self.pruneCheck = True
+                return
 #        print("complete list: ", self.extra_side)
         if self.key == 'rnode': # means the right side of the pairing is fixed and thus, must combining lhs variables
             # find the attribute node on the right
