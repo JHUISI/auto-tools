@@ -37,6 +37,7 @@ clauseKeyword = "clauses"
 constraintKeyword = "constraints"
 hardConstKeyword = "hard_constraints"
 bothKeyword = "both"
+dropFirstKeyword = "dropFirst"
 mofnKeyword = "mofn"
 searchKeyword = "searchBoth"
 weightKeyword = "weight"
@@ -424,7 +425,7 @@ def findMinimalRef(M, data1, data2, skipList=[]):
             diff = abs(data1[j] - data2[j])
             data3[j] = diff
             # count up solutions
-            if data3Count.get(diff) == None: data3Count[diff] = 1; data3Index[diff] = []
+            if data3Count.get(diff) == None: data3Count[diff] = 1; data3Index[diff] = [j]
             else: data3Count[diff] += 1; data3Index[diff].append(j)
             if first == None: first = j
 
@@ -476,16 +477,6 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
                 Values.append( Y == 0 )
             else:
                 Values.extend( [Or(Y == 0, Y == 1)] )
-#            if not searchAll:
-#                if x in constraints:
-#                    Values.append( X == 0 )
-#                else:
-#                    Values.extend( [Or(X == 0, X == 1)] )
-#                if y in constraints:
-#                    Values.append( Y == 0 )
-#                else:
-#                    Values.extend( [Or(Y == 0, Y == 1)] )
-#            else:
             
     M = get_models([And(Conditions), And(Values)])
     print("Unique solutions: ", len(M))
@@ -509,18 +500,20 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
         minKeys = list(set(list(bothConst.keys())).difference([isSet]))
         data = {}
         for i in minKeys: 
-            #print("Compute min value for: ", i)
-            #print("<================================================>")
+            if verbose: 
+                print("Compute min value for: ", i)
+                print("<================================================>")
             weights, countValue = convertQuery(shortOpt, optionDict, variables, bothConst[i])
         
             modEval             = ModelEval(range(len(M)), variables, Z3vars, countValue)
             cacheOpts = {}
             (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
-            #print("Cached: ", cacheOpts)
             data[i] = cacheOpts
-            #print("minimal Value: ", modVal) 
-            ##print("minimal Model: ", modRef)
-            #print("<================================================>")
+            if verbose:
+                print("Cached: ", cacheOpts)
+                print("minimal Value: ", modVal) 
+                print("minimal Model: ", modRef)
+                print("<================================================>")
         
         # operate on the solution
         i = minKeys[0]
@@ -535,7 +528,7 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
         #print("Index List: ", minIndexList)
         modRef = M[minIndex]
         
-        if minCount > 1 and timeOpt != "":
+        if minCount > 1 and timeOpt != "": # short => both & time option = mul or exp
             #print("<================================================>")
             weights, countValue = convertQuery(timeOpt, optionDict, variables, hard_constraints)
             #print("Time option: ", weights)
@@ -547,6 +540,20 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
             data[i] = cacheOpts
             #print("minimal Value: ", modVal)
             #print("minimal model: ", modRef)
+        elif minCount > 1:
+            dropFirst = optionDict['dropFirst']
+            assert dropFirst != None, "More than one solution left, but you need to set 'dropFirst' option to know which option is more important."
+            if verbose:
+                print("More than 1 solution && short = both && time = None. dropFirst = ", dropFirst)
+                print("minIndex: ", minIndex)
+                print("minCount: ", minCount, minIndexList)
+            weights, countValue = convertQuery(shortOpt, optionDict, variables, bothConst[dropFirst])
+            modEval             = ModelEval(minIndexList, variables, Z3vars, countValue)
+            cacheOpts = {}
+            (modRef, modVal)    = modEval.minimizeWeightFunc(M, weights, counts, cacheOpts)
+            if verbose:
+                print("minimal Value: ", modVal)
+                print("minimal model: ", modRef)
     else:
         pass
     

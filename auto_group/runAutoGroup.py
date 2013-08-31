@@ -126,8 +126,12 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
         secparam = "BN256" # default pairing curve for now
     else:
         secparam = cm.secparam
-        
-    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt}
+    
+    dropFirst = None
+    if hasattr(cm, "dropFirst"):
+        dropFirst = cm.dropFirst
+    
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst}
     startTime = time.clock()
     outfile = runAutoGroup(sdl_file, cm, options, verbose)
     endTime = time.clock()

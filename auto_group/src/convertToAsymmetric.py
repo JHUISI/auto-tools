@@ -274,7 +274,7 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         print("Unrecognized type: ", Type(assign))
     return False
 
-def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, constraints, bothConstraints, countOpt, minOptions):
+def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst):
     
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
     options[verboseKeyword] = True
@@ -290,56 +290,10 @@ def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, 
     options[minKeyword] = minOptions # (minOps, specificOp)
     options[hardConstKeyword] = hardConstraints
     options[bothKeyword] = bothConstraints
+    options[dropFirstKeyword] = dropFirst
     
     (result, satisfiable) = solveUsingSMT(options, shortOpt, timeOpt)
     return (satisfiable, result)
-
-
-#def instantiateSolver(variables, clauses, constraints, mofnConstraints, bothConstraints):
-#    print("variables = ", variables) # txor.getVariables())
-#    outputVariables = variableKeyword + " = " + str(variables) + "\n"
-#    print("clauses = ", clauses)
-#    outputClauses   = clauseKeyword + " = " + str(clauses) + "\n"
-#    print("constraints = ", constraints)
-#    outputConstraints = constraintKeyword + " = " + str(constraints) + "\n"
-#    outputMofN = ""
-#    if mofnConstraints != None:
-#        print("mofn = ", mofnConstraints)
-#        outputMofN += mofnKeyword + " = " + str(mofnConstraints) + "\n"
-#    
-#    # options of the user wants to minimize both
-#    keys = list(bothConstraints.keys())
-#    outputForBoth = ""
-#    if len(keys) > 0:
-#        outputForBoth = "searchBoth = True\n"
-#        for k in keys:
-#            outputForBoth += str(k) + " = " + str(bothConstraints[k]) + "\n"
-#        print(outputForBoth)
-#    # get random file
-#    name = ""
-#    for i in range(length):
-#        name += random.choice(string.ascii_lowercase + string.digits)
-#    newName = loc + "." + name
-#    name += ".py"
-#    fileTarget = loc + "/" + name
-#    f = open(fileTarget, 'w')
-#    f.write(outputVariables)
-#    f.write(outputClauses)
-#    if outputForBoth != "": f.write(outputForBoth)
-#    if outputMofN != "":    f.write(outputMofN)
-#    f.write(outputConstraints)
-#    f.close()
-#    
-#    os.system("/opt/local/bin/python2.7 %s/z3solver.py %s/%s" % (loc, loc, name))
-#    results = importlib.import_module(newName) #__import__(newName)
-#    if(not results.satisfiable):
-#        os.system("rm -f " + fileTarget + "*")
-#        print("SAT solver could not find a suitable solution. Change configuration and try again!")
-#        return results.satisfiable, None
-#    
-#    print(results.resultDictionary)
-#    os.system("rm -f " + fileTarget + "*")
-#    return results.satisfiable, results.resultDictionary
 
 def getAssignmentForName(var, varTypes, estimate=False):
     global assignInfo
@@ -432,6 +386,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
     info[minOp] = None
     minOps = sizeOp # default operation
     info[minKeyword] = {}
+    dropFirst = info['dropFirst']    
     # check if user set the min operation field in config file?
     # this indicates interest in measuring 
     if hasattr(conf, minOp):
@@ -513,6 +468,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             bothConstraints[ isSet ] = True
             bothConstraints[ conf.keygenSecVar ] = constraints_ky
             bothConstraints[ conf.ciphertextVar ] = constraints_ct
+            if dropFirst != None:
+                if dropFirst == SHORT_SECKEYS:      dropFirst = conf.ciphertextVar 
+                elif dropFirst == SHORT_CIPHERTEXT: dropFirst = conf.keygenSecVar
         elif shortOpt == SHORT_FORALL and conf.schemeType == PKSIG:
             fileSuffix = 'both' #default
             _hardConstraintList = [xorVarMap.get(i) for i in hardConstraintList]
@@ -527,6 +485,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             bothConstraints[ isSet ] = True            
             bothConstraints[ conf.keygenPubVar ] = constraints_ky
             bothConstraints[ conf.signatureVar ] = constraints_sig
+            if dropFirst != None:
+                if dropFirst == SHORT_PUBKEYS:      dropFirst = conf.signatureVar # dropping the other 
+                elif dropFirst == SHORT_SIGNATURE:  dropFirst = conf.keygenPubVar
         else:
             # JAA: commented out for benchmarking
             #print("'short' option not specified.\n")
@@ -578,7 +539,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
         minOptions = info[curveID] # user should provide this information
         countOpt = info[minKeyword] # the cost of group operations
-        (satisfiable, resultDict) = instantiateZ3Solver(shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions)
+        (satisfiable, resultDict) = instantiateZ3Solver(shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst)
         if satisfiable == False:
             #print("Adjusing constraints...")
             adjustConstraints = True
@@ -731,6 +692,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
     info[curveID] = options['secparam']
+    info[dropFirstKeyword] = options[dropFirstKeyword]
     gen = Generators(info)
     # JAA: commented out for benchmarking    
     #print("List of generators for scheme")
