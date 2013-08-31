@@ -81,7 +81,8 @@ newBuiltInTypes["getString"] = types.Str
 newBuiltInTypes["getTransitions"] = types.metalistInt
 newBuiltInTypes["strkeys"] = types.listStr
 newBuiltInTypes["chamH"] = types.ZR
-newBuiltInTypes["concat"] = types.list
+newBuiltInTypes["concat"] = types.listStr
+newBuiltInTypes["accept"] = types.Int
 
 # Note: when updating the grammar, there are four places that you have to update:
 # - getBNF: symbol must be represented in the grammar (w/o) breaking the other rules.

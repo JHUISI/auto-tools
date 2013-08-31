@@ -9,6 +9,9 @@ ID_list := list{Str}
 Lt := Str
 h := list{ZR}
 s := Int
+u := list{G1}
+pklist := list{G1}
+i := Int
 END :: types
 
 BEGIN :: func:setup

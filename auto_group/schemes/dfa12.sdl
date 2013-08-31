@@ -1,13 +1,13 @@
 name := dfa12
 setting := symmetric
+#mpk := list
+#msk := list
+#sk := list
+#ct := list
 
 BEGIN :: types
 M := GT
 alphabet := list{Str}
-mpk := list
-msk := list
-sk := list
-ct := list
 Q := list{Int}
 Tlink := list{Int}
 T := list{Tlink}
@@ -30,6 +30,8 @@ t0 := Int
 t1 := Int
 st := Int
 j := Int
+s := list{ZR}
+i := Int
 END :: types
 
 

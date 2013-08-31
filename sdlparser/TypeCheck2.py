@@ -13,7 +13,8 @@ asym_pair = Function('asympair', Group, Group, Group)
 
 # define basic data structure for SDL
 listPrefix = "list"
-metalistPrefix = "metalist"
+metaPrefix = "meta"
+metalistPrefix = metaPrefix + listPrefix #"metalist"
 listType = Array('list', IntSort(), Group)
 
 listStr = K(IntSort(), Str)
@@ -37,9 +38,11 @@ stdTypes = {'sInt':'Int', 'Str':'Str'}
 mapGroup = {'Str':Str, 'sInt':sInt, 'ZR':ZR, 'G1':G1, 'G2':G2, 'GT':GT,'Nil':Nil,\
             'listStr':listStr, 'listInt':listInt, 'listZR':listZR, 'listG1':listG1, 'listG2':listG2, 'listGT':listGT,\
             'metalistStr':metalistStr, 'metalistInt':metalistInt, 'metalistZR':metalistZR, 'metalistG1':metalistG1, 'metalistG2':metalistG2, 'metalistGT':metalistGT, \
-            'symmapZR':symmapZR, 'pol':pol, 'Int':sInt, 'listsInt':listInt } # last two are for consistency with SDL types (should make them match though)
+            'symmapZR':symmapZR, 'pol':pol, 'Int':sInt, 'listsInt':listInt, 'metalistsInt':metalistInt } # last two are for consistency with SDL types (should make them match though)
 
 groupToInt = ['Str', 'sInt', 'ZR', 'G1', 'G2', 'GT', 'listStr', 'listInt', 'listZR', 'listG1', 'listG2', 'listGT', 'Nil']
+
+builtinTypes = {'True': sInt, 'False': sInt}
 
 # will be created uniquely for each list type variable
 # listArray = Array("varName", IntSort(), Group)
@@ -61,6 +64,7 @@ class TypeCheck:
         self.listModel   = {}
         self.listVarType = {}
         self.runSanityTest = False
+        self.__retryTypeCheck = False
     
     def setSetting(self, setting):
         if setting == sdl.SYMMETRIC_SETTING:
@@ -74,6 +78,11 @@ class TypeCheck:
     
     def getVarType(self):
         return self.varType
+    
+    def retry(self, orig_type):
+        if self.__retryTypeCheck:
+            return sInt # instead of ZR
+        return orig_type
         
     def __getTypeModel(self):        
         x, y = Consts('x y', Group)
@@ -164,6 +173,12 @@ class TypeCheck:
                 print("Return: ", k)
                 return k
         return sdlType
+    
+    def __getMapName(self, z3Type):
+        for k,v in mapGroup.items():
+            if str(z3Type) == str(v):
+                return k
+        return None
     
     def __getUniqueRef(self):
         self.__varCount += 1
@@ -288,7 +303,7 @@ class TypeCheck:
                 initType = str(node.listNodes[0])
                 print("initType : ", initType)
                 if (initType.isdigit() == True):
-                    return ZR # by default, must cast down for Int operations
+                    return self.retry(ZR) # by default, must cast down for Int operations
                 elif initType in mapGroup.keys():
                     return mapGroup.get(initType)
                 else:
@@ -321,6 +336,9 @@ class TypeCheck:
             # retrieve type handle and use the default model to evaluate it
             refName = varType[ name ]
             Model = self.TypeModel
+        elif name in builtinTypes.keys():
+            refName = builtinTypes[name]
+            Model = self.TypeModel
         else:
             # otherwise, this is an error!
             print("Could not find ref for: ", name); sys.exit(-1)
@@ -352,17 +370,19 @@ class TypeCheck:
         return None
         
     def computeAttrType(self, varName, varType):
-        if varName == "-1": return ZR
+        if varName == "-1": return self.retry(ZR)
         if "-" in varName: varName = varName.replace("-", "")
         
         if not varName.isdigit():
             if varName in varType.keys():
                 return varType.get(varName)
+            elif varName in builtinTypes.keys():
+                return builtinTypes.get(varName)
             else:
                  print("Need type annotation: ", varName, " := NO_TYPE")
                  sys.exit(-1)
         else:
-            return ZR # by default, must specifically add Int() call to convert type
+            return self.retry(ZR) # by default, must specifically add Int() call to convert type
     
     def convertType(self, evalType):
         evalTypeStr = str(evalType)
@@ -418,19 +438,26 @@ class TypeCheck:
             print("LIST TYPE: ", node, ) # TODO: handle metalists
             the_type = self.__convertTypeToZ3(node.listNodes[0])
             print("the_type : ", the_type)
+            if the_type in self.varType.keys():
+                print("Found reference: ", list(self.varType.keys()), self.__getMapName(self.varType[the_type]))  
+                metaType = self.__getMapName(self.varType[the_type])
+                if metaType != None:
+                    return mapGroup.get(metaPrefix + str(metaType))
             return mapGroup.get( listPrefix + str(the_type) )
         elif sdl.Type(node) == sdl.ops.ATTR: 
             print("Undefined type: ", node)
         return
     
     def processTypeAnnotations(self, binNode):
+        print("<=============================>")
         if sdl.Type(binNode) == sdl.ops.EQ:
             lhsStr = str(binNode.getLeft())
             the_type = self.__buildSDLType(binNode.getRight())
             print("processTypeAnnotations: ", the_type)
-            if the_type != None:                
+            if the_type != None:
                 print("ANNOTATED TYPE: ", lhsStr, " => ", the_type)
                 self.varType[ lhsStr ] = the_type
+        print("<=============================>")
         return
     
     def evaluateType(self, binNode):
@@ -463,6 +490,21 @@ class TypeCheck:
                 new_type = self.TypeModel.evaluate(z3Nodes)
 
             print("DEBUG: Inferred Type = ", new_type)
+            if str(new_type) == str(Nil):
+                # Retry the check with the ZR to sInt adjustment
+                self.__retryTypeCheck = True
+                z3Nodes = self.__buildZ3Expression(binNode.getRight(), binNode.getLeft(), self.varType)
+                print("DEBUG2: Z3 expression = ", z3Nodes)
+                if lhsStr in self.listModel.keys():
+                    if sdl.LIST_INDEX_SYMBOL in lhsStr: lhsStr = lhsStr.split(sdl.LIST_INDEX_SYMBOL)[0] # JAA: may need to do other things here
+                    new_type = self.listVarType[ lhsStr ]
+                else:
+                    new_type = self.TypeModel.evaluate(z3Nodes)
+                self.__retryTypeCheck = False
+                if str(new_type) == str(Nil):
+                    print("ERROR: Type violation: ", new_type); sys.exit(-1)
+            print("DEBUG2: Inferred Type = ", new_type)
+        
             varName = str(binNode.left)
             sortString = str(new_type.sort())
             listLevel = sortString.count('Array')
