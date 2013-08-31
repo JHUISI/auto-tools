@@ -1,0 +1,110 @@
+name := acdk12
+setting := asymmetric
+
+BEGIN :: types
+m1 := ZR
+m2 := ZR
+END :: types
+
+BEGIN :: func:setup
+input := list{None}
+GG1 := random(G1)
+GG2 := random(G2)
+C := random(ZR)
+CG2 := (GG2^C)
+F := random(ZR)
+FG1 := (GG1^F)
+U1 := random(ZR)
+U1G1 := (GG1^U1)
+U1G2 := (GG2^U1)
+U2 := random(ZR)
+U2G1 := (GG1^U2)
+U2G2 := (GG2^U2)
+gk := list{GG1, GG2, CG2, FG1, U1G1, U1G2, U2G1, U2G2}
+output := gk
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{gk}
+gk := expand{GG1, GG2, CG2, FG1, U1G1, U1G2, U2G1, U2G2}
+V := random(ZR)
+VG1 := (GG1^V)
+VG2 := (GG2^V)
+V1 := random(ZR)
+V1G1 := (GG1^V1)
+V1G2 := (GG2^V1)
+V2 := random(ZR)
+V2G1 := (GG1^V2)
+V2G2 := (GG2^V2)
+H := random(ZR)
+HG1 := (GG1^H)
+HG2 := (GG2^H)
+a1 := random(ZR)
+a2 := random(ZR)
+b := random(ZR)
+alpha := random(ZR)
+rho := random(ZR)
+BG1 := (GG1^b)
+BG2 := (GG2^b)
+A1 := (GG1^a1)
+A2 := (GG1^a2)
+B1 := (BG1^a1)
+B2 := (BG1^a2)
+R1 := (VG1 * (V1G1^a1))
+R2 := (VG1 * (V2G1^a2))
+W1 := (R1^b)
+W2 := (R2^b)
+X1 := (GG1^rho)
+X2 := (GG2^(((alpha * a1) * b) / rho))
+K1 := (GG2^alpha)
+K2 := (K1^a1)
+svk := list{BG1, BG2, HG2, R1, R2, V1G1, V1G2, V2G1, V2G2, VG1, VG2}
+vvk := list{A1, A2, B1, B2, BG1, HG1, R1, R2, W1, W2, X1, X2}
+sk := list{K1, K2}
+output := list{sk, svk, vvk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{gk, svk, sk, m1, m2}
+gk := expand{GG1, GG2, CG2, FG1, U1G1, U1G2, U2G1, U2G2}
+svk := expand{BG1, BG2, HG2, R1, R2, V1G1, V1G2, V2G1, V2G2, VG1, VG2}
+sk := expand{K1, K2}
+Ms1 := (CG2^m1)
+Ms2 := (CG2^m2)
+Ms3 := (FG1^m1)
+Ms4 := (FG1^m2)
+Ms5G1 := (U1G1^m1)
+Ms5G2 := (U1G2^m1)
+Ms6G1 := (U2G1^m2)
+Ms6G2 := (U2G2^m2)
+r1 := random(ZR)
+r2 := random(ZR)
+z1 := random(ZR)
+z2 := random(ZR)
+r := (r1 + r2)
+S0 := (((Ms5G2 * Ms6G2) * HG2)^r1)
+S1 := (K2 * (VG2^r))
+S2 := (((K1^-1) * (V1G2^r)) * (GG2^z1))
+S3 := (BG2^-z1)
+S4 := ((V2G2^r) * (GG2^z2))
+S5 := (BG2^-z2)
+S6 := (BG2^r2)
+S7 := (GG2^r1)
+M := list{Ms1, Ms2, Ms3, Ms4, Ms5G1, Ms5G2, Ms6G1, Ms6G2}
+sig := list{S0, S1, S2, S3, S4, S5, S6, S7}
+output := list{M, sig}
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{vvk, M, sig}
+vvk := expand{A1, A2, B1, B2, BG1, HG1, R1, R2, W1, W2, X1, X2}
+M := expand{Ms1, Ms2, Ms3, Ms4, Ms5G1, Ms5G2, Ms6G1, Ms6G2}
+sig := expand{S0, S1, S2, S3, S4, S5, S6, S7}
+BEGIN :: if
+if {{{{{{{e((Ms5G1 * (Ms6G1 * HG1)),S7) == e(GG1,S0)} and {(e(BG1,S1) * (e(B1,S2) * e(A1,S3))) == (e(R1,S6) * e(W1,S7))}} and {((e(BG1,S1) * e(B2,S4)) * e(A2,S5)) == ((e(R2,S6) * e(W2,S7)) * e(X1,X2))}} and {e(FG1,Ms1) == e(Ms3,CG2)}} and {e(FG1,Ms2) == e(Ms4,CG2)}} and {e(U1G1,Ms1) == e(Ms5G1,CG2)}} and {e(U2G1,Ms2) == e(Ms6G1,CG2)}}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+

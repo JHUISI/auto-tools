@@ -1,0 +1,96 @@
+name := dse09sig
+setting := asymmetric
+
+BEGIN :: types
+m := Str
+END :: types
+
+BEGIN :: func:keygen
+input := None
+gG1 := random(G1)
+gG2 := random(G2)
+w := random(ZR)
+wG1 := (gG1^w)
+wG2 := (gG2^w)
+u := random(ZR)
+uG1 := (gG1^u)
+uG2 := (gG2^u)
+h := random(ZR)
+hG1 := (gG1^h)
+hG2 := (gG2^h)
+v := random(ZR)
+vG1 := (gG1^v)
+vG2 := (gG2^v)
+v1 := random(ZR)
+v1G1 := (gG1^v1)
+v1G2 := (gG2^v1)
+v2 := random(ZR)
+v2G1 := (gG1^v2)
+v2G2 := (gG2^v2)
+a1 := random(ZR)
+a2 := random(ZR)
+b := random(ZR)
+alpha := random(ZR)
+gbG1 := (gG1^b)
+gbG2 := (gG2^b)
+ga1 := (gG1^a1)
+ga2 := (gG2^a2)
+gba1 := (gbG2^a1)
+gba2 := (gbG1^a2)
+tau1G1 := (vG1 * (v1G1^a1))
+tau1G2 := (vG2 * (v1G2^a1))
+tau2G1 := (vG1 * (v2G1^a2))
+tau2G2 := (vG2 * (v2G2^a2))
+tau1b := (tau1G2^b)
+tau2b := (tau2G2^b)
+A := (e(gG1,gG2)^(alpha * (a1 * b)))
+galpha := (gG2^alpha)
+galphaa1 := (galpha^a1)
+spk := list{A, gG1, gG2, gbG1, gbG2, hG1, tau1G2, tau2G2, uG1, wG1}
+vpk := list{A, gG2, ga1, ga2, gbG1, gba1, gba2, hG2, tau1G1, tau1b, tau2G1, tau2b, uG2, wG2}
+sk := list{galpha, galphaa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha}
+output := list{sk, spk, vpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{spk, sk, m}
+spk := expand{A, gG1, gG2, gbG1, gbG2, hG1, tau1G2, tau2G2, uG1, wG1}
+sk := expand{galpha, galphaa1, vG1, vG2, v1G1, v1G2, v2G1, v2G2, alpha}
+r1 := random(ZR)
+r2 := random(ZR)
+z1 := random(ZR)
+z2 := random(ZR)
+tagk := random(ZR)
+r := (r1 + r2)
+M := H(m,ZR)
+S1 := (galphaa1 * (vG2^r))
+S2 := (((gG1^-alpha) * (v1G1^r)) * (gG1^z1))
+S3 := (gbG2^-z1)
+S4 := ((v2G2^r) * (gG2^z2))
+S5 := (gbG1^-z2)
+S6 := (gbG2^r2)
+S7 := (gG1^r1)
+SK := ((((uG1^M) * (wG1^tagk)) * hG1)^r1)
+sig := list{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{vpk, m, sig}
+vpk := expand{A, gG2, ga1, ga2, gbG1, gba1, gba2, hG2, tau1G1, tau1b, tau2G1, tau2b, uG2, wG2}
+sig := expand{S1, S2, S3, S4, S5, S6, S7, SK, tagk}
+s1 := random(ZR)
+s2 := random(ZR)
+t := random(ZR)
+tagc := random(ZR)
+s := (s1 + s2)
+M := H(m,ZR)
+theta := ((tagc - tagk)^-1)
+BEGIN :: if
+if {(e((gbG1^s),S1) * (e(S2,(gba1^s1)) * (e((ga1^s1),S3) * (e((gba2^s2),S4) * e(S5,(ga2^s2)))))) == (e(((tau1G1^s1) * (tau2G1^s2)),S6) * (e(S7,((tau1b^s1) * ((tau2b^s2) * ((wG2^-t) * ((uG2^((M * t) * theta)) * ((wG2^((tagc * t) * theta)) * (hG2^(t * theta)))))))) * (e(SK,(gG2^(-t * theta))) * (A^s2))))}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+

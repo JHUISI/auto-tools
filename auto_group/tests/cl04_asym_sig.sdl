@@ -1,0 +1,48 @@
+name := cl04
+setting := asymmetric
+
+BEGIN :: types
+M := Str
+END :: types
+
+BEGIN :: func:setup
+input := list{None}
+gG2 := random(G2)
+output := list{gG2}
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{gG2}
+x := random(ZR)
+y := random(ZR)
+X := (gG2^x)
+Y := (gG2^y)
+sk := list{x, y}
+vpk := list{X, Y}
+output := list{sk, vpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{sk, M}
+sk := expand{x, y}
+a := random(G1)
+m := H(M,ZR)
+b := (a^y)
+c := (a^(x + ((m * x) * y)))
+sig := list{a, b, c}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{vpk, gG2, M, sig}
+sig := expand{a, b, c}
+vpk := expand{X, Y}
+m := H(M,ZR)
+BEGIN :: if
+if {{e(a,Y) == e(b,gG2)} and {e((a * (b^m)),X) == e(c,gG2)}}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+

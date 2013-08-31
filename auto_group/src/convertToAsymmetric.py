@@ -274,10 +274,10 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         print("Unrecognized type: ", Type(assign))
     return False
 
-def instantiateZ3Solver(shortOpt, timeOpt, variables, clauses, hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst):
+def instantiateZ3Solver(verbose, shortOpt, timeOpt, variables, clauses, hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst):
     
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
-    options[verboseKeyword] = True
+    options[verboseKeyword] = verbose
          
     # uncomment for SAT version of AutoGroup
     #(result1, satisfiable) = solveUsingSAT(options)    
@@ -539,7 +539,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
         minOptions = info[curveID] # user should provide this information
         countOpt = info[minKeyword] # the cost of group operations
-        (satisfiable, resultDict) = instantiateZ3Solver(shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst)
+        (satisfiable, resultDict) = instantiateZ3Solver(info['verbose'], shortOpt, timeOpt, txor.getVariables(), txor.getClauses(), hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst)
         if satisfiable == False:
             #print("Adjusing constraints...")
             adjustConstraints = True
@@ -897,7 +897,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     # debug 
     print_sdl(info['verbose'], newLinesS, newLinesK, newLines2, newLines3)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
-    writeConfig(outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
+    writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
     return outputFile
         
 

@@ -425,8 +425,12 @@ def findMinimalRef(M, data1, data2, skipList=[]):
             diff = abs(data1[j] - data2[j])
             data3[j] = diff
             # count up solutions
-            if data3Count.get(diff) == None: data3Count[diff] = 1; data3Index[diff] = [j]
-            else: data3Count[diff] += 1; data3Index[diff].append(j)
+            if data3Count.get(diff) == None: 
+                data3Count[diff] = 1
+                data3Index[diff] = [j]
+            else: 
+                data3Count[diff] += 1
+                data3Index[diff].append(j)
             if first == None: first = j
 
     minVal = data3[first]
@@ -540,11 +544,10 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
             data[i] = cacheOpts
             #print("minimal Value: ", modVal)
             #print("minimal model: ", modRef)
-        elif minCount > 1:
+        elif minCount > 1 and optionDict['dropFirst'] != None:
             dropFirst = optionDict['dropFirst']
-            assert dropFirst != None, "More than one solution left, but you need to set 'dropFirst' option to know which option is more important."
             if verbose:
-                print("More than 1 solution && short = both && time = None. dropFirst = ", dropFirst)
+                print("More than 1 solution left && short = both && time = None. dropFirst = ", dropFirst)
                 print("minIndex: ", minIndex)
                 print("minCount: ", minCount, minIndexList)
             weights, countValue = convertQuery(shortOpt, optionDict, variables, bothConst[dropFirst])
@@ -554,6 +557,9 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
             if verbose:
                 print("minimal Value: ", modVal)
                 print("minimal model: ", modRef)
+        else:
+            # return original solution if no dropFirst option was selected
+            pass
     else:
         pass
     

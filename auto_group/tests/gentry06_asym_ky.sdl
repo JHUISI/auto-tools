@@ -1,0 +1,58 @@
+name := gentry06
+setting := asymmetric
+
+BEGIN :: types
+m := GT
+id := Str
+END :: types
+
+BEGIN :: func:setup
+input := None
+gG1 := random(G1)
+gG2 := random(G2)
+h := random(ZR)
+hG1 := (gG1^h)
+hG2 := (gG2^h)
+alpha := random(ZR)
+g1 := (gG2^alpha)
+mk := list{alpha}
+pk := list{gG1, gG2, g1, hG1, hG2}
+output := list{mk, pk}
+END :: func:setup
+
+BEGIN :: func:keygen
+input := list{pk, mk, id}
+pk := expand{gG1, gG2, g1, hG1, hG2}
+mk := expand{alpha}
+ID := H(id,ZR)
+rID := random(ZR)
+BEGIN :: if
+if {rID != alpha}
+hID := ((hG1 * (gG1^-rID))^(1 / (alpha - ID)))
+else 
+output := error
+END :: if
+sk := list{rID, hID}
+output := sk
+END :: func:keygen
+
+BEGIN :: func:encrypt
+input := list{pk, m, id}
+pk := expand{gG1, gG2, g1, hG1, hG2}
+ID := H(id,ZR)
+s := random(ZR)
+U := ((g1^s) * (gG2^(-s * ID)))
+V := (e(gG1,gG2)^s)
+W := (m * (e(gG1,hG2)^-s))
+ct := list{U, V, W}
+output := ct
+END :: func:encrypt
+
+BEGIN :: func:decrypt
+input := list{sk, ct}
+ct := expand{U, V, W}
+sk := expand{rID, hID}
+m := ((W * e(hID,U)) * (V^rID))
+output := m
+END :: func:decrypt
+

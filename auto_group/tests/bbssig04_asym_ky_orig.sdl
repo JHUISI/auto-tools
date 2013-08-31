@@ -1,0 +1,49 @@
+name := bbssig04
+setting := asymmetric
+
+BEGIN :: types
+m := ZR
+END :: types
+
+BEGIN :: func:keygen
+input := None
+gG1 := random(G1)
+gG2 := random(G2)
+x := random(ZR)
+y := random(ZR)
+u := (gG1^x)
+v := (gG1^y)
+z := e(gG1,gG2)
+sk := list{x, y}
+spk := list{gG1, gG2, z}
+vpk := list{gG1, u, v, z}
+output := list{sk, spk, vpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{spk, sk, m}
+spk := expand{gG1, gG2, z}
+sk := expand{x, y}
+r := random(ZR)
+BEGIN :: if
+if {((x + m) + (y * r)) != 0}
+S := (gG2^(1 / ((x + m) + (y * r))))
+else 
+output := False
+END :: if
+sig := list{S, r}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{vpk, m, sig}
+vpk := expand{gG1, u, v, z}
+sig := expand{S, r}
+BEGIN :: if
+if {e((u * ((gG1^m) * (v^r))),S) == z}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+

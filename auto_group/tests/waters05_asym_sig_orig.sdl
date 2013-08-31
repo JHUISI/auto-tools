@@ -1,0 +1,81 @@
+name := waters05
+setting := asymmetric
+
+BEGIN :: types
+alpha := ZR
+m := list{ZR}
+M := ZR
+y := list{ZR}
+uG1 := list{G1}
+uG2 := list{G2}
+l := Int
+END :: types
+
+BEGIN :: func:keygen
+input := None
+alpha := random(ZR)
+gG1 := random(G1)
+gG2 := random(G2)
+g1 := (gG1^alpha)
+g2 := random(ZR)
+g2G1 := (gG1^g2)
+g2G2 := (gG2^g2)
+ut := random(ZR)
+utG1 := (gG1^ut)
+utG2 := (gG2^ut)
+BEGIN :: for
+for{i := 0,l}
+y#i := random(ZR)
+uG1#i := (gG1^y#i)
+uG2#i := (gG2^y#i)
+END :: for
+sk := (g2G1^alpha)
+spk := list{g2G1, gG1, gG2, uG1, utG1}
+vpk := list{g1, g2G2, gG2, uG2, utG2}
+output := list{sk, spk, vpk}
+END :: func:keygen
+
+BEGIN :: func:sign
+input := list{spk, sk, M}
+spk := expand{g2G1, gG1, gG2, uG1, utG1}
+m := intToBits(M, l)
+r := random(ZR)
+S2 := (gG1^r)
+dotProd1 := init(G1)
+BEGIN :: for
+for{i := 0,l}
+dotProd1 := (dotProd1 * (uG1#i^m#i))
+END :: for
+S1 := (sk * ((utG1 * dotProd1)^r))
+sig := list{S1, S2}
+output := sig
+END :: func:sign
+
+BEGIN :: func:verify
+input := list{vpk, M, sig}
+vpk := expand{g1, g2G2, gG2, uG2, utG2}
+sig := expand{S1, S2}
+m := intToBits(M, l)
+dotProd2 := init(G2)
+BEGIN :: for
+for{i := 0,l}
+dotProd2 := (dotProd2 * (uG2#i^m#i))
+END :: for
+BEGIN :: if
+if {(e(S1,gG2) * e((S2^-1),(utG2 * dotProd2))) == e(g1,g2G2)}
+output := True
+else 
+output := False
+END :: if
+END :: func:verify
+
+BEGIN :: latex
+S1 := S_1
+S2 := S_2
+g2 := g_2
+u1b := \hat{u_1\prime}
+u2b := \hat{u_2\prime}
+ut := \hat{u}
+END :: latex
+
+
