@@ -31,7 +31,6 @@ t1 := Int
 st := Int
 j := Int
 s := list{ZR}
-i := Int
 END :: types
 
 

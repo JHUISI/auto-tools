@@ -2194,6 +2194,7 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
                 else:
                     updateAssignInfo(node, lineNumberInCode, tcObj)
             elif (node.type == ops.FOR) or (node.type == ops.FORALL):
+                tcObj.recordLoopVar(node)
                 updateForLoops(node, lineNumberInCode)
             elif (node.type == ops.FORINNER):
                 updateForLoopsInner(node, lineNumberInCode) 

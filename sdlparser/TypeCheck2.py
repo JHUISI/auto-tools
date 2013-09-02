@@ -318,6 +318,23 @@ class TypeCheck:
             print("NodeType unsupported: ", sdl.Type(node))
             return None
     
+    def recordLoopVar(self, node):
+        if node.type == sdl.ops.FOR:
+            #print("FOR: ", node.left, node.right)
+            startNode = node.left
+            attrNode = str(startNode.left)
+            stopVar  = str(node.right)
+            if stopVar in self.varType.keys():
+                z3Nodes = self.__buildZ3Expression(node.getRight(), None, self.varType)
+                #print("DEBUG: Z3 expression = ", z3Nodes)
+                the_type = self.TypeModel.evaluate(z3Nodes)
+                if str(the_type) == str(sInt):
+                    self.varType[ attrNode ] = sInt
+            #print("type: ", attrNode, self.varType[attrNode])
+        elif node.type == sdl.ops.FORALL:
+            print("HANDLE FORALL: ", node.left, node.right)
+        return
+    
     def contextType(self, attrNode, varType):
         print("attrNode: ", attrNode)
         attrName = str(attrNode)
