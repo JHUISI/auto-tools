@@ -3,11 +3,11 @@ setting := symmetric
 short := keys
 
 BEGIN :: types
-policyUSstr := str
-attrs := list{str}
+policyUSstr := Str
+attrs := list{Str}
 sh := symmap
 coeff := list
-S := list{str}
+S := list{Str}
 M := GT
 END :: types
 
