@@ -49,8 +49,10 @@ BEGIN :: func:verify
 input := list{suPK, m, sig}
 sig := expand{sig1, sig2, spk}
 suPK := expand{pk, ppk}
+varM := concat{spk, m}
+varM1 := DeriveKey(varM)
 BEGIN :: if
-if {{dse09sig.verify(pk, m, sig) == True } and {schnorr.verify(ppk, spk, sig1, sig2) == True }}
+if {{dse09sig.verify(pk, varM1, sig) == True } and {schnorr.verify(ppk, spk, sig1, sig2) == True }}
  output := True
 else
  output := False

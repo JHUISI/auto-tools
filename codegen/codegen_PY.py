@@ -20,7 +20,6 @@ lineNoBeingProcessed = 0
 numLambdaFunctions = 0
 userFuncsList = []
 currentLambdaFuncName = None
-
 blindingFactors_NonLists = None
 blindingFactors_Lists = None
 
@@ -51,22 +50,23 @@ def writeCurrentNumTabsIn(outputFile):
 
 def addImportLines(userFuncsFileArg, incNumSig):
     global setupFile#, userFuncsFile
-    #userFuncsLibName = userFuncsFileArg
-    #if (userFuncsLibName.endswith(pySuffix) == True):
-    #    userFuncsLibName = userFuncsLibName[0:(len(userFuncsLibName) - len(pySuffix))]
-    #    userFuncsLibName = removeDirectoryName(userFuncsLibName)
-    #pythonImportLines = ""
-    #pythonImportLines += "from " + str(userFuncsLibName) + " import *\n\n"
-    #setupFile.write(pythonImportLines)
-    #pythonImportLines = ""
-    #setupFile.write(pythonImportLines)
     setupFile.write("import builtInFuncs\n")
     setupFile.write("from builtInFuncs import *\n")
     setupFile.write("from charm.toolbox.pairinggroup import PairingGroup,ZR,G1,G2,GT,pair\n")
-    #setupFile.write("from charm.core.engine.util import *\n")
     if incNumSig != None: setupFile.write("from charm.core.math.integer import randomBits\n\n")
+    return
 
-    #userFuncsFile.write("from builtInFuncs import *\n\n")
+def addSDLImportLines(assignInfo):
+    global setupFile
+    
+    if REQUIRE_OPTION in assignInfo[NONE_FUNC_NAME].keys():
+        node = assignInfo[NONE_FUNC_NAME][REQUIRE_OPTION].getAssignNode()
+        if Type(node) == ops.EQ and Type(node.getRight()) == ops.LIST:
+            importNodes = node.getRight().listNodes
+            #print("Import these: ", importNodes)
+            for name in importNodes:
+                setupFile.write("import " + str(name) + "\n")
+    return
 
 def addGroupObjGlobalVar():
     global setupFile, userFuncsFile
@@ -631,6 +631,8 @@ def getAssignStmtAsString(variableName, node, replacementsDict, dotProdObj, lamb
     elif (node.type == ops.FUNC):
         nodeName = applyReplacementsDict(replacementsDict, getFullVarName(node, False))
         nodeName = replacePoundsWithBrackets(nodeName)
+        if NoneValue in node.listNodes: node.listNodes.remove(NoneValue)
+        
         if (nodeName == INIT_FUNC_NAME):
             if ( (len(node.listNodes) == 1) and (node.listNodes[0] == strArgName) ):
                 return "\"\""
@@ -664,7 +666,7 @@ def getAssignStmtAsString(variableName, node, replacementsDict, dotProdObj, lamb
         for listNodeInFunc in node.listNodes:
             listNodeAsString = getAssignStmtAsString(variableName, listNodeInFunc, replacementsDict, dotProdObj, lambdaReplacements, forOutput)
             funcOutputString += listNodeAsString + ", "
-        funcOutputString = funcOutputString[0:(len(funcOutputString) - len(", "))]
+        if len(node.listNodes) > 0: funcOutputString = funcOutputString[0:(len(funcOutputString) - len(", "))]
         funcOutputString += ")"
         if ( (nodeName not in pythonDefinedFuncs) and (nodeName not in assignInfo) and (nodeName not in userFuncsList) and (nodeName not in builtInTypes) ):
             userFuncsList.append(nodeName)
@@ -1292,6 +1294,7 @@ def codegen_PY_main(SDL_Scheme, setupFileArg, userFuncsFileArg, codegenOpts={}):
     getGlobalVarNames()
 
     addImportLines(userFuncsFileArg, incNumSig)
+    addSDLImportLines(assignInfo) # look for "requires := list{x, y}"
     addGroupObjGlobalVar()
     if incNumSig != None:
         addNumSignatures()

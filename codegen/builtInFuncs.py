@@ -6,7 +6,7 @@ from charm.toolbox.secretutil import SecretUtil
 from charm.toolbox.enum import Enum
 from charm.core.math import pairing
 from charm.toolbox.iterate import dotprod2
-from charm.core.math.pairing import hashPair as DeriveKey
+from charm.core.math.pairing import hashPair
 from charm.core.engine.util import objectToBytes, bytesToObject
 from charm.toolbox.symcrypto import AuthenticatedCryptoAbstraction
 from charm.toolbox.conversion import Conversion
@@ -122,3 +122,14 @@ def checkUserGlobals():
         #assert False, "utilObj (SecretUtil class) not defined in builtInFuncs.py"
         pass
     return
+
+def DeriveKey(args):
+    global groupObj
+    assert groupObj != None, "groupObj not set"
+    if type(args) in [tuple, list]:
+       # first use hash to ZR
+       # then hash to a key
+       return hashPair(groupObj.hash(args, ZR))
+    else:
+       # hash directly to a key
+       return hashPair(args)

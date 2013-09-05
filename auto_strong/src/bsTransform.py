@@ -194,8 +194,8 @@ class BSTransform:
     
     def __constructSign(self, config):
         keyS = "keyS"
-        varM = "var" + config.messageVar.upper()
-        varM1 = varM + "1"
+        self.varM = "var" + config.messageVar.upper()
+        self.varM1 = self.varM + "1"
         diffVars = set(list(self.newSKArgs + self.funcInput[signFuncName])).difference([config.messageVar] + self.newSKArgs)
         signInArgs = [self.newSK] + list(diffVars) + [config.messageVar]
         signOutArgs = [self.origSig, self.schnorrSig, self.spk]
@@ -215,19 +215,19 @@ class BSTransform:
         self.__newTypeLines.append( keyS + " := list{" + self.spk + ", " + self.ssk + "}" )
         
         # prepare new regular signature input
-        signLines.append( varM + " := concat{" + getArgString([self.spk, config.messageVar]) + "}" ) 
+        signLines.append( self.varM + " := concat{" + getArgString([self.spk, config.messageVar]) + "}" ) 
         MsgType = self.varTypes.get(config.messageVar).getType()
 #        print("type: ", self.varTypes, config.messageVar)
         if MsgType == types.Str:
-            signLines.append( varM1 + " := DeriveKey(" + varM + ")" )
+            signLines.append( self.varM1 + " := DeriveKey(" + self.varM + ")" )
         elif MsgType in [types.ZR, types.G1]:
-            signLines.append( varM1 + " := H(" + varM1 + ", " + str(MsgType) + ")" )
+            signLines.append( self.varM1 + " := H(" + self.varM1 + ", " + str(MsgType) + ")" )
         else:
             print("BSTransform: Unexepcted type for " + config.messageVar)
             sys.exit(-1)
-        self.__newTypeLines.append( varM1 + " := " + str(MsgType) )
+        self.__newTypeLines.append( self.varM1 + " := " + str(MsgType) )
         # call sign for the regular signature :=> sig1
-        signLines.append( self.origSig + " := " + self.schemeCalls[signFuncName].replace(config.messageVar, varM1) )
+        signLines.append( self.origSig + " := " + self.schemeCalls[signFuncName].replace(config.messageVar, self.varM1) )
         # call sign for the schnorr signature scheme :=> sig2
         signLines.append( self.schnorrSig + " := " + self.schnorr + "." + signFuncName + "(" + getArgString(schnorrSignArgs) + ")" )
         signLines.append( self.newSig + " := list{" + getArgString(signOutArgs) + "}" )
@@ -256,7 +256,18 @@ class BSTransform:
         verifyLines.append( self.newSig + " := expand{" + getArgString(newSigArgs) + "}" )
         verifyLines.append( self.newPK + " := expand{" + getArgString(self.newPKArgs) + "}" )
         
-        verifyCond1 = self.schemeCalls[verifyFuncName]
+        verifyLines.append( self.varM + " := concat{" + getArgString([self.spk, config.messageVar]) + "}" ) 
+        MsgType = self.varTypes.get(config.messageVar).getType()
+#        print("type: ", self.varTypes, config.messageVar)
+        if MsgType == types.Str:
+            verifyLines.append( self.varM1 + " := DeriveKey(" + self.varM + ")" )
+        elif MsgType in [types.ZR, types.G1]:
+            verifyLines.append( self.varM1 + " := H(" + self.varM1 + ", " + str(MsgType) + ")" )
+        else:
+            print("BSTransform: Unexepcted type for " + config.messageVar)
+            sys.exit(-1)
+        
+        verifyCond1 = self.schemeCalls[verifyFuncName].replace(config.messageVar, self.varM1)
         verifyCond2 = self.schnorr + "." + verifyFuncName + "(" + getArgString(schnorrVerifyArgs) + ")"
         verifyLines.append( "BEGIN :: if" )
         verifyLines.append( "if {{" + verifyCond1 + " == True } and {" + verifyCond2 + " == True }}" )

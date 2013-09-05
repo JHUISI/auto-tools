@@ -6,7 +6,7 @@ BEGIN :: types
 END :: types
 
 BEGIN :: func:keygenP
-input := list{ppk, psk}
+input := list{None}
  k := random(ZR)
  g := random(G1)
  x := random(ZR)
