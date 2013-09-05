@@ -268,8 +268,8 @@ class SDLParser:
                     if (currentFuncName in endLineNos_Functions):
                         sys.exit("SDLParser.py found multiple END_TOKEN declarations for the same function.")
                     endLineNos_Functions[currentFuncName] = line_number
-                    # post cleanup
-                    postTypeCleanup()
+                    # post cleanup (REMOVE)
+                    #postTypeCleanup()
                     currentFuncName = NONE_FUNC_NAME
             elif (op1 == TYPES_HEADER):
                 if (op == START_TOKEN):
@@ -1078,6 +1078,8 @@ def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
             return types.list
         elif (currentFuncName == LEN_FUNC_NAME):
             return types.Int
+        elif ( (currentFuncName in assignInfo) and (outputKeyword in assignInfo[currentFuncName]) ):
+            return getVarTypeFromVarName(outputKeyword, currentFuncName, False, False)        
         return types.NO_TYPE
     if (node.type == ops.EQ_TST):
         leftSideType = getVarTypeInfoRecursive(node.left)
