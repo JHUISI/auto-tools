@@ -102,6 +102,20 @@ def addImportLines(defineAsClass, outputFileName):
         setupFile.write(cppImportLines)
         return ""
 
+def addSDLImportLines(assignInfo):
+    global setupFile
+    
+    if REQUIRE_OPTION in assignInfo[NONE_FUNC_NAME].keys():
+        node = assignInfo[NONE_FUNC_NAME][REQUIRE_OPTION].getAssignNode()
+        if Type(node) == ops.EQ and Type(node.getRight()) == ops.LIST:
+            importNodes = node.getRight().listNodes
+            #print("Import these: ", importNodes)
+            for name in importNodes:
+                className = string.capwords(name)
+                setupFile.write("#include \"%s\"\n\n" % className)
+    return
+    
+
 def addNumSignatures():
     global setupFile
 
@@ -1784,6 +1798,7 @@ def codegen_CPP_main(inputSDLScheme, outputFileName, userFuncList=[], defineAsCl
 
     getGlobalVarNames()
     importLines = addImportLines(defineAsClass, outputFileNameHdr)
+    addSDLImportLines(defineAsClass, assignInfo)
     addNumSignatures()
     addNumSigners()
     addSecParam()
