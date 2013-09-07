@@ -1988,11 +1988,12 @@ def parseFile(filename, verbosity, ignoreCloudSourcing=False):
     fd = open(filename, 'r')
     linesOfCode = fd.readlines()
     if (ignoreCloudSourcing == False):
-        parseLinesOfCode(linesOfCode, verbosity)
+        tcObj = parseLinesOfCode(linesOfCode, verbosity)
     else:
-        parseLinesOfCode(linesOfCode, verbosity, ignoreCloudSourcing)
+        tcObj = parseLinesOfCode(linesOfCode, verbosity, ignoreCloudSourcing)
        
     fd.close()
+    return tcObj
 
 def getAstNodes():
     return astNodes
@@ -2199,6 +2200,7 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
                 tcObj.recordLoopVar(node)
                 updateForLoops(node, lineNumberInCode)
             elif (node.type == ops.FORINNER):
+                tcObj.recordLoopVar(node)                
                 updateForLoopsInner(node, lineNumberInCode) 
             elif (node.type == ops.IF):
                 updateIfElseBranches(node, lineNumberInCode, tcObj)
@@ -2212,14 +2214,15 @@ def parseLinesOfCode(code, verbosity, ignoreCloudSourcing=False):
 
     getVarsThatProtectM()
     getVarsThatProtectMCalled = True
-
-    print("VarTypes:\t", tcObj.getVarType())
-    print("SDL VarTypes:\t", tcObj.getSDLVarType())
+    SMTDebug = False
+    if SMTDebug:
+        print("VarTypes:\t", tcObj.getVarType())
+        print("SDL VarTypes:\t", tcObj.getSDLVarType())
 
     if (ignoreCloudSourcing == False):
         updatePublicVarNames()
         updateSecretVarNames()
-    return
+    return tcObj
 
 def cleanParseLinesOfCode():
     global varTypes, assignInfo, forLoops, forLoopsInner, currentFuncName, varDepList, varInfList, varsThatProtectM
