@@ -1,4 +1,4 @@
-"""Generates LaTeX templates for SDL descriptions"""
+"""Standalone generator of LaTeX from SDL descriptions"""
 import os, re, sys, getopt, imp, time
 import sdlpath
 import SDLParser2 as sdl
