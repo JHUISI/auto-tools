@@ -3,7 +3,7 @@ setting := symmetric
 short := keys
 
 BEGIN :: types
-id := str
+id := Str
 M := GT
 #C := list
 D := list
@@ -117,3 +117,12 @@ result1 := (A3 / result0)
 M := C0 / result1
 output := M
 END :: func:decrypt
+
+BEGIN :: latex
+
+tagUSc := tag_c
+tagUSk := tag_k
+RtagUSk := Rtag_k
+idUShash := id_1
+
+END :: latex

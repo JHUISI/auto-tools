@@ -9,6 +9,7 @@ PKSIG = "PKSIG" # signatures
 functionOrder = "functionOrder"
 hashtag = "#"
 comma = ","
+times = " \\times "
 NoneKeyword = "None"
 
 encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
@@ -18,10 +19,11 @@ configDef = {'keygenPubVar': 'public key', 'keygenSecVar': 'secret key', 'cipher
 template_top = """
 \documentclass[11pt]{article}
 \\usepackage{fullpage,amsthm,amsmath}
-\\usepackage{latexsym,amssymb,xspace}
+\\usepackage{latexsym,amssymb,xspace,paralist}
+\\renewenvironment{itemize}[1]{\\begin{compactitem}#1}{\end{compactitem}}
 """
 
-template_header = "\\begin{document}\n"
+template_header = "\n\\begin{document}\n"
 template_end    = "\end{document}\n"
 
 
@@ -31,8 +33,7 @@ fixed_cmds = """
 """
 
 funcname_cmd = "\\newcommand{\%s}{{\sf %s}}\n"
-#funcintro    = "%s. On input %s"
-varname_cmd  = "\\newcommand{%s}{%s}\n" 
+varname_cmd  = "\\newcommand{%s}{%s}\n"
 
 content_header = "\\begin{itemize}\n"
 content_line   = "\item[-] %s\n"
@@ -62,18 +63,34 @@ def handleKeywords(config, varList):
     if hasattr(config, "signatureVar") and config.signatureVar in varList:
         output += configDef["signatureVar"] + ", " + config.signatureVar + " "
     return output
-    
 
-def generateLatexFuncs(funcName, config, blockStmts):
-    randomElems = {'ZR':'\Zq', 'G1':'\G_1', 'G2':'\G_2', 'GT':'\G_T'}
+def computeHashIndex(hashSigs, inputList, targetType):
+    countList = list(hashSigs.keys())
+    countList.sort()
+    if len(countList) > 0: count = countList[-1]
+    else: count = 1
+    
+    key = (str(inputList), str(targetType))
+    print("DEBUG: Hash type signature => ", key)
+    if key in hashSigs.keys():
+        return hashSigs[key]
+    else:
+        hashSigs[ key ] = count
+        return count    
+
+def generateLatexFuncs(tcObj, funcName, config, blockStmts, hashSigs):
+    sdlVarType = tcObj.getSDLVarType()
+    randomElems = {'ZR':'\Zq', 'G1':'\G_1', 'G2':'\G_2', 'GT':'\G_T', 'Str':'\{0, 1\}^*', 'Int':'\Z'}
+    
     lines = list(blockStmts.keys())
     lines.sort()
     
     lcg = LatexCodeGenerator(None)
     data = {sdl.inputKeyword:None, sdl.outputKeyword:None}
-    defines       = [funcname_cmd % (str(funcName), str(funcName))]
+    defines       = [funcname_cmd % (str(funcName), str(funcName).title())]
     random_assign = []
     compute       = []
+    preamble      = []
     for index, i in enumerate(lines):
         assert type(blockStmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
         if blockStmts[i].getHasRandomness():
@@ -102,7 +119,7 @@ def generateLatexFuncs(funcName, config, blockStmts):
             varExpand = lcg.print_statement(blockStmts[i].getAssignNode().getRight())
             compute.append( "Parse $" + varName + "$ as $" + varExpand + "$" )
             
-        elif blockStmts[i].getIsForLoopBegin():
+        elif blockStmts[i].getIsForLoopBegin(): # TODO
             #if blockStmts[i].getIsForType(): newLines.append(parser.parse("BEGIN :: for\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
             #elif blockStmts[i].getIsForAllType(): newLines.append(parser.parse("BEGIN :: forall\n"))  # "\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
             pass
@@ -112,8 +129,24 @@ def generateLatexFuncs(funcName, config, blockStmts):
             pass
         elif blockStmts[i].getIsElseBegin():
             pass
-        else: 
-            print("Compute: ", blockStmts[i].getAssignNode(), lcg.print_statement(blockStmts[i].getAssignNode()))
+        elif blockStmts[i].getHashArgsInAssignNode():
+            # convert input list to types list ==> for signature
+            inputList = []
+            argList = ""
+            for j in blockStmts[i].getHashArgsInAssignNode():
+                the_type = sdlVarType.get(str(j))
+                inputList.append( the_type )
+                argList += randomElems.get(str(the_type)) + times
+            argList = argList[:-len(times)]
+            # find or create hash index
+            index = computeHashIndex(hashSigs, inputList, blockStmts[i].getHashArgType() )
+            # add new index to preamble
+            preamble.append( '$H_'+str(index) + " : " + argList + " \\rightarrow " + randomElems.get(str(blockStmts[i].getHashArgType())) + "$" )
+            lcg.defineHashIndex(index)
+            compute.append( "$" + lcg.print_statement(blockStmts[i].getAssignNode()) + "$" )
+            lcg.clearHashIndex()
+        else:
+            print("Compute: ", blockStmts[i].getAssignNode(), ":", lcg.print_statement(blockStmts[i].getAssignNode()))
             compute.append( "$" + lcg.print_statement(blockStmts[i].getAssignNode()) + "$" )
     
     print("FUNC    => ", funcName)
@@ -122,9 +155,9 @@ def generateLatexFuncs(funcName, config, blockStmts):
     print("Outputs => ", data[sdl.outputKeyword])
     output = "\\" + funcName + ". "
     if len(data[sdl.inputKeyword]) == 0:
-        output += "On input a security parameter 1^\lambda, "
+        output += "On input a security parameter $1^\lambda$, "
     else:
-        defines.append( varname_cmd % (funcName + "Vars", printCommaList(data[sdl.inputKeyword])) )
+        defines.append( varname_cmd % ("\\" + funcName + "Vars", printCommaList(data[sdl.inputKeyword])) )
         defs = handleKeywords(config, data[sdl.inputKeyword])
         output += "On input $\\" + funcName + "Vars$" 
         if len(defs) > 1: output += ", where " + defs + "\n"
@@ -132,7 +165,7 @@ def generateLatexFuncs(funcName, config, blockStmts):
     # choose random elements
     rnd_str = "Choose "
     for i in random_assign:
-        rnd_str += i + comma    
+        rnd_str += i + comma
     if len(random_assign) > 0:
         rnd_str = rnd_str[:-len(comma)]
         output += rnd_str + "\n"
@@ -141,14 +174,25 @@ def generateLatexFuncs(funcName, config, blockStmts):
     for i in compute:
         output += content_line % i
     
-    output += "Output = $" + output_str + "$\n"
+    output += "\item[-] Output = $" + output_str + "$\n"
     output += content_end
-    return (defines, output)
+    return (defines, preamble, output)
 
 class SDL2LaTeX:
-    def __init__(self):
+    def __init__(self, sdlName):
+        self.sdlName = sdlName.upper()
         self.defines = []
-        self.funcDefs = [[]]
+        self.funcDefs = []
+        self.premableDef = []
+        
+    def buildConfig(self, definesForFunc, preamble, outputForFunc):
+        for i in definesForFunc:
+            self.defines.append(i)
+        for i in preamble:
+            if i not in self.premableDef:
+                self.premableDef.append(i)
+        self.funcDefs.append( outputForFunc )
+        
         
     def writeConfig(self):
         # write header
@@ -158,10 +202,16 @@ class SDL2LaTeX:
             output += i
         
         output += template_header
+        output += "\section*{"+ self.sdlName + " Scheme Description}\n\n"
+        if len(self.premableDef) > 0:
+            preamble_str = "The scheme selects "
+            for i in self.premableDef:
+                preamble_str += i + comma
+            preamble_str = preamble_str[:-len(comma)]
+            output += preamble_str + "\n\n" 
         # write body
         for i in self.funcDefs:
-            for j in i:
-                output += j
+            output += i + "\n"
         output += template_end
         
         
@@ -177,6 +227,7 @@ class LatexCodeGenerator:
              'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
              'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
              'tau':'\\tau', 'phi':'\phi', 'chi':'\\chi', 'psi':'\psi', 'omega':'\omega'}
+        self.hash_index = 0
     
     def getLatexVersion(self, name):
         if self.latex != None and self.latex.get(name) != None:
@@ -197,7 +248,14 @@ class LatexCodeGenerator:
                     if i in name: return name.replace(i, j)
 #            return self.latexVars.get(name)
         return name    
+    def defineHashIndex(self, index):
+        self.hash_index = index
+        return
     
+    def clearHashIndex(self):
+        self.hash_index = 0
+        return
+        
     def print_statement(self, node, parent=None):
         if node == None:
             return None
@@ -272,7 +330,10 @@ class LatexCodeGenerator:
             elif(node.type == ops.PAIR):
                 return ('e(' + left + ',' + right + ')')
             elif(node.type == ops.HASH):
-                return ('H(' + left + ')')
+                if self.hash_index == 0:
+                    return ('H(' + left + ')')
+                else:
+                    return ('H_'+str(self.hash_index) + "(" + left + ")")
             elif(node.type == ops.SUM):
                 return ('\sum_{' + left + '}^{' + right + '}')
             elif(node.type == ops.PROD):
@@ -334,29 +395,35 @@ def readConfig(dest_path, sdl_file, config_file, output_file, verbose):
     # call parseFile on SDL
     tcObj = sdl.parseFile(sdl_file, verbose, ignoreCloudSourcing=True)
     assignInfo = sdl.getAssignInfo()
-    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+#    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
-    #typesBlock = sdl.getFuncStmts( TYPES_HEADER )
     
     print("Processing... ", sdl_name)
     
     # 1. Start with Keygen/Setup ... 
+    sdl2tex = SDL2LaTeX(sdl_name)
+    hashSigs = {}
     if hasattr(config, "setupFuncName"):
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
-        print(generateLatexFuncs(config.setupFuncName, config, stmtS))
+        defines, preamble, latexOutputSetup = generateLatexFuncs(tcObj, config.setupFuncName, config, stmtS, hashSigs)
+        sdl2tex.buildConfig(defines, preamble, latexOutputSetup)
         funcOrder.remove(config.setupFuncName)
         
     if hasattr(config, "keygenFuncName"):
         (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
-        print(generateLatexFuncs(config.keygenFuncName, config, stmtK))
+        defines, preamble, latexOutputKeygen = generateLatexFuncs(tcObj, config.keygenFuncName, config, stmtK, hashSigs)
+        sdl2tex.buildConfig(defines, preamble, latexOutputKeygen)
         funcOrder.remove(config.keygenFuncName)
 
     # 2. call each function and produce a block of latex code
     for funcName in funcOrder:
-        (stmtF, typesF, depListF, depListNoExpF, infListF, infListNoExpF) = sdl.getVarInfoFuncStmts( funcName )        
-        print(generateLatexFuncs(funcName, config, stmtF))
+        (stmtF, typesF, depListF, depListNoExpF, infListF, infListNoExpF) = sdl.getVarInfoFuncStmts( funcName ) 
+        defines, preamble, latexOutputFunc = generateLatexFuncs(tcObj, funcName, config, stmtF, hashSigs)
+        sdl2tex.buildConfig(defines, preamble, latexOutputFunc)
+    
     # 3. print info to the template
-
+    sdl2tex.writeConfig()
+        
 
 if __name__ == "__main__":
     sdl_file = sys.argv[1]

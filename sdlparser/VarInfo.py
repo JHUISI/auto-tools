@@ -43,6 +43,7 @@ class VarInfo:
         self.listElementsType = None
         self.isUsedInHashCalc = False
         self.hashArgsInAssignNode = []
+        self.hashArgType = types.NO_TYPE
         self.hasListIndexSymInLeftAssign = False
         self.isExpandNode = False
         self.isBaseElement = False
@@ -89,6 +90,7 @@ class VarInfo:
         v.listElementsType = obj.listElementsType
         v.isUsedInHashCalc = obj.isUsedInHashCalc
         v.hashArgsInAssignNode = obj.hashArgsInAssignNode
+        v.hashArgType = obj.hashArgType
         v.hasListIndexSymInLeftAssign = obj.hasListIndexSymInLeftAssign
         v.isExpandNode = obj.isExpandNode
         v.isBaseElement = obj.isBaseElement
@@ -178,7 +180,10 @@ class VarInfo:
 
     def getHashArgsInAssignNode(self):
         return self.hashArgsInAssignNode
-
+    
+    def getHashArgType(self):
+        return self.hashArgType
+        
     def hasBeenSet(self):
         return self.beenSet
 
@@ -251,6 +256,7 @@ class VarInfo:
             hashInputName = getFullVarName(node.left, False)
             if (hashInputName not in self.hashArgsInAssignNode):
                 self.hashArgsInAssignNode.append(hashInputName)
+            self.hashArgType = node.right
         elif (node.type == ops.ATTR):
             varName = getFullVarName(node, True)
             if ( (varName not in self.varDeps) and (varName.isdigit() == False) and (varName != NONE_STRING) ):

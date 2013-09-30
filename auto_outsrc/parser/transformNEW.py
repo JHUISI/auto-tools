@@ -1301,4 +1301,4 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
     parseLinesOfCode(getLinesOfCode(), False)
 
     #print(latexOutputString)
-    #proof.writeProof()
+    proof.writeProof()

@@ -1269,6 +1269,11 @@ def instantiateBFSolver(config, assignInfo):
     mskVarsOutputVar = "mskVars = " + str(mskVars) + "\n"
     rndVarsOutputVar = "rndVars = " + str(rndVars) + "\n"
     infoOutputVar = "info = " + str(keygenElemToSMTExp) + "\n"
+    latex_block = assignInfo.get(LATEX_HEADER)
+    latex_info = {}
+    for i,j in latex_block.items():
+        latex_info[ i ] = j.getLineStrValue()
+    myLCG = LatexCodeGenerator(latex_info)
     
     f = open(name, 'w')
     f.write(skVarsOutputVar)
@@ -1305,15 +1310,19 @@ def instantiateBFSolver(config, assignInfo):
     pseudoTransformKey = []
     for i in skList:
         skElem = bfMap[ i ]
-        skLatex = getLatexVar(i)
+        skLatex = myLCG.getLatexVersion(i) # getLatexVar(i)
         rndLatex = "R" + skLatex
         SKList.append(skLatex)
-        RndList.append(rndLatex)
+        RndList.append(rndLatex) # fix 2 (after we have type defs for original SK components)
         tkVar   =  skLatex + "'"
         tkVar2  =  "\\bar{" + skLatex + "}"
-        tkBf    = BinaryNode("{\sf " + getLatexVar(skBfMap[i]) + "}")
-        tkAssign  = BinaryNode(ops.EXP, BinaryNode(skLatex), tkBf)
-        tkAssign2 = BinaryNode(ops.EXP, BinaryNode(rndLatex), tkBf)
+        tkBf    = BinaryNode("{\sf " + myLCG.getLatexVersion(skBfMap[i]) + "}")
+        if i in rndVars:
+            theOP = ops.MUL
+        else:
+            theOP = ops.EXP
+        tkAssign  = BinaryNode(theOP, BinaryNode(skLatex), tkBf)
+        tkAssign2 = BinaryNode(theOP, BinaryNode(rndLatex), tkBf)
         
         transformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(tkVar), tkAssign) )
         pseudoTransformKey.append( BinaryNode(ops.EQ, BinaryNode(tkVar2), tkAssign2) )
@@ -1322,24 +1331,29 @@ def instantiateBFSolver(config, assignInfo):
         (funcName, varInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, i)
         if type(skElem) == dict:
             for j, k in skElem.items():
-                J = getLatexVar(j)
-                bfStr = "{\sf " + getLatexVar(k) + "}"
+                J = myLCG.getLatexVersion(j)
+                bfStr = "{\sf " + myLCG.getLatexVersion(k) + "}"
                 theDef = J + "' = {" + J + " \cdot " + bfStr + "}"
                 if theDef not in keyDefs: keyDefs.append( theDef )
                 if bfStr not in bfList: bfList.append( bfStr )
             resNode = varInfoObj.getAssignBaseElemsOnly()
             resNode2 = BinaryNode.copy(resNode)
-            for j, k in skElem.items():
-                InPlaceReplaceAttr(resNode2, j, j + "'")
-            originalKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i), resNode) ) # I + " = " + str(resNode) )
-            expTransformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i + "'"), resNode2) ) # I + " = " + str(resNode2) )
+            if str(resNode) in rndVars:
+                print("Deal with this differently: ", resNode, varInfoObj.getAssignNode())
+                originalKeyNodes.append( BinaryNode.copy(varInfoObj.getAssignNode()) )
+                expTransformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(myLCG.getLatexVersion(i) + "'"), tkAssign) )
+            else:                        
+                for j, k in skElem.items():
+                    InPlaceReplaceAttr(resNode2, j, j + "'")
+                originalKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(myLCG.getLatexVersion(i)), resNode) ) # I + " = " + str(resNode) )
+                expTransformKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(myLCG.getLatexVersion(i) + "'"), resNode2) ) # I + " = " + str(resNode2) )
             print("node: ", resNode, type(resNode)) # need the symbolic executed version! 
         else:
             print("UNIQUE BF: ", skElem)
-            bfStr = "{\sf " + getLatexVar(skElem) + "}"
+            bfStr = "{\sf " + myLCG.getLatexVersion(skElem) + "}"
             if bfStr not in bfList: bfList.append( bfStr )
             resNode = varInfoObj.getAssignBaseElemsOnly()
-            theDef = getLatexVar(i) + "' = (" + getLatexVar(i) + " ) ^ { " + bfStr + "}"
+            theDef = myLCG.getLatexVersion(i) + "' = (" + myLCG.getLatexVersion(i) + " ) ^ { " + bfStr + "}"
             if theDef not in keyDefs: keyDefs.append( theDef )
             originalKeyNodes.append( BinaryNode(ops.EQ, BinaryNode(i), resNode) ) # I + " = " + str(resNode) )
             exp = BinaryNode(ops.EXP, resNode, BinaryNode(bfStr))
@@ -1356,7 +1370,7 @@ def instantiateBFSolver(config, assignInfo):
         print("\\randomsecretkeys = ", RndList)
     
     proof = GenerateProof()
-    proof.initLCG(RndList, SKList, bfList, mskVars, rndVars, keyDefs)
+    proof.initLCG(latex_info, RndList, SKList, bfList, mskVars, rndVars, keyDefs)
     proof.setOriginalKey(originalKeyNodes)
     proof.setTransformKey(transformKeyNodes)
     proof.setPseudoTK(pseudoTransformKey)

@@ -1,6 +1,6 @@
 # This class generates the latex macros for the batch verification proofs of security
 import sdlpath, re, string
-from SDLang import *
+from SDLang import * 
 
 hashtag = '#'
 underscore = '_'
@@ -44,21 +44,41 @@ basic_step = """\medskip \\noindent
 #final_batch_eq  = "\label{eqn:finalequation}\n"
 
 main_proof_header_standalone = """\n"""
-    
+NoneKeyword = "None"
+comma = ","
+
+def getList(listNode):
+    newList = list(listNode)
+    if NoneKeyword in newList:
+        newList.remove(NoneKeyword)
+    return newList
+
+def printCommaList(_list):
+    listStr = ""
+    for i in _list:
+        listStr += i + comma
+    listStr = listStr[:-len(comma)]
+    return listStr
+
 class LatexCodeGenerator:
-    def __init__(self):
+    def __init__(self, latex_info):
+        self.latex  = latex_info # used for substituting attributes
         self.latexVars  = {'alpha':'\\alpha', 'beta':'\beta', 'gamma':'\gamma', 'delta':'\delta', 'epsilon':'\epsilon',
              'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
              'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
              'tau':'\\tau', 'phi':'\phi', 'chi':'\\chi', 'psi':'\psi', 'omega':'\omega'}
-        
+        self.sdlTypes   = {'ZR':'\Zp^*', 'G1':'\G_1', 'G2':'\G_2', 'GT':'\G_T', 'Str':'\{0, 1\}^*', 'Int':'\Z'}
+        self.hash_index = 0
+    
     def getLatexVersion(self, name):
-        if name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
+        if self.latex != None and self.latex.get(name) != None:
+            return self.latex[ name ]        
+        elif name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
             return name.replace(hashtag, underscore)
         elif name.find("G1") != -1:
-            return name.replace("G1", "_1")
+            return "\hat{" + self.getLatexVersion( name.replace("G1", "") ) + "}"
         elif name.find("G2") != -1:
-            return name.replace("G2", "_2")
+            return "\\bar{" + self.getLatexVersion( name.replace("G2", "") ) + "}"
         else:
             # matches word + numbers => 'x1' => 'x_1'
             res = re.findall(r"[a-zA-Z]+|\d+", name)
@@ -70,12 +90,34 @@ class LatexCodeGenerator:
 #            return self.latexVars.get(name)
         return name    
     
+    def getType(self, type_node):
+        t = str(type_node)
+        if t in self.sdlTypes.keys():
+            return self.sdlTypes[t]
+        return 'None'
+             
+    
+    def defineHashIndex(self, index):
+        self.hash_index = index
+        return
+    
+    def clearHashIndex(self):
+        self.hash_index = 0
+        return
+        
     def print_statement(self, node, parent=None):
         if node == None:
             return None
         elif(node.type == ops.ATTR):
             msg = node.attr
-            msg = self.getLatexVersion(str(msg))
+            if 'delta' in str(msg):
+                msg = '\delta'
+            elif str(msg) =='N':
+                msg = '\\numsigs'
+            else:
+                msg = self.getLatexVersion(str(msg))
+#                if msg.find('_') != -1: msg = "{" + msg + "}" # prevent subscript
+#            print("msg : ", msg)
             if node.delta_index != None and 'delta' in node.attr:
 #                print("Found IT!!!")
                 msg = msg + '_{' + node.delta_index[0] + '}'
@@ -130,6 +172,8 @@ class LatexCodeGenerator:
             elif(node.type == ops.EQ):
                 if parent != None and parent.type == ops.PROD:
                     return (left + ' = ' + str(right).replace("0", "1"))
+                elif node.right != None and node.right.type == ops.RANDOM:
+                    return (left + " " + str(right))
                 else:
                     return (left + ' = ' + str(right))
             elif(node.type == ops.EQ_TST):
@@ -137,7 +181,10 @@ class LatexCodeGenerator:
             elif(node.type == ops.PAIR):
                 return ('e(' + left + ',' + right + ')')
             elif(node.type == ops.HASH):
-                return ('H(' + left + ')')
+                if self.hash_index == 0:
+                    return ('H(' + left + ')')
+                else:
+                    return ('H_'+str(self.hash_index) + "(" + left + ")")
             elif(node.type == ops.SUM):
                 return ('\sum_{' + left + '}^{' + right + '}')
             elif(node.type == ops.PROD):
@@ -154,10 +201,130 @@ class LatexCodeGenerator:
                  return ( left + ' \\text{ it holds: }  ' + right)
             elif(node.type == ops.AND):
                  return ( left + " \mbox{ and } " + right )
-            elif(node.type == ops.OR):
-                 return ( left + " \mbox{ or } " + right )
-             
+            elif(node.type in [ops.LIST, ops.EXPAND]):
+                 return ( "(" + printCommaList(getList(node.listNodes)) + ")")
+            elif(node.type == ops.IF):
+                 return ( "\mbox{if }{" + left + "}")
+            elif(node.type == ops.ELSE):
+                 return " or else "
+            elif(node.type == ops.RANDOM):
+                 return "\\rightarrow " + self.getType(node.left)
         return None
+
+# OLD GENERATOR
+#class LatexCodeGenerator:
+#    def __init__(self):
+#        self.latexVars  = {'alpha':'\\alpha', 'beta':'\beta', 'gamma':'\gamma', 'delta':'\delta', 'epsilon':'\epsilon',
+#             'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
+#             'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
+#             'tau':'\\tau', 'phi':'\phi', 'chi':'\\chi', 'psi':'\psi', 'omega':'\omega'}
+#        
+#    def getLatexVersion(self, name):
+#        if name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
+#            return name.replace(hashtag, underscore)
+#        elif name.find("G1") != -1:
+#            return name.replace("G1", "_1")
+#        elif name.find("G2") != -1:
+#            return name.replace("G2", "_2")
+#        else:
+#            # matches word + numbers => 'x1' => 'x_1'
+#            res = re.findall(r"[a-zA-Z]+|\d+", name)
+#            if len(res) == 2:
+#                return name.replace(res[0] + res[1], res[0] + "_" + res[1])
+#            else:
+#                for i,j in self.latexVars.items():
+#                    if i in name: return name.replace(i, j)
+##            return self.latexVars.get(name)
+#        return name    
+#    
+#    def print_statement(self, node, parent=None):
+#        if node == None:
+#            return None
+#        elif(node.type == ops.ATTR):
+#            msg = node.attr
+#            msg = self.getLatexVersion(str(msg))
+#            if node.delta_index != None and 'delta' in node.attr:
+##                print("Found IT!!!")
+#                msg = msg + '_{' + node.delta_index[0] + '}'
+#            if node.attr_index != None:
+#                keys = ""
+#                if msg.find('_') != -1:
+#                    s = msg.split('_', 1)
+#                    #print("s : ", s)
+#                    for i in node.attr_index:
+#                        keys += i + ","
+#                    keys = keys[:len(keys)-1]
+#                    msg = s[0] + '_{' + keys + "," + s[1] + '}'
+#                    #print("msg :=", msgs)
+#                else:
+#                    for i in node.attr_index:
+#                        keys += i + ","
+#                    keys = keys[:len(keys)-1]
+#                    if len(node.attr_index) > 1:
+#                        msg += '_{' + keys + '}'
+#                    else:
+#                        msg += '_' + keys
+#                    msg = "{" + msg + "}"
+##                    print("result: ", msg)
+#            if node.negated: msg = '-' + msg
+##            print("msg2 : ", msg)
+#            return msg
+#        elif(node.type == ops.TYPE):
+#            return str(node.attr)
+#        else:
+#            left = self.print_statement(node.left, node)
+#            right = self.print_statement(node.right, node)
+#
+#            if debug >= levels.some:
+#               print("Operation: ", node.type)
+#               print("Left operand: ", left)
+#               print("Right operand: ", right)            
+#            if(node.type == ops.EXP):
+#                if Type(node.left) == ops.EXP:
+#                    l = self.print_statement(node.left.left)
+#                    r = self.print_statement(node.left.right)
+#                    return ( l + "^{" + r + ' \cdot ' + right + "}")
+#                elif Type(node.left) in [ops.ATTR, ops.PAIR]:
+#                    if str(right) == "1": return left 
+#                    return ( left + '^{' + right + "}")
+#                return ("(" + left + ')^{' + right + "}")
+#            elif(node.type == ops.MUL):
+#                return ( left + ' \cdot ' + right)
+#            elif(node.type == ops.ADD):
+#                return ("("+ left + ' + ' + right + ")")
+#            elif(node.type == ops.SUB):
+#                return ("("+ left + ' - ' + right + ")")
+#            elif(node.type == ops.EQ):
+#                if parent != None and parent.type == ops.PROD:
+#                    return (left + ' = ' + str(right).replace("0", "1"))
+#                else:
+#                    return (left + ' = ' + str(right))
+#            elif(node.type == ops.EQ_TST):
+#                return (left + ' \stackrel{?}{=} ' + right)
+#            elif(node.type == ops.PAIR):
+#                return ('e(' + left + ',' + right + ')')
+#            elif(node.type == ops.HASH):
+#                return ('H(' + left + ')')
+#            elif(node.type == ops.SUM):
+#                return ('\sum_{' + left + '}^{' + right + '}')
+#            elif(node.type == ops.PROD):
+#                return ('\prod_{' + left + '}^' + right)
+#            elif(node.type == ops.ON):
+#                return ("{" + left + " " + right + "}")
+#            elif(node.type == ops.OF):
+#                return ("{" + left + " " + right + "}")
+#            elif(node.type == ops.CONCAT):
+#                 return (left + ' | ' + right)
+#            elif(node.type == ops.FOR):
+#                return ('\\text{for }' + left + '\\text{ to }  ' + right)
+#            elif(node.type == ops.DO):
+#                 return ( left + ' \\text{ it holds: }  ' + right)
+#            elif(node.type == ops.AND):
+#                 return ( left + " \mbox{ and } " + right )
+#            elif(node.type == ops.OR):
+#                 return ( left + " \mbox{ or } " + right )
+#             
+#        return None
 
 class GenerateProof:
     def __init__(self):
@@ -181,15 +348,17 @@ class GenerateProof:
         self.stepPrefix = prefixStr
         return
         
-    def initLCG(self, rndList, skList, bfList, mskList, randList, keyDefsList): # , originalKeyNodes, transformKeyNodes, pseudoKey):
+    def initLCG(self, latex_block, rndList, skList, bfList, mskList, randList, keyDefsList): # , originalKeyNodes, transformKeyNodes, pseudoKey):
         if self.lcg == None:
-            self.lcg = LatexCodeGenerator()
+            self.lcg = LatexCodeGenerator(latex_block)
             self.rndList = rndList
             self.skList = skList
             self.bfList = bfList
             self.mskList = mskList
             self.randList = randList
             self.keyDefsList = keyDefsList
+            self.ctList = None
+            self.latex_file = None
             self.originalKeyList = []
             self.transformKeyList = []
             self.pseudoTK = []
@@ -362,17 +531,17 @@ class GenerateProof:
         title = string.capwords(latex_file)
         outputStr = self.proofHeader(title, self.rndList, self.skList, self.bfList, self.mskList, self.randList, self.keyDefsList, self.originalKeyList, self.transformKeyList, self.pseudoTK, self.expandedTK)
         # add list of ciphertext names
-#        outputStr += headerCT % self.__toLaTeX(self.ctList)
+        outputStr += headerCT % self.__toLaTeX(self.ctList)
         # build the decrypt portion of proof
-#        outputStr += header_decrypt
-#        for i in range(self.__lcg_decrypt_count):
-#            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
-#        outputStr += proof_footer
+        outputStr += header_decrypt
+        for i in range(self.__lcg_decrypt_count):
+            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
+        outputStr += proof_footer
        # build the transform portion of proof 
-#        outputStr += header_transform
-#        for i in range(self.__lcg_transform_count):
-#            outputStr += self.proofBody(i+1, self.__lcg_transform_data[i])
-#        outputStr += proof_footer
+        outputStr += header_transform
+        for i in range(self.__lcg_transform_count):
+            outputStr += self.proofBody(i+1, self.__lcg_transform_data[i])
+        outputStr += proof_footer
         return outputStr
     
     def writeProof(self, file=None):

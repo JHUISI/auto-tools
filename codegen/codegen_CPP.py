@@ -102,7 +102,7 @@ def addImportLines(defineAsClass, outputFileName):
         setupFile.write(cppImportLines)
         return ""
 
-def addSDLImportLines(assignInfo):
+def addSDLImportLines(defineAsClass, assignInfo):
     global setupFile
     
     if REQUIRE_OPTION in assignInfo[NONE_FUNC_NAME].keys():
