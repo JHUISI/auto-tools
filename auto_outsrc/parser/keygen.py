@@ -1271,8 +1271,9 @@ def instantiateBFSolver(config, assignInfo):
     infoOutputVar = "info = " + str(keygenElemToSMTExp) + "\n"
     latex_block = assignInfo.get(LATEX_HEADER)
     latex_info = {}
-    for i,j in latex_block.items():
-        latex_info[ i ] = j.getLineStrValue()
+    if latex_block != None:
+        for i,j in latex_block.items():
+            latex_info[ i ] = j.getLineStrValue()
     myLCG = LatexCodeGenerator(latex_info)
     
     f = open(name, 'w')
