@@ -31,10 +31,22 @@ header_transform = """\n
 header_decrypt = """\n
 \\newcommand{\gutsofdecrypt}{
 """
+
+header_decout = """\n
+\\newcommand{\gutsofdecout}{
+"""
+
 proof_footer = "\n}\n"
 
 basic_step = """\medskip \\noindent
 {\\bf Step %d:} %s:
+\\begin{equation}
+%s
+\end{equation}
+""" # (step #, message of what we are doing, resulting equation)
+
+basic_step2 = """\medskip \\noindent
+{\\bf Step %s:} %s:
 \\begin{equation}
 %s
 \end{equation}
@@ -63,6 +75,7 @@ def printCommaList(_list):
 class LatexCodeGenerator:
     def __init__(self, latex_info):
         self.latex  = latex_info # used for substituting attributes
+        self.latex[ "transformOutputList" ] = "\CT'"
         self.latexVars  = {'alpha':'\\alpha', 'beta':'\beta', 'gamma':'\gamma', 'delta':'\delta', 'epsilon':'\epsilon',
              'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
              'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
@@ -342,6 +355,9 @@ class GenerateProof:
         self.__lcg_buckets_pair_cnt = 0
         self.__lcg_unblinded_pair = {}
         self.__lcg_unblinded_pair_cnt = 0
+        self.__lcg_decout_data = {}
+        self.__lcg_decout_count = 0
+        self.bucket_counter = 0 # use in bucket section
         
     def setPrefix(self, prefixStr):
         assert type(prefixStr) == str, "expecting string for the step prefix."
@@ -416,18 +432,29 @@ class GenerateProof:
             msg = "" # + self.lcg.print_statement(node.left) 
             for i,j in techs.items():
                 if i == 'applyTechnique11':
-                    msg += "Unrolled the dot product, "
+                    msg += "Unroll the product (if applicable), "
                 if i == 'SimplifySDLNode' and j != None:
-                    msg += "Simplified the equation, "
+                    msg += "Simplified the equation (if applicable), "
             msg += "then computed $" + self.lcg.print_statement(node.left) + "$"
-        self.__lcg_transform_data[ self.__lcg_transform_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ) }
+        self.__lcg_transform_data[ self.__lcg_transform_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ).replace("Blinded", "'") }
         self.__lcg_transform_count += 1
+        return
+
+    def setDecoutStep(self, node): # TODO: improve to handle other node types
+        assert self.lcg != None, "LatexCodeGen not initialized."
+        msg = ""
+        if node.type == ops.EQ:
+            # check rhs
+            if node.right.type == ops.FUNC: return
+            msg = "Compute $" + self.lcg.print_statement(node.left) + "$"
+        self.__lcg_decout_data[ self.__lcg_decout_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ) }
+        self.__lcg_decout_count += 1
         return
     
     def setStartPairs(self, lineNo, sdlList):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("DEBUG: ", lineNo)
-        print("DEBUG: ", sdlList)
+        print("setStartPairs DEBUG: ", lineNo)
+        print("setStartPairs DEBUG: ", sdlList)
         msg = "Some Message..."
         CM = ", "
         eqStr = ""        
@@ -440,8 +467,8 @@ class GenerateProof:
     
     def setCombinePairs(self, lineNo, sdlList):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("DEBUG: ", lineNo)
-        print("DEBUG: ", sdlList)
+        print("setCombinePairs DEBUG: ", lineNo)
+        print("setCombinePairs DEBUG: ", sdlList)
         msg = "Some Message..."        
         CM = ", "
         eqStr = ""
@@ -454,16 +481,16 @@ class GenerateProof:
     
     def setBuckets(self, lineNo, metaSdlList, metaSdlFactors):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("DEBUG: ", lineNo)
-        print("DEBUG: ", metaSdlList)        
-        print("DEBUG: ", metaSdlFactors)
-        msg = "Some Message..."        
-        CM = ", "
+        print("setBuckets DEBUG: ", lineNo)
+        print("setBuckets DEBUG: ", metaSdlList)        
+        print("setBuckets DEBUG: ", metaSdlFactors)
+        msg = "Organize pairings based on common blinding factors"
+        CM = " \cdot "
         listOfStr = []
-        for i in range(len(metaSdlList)):
-            eqStr = "BT" + str(i)
+        for i in range(len(metaSdlFactors)):
+            eqStr = "{\CT'}_{" + self.lcg.getLatexVersion(str(metaSdlFactors[i][0])) + "} = "
             for node in metaSdlList[i]:
-                eqStr += self.lcg.print_statement( node ) + ", "
+                eqStr += self.lcg.print_statement( node ).replace("Blinded", "'") + " \cdot "
             eqStr = eqStr[:-len(CM)]
             listOfStr.append(eqStr)
         self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
@@ -526,6 +553,19 @@ class GenerateProof:
         result = basic_step % (step, data['msg'], result_eq)
         #print('[STEP', step, ']: ', result)
         return result
+    
+    def proofBody2(self, step, data):
+        result_eq = data['eq']
+        result_eq_str = ""
+        if(type(result_eq) == list):
+            for i in result_eq:
+                result_eq_str += i + comma
+            result_eq_str = result_eq_str[:-len(comma)]
+        else:
+            result_eq_str = str(result_eq)
+        result = basic_step2 % (step, data['msg'], result_eq_str)
+        #print('[STEP', step, ']: ', result)
+        return result
 
     def writeConfig(self, latex_file):
         title = string.capwords(latex_file)
@@ -533,15 +573,22 @@ class GenerateProof:
         # add list of ciphertext names
         outputStr += headerCT % self.__toLaTeX(self.ctList)
         # build the decrypt portion of proof
-        outputStr += header_decrypt
-        for i in range(self.__lcg_decrypt_count):
-            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
-        outputStr += proof_footer
+#        outputStr += header_decrypt
+#        for i in range(self.__lcg_decrypt_count):
+#            outputStr += self.proofBody(i+1, self.__lcg_decrypt_data[i])
+#        outputStr += proof_footer
        # build the transform portion of proof 
         outputStr += header_transform
         for i in range(self.__lcg_transform_count):
-            outputStr += self.proofBody(i+1, self.__lcg_transform_data[i])
+            outputStr += self.proofBody2(str(i+1) + "a", self.__lcg_transform_data[i])        
+            outputStr += self.proofBody2(str(i+1) + "b", self.__lcg_buckets_pair[i])        
         outputStr += proof_footer
+        
+        outputStr += header_decout
+        for i in range(self.__lcg_decout_count):
+            outputStr += self.proofBody(i+1, self.__lcg_decout_data[i]) 
+        outputStr += proof_footer
+        
         return outputStr
     
     def writeProof(self, file=None):

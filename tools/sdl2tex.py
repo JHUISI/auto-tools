@@ -78,14 +78,14 @@ def computeHashIndex(hashSigs, inputList, targetType):
         hashSigs[ key ] = count
         return count    
 
-def generateLatexFuncs(tcObj, funcName, config, blockStmts, hashSigs):
+def generateLatexFuncs(tcObj, funcName, config, blockStmts, hashSigs, latexBlock=None):
     sdlVarType = tcObj.getSDLVarType()
     randomElems = {'ZR':'\Zq', 'G1':'\G_1', 'G2':'\G_2', 'GT':'\G_T', 'Str':'\{0, 1\}^*', 'Int':'\Z'}
     
     lines = list(blockStmts.keys())
     lines.sort()
     
-    lcg = LatexCodeGenerator(None)
+    lcg = LatexCodeGenerator(latexBlock)
     data = {sdl.inputKeyword:None, sdl.outputKeyword:None}
     defines       = [funcname_cmd % (str(funcName), str(funcName).title())]
     random_assign = []
@@ -103,6 +103,11 @@ def generateLatexFuncs(tcObj, funcName, config, blockStmts, hashSigs):
             print("Input: ", inputNode)
             if Type(inputNode) == ops.LIST: # and NoneKeyword not in inputNode.listNodes:
                 data[sdl.inputKeyword] = getList(inputNode.listNodes)
+            elif Type(inputNode) == ops.ATTR:
+                if str(inputNode) == NoneKeyword:
+                    data[sdl.inputKeyword] = []
+                else:
+                    data[sd.inputKeyword] = [str(inputNode)]
         elif blockStmts[i].getAssignVar() == sdl.outputKeyword:
             outputNode = blockStmts[i].getAssignNode().getRight()
             print("Output: ", outputNode)
@@ -255,6 +260,13 @@ class LatexCodeGenerator:
     def clearHashIndex(self):
         self.hash_index = 0
         return
+    
+    def getList(self, listNode):
+        newList = []
+        for i in listNode:
+            if i != NoneKeyword:
+                newList.append( self.getLatexVersion(i) )
+        return newList
         
     def print_statement(self, node, parent=None):
         if node == None:
@@ -315,7 +327,9 @@ class LatexCodeGenerator:
                     return ( left + '^{' + right + "}")
                 return ("(" + left + ')^{' + right + "}")
             elif(node.type == ops.MUL):
-                return ( left + ' \cdot ' + right)
+                return ( left + ' \cdot ' + right )
+            elif(node.type == ops.DIV):
+                return ( left + ' / ' + right )
             elif(node.type == ops.ADD):
                 return ("("+ left + ' + ' + right + ")")
             elif(node.type == ops.SUB):
@@ -351,7 +365,7 @@ class LatexCodeGenerator:
             elif(node.type == ops.AND):
                  return ( left + " \mbox{ and } " + right )
             elif(node.type in [ops.LIST, ops.EXPAND]):
-                 return ( "(" + printCommaList(getList(node.listNodes)) + ")")
+                 return ( "(" + printCommaList(self.getList(node.listNodes)) + ")")
             elif(node.type == ops.IF):
                  return ( "\mbox{if }{" + left + "}")
             elif(node.type == ops.ELSE):
@@ -397,7 +411,12 @@ def readConfig(dest_path, sdl_file, config_file, output_file, verbose):
     assignInfo = sdl.getAssignInfo()
 #    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
-    
+    latex_info = assignInfo.get(sdl.LATEX_HEADER)
+    latexBlock = {}
+    if latex_info != None:
+        for i,j in latex_info.items():
+            latexBlock[ i ] = j.getLineStrValue()
+
     print("Processing... ", sdl_name)
     
     # 1. Start with Keygen/Setup ... 

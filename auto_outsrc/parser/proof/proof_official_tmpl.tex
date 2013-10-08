@@ -78,7 +78,7 @@
 \date{}
 \maketitle
 
-\section{$\KeygenOut$ Proof}
+\section{$\KeygenOut$ Proof of Security}
 
 Let $\listofmskvalues$ be the $\MSK$ variable(s) and $\listofrandomvalues$ be randomness selected in the $\Keygen$ algorithm. The $\Keygen$ algorithm runs to obtain the secret key, \\ $\SK = \{\secretkey\}$ and is computed as follows:
 
@@ -107,18 +107,23 @@ Observe that this simulated $\pseudokey$ has an identical distribution to $\TK$.
 \end{description}
 
 % TODO: fine-tune
-%\section{$\Transform$ Proof}
-%
-%In the ${\schemename}$ scheme, we show the relevant portions to our transformation in the $\Decrypt$ algorithm. The ciphertext, $\CT = \{\ciphertext\}$ and the \\ $\SK = \{\secretkey\}$. 
-%
-%%\begin{description}
-%%\item {Step 1: Compute tag} \begin{equation*} tag =  \end{equation*}
-%%\end{description}
-%\gutsofdecrypt
-%
-%% Rework this text...
-%Then, we show how the computation of the original $\Decrypt$ algorithm is distributed between the $\Transform$ algorithm and the $\Decout$ algorithm.
-%
-%\gutsoftransform
+\section{$\Transform$ Proof of Correctness}
+
+In the ${\schemename}$ scheme, we show the relevant portions to our transformation in the $\Decrypt$ algorithm. The ciphertext, $\CT = \{\ciphertext\}$ and the \\ $\SK = \{\secretkey\}$. 
+
+\gutsofdecrypt
+
+\noindent
+[ NEED OFFICIAL TEXT HERE ] Next, we show how the computation of the original $\Decrypt$ algorithm is distributed between the $\Transform$ algorithm and the $\Decout$ algorithm.
+
+\medskip \noindent
+We first show the steps of the transform algorithm with respect to the transform key, $\TK$. 
+
+\gutsoftransform
+
+\noindent
+We now show the final computation performed by the $\Decout$ algorithm which recovers the message and does not involve any pairing computations.
+
+\gutsofdecout
 
 \end{document}

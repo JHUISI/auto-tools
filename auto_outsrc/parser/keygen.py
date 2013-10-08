@@ -1317,7 +1317,7 @@ def instantiateBFSolver(config, assignInfo):
         RndList.append(rndLatex) # fix 2 (after we have type defs for original SK components)
         tkVar   =  skLatex + "'"
         tkVar2  =  "\\bar{" + skLatex + "}"
-        tkBf    = BinaryNode("{\sf " + myLCG.getLatexVersion(skBfMap[i]) + "}")
+        tkBf    = BinaryNode("{\sf 1 / " + myLCG.getLatexVersion(skBfMap[i]) + "}")
         if i in rndVars:
             theOP = ops.MUL
         else:
@@ -1333,7 +1333,7 @@ def instantiateBFSolver(config, assignInfo):
         if type(skElem) == dict:
             for j, k in skElem.items():
                 J = myLCG.getLatexVersion(j)
-                bfStr = "{\sf " + myLCG.getLatexVersion(k) + "}"
+                bfStr = "{\sf 1 / " + myLCG.getLatexVersion(k) + "}"
                 theDef = J + "' = {" + J + " \cdot " + bfStr + "}"
                 if theDef not in keyDefs: keyDefs.append( theDef )
                 if bfStr not in bfList: bfList.append( bfStr )
@@ -1351,7 +1351,7 @@ def instantiateBFSolver(config, assignInfo):
             print("node: ", resNode, type(resNode)) # need the symbolic executed version! 
         else:
             print("UNIQUE BF: ", skElem)
-            bfStr = "{\sf " + myLCG.getLatexVersion(skElem) + "}"
+            bfStr = "{\sf 1 / " + myLCG.getLatexVersion(skElem) + "}"
             if bfStr not in bfList: bfList.append( bfStr )
             resNode = varInfoObj.getAssignBaseElemsOnly()
             theDef = myLCG.getLatexVersion(i) + "' = (" + myLCG.getLatexVersion(i) + " ) ^ { " + bfStr + "}"

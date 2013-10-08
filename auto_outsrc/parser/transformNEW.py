@@ -726,7 +726,9 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
 
         #if ( (canCollapseThisForLoop == True) and (regDotProdVar != None) and (str(currentNode.right) == regDotProdVar) and (singleBF == True) ):
         if ( (canCollapseThisForLoop == True) and (regDotProdVar != None) and (str(currentNode.right) == regDotProdVar) ):
-            decoutLines.append(lineForDecoutLines + " ^ " + allPossibleBlindingFactors[0] + "\n")
+            tmpComp = lineForDecoutLines + " ^ " + allPossibleBlindingFactors[0] + "\n"
+            #proof.setDecoutStep(tmpComp)
+            decoutLines.append(tmpComp)
             #print("Line for decout:  ", lineForDecoutLines + " ^ " + allPossibleBlindingFactors[0] + "\n")
         else:
             decoutLines.append(lineForDecoutLines + "\n")
@@ -1068,6 +1070,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
             transformLines.append(str(currentFullNode) + "\n")
             if ( (writeToDecout == True) and (str(currentFullNode.left) not in ctVarNames) and (str(currentFullNode.left) != (keygenSecVar + blindingSuffix)) ):
                 decoutLines.append(str(currentFullNode) + "\n")
+                proof.setDecoutStep(currentFullNode)
             if (str(currentFullNode.left) in ctVarNames):
                 ctExpandListNodesForThisLine = getListNodes(currentFullNode.right)
                 addListNodesForThisLineToCtExpandListNodes(ctExpandListNodes, ctExpandListNodesForThisLine)
@@ -1175,6 +1178,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
                 #proof.setTransformStep(currentNode, techs_applied)
                 if (writeToDecout == True):
                     decoutLines.append(str(currentNode) + "\nNOP\n")
+                    proof.setDecoutStep(currentNode)                    
                     addVarsUsedInDecoutToGlobalList(currentNode)
                     searchForCTVarsThatNeedBuckets(currentNode, ctExpandListNodes, ctVarsThatNeedBuckets)
             else:
@@ -1182,6 +1186,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
                 transformLines.append(str(currentNode) + "\n")
                 if (writeToDecout == True):
                     decoutLines.append(str(currentNode) + "\n")
+                    proof.setDecoutStep(currentNode)                    
                     addVarsUsedInDecoutToGlobalList(currentNode)
                     searchForCTVarsThatNeedBuckets(currentNode, ctExpandListNodes, ctVarsThatNeedBuckets)
 
@@ -1193,11 +1198,13 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
         elif (str(currentNode.left) == config.M):
             if (writeToDecout == True):
                 decoutLines.append(str(currentNode) + "\n")
+                proof.setDecoutStep(currentNode)
                 addVarsUsedInDecoutToGlobalList(currentNode.right)
                 searchForCTVarsThatNeedBuckets(currentNode.right, ctExpandListNodes, ctVarsThatNeedBuckets)
         elif (str(currentNode.left) in config.doNotIncludeInTransformList):
             if (writeToDecout == True):
                 decoutLines.append(str(currentNode) + "\n")
+                proof.setDecoutStep(currentNode)
                 addVarsUsedInDecoutToGlobalList(currentNode.right)
                 searchForCTVarsThatNeedBuckets(currentNode.right, ctExpandListNodes, ctVarsThatNeedBuckets)
         elif ( (len(currentNodePairings) > 0) and (areAllVarsOnLineKnownByTransform == True) ):
@@ -1219,6 +1226,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
         else:
             if (writeToDecout == True):
                 decoutLines.append(str(currentNode) + "\n")
+                proof.setDecoutStep(currentNode)
                 addVarsUsedInDecoutToGlobalList(currentNode.right)
                 searchForCTVarsThatNeedBuckets(currentNode.right, ctExpandListNodes, ctVarsThatNeedBuckets)
 
@@ -1278,7 +1286,13 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
 
     decoutLines.append("output := " + config.M + "\n")
     decoutLines.append("END :: func:" + decOutFunctionName + "\n\n")
-
+    
+    # debug
+    print("<=== DECOUT ===>")
+    for i in decoutLines:
+        print(i)
+    print("<=== DECOUT ===>")
+    
     transformPlusDecoutLines = transformLines + decoutLines
 
     transformOutputListDecl = [transformOutputList + " := list\n"]
