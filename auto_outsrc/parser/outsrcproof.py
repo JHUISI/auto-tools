@@ -435,7 +435,7 @@ class GenerateProof:
                     msg += "Unroll the product (if applicable), "
                 if i == 'SimplifySDLNode' and j != None:
                     msg += "Simplified the equation (if applicable), "
-            msg += "then computed $" + self.lcg.print_statement(node.left) + "$"
+            msg += "then compute $" + self.lcg.print_statement(node.left) + "$"
         self.__lcg_transform_data[ self.__lcg_transform_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ).replace("Blinded", "'") }
         self.__lcg_transform_count += 1
         return
@@ -484,15 +484,19 @@ class GenerateProof:
         print("setBuckets DEBUG: ", lineNo)
         print("setBuckets DEBUG: ", metaSdlList)        
         print("setBuckets DEBUG: ", metaSdlFactors)
-        msg = "Organize pairings based on common blinding factors"
+        msg = "Organize pairings based on common blinding factors for "
         CM = " \cdot "
+        AND = " and "
         listOfStr = []
         for i in range(len(metaSdlFactors)):
-            eqStr = "{\CT'}_{" + self.lcg.getLatexVersion(str(metaSdlFactors[i][0])) + "} = "
+            eqStr = "{\CT'}_{" + str(self.bucket_counter) + "} = "
+            self.bucket_counter += 1
+            msg +=  "$" + self.lcg.getLatexVersion(str(metaSdlFactors[i][0])) + "$" + AND
             for node in metaSdlList[i]:
                 eqStr += self.lcg.print_statement( node ).replace("Blinded", "'") + " \cdot "
             eqStr = eqStr[:-len(CM)]
             listOfStr.append(eqStr)
+        msg = msg[:-len(AND)]
         self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
         self.__lcg_buckets_pair_cnt += 1
         return
