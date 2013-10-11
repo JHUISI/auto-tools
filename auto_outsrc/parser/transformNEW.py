@@ -499,6 +499,7 @@ def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, de
     combinedPairingsForProof = []
     bucketizedPairingsForProof = []
     bfsForProof = []
+    outputLineForProof = []
 
     for groupedPairing in groupedPairings:
         transformListIndex = getTransformListIndex(currentLineNo, astNodes, config)
@@ -537,8 +538,9 @@ def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, de
             lineForTransformLines += " ) }"
 
         transformLines.append(lineForTransformLines + "\n")
-        #print("Line for transform:  ", lineForTransformLines)
-
+        #print("DEBUG => Line for transform:  ", lineForTransformLines)
+        lineForTransformLines2 = str(lineForTransformLines)
+        
         if (len(groupedPairings) == 1):
             if (withinForLoop == True):
                 #lineForTransformLines = str(currentNode.left) + " := " + transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "?"
@@ -557,9 +559,10 @@ def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, de
 
         bucketizedPairingsForProof.append(listOfPairings)
         bfsForProof.append(groupedPairing[0])
-
+        outputLineForProof.append(lineForTransformLines2)
+    
     proof.setCombinePairs(currentLineNo, combinedPairingsForProof)
-    proof.setBuckets(currentLineNo, bucketizedPairingsForProof, bfsForProof)
+    proof.setBuckets(currentLineNo, bucketizedPairingsForProof, bfsForProof, outputLineForProof)
     #proof.setBuckets(currentLineNo, bucketizedPairingsForProof)
 
     FLrepVarCounter = originalFLrepVarCounter
@@ -612,7 +615,8 @@ def writeOutPairingCalcs(proof, techApplied, groupedPairings, transformLines, de
     if (writeToDecout == True):
         decoutLines.append(lineForDecoutLines + "\n")
         addVarsUsedInDecoutToGlobalList(getLastRightSideOfStringAssignStatements(lineForDecoutLines))
-        #print("Line for decout:  ", lineForDecoutLines)
+        #print("DEBUG => Line for decout:  ", lineForDecoutLines)
+        proof.setDecoutStepFromStr(lineForDecoutLines)
 
     #FLrepVarCounter += 1
 
@@ -637,7 +641,7 @@ def makeListTypeReplacement(inputType):
 
     return str(inputType)
 
-def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, currentLineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors):
+def writeOutLineKnownByTransform(proof, currentNode, transformLines, decoutLines, currentLineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors):
     global transformListCounter, decoutListCounter, iterationNo, varsWithNonStandardTypes, FLrepVarCounter
 
     decoutListCounter = transformListCounter
@@ -647,7 +651,6 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
     #decoutListIndex = getDecoutListIndex(currentLineNo)
 
     currentNodeRightType = getVarTypeInfoRecursive(currentNode.right, config.decryptFuncName)
-
     if (currentNodeRightType in listOfStandardTypes):
         if (withinForLoop == True):
             #lineForTransformLines = transformOutputListForLoop + LIST_INDEX_SYMBOL + str(transformListIndex) + "? := "
@@ -683,7 +686,8 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
         '''
 
     lineForTransformLines += str(currentNode.right)
-
+    proof.setFinalPartialCT(lineForTransformLines)
+    #print("DEBUGGING => ", lineForTransformLines)
     transformLines.append(lineForTransformLines + "\n")
 
     #iterationNo = origIterationNo
@@ -696,7 +700,8 @@ def writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, curre
         iterationNo += 1
     else:
         lineForTransformLines = str(currentNode.left) + " := " + transformOutputList + LIST_INDEX_SYMBOL + str(transformListIndex)
-
+    #print("DEBUGGING => ", lineForTransformLines)
+    proof.setFinalPartialCT(lineForTransformLines)
     transformLines.append(lineForTransformLines + "\n")
 
     if (withinForLoop == False):
@@ -798,7 +803,7 @@ def searchForCTVarsThatNeedBuckets(node, ctExpandListNodes, ctVarsThatNeedBucket
         if ( (varOnThisLine in ctExpandListNodes) and (varOnThisLine not in ctVarsThatNeedBuckets) ):
             ctVarsThatNeedBuckets.append(varOnThisLine)
 
-def writeOutCTVarsThatNeedBuckets(ctVarsThatNeedBuckets, transformInputExpandNumStatements, decoutInputExpandNumStatements, transformLines, decoutLines):
+def writeOutCTVarsThatNeedBuckets(proof, ctVarsThatNeedBuckets, transformInputExpandNumStatements, decoutInputExpandNumStatements, transformLines, decoutLines):
     global transformListCounter, decoutListCounter
 
     for var in ctVarsThatNeedBuckets:
@@ -812,6 +817,10 @@ def writeOutCTVarsThatNeedBuckets(ctVarsThatNeedBuckets, transformInputExpandNum
 
         transformListCounter += 1
         decoutListCounter += 1
+        #print("DEBUG FINAL => ", lineForTransform)
+        proof.setFinalPartialCT(lineForTransform)
+        proof.setPrePartialCT(lineForDecout)
+
         #reverse order b/c we're not keeping a counter
         transformLines.insert(transformInputExpandNumStatements, lineForTransform)
         decoutLines.insert(decoutInputExpandNumStatements, lineForDecout)
@@ -1012,6 +1021,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
     seeIfSingleBF(varsThatAreBlindedDict)
 
     ctVarNames, ctList = getCTVarNames()
+    proof.setParser( SDLParser() )
     proof.setCTVars(ctList)
     #print(ctVarNames, " := ", ctList)
     #sys.exit(0)
@@ -1215,11 +1225,11 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
             if (groupedPairings[0][0] == []):
                 knownVars.append(str(currentNode.left))
         elif (areAllVarsOnLineKnownByTransform == True):
-            writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, lineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors)
+            writeOutLineKnownByTransform(proof, currentNode, transformLines, decoutLines, lineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors)
             knownVars.append(str(currentNode.left))
         #elif ( (regDotProdVarOnThisLine != None) and (singleBF == True) and (canCollapseThisForLoop == True) ):
         elif ( (regDotProdVarOnThisLine != None) and (canCollapseThisForLoop == True) ):
-            writeOutLineKnownByTransform(currentNode, transformLines, decoutLines, lineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors)
+            writeOutLineKnownByTransform(proof, currentNode, transformLines, decoutLines, lineNo, astNodes, config, ctExpandListNodes, ctVarsThatNeedBuckets, regDotProdVar, allPossibleBlindingFactors)
             knownVars.append(str(currentNode.left))
         #elif ( (regDotProdVar != None) and (str(currentNode.right) == regDotProdVar) and (singleBF == True) ):
             #decoutLines.append(str(currentNode) + " ^ " + allPossibleBlindingFactors[0])
@@ -1241,7 +1251,7 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
     #sys.exit("test")
 
     if (len(ctVarsThatNeedBuckets) > 0):
-        writeOutCTVarsThatNeedBuckets(ctVarsThatNeedBuckets, transformInputExpandNumStatements, decoutInputExpandNumStatements, transformLines, decoutLines)
+        writeOutCTVarsThatNeedBuckets(proof, ctVarsThatNeedBuckets, transformInputExpandNumStatements, decoutInputExpandNumStatements, transformLines, decoutLines)
 
     #print(varsUsedInDecout)
     #sys.exit("test")
@@ -1288,10 +1298,10 @@ def transformNEW(proof, varsThatAreBlindedDict, secretKeyElements, config):
     decoutLines.append("END :: func:" + decOutFunctionName + "\n\n")
     
     # debug
-    print("<=== DECOUT ===>")
-    for i in decoutLines:
-        print(i)
-    print("<=== DECOUT ===>")
+    #print("<=== DECOUT ===>")
+    #for i in decoutLines:
+    #    print(i)
+    #print("<=== DECOUT ===>")
     
     transformPlusDecoutLines = transformLines + decoutLines
 

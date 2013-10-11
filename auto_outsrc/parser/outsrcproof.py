@@ -26,6 +26,7 @@ headerCT = "\n\\newcommand{\ciphertext}{ %s }\n"
 
 header_transform = """\n
 \\newcommand{\gutsoftransform}{
+\\transform(\CT, \TK) \\rightarrow \CT'
 """
 
 header_decrypt = """\n
@@ -34,6 +35,7 @@ header_decrypt = """\n
 
 header_decout = """\n
 \\newcommand{\gutsofdecout}{
+\decout(\CT', \SK) \\rightarrow M
 """
 
 proof_footer = "\n}\n"
@@ -55,6 +57,7 @@ basic_step2 = """\medskip \\noindent
 #small_exp_label = "\label{eqn:smallexponents}\n"
 #final_batch_eq  = "\label{eqn:finalequation}\n"
 
+transformOutputList = "transformOutputList"
 main_proof_header_standalone = """\n"""
 NoneKeyword = "None"
 comma = ","
@@ -75,7 +78,8 @@ def printCommaList(_list):
 class LatexCodeGenerator:
     def __init__(self, latex_info):
         self.latex  = latex_info # used for substituting attributes
-        self.latex[ "transformOutputList" ] = "\CT'"
+        self.latex[ transformOutputList ] = "\CT'"
+        self.latex[ "Blinded" ] = "'"
         self.latexVars  = {'alpha':'\\alpha', 'beta':'\beta', 'gamma':'\gamma', 'delta':'\delta', 'epsilon':'\epsilon',
              'zeta':'\zeta', 'eta':'\eta', 'Gamma':'\Gamma', 'Delta':'\Delta', 'theta':'\theta', 
              'kappa':'\kappa', 'lambda':'\lambda', 'mu':'\mu', 'nu':'\\nu', 'xi':'\\xi', 'sigma':'\\sigma',
@@ -85,9 +89,14 @@ class LatexCodeGenerator:
     
     def getLatexVersion(self, name):
         if self.latex != None and self.latex.get(name) != None:
-            return self.latex[ name ]        
+            return self.latex[ name ]
         elif name.find(hashtag) != -1: # matches words separated by hashtags. x#1 => 'x_1'
-            return name.replace(hashtag, underscore)
+            newName = name.replace(hashtag, underscore) 
+            for i,j in self.latex.items():
+                if i in newName:
+                    newName = newName.replace(i, j)
+                    break
+            return newName
         elif name.find("G1") != -1:
             return "\hat{" + self.getLatexVersion( name.replace("G1", "") ) + "}"
         elif name.find("G2") != -1:
@@ -100,6 +109,9 @@ class LatexCodeGenerator:
             else:
                 for i,j in self.latexVars.items():
                     if i in name: return name.replace(i, j)
+                for i,j in self.latex.items():
+                    if i in name: return self.getLatexVersion( name.replace(i, j) )
+                
 #            return self.latexVars.get(name)
         return name    
     
@@ -129,8 +141,7 @@ class LatexCodeGenerator:
                 msg = '\\numsigs'
             else:
                 msg = self.getLatexVersion(str(msg))
-#                if msg.find('_') != -1: msg = "{" + msg + "}" # prevent subscript
-#            print("msg : ", msg)
+
             if node.delta_index != None and 'delta' in node.attr:
 #                print("Found IT!!!")
                 msg = msg + '_{' + node.delta_index[0] + '}'
@@ -357,8 +368,16 @@ class GenerateProof:
         self.__lcg_unblinded_pair_cnt = 0
         self.__lcg_decout_data = {}
         self.__lcg_decout_count = 0
-        self.bucket_counter = 0 # use in bucket section
-        
+        self.bucket_counter = 1 # use in bucket section
+        self.finalPartCT = []
+        self.expandPartCT = []
+        self.parser = None
+        self.verbose = False
+    
+    def setParser(self, objRef):
+        self.parser = objRef
+        return
+    
     def setPrefix(self, prefixStr):
         assert type(prefixStr) == str, "expecting string for the step prefix."
         self.stepPrefix = prefixStr
@@ -436,7 +455,7 @@ class GenerateProof:
                 if i == 'SimplifySDLNode' and j != None:
                     msg += "Simplified the equation (if applicable), "
             msg += "then compute $" + self.lcg.print_statement(node.left) + "$"
-        self.__lcg_transform_data[ self.__lcg_transform_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ).replace("Blinded", "'") }
+        self.__lcg_transform_data[ self.__lcg_transform_count ] = {'msg': msg, 'eq': self.lcg.print_statement( node ) }
         self.__lcg_transform_count += 1
         return
 
@@ -451,10 +470,40 @@ class GenerateProof:
         self.__lcg_decout_count += 1
         return
     
+    def setDecoutStepFromStr(self, node_str):
+        assert self.parser != None
+        node = self.parser.parse(node_str)
+        return self.setDecoutStep(node)
+    
+    def setFinalPartialCT(self, node_str):
+        assert self.parser != None
+        eq_op = ":="
+        test = node_str.split(eq_op)
+        node = self.parser.parse(node_str)
+        if  transformOutputList in test[0]: # tf must be on LHS
+            self.finalPartCT.append( self.lcg.print_statement(node) )
+        elif transformOutputList in test[1]:            
+            self.expandPartCT.append( self.lcg.print_statement(node) )
+        else:
+            print("UNHANDLED CASE: ", node_str)
+        return
+    
+    def setPrePartialCT(self, node_str):
+        assert self.parser != None
+        eq_op = ":="
+        test = node_str.split(eq_op)
+        if  transformOutputList in test[1]: # tf must be on RHS
+            node = self.parser.parse(node_str)
+            self.expandPartCT.append( self.lcg.print_statement(node) )
+        else:
+            print("UNHANDLED CASE: ", node_str)
+        return
+    
     def setStartPairs(self, lineNo, sdlList):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("setStartPairs DEBUG: ", lineNo)
-        print("setStartPairs DEBUG: ", sdlList)
+        if self.verbose:
+            print("setStartPairs DEBUG: ", lineNo)
+            print("setStartPairs DEBUG: ", sdlList)
         msg = "Some Message..."
         CM = ", "
         eqStr = ""        
@@ -467,8 +516,9 @@ class GenerateProof:
     
     def setCombinePairs(self, lineNo, sdlList):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("setCombinePairs DEBUG: ", lineNo)
-        print("setCombinePairs DEBUG: ", sdlList)
+        if self.verbose:        
+            print("setCombinePairs DEBUG: ", lineNo)
+            print("setCombinePairs DEBUG: ", sdlList)
         msg = "Some Message..."        
         CM = ", "
         eqStr = ""
@@ -479,11 +529,13 @@ class GenerateProof:
         self.__lcg_combine_pair_cnt += 1
         return
     
-    def setBuckets(self, lineNo, metaSdlList, metaSdlFactors):
+    def setBuckets(self, lineNo, metaSdlList, metaSdlFactors, outputList):
         assert self.lcg != None, "LatexCodeGen not initialized."
-        print("setBuckets DEBUG: ", lineNo)
-        print("setBuckets DEBUG: ", metaSdlList)        
-        print("setBuckets DEBUG: ", metaSdlFactors)
+        if self.verbose:        
+            print("setBuckets DEBUG: ", lineNo)
+            print("setBuckets DEBUG: ", metaSdlList)        
+            print("setBuckets DEBUG: ", metaSdlFactors)
+            print("setBuckets DEBUG: ", outputList)
         msg = "Organize pairings based on common blinding factors for "
         CM = " \cdot "
         AND = " and "
@@ -492,10 +544,11 @@ class GenerateProof:
             eqStr = "{\CT'}_{" + str(self.bucket_counter) + "} = "
             self.bucket_counter += 1
             msg +=  "$" + self.lcg.getLatexVersion(str(metaSdlFactors[i][0])) + "$" + AND
-            for node in metaSdlList[i]:
-                eqStr += self.lcg.print_statement( node ).replace("Blinded", "'") + " \cdot "
-            eqStr = eqStr[:-len(CM)]
-            listOfStr.append(eqStr)
+            node2 = self.parser.parse( outputList[i] )
+            listOfStr.append( self.lcg.print_statement(node2) )            
+#            for node in metaSdlList[i]:
+#                eqStr += self.lcg.print_statement( node ) + " \cdot "
+#            eqStr = eqStr[:-len(CM)]
         msg = msg[:-len(AND)]
         self.__lcg_buckets_pair[ self.__lcg_buckets_pair_cnt ] = {'msg': msg, 'eq':listOfStr }
         self.__lcg_buckets_pair_cnt += 1
@@ -567,7 +620,7 @@ class GenerateProof:
             result_eq_str = result_eq_str[:-len(comma)]
         else:
             result_eq_str = str(result_eq)
-        result = basic_step2 % (step, data['msg'], result_eq_str)
+        result = basic_step2 % (str(step), data['msg'], result_eq_str)
         #print('[STEP', step, ']: ', result)
         return result
 
@@ -584,13 +637,18 @@ class GenerateProof:
        # build the transform portion of proof 
         outputStr += header_transform
         for i in range(self.__lcg_transform_count):
-            outputStr += self.proofBody2(str(i+1) + "a", self.__lcg_transform_data[i])        
-            outputStr += self.proofBody2(str(i+1) + "b", self.__lcg_buckets_pair[i])        
+            outputStr += self.proofBody2(str(i+1) + "a", self.__lcg_transform_data[i])
+            outputStr += self.proofBody2(str(i+1) + "b", self.__lcg_buckets_pair[i])
+            final_i = i
+        data = {'msg': 'Return remaining elements of partially decrypted ciphertext', 'eq':self.finalPartCT}
+        outputStr += self.proofBody2(final_i+1, data)
         outputStr += proof_footer
         
         outputStr += header_decout
+        data = {'msg': 'Extract the following from partially decrypted ciphertext', 'eq':self.expandPartCT}
+        outputStr += self.proofBody2(1, data)
         for i in range(self.__lcg_decout_count):
-            outputStr += self.proofBody(i+1, self.__lcg_decout_data[i]) 
+            outputStr += self.proofBody(i+2, self.__lcg_decout_data[i]) 
         outputStr += proof_footer
         
         return outputStr
