@@ -65,7 +65,7 @@ An example for how to execute AutoStrong on the Boneh-Boyen (short) signature sc
 Configuration
 =============
 
-AutoStrong requires configuration parameters to understand basic aspects of the signature scheme:
+AutoStrong requires configuration parameters to understand basic aspects of the signature scheme.  The configuration file is specified in Python with the following options:
 
 ``schemeType``: for describing the type of input scheme. For signature types, ``"PKSIG"``.
 
