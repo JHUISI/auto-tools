@@ -8,5 +8,5 @@ set yrange [0 : 25]; set xrange[1 : 100]; set xtics autofreq 20;
 set xlabel 'Number of signatures';
 set ylabel 'ms per signature';
 plot 'CDH_bat.dat' w lines lw 6 title 'HW-Single (batched)', \\
- 'HW_DIFF_bat.dat' w lines lw 6 title 'HW-Multiple (batched)', \\
- 'CDH_ind.dat' w lines lw 6 title 'HW (individual)';
+   'CDH_ind.dat' w lines lw 6 title 'HW (individual)', \\
+  'HW_DIFF_bat.dat' w lines lw 6 title 'HW-Multiple (batched)';

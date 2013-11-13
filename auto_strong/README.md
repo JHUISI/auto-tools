@@ -5,6 +5,8 @@ Many signature schemes are presented under the existential unforgeability defini
 
 There are several general transformations to obtain strongly unforgeable signatures from unforgeable signatures. We focus on the highly-efficient transformation due to Boneh, Shen and Waters (BSW) [1] that only applies if a signature is paritioned and a less efficient transformation due to Bellare-Shoup [2]. AutoStrong first automatically determines whether a given signature satisfies the partitioning property using Z3 and Mathematica. If so, it applies BSW, otherwise, it applies the BS transform to obtain a strongly unforgeable signature.
 
+[ACM CCS 2013 publication](http://dl.acm.org/citation.cfm?id=2516718)
+
 Installation
 ============
 
@@ -63,7 +65,41 @@ An example for how to execute AutoStrong on the Boneh-Boyen (short) signature sc
 Configuration
 =============
 
-TODO: add config option details
+AutoStrong requires configuration parameters to understand basic aspects of the signature scheme:
+
+``schemeType``: for describing the type of input scheme. For signature types, ``"PKSIG"``.
+
+``messageVar``: denotes the message being signed/verified 
+
+``keygenPubVar``: denotes the user's public-key
+
+``keygenSecVar``: denotes the user's secret-key 
+
+``signatureVar``: denotes the signature if scheme type is ``PKSIG``
+
+``masterPubVars``: denotes the public parameters available to all users of the system (if applicable)
+
+``masterSecVars``: denotes the master secret-key (if applicable)
+
+We require function names of algorithms described in the SDL specified as ``setupFuncName``, ``keygenFuncName``, ``signFuncName`` and ``verifyFuncName``.
+
+See the configuration for the CL signature example below:
+
+	schemeType = "PKSIG"
+	
+	setupFuncName 	= "setup"
+	keygenFuncName 	= "keygen"
+	signFuncName 	= "sign"
+	verifyFuncName 	= "verify"
+	
+	masterPubVars = None
+	masterSecVars = None
+	
+	keygenPubVar = "pk"
+	keygenSecVar = "sk" 
+	messageVar = "M"
+	signatureVar = "sig" 
+
 
 References
 ==========

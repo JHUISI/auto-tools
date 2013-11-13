@@ -3,6 +3,8 @@ AutoGroup
 
 Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric groups represent the state-of-the-art in terms of efficiency and converting schemes from symmetric to an asymmetric solution currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
 
+[ACM CCS 2013 publication](http://dl.acm.org/citation.cfm?id=2516718)
+
 Installation
 ============
 
@@ -72,7 +74,7 @@ The next set of variables describe basic aspects of the signature or encryption 
 
 ``masterSecVars``: denotes the master secret-key (if applicable)
 
-Finally, AutoGroup requires algorithm names specified in the SDL that it should analyze such as ``setupFuncName`` and ``keygenFuncName``. Also, for signature schemes, must specify the ``signFuncName`` and ``verifyFuncName``. For encryption, must specify the ``encryptFuncName`` and ``decryptFuncName``. 
+We require function names of algorithms described in the SDL specified as ``setupFuncName`` and ``keygenFuncName``. Also, for signature schemes, must specify the ``signFuncName`` and ``verifyFuncName``. For encryption, must specify the ``encryptFuncName`` and ``decryptFuncName``. 
 
 We provide a complete configuration file example for the CL signature:
 

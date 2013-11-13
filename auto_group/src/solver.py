@@ -411,7 +411,10 @@ def convertQuery(configOpt, optionDict, variables, constraints):
         else:
             if v in countOpts.keys(): countValue[ v ] = int(countOpts[v])
             else: countValue[ v ] = 0
-    #print("<====================>")    
+    print("<====================>")    
+    print("selected weights: ", weights)
+    print("selected costs: ", countValue)
+    print("<====================>")    
     return (weights, countValue)
     
 def findMinimalRef(M, data1, data2, skipList=[]):
