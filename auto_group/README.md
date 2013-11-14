@@ -43,7 +43,7 @@ For the help menu, execute the following:
 
 An example for how to execute AutoGroup on the Camenisch-Lysyanskaya (CL) signature scheme with basic options:
 
-	python runAutoGroup.py --sdl schemes/cl04.sdl --config configCL -o TestCL -v
+	python runAutoGroup.py --sdl schemes/cl04.sdl --config schemes/configCL.py -o TestCL -v
 
 Note that AutoGroup was designed to handle both encryption and signature schemes.
 

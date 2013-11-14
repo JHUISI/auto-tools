@@ -1,4 +1,4 @@
-import sys, getopt, importlib, time
+import os, sys, getopt, imp, time
 import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
@@ -95,9 +95,12 @@ def errorOut(keyword):
     sys.exit("configAutoGroup: missing '%s' variable in config." % keyword)
 
 def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
-    #sdl_file, cm, targetFile, sdlVerbose):
-    config =  config_file.split('.')[0]
-    cm = importlib.import_module("schemes." + config)    
+    # get full path (assuming not provided)
+    full_config_file = os.path.abspath(config_file)
+    pkg_name = os.path.basename(full_config_file)
+    
+    cm = imp.load_source(pkg_name, full_config_file)
+    
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
     sdl.masterSecVars = cm.masterSecVars
