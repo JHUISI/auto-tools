@@ -14,7 +14,7 @@ Full Version of ACM CCS 2012 publication: http://eprint.iacr.org/2013/175
 Installation
 ============
 
-To use our toolkit, we require the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.42 or newer) to execute the automatically generated batch verification algorithm in Python and/or C++.
+The [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.42 or newer) is required to execute the automatically generated batch verification algorithm in Python and/or C++. IMPORTANT: make sure you install the [Stanford PBC library](http://crypto.stanford.edu/pbc/download.html) and also install Python 3 or greater.
 
 Running The Tool
 ================

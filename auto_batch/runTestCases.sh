@@ -34,7 +34,7 @@ python runAutoBatch.py --sdl schemes/HW/hw.sdl --outfile schemes/HW/hw-full-batc
 diff schemes/HW/hw-full-batch.sdl schemes/HW/hw-full-batch2.sdl > hw_result.txt
 
 # good
-python runAutoBatch.py --sdl schemes/VRF/vrf.sdl --outfile schemes/VRF/vrf-full-batch2.sdl
+python runAutoBatch.py --sdl schemes/VRF/vrf.sdl --outfile schemes/VRF/vrf-full-batch2.sdl --proof
 diff schemes/VRF/vrf-full-batch.sdl schemes/VRF/vrf-full-batch2.sdl > vrf_result.txt
 
 # good
