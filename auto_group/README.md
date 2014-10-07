@@ -8,13 +8,13 @@ Often, pairing-based cryptographic schemes are described using symmetric groups.
 Installation
 ============
 
-AutoGroup requires Python 3 or greater and you will need the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated the asymmetric scheme in Python and/or C++.
+AutoGroup requires Python 3 or greater and you will need the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated asymmetric scheme in Python and/or C++.
 
 AutoGroup also requires the [Z3](https://z3.codeplex.com/) Theorem prover (with Python 3 bindings).
 
 Briefly, here's how to install the Python 3 version of Z3:
 
-    git clone https://git01.codeplex.com/z3
+    git clone https://git01.codeplex.com/z3 -b unstable
     python3 scripts/mk_make.py
     cd build
     make
