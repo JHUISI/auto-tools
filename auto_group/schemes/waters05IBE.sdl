@@ -1,0 +1,95 @@
+name := waters05IBE
+setting := symmetric
+l := 32
+
+
+BEGIN :: types
+alpha := ZR
+ID := Str
+M := GT
+y := list{ZR}
+u := list{G1}
+l := Int
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ alpha := random(ZR) 
+ g := random(G1)
+ g1 := g ^ alpha
+ g2 := random(G1)
+ ut := random(G1)
+BEGIN :: for
+for{i := 0, l}
+ y#i := random(ZR)
+ u#i := g ^ y#i
+END :: for
+
+ msk := g2 ^ alpha
+ pk := list{g, g1, g2, u, ut} 
+output := list{pk, msk}
+END :: func:setup
+
+
+BEGIN :: func:keygen
+input := list{pk, msk, ID}
+ pk := expand{g, g1, g2, u, ut}
+ idh := H(ID, ZR)
+ id := intToBits(idh, l)
+ r  := random(ZR)
+ d2 := g ^ r
+ dotProd1 := init(G1)
+BEGIN :: for
+for{i := 0, l}
+ dotProd1 := dotProd1 * (u#i ^ id#i)
+END :: for
+ d1 := (msk * ((ut * dotProd1) ^ r))
+ sk := list{d1, d2}
+output := sk
+END :: func:keygen
+
+
+BEGIN :: func:encrypt
+input := list{pk, M, ID}
+ pk := expand{g, g1, g2, u, ut}
+ idh := H(ID, ZR)
+ id := intToBits(idh, l)
+ t  := random(ZR)
+
+ C1 := (e(g1, g2) ^ t) * M
+ C2 := g ^ t
+
+ dotProd2 := init(G1)
+BEGIN :: for
+for{i := 0, l}
+ dotProd2 := dotProd2 * (u#i ^ id#i)
+END :: for
+ C3 := (ut * dotProd2) ^ t
+
+ ct := list{C1, C2, C3}
+
+output := ct
+END :: func:encrypt
+
+
+BEGIN :: func:decrypt
+ input := list{sk, ct}
+ sk := expand{d1, d2}
+ ct := expand{C1, C2, C3}
+
+ m := C1 * (e(d2, C3) / e(d1, C2))
+
+output := m
+END :: func:decrypt
+
+
+BEGIN :: latex
+dv1 := dv_1
+dv2 := dv_2
+g2 := g_2
+u1b := \hat{u_1\prime}
+u2b := \hat{u_2\prime}
+ut := \hat{u}
+END :: latex
+
