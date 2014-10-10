@@ -10,3 +10,6 @@ before_script
   - python3 scripts/mk_make.py
   - cd build
   - make
+
+script:
+  - bin/sh auto_group/runTestCases.sh
