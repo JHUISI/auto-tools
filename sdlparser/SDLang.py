@@ -1,5 +1,5 @@
 ''' SDL Grammar: BinaryNode class is internal representation for SDL statements.'''
-from charm.toolbox.enum import *
+from enum import *
 import string, sys
 
 sdlSuffix = ".sdl" 
