@@ -4,7 +4,7 @@ python:
 install:
   - pip install -r pyparsing
 
-before_script
+before_script:
   - cd ..
   - git clone https://git01.codeplex.com/z3 -b unstable
   - python3 scripts/mk_make.py
