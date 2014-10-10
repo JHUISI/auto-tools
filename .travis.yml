@@ -2,7 +2,7 @@ language: python
 python:
   - "3.3"
 install:
-  - time pip install -r pyparsing-2.0.1
+  - time pip install pyparsing-2.0.1
 
 before_script:
   - cd ..
