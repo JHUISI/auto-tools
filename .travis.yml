@@ -2,7 +2,7 @@ language: python
 python:
   - "3.3"
 install:
-  - pip install -r pyparsing
+  - time pip install -r --use-mirrors pyparsing-2.0.1
 
 before_script:
   - cd ..
