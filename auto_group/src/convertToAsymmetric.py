@@ -628,16 +628,27 @@ def transformTypes(typesH, info):
     newLines.append(typesHeadEnd)
     return newLines
 
-
+"""
+runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
+sdl filename, a config file and the options which include security parameter,
+a drop first requirement in case multiple solutions achieve the user's requirements,
+and a destination path for the generated Asymmetric-based scheme and accompanying code.
+"""
 def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
+    # this contains a Variable Object for each statement in the SDL file
     assignInfo = sdl.getAssignInfo()
+    # this consists of the type of the input scheme (e.g., symmetric)
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+    # name of the scheme
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
+    # the block of types in the SDL
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
     info = {'verbose':sdlVerbose}
 
+    # we want to ignore user defined functions from our analysis
+    # (unless certain variables that we care about are manipulated there)
     userCodeBlocks = list(set(list(assignInfo.keys())).difference(config.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
     options['userFuncList'] += userCodeBlocks
     print("name is", sdl_name)
@@ -649,9 +660,13 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     begin = ["BEGIN :: " + TYPES_HEADER]
     end = ["END :: " + TYPES_HEADER]
 
+    # start constructing the preamble for the Asymmetric SDL output
     newLines0 = [ BV_NAME + " := " + sdl_name, SETTING + " := " + sdl.ASYMMETRIC_SETTING ] 
     newLines1 = begin + typesBlockLines + end
-    
+    # this fact is already verified by the parser
+    # but if scheme claims symmetric
+    # and really an asymmetric scheme then parser will
+    # complain.
     assert setting == sdl.SYMMETRIC_SETTING, "No need to convert to asymmetric setting."    
     # determine user preference in terms of keygen or encrypt
     short = SHORT_DEFAULT # default option
@@ -665,6 +680,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     if not hasattr(config, 'schemeType'):
         sys.exit("'schemeType' option missing in specified config file.")
     pairingSearch = []
+    # extract the statements, types, dependency list, influence list and exponents of influence list
+    # for each algorithm in the SDL scheme
     if config.schemeType == PKENC:
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
         (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
@@ -676,6 +693,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         varTypes.update(typesD)
         # TODO: expand search to encrypt and potentially setup
         pairingSearch += [stmtS, stmtE, stmtD] # aka start with decrypt.
+    # extract statements, etc ... for each algorithm in the SDL scheme.
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName'): 
             (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
@@ -696,12 +714,14 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     gen = Generators(info)
     # JAA: commented out for benchmarking    
     #print("List of generators for scheme")
+    # retrieve the generators selected by the scheme
+    # typically found in the setup routine in most cases.
     if hasattr(config, "extraSetupFuncName"):
         (stmtSe, typesSe, depListSe, depListNoExpSe, infListSe, infListNoExpSe) = sdl.getVarInfoFuncStmts( config.extraSetupFuncName )
         gen.extractGens(stmtSe, typesSe)
         #extractGeneratorList(stmtSe, typesSe, generators)
         varTypes.update(typesSe)
-    
+    # extract the generators from the setup and keygen routine for later use
     if hasattr(config, 'setupFuncName'):
         gen.extractGens(stmtS, typesS)
     if hasattr(config, 'keygenFuncName'):
@@ -713,33 +733,42 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     #print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
-    # TODO: expand to other parts of algorithm including setup, keygen, encrypt 
+    # TODO: expand to other parts of algorithm including setup, keygen, encrypt
+    # Visits each pairing computation in the SDL and
+    # extracts the inputs. This is the beginning of the
+    # analysis of these variables as the SDL is converted into
+    # an asymmetric scheme.
     hashVarList = []
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs) 
-    for eachStmt in pairingSearch:
-        lines = eachStmt.keys()
+    for eachStmt in pairingSearch: # loop through each pairing statement
+        lines = eachStmt.keys() # for each line, do the following
         for i in lines:
-            if type(eachStmt[i]) == sdl.VarInfo:
-                
+            if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
                 #print("Each: ", eachStmt[i].getAssignNode())
-                if HasPairings( eachStmt[i].getAssignNode() ):
+                # assert that the statement contains a pairing computation
+                if HasPairings(eachStmt[i].getAssignNode()):
                     path_applied = []
+                    # split pairings if necessary so that we don't influence
+                    # the solve in anyway. We can later recombine these during
+                    # post processing of the SDL
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
-                    # in case, there's a hashed values...build up list and check later to see if it appears
+                    # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
                 
+    # constraint list narrows the solutions that
+    # we care about
     constraintList = []
-    # determine if any hashed values in decrypt show up in a pairing
+    # for example, include any hashed values that show up in a pairing by default
     for i in hashVarList:
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
@@ -748,6 +777,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     #print("pair vars RHS:", pair_vars_G1_rhs) 
     #print("list of gens :", generators)
     #print("constraintList: ", constraintList)
+    # for each pairing variable, we construct a dependency graph all the way back to
+    # the generators used. The input of assignTraceback consists of the list of SDL statements,
+    # generators from setup, type info, and the pairing variables.
+    # We do this analysis for both sides
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
    
@@ -755,8 +788,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     #print("info => G1 lhs : ", info['G1_lhs'])
     #print("info => G1 rhs : ", info['G1_rhs'])   
     #print("<===== Determine Asymmetric Generators =====>")
-    #(generatorLines, generatorMapG1, generatorMapG2) = Step1_DeriveSetupGenerators(generators, info)
+    # construct the asymmetric generators for the new SDL
     (generatorMapG1, generatorMapG2) = gen.setupNewGens()
+    # generate the relevant SDL lines
     generatorLines = gen.getGenLines()
     # JAA: commented out for benchmarking    
     #print("Generators in G1: ", generatorMapG1)
@@ -766,8 +800,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     
     #print("<===== Generate XOR clauses =====>")  
     # let the user's preference for fixing the keys or ciphertext guide this portion of the algorithm.
-    # info[ 'G1' ] : represents (varKeyList, depVarMap). 
-    assert len(pair_vars_G1_lhs) == len(pair_vars_G1_rhs), "Uneven number of pairings. Please inspect your bv file."
+    # info[ 'G1' ] : represents (varKeyList, depVarMap).
+    # sanity check that we have an equivalent number of inputs to pairings
+    assert len(pair_vars_G1_lhs) == len(pair_vars_G1_rhs), "Uneven number of pairings. Please inspect your SDL file."
+    # now we can construct the logical formula input to the SMT solver
     varsLen = len(pair_vars_G1_lhs)
     xorList = []
     for i in range(varsLen):
@@ -787,9 +823,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     sdl.ASTVisitor(txor).preorder(ANDs[0])
     #print("<===== Generate XOR clauses =====>")
         
-    constraints = "[]"
+    #constraints = "[]"
+    # given the above formula and the constraint list and options we can
+    # run the solver to produce an initial set of solutions
     fileSuffix, resultDict = searchForSolution(info, short, constraintList, txor, varTypes, config, generators)
-    
+    # map of Z3 to SDL pairing variables (so we can map the solution to SDL)
     xorVarMap = txor.getVarMap()
 #    if short != SHORT_FORALL:
 #        res, resMap = NaiveEvaluation(resultDict, short)
@@ -799,9 +837,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
 #        groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
 #    else:
 
+    # narrow the specific solution that user asked for
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
     symDataTypePK  = {}
     asymDataTypePK = {}
+    # we include some code to estimate size of SK/PK and CTs/Sigs
+    # if the 'computeSize' option is set (e.g., --estimate option)
     if config.schemeType == PKENC and options['computeSize']:   
         symDataTypeSK = getAssignmentForName(config.keygenSecVar, varTypes, True)
         symDataTypeCT = getAssignmentForName(config.ciphertextVar, varTypes, True)
@@ -853,10 +894,14 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         print("estimated asym: ", estimateSize(asymDataTypeSIG, asymmetric_curves['BN256']))
         print("<====================>")
 
+    # we still care about group elements that are not used in pairings
+    # the rule is that we always assign these elements to G1 (so as long as
+    # so as long as it doesn't affect any pairing computations)
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
         groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         print("Update: new G1 deps=>", groupInfo['G1'])    
 
+    # put all the info together so that we can generate the new Asym SDL
     groupInfo['generators'] = generators 
     groupInfo['generatorMapG1'] = generatorMapG1
     groupInfo['generatorMapG2'] = generatorMapG2
@@ -870,6 +915,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     transFunc = {}
     transFuncGen = {}
 
+    # determine the structure of the input SDL and stick as close as
+    # possible to that in the output SDL
     if hasattr(config, "extraSetupFuncName"):
         transFuncGen[ config.extraSetupFuncName ] = stmtSe
     if hasattr(config, 'setupFuncName'):    
@@ -890,17 +937,23 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     if options['computeSize']:
         options['symPK']  = symDataTypePK
         options['asymPK'] = asymDataTypePK
-    
+
+    # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
     newSDL = AsymSDL(options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
     newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
 
-    # debug 
+    # debug output of the SDL file
     print_sdl(info['verbose'], newLinesS, newLinesK, newLines2, newLines3)
+    # output the new SDL file with right suffix (which indicates options that were set)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
     return outputFile
         
-
+"""
+Aymmetric SDL class takes as input the assignment info from the SDL, new group info, type assignments,
+the new generators for the scheme and other functional details.
+AsymSDL mechanically converts the symmetric scheme to asymmetric based on all the inferred information.
+"""
 class AsymSDL:
     def __init__(self, options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
         self.assignInfo     = assignInfo
