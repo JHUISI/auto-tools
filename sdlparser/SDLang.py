@@ -1,5 +1,5 @@
 ''' SDL Grammar: BinaryNode class is internal representation for SDL statements.'''
-from enum import *
+from enumtool import *
 import string, sys
 
 sdlSuffix = ".sdl" 
