@@ -3,6 +3,7 @@ import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
 from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, CountOfPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 from src.solver import *
+import operator
 
 assignInfo = None
 SHORT_SECKEYS = "secret-keys" # for
@@ -31,7 +32,8 @@ class GetPairingVariables:
         assert type(list1) == type(list2) and type(list1) == list, "GetPairingVariables: invalid input type"
         self.listLHS = list1
         self.listRHS = list2
-    
+        self.pairing_map = {}
+
     def retrieveNode(self, node):
         if Type(node) == ops.EXP:
             return node.left
@@ -59,7 +61,18 @@ class GetPairingVariables:
             self.listLHS.append(str(self.retrieveNode(node.left)))
             self.listRHS.append(str(self.retrieveNode(node.right)))
         else:
-            pass            
+            pass
+        # store for latter use
+        self.pairing_map[ self.listLHS[-1] ] = self.listRHS[-1]
+
+def getOtherPairingVar(var_map, target_var):
+    for i,j in var_map.items():
+        # if the var is the key
+        if i == target_var:
+            return j
+        # if the var is the value
+        if j == target_var:
+            return i
 
 class transformXOR:
     def __init__(self, fixedValues):
@@ -741,7 +754,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     hashVarList = []
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
-    gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs) 
+    gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     for eachStmt in pairingSearch: # loop through each pairing statement
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
@@ -783,8 +796,63 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     # We do this analysis for both sides
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
-   
-    # JAA: commented out for benchmarking     
+
+    # if we want to optimize based on public parameters, one
+    # approach would be to observe the dependency graph of
+    # the pairing variables to see which generators are used more
+    # commonly (these are the pairing variables we want to minimize)
+    # one caveat: we can only pick one variable that appears in a pairing
+    if config.schemeType == PKENC and short == SHORT_PUBKEYS:
+        # special case for PK encryption
+        pk_var_obj = varTypes[config.keygenPubVar]
+        if Type(pk_var_obj) == types.list:
+            pk_list = pk_var_obj.getListNodesList()
+        else:
+            pk_list = None
+
+        lhs_orig_vars, lhs_var_map = info['G1_lhs']
+        rhs_orig_vars, rhs_var_map = info['G1_rhs']
+        var_list = []
+        countMap = {}
+        if info['verbose']:
+            print("pk list: ", pk_list)
+            print("<=========================>")
+        for i in lhs_orig_vars:
+            if i not in pk_list:
+                if info['verbose']:  print("Add to list: ", i, ":", lhs_var_map[i])
+                var_list.append(i)
+        countCommonGenerators(countMap, pk_list, var_list, lhs_var_map, assignInfo)
+
+        if info['verbose']: print("<=========================>")
+        var_list = []  # reset
+        for i in rhs_orig_vars:
+            if i not in pk_list:
+                if info['verbose']: print("Add to list: ", i, ":", rhs_var_map[i])
+                var_list.append(i)
+        if info['verbose']: print("<=========================>")
+        countCommonGenerators(countMap, pk_list, var_list, rhs_var_map, assignInfo)
+
+        # define a function that returns the key of the value with highest value
+        # but what if there is no real max (everything thesame?)
+        max_var = max(countMap.keys(), key=lambda x: countMap[x])
+        the_map = gpv.pairing_map
+        if info['verbose']:
+            print("Max: ", max_var)
+            print("Pairing map: ", the_map)
+        # now we can identify constraints with this knowledge
+        for i in lhs_orig_vars: # look for where max_var appears in pairing variables
+            if i not in pk_list and max_var in lhs_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList:
+                    constraintList.append(i)
+
+        for i in rhs_orig_vars: # look for where max_var appears in pairing variable
+            if i not in pk_list and max_var in rhs_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList:
+                    constraintList.append(i)
+
+        print("Public-key informed constraint list: ", constraintList)
+
+    # JAA: commented out for benchmarking
     #print("info => G1 lhs : ", info['G1_lhs'])
     #print("info => G1 rhs : ", info['G1_rhs'])   
     #print("<===== Determine Asymmetric Generators =====>")
@@ -1464,7 +1532,40 @@ def buildMap(assignInfo, generators, varTypes, varList, var, constraintList):
 #            print("REMOVING: ", i)
 #            print("varList: ", varList)
             
-    return    
+    return
+
+def getVarCount(assignInfo, varName):
+    (name, varObj) = getVarNameEntryFromAssignInfo(assignInfo, varName)
+    for_loop_obj = varObj.getOutsideForLoopObj()
+    if for_loop_obj:
+        # see the value
+        var = for_loop_obj.getEndVal()
+        # check if it's a var or number
+        try:
+            varInt = int(var)
+            return varInt
+        except:
+            # must be a variable
+            (name, varObj2) = getVarNameEntryFromAssignInfo(assignInfo, var)
+            try:
+                varInt = int(varObj2.getAssignNode().getRight().getAttribute())
+                return varInt
+            except:
+                sys.exit("'%s' not defined as an integer! Fix your SDL and try again.\n" % var)
+    return 1
+
+def countCommonGenerators(countMap, pk_list, var_list, var_map, assignInfo):
+    for i in var_list:
+        for j in var_map[i]:
+            if j in pk_list:
+                if j not in countMap:
+                    # add getCount(j) => looks up 'j' var object to see if it's in a loop or not
+                    countMap[j] = getVarCount(assignInfo, j)
+                else:
+                    countMap[j] += getVarCount(assignInfo, j)
+    # print("Final Count map: ", countMap)
+    return
+
 
 class Generators:
     def __init__(self, info):
