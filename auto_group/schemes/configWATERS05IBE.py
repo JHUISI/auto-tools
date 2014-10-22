@@ -1,4 +1,6 @@
 schemeType = "PKENC"
+assumption = "DBDH"
+
 #short = "secret-keys"
 #short = "ciphertext"
 #operation = "exp"

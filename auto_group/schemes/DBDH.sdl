@@ -1,0 +1,39 @@
+name := DBDH
+setting := symmetric
+
+
+BEGIN :: types
+a := ZR
+b := ZR
+c := ZR
+z := ZR
+END :: types
+
+
+BEGIN :: func:assumpsetup
+input := None
+ a := random(ZR)
+ b := random(ZR)
+ c := random(ZR)
+ z := random(ZR)
+ g := random(G1)
+
+ assumpKey := list{g, a, b, c, z}
+
+output := assumpKey
+END :: func:assumpsetup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{g, a, b, c, z}
+ A := g ^ a
+ B := g ^ b
+ C := g ^ c
+#Target group element Z is irrelevant and ignored here (CRYPTO 2014)
+
+ assumpVar := list{A, B, C}
+
+output := assumpVar
+END :: func:assump
+

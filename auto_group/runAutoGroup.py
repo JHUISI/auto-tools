@@ -100,6 +100,14 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     pkg_name = os.path.basename(full_config_file)
     
     cm = imp.load_source(pkg_name, full_config_file)
+
+    #parse assumption arguments
+    if not hasattr(cm, "assumption"):
+        print("No assumption specified")
+        assumptionFile = ''
+        #sys.exit("configAutoGroup: need to set 'assumption' in config.") #TODO: add back in when finished and remove else
+    else:
+        assumptionFile = os.path.dirname(full_config_file) + "/" + cm.assumption + ".sdl" #TODO: how to determine location of assumption SDL file??
     
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
@@ -136,7 +144,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     
     options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
     startTime = time.clock()
-    outfile = runAutoGroup(sdl_file, cm, options, verbose)
+    outfile = runAutoGroup(sdl_file, cm, options, verbose, assumptionFile)
     endTime = time.clock()
     if benchmarkOpt: 
         runningTime = (endTime - startTime) * 1000
