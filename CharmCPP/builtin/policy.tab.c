@@ -95,6 +95,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
         
 #include "util.h"
 #include "policy.h"
@@ -159,7 +160,7 @@ char* s_strdup_printf(char *, ...);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 52 "policy.y"
+#line 53 "policy.y"
 {
         char* str;
         uint64_t nat;
@@ -167,8 +168,8 @@ typedef union YYSTYPE
         charm_attribute_subtree* tree;
         ptr_array_t* list;
 }
-/* Line 193 of yacc.c.  */
-#line 172 "policy.tab.c"
+/* Line 187 of yacc.c.  */
+#line 173 "policy.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -181,7 +182,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 185 "policy.tab.c"
+#line 186 "policy.tab.c"
 
 #ifdef short
 # undef short
@@ -231,7 +232,7 @@ typedef short int yytype_int16;
 #define YYSIZE_MAXIMUM ((YYSIZE_T) -1)
 
 #ifndef YY_
-# if defined YYENABLE_NLS && YYENABLE_NLS
+# if YYENABLE_NLS
 #  if ENABLE_NLS
 #   include <libintl.h> /* INFRINGES ON USER NAME SPACE */
 #   define YY_(msgid) dgettext ("bison-runtime", msgid)
@@ -472,9 +473,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    74,    74,    76,    77,    79,    80,    81,    82,    83,
-      84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      95,    97
+       0,    75,    75,    77,    78,    80,    81,    82,    83,    84,
+      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
+      96,    98
 };
 #endif
 
@@ -656,7 +657,7 @@ while (YYID (0))
    we won't break user code: when these are the locations we know.  */
 
 #ifndef YY_LOCATION_PRINT
-# if defined YYLTYPE_IS_TRIVIAL && YYLTYPE_IS_TRIVIAL
+# if YYLTYPE_IS_TRIVIAL
 #  define YY_LOCATION_PRINT(File, Loc)			\
      fprintf (File, "%d.%d-%d.%d",			\
 	      (Loc).first_line, (Loc).first_column,	\
@@ -1397,110 +1398,110 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 74 "policy.y"
+#line 75 "policy.y"
     { final_policy = (yyvsp[(1) - (1)].tree) ;}
     break;
 
   case 3:
-#line 76 "policy.y"
+#line 77 "policy.y"
     { (yyval.sint) = expint((yyvsp[(1) - (3)].nat), (yyvsp[(3) - (3)].nat)); ;}
     break;
 
   case 4:
-#line 77 "policy.y"
+#line 78 "policy.y"
     { (yyval.sint) = flexint((yyvsp[(1) - (1)].nat));    ;}
     break;
 
   case 5:
-#line 79 "policy.y"
+#line 80 "policy.y"
     { (yyval.tree) = leaf_policy((yyvsp[(1) - (1)].str));        ;}
     break;
 
   case 6:
-#line 80 "policy.y"
+#line 81 "policy.y"
     { (yyval.tree) = kof2_policy(1, (yyvsp[(1) - (3)].tree), (yyvsp[(3) - (3)].tree)); ;}
     break;
 
   case 7:
-#line 81 "policy.y"
+#line 82 "policy.y"
     { (yyval.tree) = kof2_policy(2, (yyvsp[(1) - (3)].tree), (yyvsp[(3) - (3)].tree)); ;}
     break;
 
   case 8:
-#line 82 "policy.y"
+#line 83 "policy.y"
     { (yyval.tree) = kof_policy((yyvsp[(1) - (5)].nat), (yyvsp[(4) - (5)].list));     ;}
     break;
 
   case 9:
-#line 83 "policy.y"
+#line 84 "policy.y"
     { (yyval.tree) = eq_policy((yyvsp[(3) - (3)].sint), (yyvsp[(1) - (3)].str));      ;}
     break;
 
   case 10:
-#line 84 "policy.y"
+#line 85 "policy.y"
     { (yyval.tree) = lt_policy((yyvsp[(3) - (3)].sint), (yyvsp[(1) - (3)].str));      ;}
     break;
 
   case 11:
-#line 85 "policy.y"
+#line 86 "policy.y"
     { (yyval.tree) = gt_policy((yyvsp[(3) - (3)].sint), (yyvsp[(1) - (3)].str));      ;}
     break;
 
   case 12:
-#line 86 "policy.y"
+#line 87 "policy.y"
     { (yyval.tree) = le_policy((yyvsp[(3) - (3)].sint), (yyvsp[(1) - (3)].str));      ;}
     break;
 
   case 13:
-#line 87 "policy.y"
+#line 88 "policy.y"
     { (yyval.tree) = ge_policy((yyvsp[(3) - (3)].sint), (yyvsp[(1) - (3)].str));      ;}
     break;
 
   case 14:
-#line 88 "policy.y"
+#line 89 "policy.y"
     { (yyval.tree) = eq_policy((yyvsp[(1) - (3)].sint), (yyvsp[(3) - (3)].str));      ;}
     break;
 
   case 15:
-#line 89 "policy.y"
+#line 90 "policy.y"
     { (yyval.tree) = gt_policy((yyvsp[(1) - (3)].sint), (yyvsp[(3) - (3)].str));      ;}
     break;
 
   case 16:
-#line 90 "policy.y"
+#line 91 "policy.y"
     { (yyval.tree) = lt_policy((yyvsp[(1) - (3)].sint), (yyvsp[(3) - (3)].str));      ;}
     break;
 
   case 17:
-#line 91 "policy.y"
+#line 92 "policy.y"
     { (yyval.tree) = ge_policy((yyvsp[(1) - (3)].sint), (yyvsp[(3) - (3)].str));      ;}
     break;
 
   case 18:
-#line 92 "policy.y"
+#line 93 "policy.y"
     { (yyval.tree) = le_policy((yyvsp[(1) - (3)].sint), (yyvsp[(3) - (3)].str));      ;}
     break;
 
   case 19:
-#line 93 "policy.y"
+#line 94 "policy.y"
     { (yyval.tree) = (yyvsp[(2) - (3)].tree);                     ;}
     break;
 
   case 20:
-#line 95 "policy.y"
+#line 96 "policy.y"
     { (yyval.list) = ptr_array_new();
                                        ptr_array_add((yyval.list), (yyvsp[(1) - (1)].tree)); ;}
     break;
 
   case 21:
-#line 97 "policy.y"
+#line 98 "policy.y"
     { (yyval.list) = (yyvsp[(1) - (3)].list);
                                        ptr_array_add((yyval.list), (yyvsp[(3) - (3)].tree)); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1504 "policy.tab.c"
+#line 1505 "policy.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1714,7 +1715,7 @@ yyreturn:
 }
 
 
-#line 101 "policy.y"
+#line 102 "policy.y"
 
 
 void
@@ -1969,6 +1970,7 @@ flexint_leader( int gt, char* attr, uint64_t value )
         // charm_attribute_subtree* p;
         int k;
         charm_attribute_subtree* attributes[256];
+	memset(attributes, 0, 256);
         uint32 i = 0;
 
         for( k = 2; k <= 32; k *= 2 )
@@ -2106,7 +2108,7 @@ yylex()
                 while( isdigit(PEEK_CHAR) )
                         s_string_append_c(s, len, NEXT_CHAR);
 
-                sscanf(s, "%llu", &(yylval.nat));
+                sscanf(s, "%lu", &(yylval.nat));
 
                 free(s);
                 r = INTLIT;
@@ -2335,3 +2337,4 @@ parse_policy_lang_as_str( char* s )
 
         return parsed_policy;
 }
+

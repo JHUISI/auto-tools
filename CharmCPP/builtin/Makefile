@@ -1,6 +1,8 @@
 include ../config.mk
 
 INCLUDES += -I. -I.. -I../$(underlib)
+CXXFLAGS += -fPIC
+CFLAGS += -fPIC
 
 objects := util.o SecretUtil.o policy.tab.o DFA.o Benchmark.o
 

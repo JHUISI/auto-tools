@@ -704,7 +704,6 @@ elif test "$pairing_miracl" = "yes" ; then
         echo "BUILD_RELIC=no" >> $config_mk
         echo "BUILD_PBC=no" >> $config_mk
         echo "underlib=miracl" >> $config_mk
-        echo "CHARM_LIB=$LIBNAME$curve" >> $config_mk
 elif test "$pairing_relic" = "yes" ; then
 	INCLUDES="-I$incdir/relic -Irelic/ $INCLUDES"
 	CFLAGS="-DBUILD_RELIC=1 -DBUILD_MIRACL=0 $CFLAGS"
@@ -728,6 +727,7 @@ if test "$pairing_miracl" = "yes" ; then
 		CFLAGS="-DASYMMETRIC=0 -DBUILD_SS_CURVE=1 $CFLAGS"
 	fi
 echo "CURVE=$curve" >> $config_mk
+echo "CHARM_LIB=$LIBNAME$curve" >> $config_mk
 fi
 
 if test "$libm_found" = "no" ; then

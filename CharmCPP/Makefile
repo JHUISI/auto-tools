@@ -12,17 +12,23 @@ msrc := miracl
 util := builtin
 subdir := $(util)/*.o $(rsrc)/*.o $(msrc)/*.o
 INCLUDES += -I. -I$(incdir) -I$(util)
+# instead of .a
+EXT := so
 
 OBJECTS	:= CharmDictZR.o CharmListInt.o CharmListStr.o CharmListZR.o CharmListG1.o CharmListG2.o CharmListGT.o CharmList.o Element.o
 RELIC_OBJECTS := $(rsrc)/Builtin.o $(rsrc)/relic_api.o $(rsrc)/common.o
 MIRACL_OBJECTS := $(msrc)/MiraclAPI.o
 COMMON_OBJECTS := $(util)/util.o $(util)/policy.tab.o $(util)/SecretUtil.o $(util)/DFA.o $(util)/Benchmark.o
 CHARM := charm
-CHARM_LIB1 := libCharmRelic.dylib 
-CHARM_LIB2 := libCharmMiracl$(CURVE).dylib
-CHARM_LIB := $(CHARM_LIB).dylib
+CHARM_LIB1 := libCharmRelic.$(EXT)
+CHARM_LIB2 := libCharmMiracl$(CURVE).$(EXT)
+CHARM_LIB := $(CHARM_LIB).$(EXT)
 
-LDFLAGS = -dynamiclib -current_version 0.1 -install_name ./$(CHARM_LIB)
+# for Linux
+LDFLAGS = -shared
+# for OS X
+# LDFLAGS = -dynamiclib -current_version 0.1 -install_name ./$(CHARM_LIB)
+
 RLIB    := -lrelic
 MLIB	:= $(libdir)/miracl-$(CURVE).a
  
@@ -50,6 +56,7 @@ $(CHARM_LIB1): sub $(OBJECTS) $(RELIC_OBJECTS)
 
 $(CHARM_LIB2): sub $(OBJECTS) $(MIRACL_OBJECTS)
 	$(CXX) $(LDFLAGS) -o $(CHARM_LIB2) $(OBJECTS) $(MIRACL_OBJECTS) $(COMMON_OBJECTS) $(MLIB)
+	#$(AR) rc $(CHARM_LIB2) $(OBJECTS) $(MIRACL_OBJECTS) $(COMMON_OBJECTS) $(MLIB)
 
 .PHONY: install
 install: $(CHARM_LIB)

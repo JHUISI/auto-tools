@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <stdlib.h>
         
 #include "util.h"
 #include "policy.h"
@@ -352,6 +353,7 @@ flexint_leader( int gt, char* attr, uint64_t value )
         // charm_attribute_subtree* p;
         int k;
         charm_attribute_subtree* attributes[256];
+	memset(attributes, 0, 256);
         uint32 i = 0;
 
         for( k = 2; k <= 32; k *= 2 )
@@ -489,7 +491,7 @@ yylex()
                 while( isdigit(PEEK_CHAR) )
                         s_string_append_c(s, len, NEXT_CHAR);
 
-                sscanf(s, "%llu", &(yylval.nat));
+                sscanf(s, "%lu", &(yylval.nat));
 
                 free(s);
                 r = INTLIT;

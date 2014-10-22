@@ -24,8 +24,8 @@
 
 CHARM_ERROR charm_parse_input_as_attribute_list(charm_function_input *input, charm_attribute_list *attribute_list, pairing_t pairing)
 {
-	CHARM_ERROR result;
-	
+	CHARM_ERROR result = CHARM_ERROR_NONE;
+
 	if (attribute_list == NULL) {
 		return CHARM_ERROR_INVALID_INPUT;
 	}
@@ -47,7 +47,7 @@ CHARM_ERROR charm_parse_input_as_attribute_list(charm_function_input *input, cha
 	memset(attribute_list, 0, sizeof(charm_attribute_list));
 	result = charm_attribute_list_copy(attribute_list, (charm_attribute_list*)input->scheme_input, pairing);
 	
-	return CHARM_ERROR_NONE;
+	return result;
 }
 
 /*!
@@ -328,7 +328,7 @@ charm_attribute_list_copy(charm_attribute_list *attribute_list_DST, charm_attrib
  * @param result_len			Result length.
  * @return						CHARM_ERROR_NONE or an error code.
  */
-
+/*
 CHARM_ERROR
 charm_attribute_list_to_buffer(charm_attribute_list *attribute_list, uint8 *buffer, size_t buf_len, size_t *result_len)
 {
@@ -343,17 +343,16 @@ charm_attribute_list_to_buffer(charm_attribute_list *attribute_list, uint8 *buff
 		return CHARM_ERROR_INVALID_INPUT;
 	}
 	
-	/* Begin with a paren.	*/
 	(*result_len)++;
 	if (buffer != NULL) {	buf_ptr += snprintf((char*)buf_ptr, (buf_len - *result_len), "("); 	}
 	
-	/* Serialize all of the elements.	*/
+	// Serialize all of the elements.	
 	for (i = 0; i < attribute_list->num_attributes; i++) {
 		// printf("%i:%s\n", i, attribute_list->attribute[i].attribute_str);
-		/* We prefer the attribute string.	*/
+		// We prefer the attribute string.	
 			if (i != 0) {
 				if (buffer != NULL) {	
-					/* MDG: 7/4/2010 commented out what look like unnecessary arguments. i.e. ');'	*/
+					// MDG: 7/4/2010 commented out what look like unnecessary arguments. i.e. ');'	
 					buf_ptr += snprintf((char*) buf_ptr, (buf_len - *result_len), ",", attribute_list->attribute[i].attribute_str);
 				}
 				(*result_len)++;
@@ -362,19 +361,20 @@ charm_attribute_list_to_buffer(charm_attribute_list *attribute_list, uint8 *buff
 		if (attribute_list->attribute[i].attribute_str[0] != 0)	{
 			if (buffer != NULL) {	buf_ptr += snprintf((char *) buf_ptr, (buf_len - *result_len), "%s", attribute_list->attribute[i].attribute_str);	}
 			
-			/* JAA removed quotes around attributes to make parsing straightforward */
+			// JAA removed quotes around attributes to make parsing straightforward 
 			*result_len += strlen((char *) attribute_list->attribute[i].attribute_str);  // + 2;
 		} else {
 			return CHARM_ERROR_INVALID_INPUT;
 		}
 	}
 	
-	/* End with another paren.	*/
+	// End with another paren.	
 	(*result_len)++;
 	if (buffer != NULL) {	buf_ptr += snprintf((char *) buf_ptr, (buf_len - *result_len), ")");	}
 	
 	return CHARM_ERROR_NONE;
 }
+*/
 
 
 /*!
@@ -582,7 +582,7 @@ charm_attribute_clear(charm_attribute *attribute)
 
 CHARM_ERROR charm_attribute_subtree_clear(charm_attribute_subtree *subtree)
 {
-	CHARM_ERROR err_code;
+	CHARM_ERROR err_code = CHARM_ERROR_NONE;
 	uint32 i;
 	
 	/* Leaf nodes.							*/
@@ -604,8 +604,8 @@ CHARM_ERROR charm_attribute_subtree_clear(charm_attribute_subtree *subtree)
 		/* Deallocate the list.		*/
 		SAFE_FREE(subtree->subnode);
 	}
-	
-	return CHARM_ERROR_NONE;
+
+	return err_code;	
 }
 
 /*!
@@ -1314,6 +1314,7 @@ void debug_print_policy(charm_attribute_policy *policy)
 	free(pol_str);
 }
 
+/*
 void debug_print_attribute_list(charm_attribute_list *attribute_list)
 {
 	size_t len = MAX_POLICY_STR * 2;
@@ -1324,4 +1325,4 @@ void debug_print_attribute_list(charm_attribute_list *attribute_list)
 	printf("DEBUG: Attribute list -- '%s'\n", attr_str);
 	free(attr_str);
 }
-
+*/

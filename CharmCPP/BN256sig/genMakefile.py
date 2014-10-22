@@ -43,7 +43,7 @@ def buildMakefile(config_file, flag, cppFiles, makefileName):
     cppFileName = cppFiles[0].strip(".cpp") # first will be used as target name as well
     charmLib = options['CHARM_LIB'][3:]
     if(options['BUILD_MIRACL'] == YES):
-        charmLibOpt = "-l" + charmLib
+        charmLibOpt = "-l" + charmLib 
         localPathToHeaders = "-I../miracl"
     elif(options['BUILD_RELIC'] == YES):
         charmLibOpt = "-l" + charmLib + " -lrelic"
@@ -78,5 +78,3 @@ if __name__ == "__main__":
     #buildMakefile("../config.mk", "TestCharm.cpp", "MakefileTmp")
     buildMakefile(config, flag, file, makefileName)
     os.system("make -f %s" % makefileName)
-    
-    
