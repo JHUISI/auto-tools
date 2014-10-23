@@ -30,9 +30,17 @@ input := assumpKey
  A := g ^ a
  B := g ^ b
  C := g ^ c
-#Target group element Z is irrelevant and ignored here (CRYPTO 2014)
 
- assumpVar := list{A, B, C}
+#Target group element Z is irrelevant and ignored here (CRYPTO 2014)
+ coinflip := random(bool)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := pair(g, g) ^ (a * b * c)
+ else
+   Z := g ^ z
+ END :: if
+
+ assumpVar := list{A, B, C, Z}
 
 output := assumpVar
 END :: func:assump
