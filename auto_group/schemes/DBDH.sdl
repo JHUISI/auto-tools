@@ -37,7 +37,7 @@ input := assumpKey
  if { coinflip == 0 }
    Z := pair(g, g) ^ (a * b * c)
  else
-   Z := g ^ z
+   Z := pair(g, g) ^ z
  END :: if
 
  assumpVar := list{A, B, C, Z}

@@ -7,15 +7,20 @@ BEGIN :: types
 A := G1
 B := G1
 C := G1
+Z := GT
+a := ZR
+b := ZR
+c := ZR
+z := ZR
 m := Int #this notation is used in the paper but might conflict with the scheme notation
 k := Int
 x := list{Int}
 y := list{ZR}
 u := list{G1}
 ID := Str
-M0 := G1
-M1 := G1
-M := list{G1}
+M0 := GT
+M1 := GT
+M := list{GT}
 END :: types
 
 
