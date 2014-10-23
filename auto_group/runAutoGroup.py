@@ -144,7 +144,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     
     options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
     startTime = time.clock()
-    outfile = runAutoGroup(sdl_file, cm, options, verbose, assumptionFile)
+    outfile = runAutoGroup(sdl_file, cm, options, verbose)
     endTime = time.clock()
     if benchmarkOpt: 
         runningTime = (endTime - startTime) * 1000

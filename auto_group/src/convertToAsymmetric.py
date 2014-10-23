@@ -647,12 +647,7 @@ sdl filename, a config file and the options which include security parameter,
 a drop first requirement in case multiple solutions achieve the user's requirements,
 and a destination path for the generated Asymmetric-based scheme and accompanying code.
 """
-def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionFile=''):
-    if(not(assumptionFile == '')):
-        sdl.parseFile(assumptionFile, sdlVerbose, ignoreCloudSourcing=True)
-        assignInfo_assump = sdl.getAssignInfo()
-        assumptionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_assump, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER )}
-
+def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     # this contains a Variable Object for each statement in the SDL file
