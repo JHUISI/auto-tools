@@ -45,7 +45,7 @@ NoneValue = "None"
 PRUNE_FUNC_NAME = "prune"
 FUNC_SYMBOL = "def func :"
 START_TOKEN, BLOCK_SEP, END_TOKEN = 'BEGIN','::','END'
-types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'Int', 'Str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR', 'bool')
+types = Enum('NO_TYPE','G1', 'G2', 'GT', 'ZR', 'Int', 'Str', 'list', 'pol', 'listInt', 'listStr', 'listG1', 'listG2', 'listGT', 'listZR', 'metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT','symmap', 'symmapZR', 'bool', 'bin')
 listGroupTypes = ['listStr', 'listInt' , 'listZR', 'listG1', 'listG2', 'listGT']
 metaListGroupTypes = ['metalist', 'metalistInt', 'metalistStr', 'metalistZR', 'metalistG1', 'metalistG2', 'metalistGT']
 downType = {'listStr':'Str', 'listInt':'Int', 'listZR':'ZR', 'listG1':'G1', 'listG2':'G2', 'listGT':'GT', 
@@ -376,67 +376,67 @@ def getFullVarName(node, dropListIndexIfNonNum_Arg):
     return varName
 
 def getListNodes(subtree, parent_type, _list):
-	if subtree == None: return None
-	# trying to capture most probable arrangements (may need to expand for other cases)
-	elif parent_type == ops.MUL:
-		if subtree.type == ops.ATTR: _list.append(subtree)
-		elif subtree.type == ops.EXP: _list.append(subtree)
-		elif subtree.type == ops.HASH: _list.append(subtree)
-		elif subtree.type == ops.PAIR: _list.append(subtree)
-	elif parent_type == ops.EQ_TST:
-		if subtree.type == ops.PAIR: _list.append(subtree)
-		elif subtree.type == ops.ATTR: _list.append(subtree)
-		elif subtree.type == ops.ON: _list.append(subtree.right)
-		elif subtree.type == ops.EXP: _list.append(subtree)
-	if subtree.left: getListNodes(subtree.left, subtree.type, _list)
-	if subtree.right: getListNodes(subtree.right, subtree.type, _list)
-	return
+    if subtree == None: return None
+    # trying to capture most probable arrangements (may need to expand for other cases)
+    elif parent_type == ops.MUL:
+        if subtree.type == ops.ATTR: _list.append(subtree)
+        elif subtree.type == ops.EXP: _list.append(subtree)
+        elif subtree.type == ops.HASH: _list.append(subtree)
+        elif subtree.type == ops.PAIR: _list.append(subtree)
+    elif parent_type == ops.EQ_TST:
+        if subtree.type == ops.PAIR: _list.append(subtree)
+        elif subtree.type == ops.ATTR: _list.append(subtree)
+        elif subtree.type == ops.ON: _list.append(subtree.right)
+        elif subtree.type == ops.EXP: _list.append(subtree)
+    if subtree.left: getListNodes(subtree.left, subtree.type, _list)
+    if subtree.right: getListNodes(subtree.right, subtree.type, _list)
+    return
 
 # checks whether a target node exists in a subtree
 # note: returns True when it finds the first match 
 def isNodeInSubtree(node, target):
-	if node == None: return False
-	else:
-		if str(node) == str(target): return True
-	result = isNodeInSubtree(node.left, target)
-	if result: return result
-	result = isNodeInSubtree(node.right, target)
-	return result
+    if node == None: return False
+    else:
+        if str(node) == str(target): return True
+    result = isNodeInSubtree(node.left, target)
+    if result: return result
+    result = isNodeInSubtree(node.right, target)
+    return result
 
 # searches a subtree for a target node type
 # it returns the first node that matches the target type.
 # note: doesn't return all istances of a given type in the subtree
 def searchNodeType(node, target_type):
-	if node == None: return None
-	elif node.type == target_type: return node		
-	result = searchNodeType(node.left, target_type)
-	if result: return result
-	result = searchNodeType(node.right, target_type)		
-	return result
+    if node == None: return None
+    elif node.type == target_type: return node
+    result = searchNodeType(node.left, target_type)
+    if result: return result
+    result = searchNodeType(node.right, target_type)
+    return result
 
 # simplifies checking the type of a given node
 def Type(node):
-	if node == None: return ops.NONE
-	return node.type
+    if node == None: return ops.NONE
+    return node.type
 
 # short cut to creating a binary node of a given type
 # with given children nodes.
 def createNode(node_type, left=None, right=None):
-	node = BinaryNode(node_type)
-	node.left = left
-	node.right = right
-	return node
+    node = BinaryNode(node_type)
+    node.left = left
+    node.right = right
+    return node
 
 def validateCreatedNode(node):
-	correct = True
-	if Type(node) == ops.OF:
-		if Type(node.left) != ops.SUM: correct = False
-	elif Type(node) == ops.DO:
-		if Type(node.left) != ops.FOR: correct = False
-	elif Type(node) == ops.ON:
-		if Type(node.left) != ops.PROD: correct = False
-	# extend for other nodes like PAIR/MUL
-	return correct
+    correct = True
+    if Type(node) == ops.OF:
+        if Type(node.left) != ops.SUM: correct = False
+    elif Type(node) == ops.DO:
+        if Type(node.left) != ops.FOR: correct = False
+    elif Type(node) == ops.ON:
+        if Type(node.left) != ops.PROD: correct = False
+    # extend for other nodes like PAIR/MUL
+    return correct
 
 
 # binds a string representation of the operation to 
@@ -445,13 +445,13 @@ def createTree(op, node1, node2, op_value=None):
     if(op == START_TOKEN):
         node = BinaryNode(ops.BEGIN)
     elif(op == END_TOKEN):
-    	node = BinaryNode(ops.END)
+        node = BinaryNode(ops.END)
     elif(op == "^"):
         node = BinaryNode(ops.EXP)
     elif(op == "*"):
         node = BinaryNode(ops.MUL)
     elif(op == "/"):
-    	node = BinaryNode(ops.DIV)
+        node = BinaryNode(ops.DIV)
     elif(op == "+"):
         node = BinaryNode(ops.ADD)
     elif(op == "-"):
@@ -469,20 +469,20 @@ def createTree(op, node1, node2, op_value=None):
     elif(op == "prod{"):
         node = BinaryNode(ops.PROD)
     elif(op == "on"):
-        # can only be used in conjunction w/ PROD (e.g. PROD must precede it)        
+        # can only be used in conjunction w/ PROD (e.g. PROD must precede it)
         node = BinaryNode(ops.ON)
     elif(op == "for{"):
-    	node = BinaryNode(ops.FOR)
+        node = BinaryNode(ops.FOR)
     elif(op == "forinner{"):
         node = BinaryNode(ops.FORINNER)
     elif(op == "forall{"):
-        node = BinaryNode(ops.FORALL)        
+        node = BinaryNode(ops.FORALL)
     elif(op == "do"):
-    	node = BinaryNode(ops.DO)
+        node = BinaryNode(ops.DO)
     elif(op == "sum{"):
-    	node = BinaryNode(ops.SUM)
+        node = BinaryNode(ops.SUM)
     elif(op == "of"):
-    	node = BinaryNode(ops.OF)
+        node = BinaryNode(ops.OF)
     elif(op == "if {"):
         node = BinaryNode(ops.IF)
     elif(op == "elseif {"):
@@ -490,34 +490,34 @@ def createTree(op, node1, node2, op_value=None):
     elif(op == "else"):
         node = BinaryNode(ops.ELSE)
     elif(op == "strconcat{"):
-        node = BinaryNode(ops.STRCONCAT)        
+        node = BinaryNode(ops.STRCONCAT)
     elif(op == "concat{"):
         node = BinaryNode(ops.CONCAT)
     elif(op == "or"):
         node = BinaryNode(ops.OR)
     elif(op == "and"):
-    	node = BinaryNode(ops.AND)
+        node = BinaryNode(ops.AND)
     elif(op == "list{"):
-    	node = BinaryNode(ops.LIST)
+        node = BinaryNode(ops.LIST)
     elif(op == "symmap{"):
         node = BinaryNode(ops.SYMMAP)
     elif(op == "expand{"):
-    	node = BinaryNode(ops.EXPAND)
+        node = BinaryNode(ops.EXPAND)
     elif(op == "random("):
-    	node = BinaryNode(ops.RANDOM)
+        node = BinaryNode(ops.RANDOM)
     elif(op == "error("):
         node = BinaryNode(ops.ERROR)
         node.setAttribute(op_value)
     elif(op in ["nop", "NOP"]):
         node = BinaryNode(ops.NOP)
     elif(FUNC_SYMBOL in op):
-    	node = BinaryNode(ops.FUNC)
-    	node.setAttribute(op_value)
+        node = BinaryNode(ops.FUNC)
+        node.setAttribute(op_value)
     elif(op == ";"):
-    	node = BinaryNode(ops.SEQ) # represents multi-line assignment statements
-    	# rule: throw up an error if 
+        node = BinaryNode(ops.SEQ) # represents multi-line assignment statements
+        # rule: throw up an error if
     # elif e( ... )
-    else:    
+    else:
         return None
     node.addSubNode(node1, node2)
     if not validateCreatedNode(node): del node; return False
@@ -528,7 +528,7 @@ class BinaryNode:
 	def __init__(self, value, left=None, right=None):		
 		self.negated = False	
 		if(isinstance(value, str)):
-			if value in ['G1', 'G2', 'GT', 'ZR', 'Int', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
+			if value in ['G1', 'G2', 'GT', 'ZR', 'Int', 'bin', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
                 # denotes group type of an attribute value
 				self.type = ops.TYPE
 				self.attr = types[value]

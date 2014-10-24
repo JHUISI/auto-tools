@@ -1020,8 +1020,8 @@ def checkWhetherThesame(firstType, secondType):
 def getVarTypeInfoRecursive(node, funcNameInputParam=currentFuncName):
     if (node.type == ops.RANDOM):
         retRandomType = node.left.attr
-        if (str(retRandomType) not in [str(types.G1), str(types.G2), str(types.GT), str(types.ZR)]):
-            sys.exit("getVarTypeInfoRecursive in SDLParser.py found a random call in which the type is not one of the supported types (" + str(types.G1) + ", " + str(types.G2) + ", " + str(types.GT) + ", and " + str(types.ZR) + ").")
+        if (str(retRandomType) not in [str(types.G1), str(types.G2), str(types.GT), str(types.ZR), str(types.Int), str(types.bin)]):
+            sys.exit("getVarTypeInfoRecursive in SDLParser.py found a random call in which the type is not one of the supported types: [bin, Int, ZR, G1, G2, GT]")
         return retRandomType
     if (node.type == ops.ON):
         return getVarTypeInfoRecursive(node.right)
