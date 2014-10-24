@@ -32,7 +32,7 @@ input := assumpKey
  C := g ^ c
 
 #Target group element Z is irrelevant and ignored here (CRYPTO 2014)
- coinflip := random(bool)
+ coinflip := random(ZR)#random(bool)
  BEGIN :: if
  if { coinflip == 0 }
    Z := pair(g, g) ^ (a * b * c)

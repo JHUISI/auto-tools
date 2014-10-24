@@ -4,6 +4,8 @@ l := 32
 
 
 BEGIN :: types
+l := Int
+g := G1
 A := G1
 B := G1
 C := G1
@@ -12,28 +14,32 @@ a := ZR
 b := ZR
 c := ZR
 z := ZR
-m := Int #this notation is used in the paper but might conflict with the scheme notation
+m := Int
 k := Int
 x := list{Int}
+xprime := Int
 y := list{ZR}
+yprime := ZR
 u := list{G1}
 ID := Str
 M0 := GT
 M1 := GT
 M := list{GT}
+q := Int
+p := Int
 END :: types
 
 
 BEGIN :: func:F
-input := list{ID, xprime,x,  m, k, p}
+input := list{ID, xprime, x, m, k, p}
 
 idh := H(ID, ZR)
 id := intToBits(idh, l)
 
-xi := init(ZR)
+xi := init(Int)
 BEGIN :: for
 for{i := 0, l}
-   xi := x#i + id#i
+   xi := xi + (x#i ^ id#i)
 END :: for
 
 Fv := (p - (m * k)) + xprime + xi
@@ -51,7 +57,7 @@ id := intToBits(idh, l)
 yi := init(ZR)
 BEGIN :: for
 for{i := 0, l}
-   yi := y#i + id#i
+   yi := yi + (y#i ^ id#i)
 END :: for
 
 Jv := yprime + yi
@@ -66,10 +72,10 @@ input := list{ID, xprime, x}
 idh := H(ID, ZR)
 id := intToBits(idh, l)
 
-xi := init(ZR)
+xi := init(Int)
 BEGIN :: for
 for{i := 0, l}
-   xi := x#i + id#i
+   xi := xi + (x#i ^ id#i)
 END :: for
 
 cond := xprime + xi
@@ -92,8 +98,8 @@ input := list{assumpKey, assumpVar}
 assumpKey := expand{g, a, b, c, z}
 assumpVar := expand{A, B, C, Z}
 
-p := random(Int) #we do not actually have access to these group parameters
-q := random(Int)
+#p := random(Int) #we do not actually have access to these group parameters
+#q := random(Int)
 
 m := 4 * q
 k := random(Int) #this is not totally in keeping with the reduction...can we specify random values from a certain range? do we need to?
@@ -119,11 +125,11 @@ uexp := ((p - k*m) + xprime)
 uprime := g2 ^ uexp #could we create just a random ZR element for the exponent since it doesn’t touch a pairing element?  or is it unsound to not follow the reduction exactly as written?
 BEGIN :: for
 for{i := 0, l}
-   u#i := (g2^ x#i) * (g ^ y#i)
+   u#i := (g2 ^ x#i) * (g ^ y#i)
 END :: for
 
 reductionKey := list{g, g1, g2, uprime, u}
-reductionParams := {p, q, m, k, xprime, x, yprime, y}
+reductionParams := list{p, q, m, k, xprime, x, yprime, y}
 output := list{reductionKey, reductionParams}
 END :: func:setup
 
@@ -136,14 +142,12 @@ reductionParams := expand{p, q, m, k, xprime, x, yprime, y}
 
 BEGIN :: if
 if { K(ID, xprime) == 0 }
-   #simulator aborts??
+#simulator aborts??
 else
    idh := H(ID, ZR)
    id := intToBits(idh, l)
 
    r := random(ZR)
-
-   #how to do d0, d1 with the strange functions? create just random ZR placeholders for the functions since they never touch pairing elements?
 
    d1 := (g1 ^ (-1 / F(ID, xprime, m, p, j))) * (g ^ r)
 
@@ -153,7 +157,7 @@ else
       dotProd1 := dotProd1 * (u#i ^ id#i)
    END :: for
 
-   d0 := (g1 ^ (-J(ID, yprime) / F(ID, xprime, m, p, j))) * ((uprime * dotProd1) ^ r)
+   d0 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, m, p, j))) * ((uprime * dotProd1) ^ r)
    d := list{d0, d1} #private key
 END :: if
 
@@ -168,7 +172,6 @@ assumpVar := expand{A, B, C, Z}
 reductionKey := expand{g, g1, g2, u, ut}
 reductionParams := expand{p, q, m, k, xprime, x, yprime, y}
 
-#M := list{M0, M1}
 b := random(bool)
 
 ct1 := Z * M#b
