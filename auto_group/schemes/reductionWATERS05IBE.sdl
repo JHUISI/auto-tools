@@ -149,7 +149,7 @@ else
 
    r := random(ZR)
 
-   d1 := (g1 ^ (-1 / F(ID, xprime, m, p, j))) * (g ^ r)
+   d1 := (g1 ^ (-1 / F(ID, xprime, x, m, k, p))) * (g ^ r)
 
    dotProd1 := init(G1)
    BEGIN :: for
@@ -157,7 +157,7 @@ else
       dotProd1 := dotProd1 * (u#i ^ id#i)
    END :: for
 
-   d0 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, m, p, j))) * ((uprime * dotProd1) ^ r)
+   d0 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, x, m, k, p))) * ((uprime * dotProd1) ^ r)
    d := list{d0, d1} #private key
 END :: if
 
@@ -172,7 +172,7 @@ assumpVar := expand{A, B, C, Z}
 reductionKey := expand{g, g1, g2, u, ut}
 reductionParams := expand{p, q, m, k, xprime, x, yprime, y}
 
-b := random(bool)
+b := random(bin)
 
 ct1 := Z * M#b
 ct2 := C
