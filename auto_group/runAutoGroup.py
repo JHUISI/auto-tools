@@ -94,6 +94,76 @@ sigConfigParams = ["keygenPubVar", "keygenSecVar", "signatureVar", "keygenFuncNa
 def errorOut(keyword):
     sys.exit("configAutoGroup: missing '%s' variable in config." % keyword)
 
+def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt):
+    # setup sdl parser configs
+    sdl.masterPubVars = cm.assumpMasterPubVars
+    sdl.masterSecVars = cm.assumpMasterSecVars
+    if not hasattr(cm, "schemeType"):
+        sys.exit("configAutoGroup: need to set 'schemeType' in config.")
+
+    funcOrder = [cm.assumpSetupFuncName, cm.assumpFuncName]
+    setattr(cm, functionOrder, funcOrder)
+
+    print("function order: ", cm.functionOrder)
+
+    #TODO: create something like this for assumption?
+    #for i in encConfigParams:
+    #    if not hasattr(cm, i):
+    #        errorOut(i)
+    
+    if not hasattr(cm, "secparam"):
+        secparam = "BN256" # default pairing curve for now
+    else:
+        secparam = cm.secparam
+    
+    #do we need this for the assumption?
+    dropFirst = None
+    if hasattr(cm, "dropFirst"):
+        dropFirst = cm.dropFirst
+    
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+
+    sdl.parseFile(assumption_file, verbose, ignoreCloudSourcing=True)
+    assignInfo_assump = sdl.getAssignInfo()
+    assumptionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_assump, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_assump.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
+
+    return assumptionData
+
+def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
+    # setup sdl parser configs
+    sdl.masterPubVars = cm.reducMasterPubVars
+    sdl.masterSecVars = cm.reducMasterSecVars
+    if not hasattr(cm, "schemeType"):
+        sys.exit("configAutoGroup: need to set 'schemeType' in config.")
+
+    funcOrder = [cm.reducSetupFuncName, cm.reducQueryFuncName, cm.reducChallengeFuncName]
+    setattr(cm, functionOrder, funcOrder)
+
+    print("function order: ", cm.functionOrder)
+
+    #TODO: create something like this for assumption?
+    #for i in encConfigParams:
+    #    if not hasattr(cm, i):
+    #        errorOut(i)
+    
+    if not hasattr(cm, "secparam"):
+        secparam = "BN256" # default pairing curve for now
+    else:
+        secparam = cm.secparam
+    
+    #do we need this for the assumption?
+    dropFirst = None
+    if hasattr(cm, "dropFirst"):
+        dropFirst = cm.dropFirst
+    
+    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+
+    sdl.parseFile(reduction_file, verbose, ignoreCloudSourcing=True)
+    assignInfo_reduction = sdl.getAssignInfo()
+    reductionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_reduction, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_reduction.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
+
+    return reductionData
+
 def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
     # get full path (assuming not provided)
     full_config_file = os.path.abspath(config_file)
@@ -104,11 +174,21 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     #parse assumption arguments
     if not hasattr(cm, "assumption"):
         print("No assumption specified")
-        assumptionFile = ''
         #sys.exit("configAutoGroup: need to set 'assumption' in config.") #TODO: add back in when finished and remove else
     else:
         assumptionFile = os.path.dirname(full_config_file) + "/" + cm.assumption + ".sdl" #TODO: how to determine location of assumption SDL file??
-    
+        assumptionData = parseAssumptionFile(cm, assumptionFile, verbose, benchmarkOpt, estimateOpt)
+        setattr(cm, functionOrder, None)
+
+    #parse reduction arguments
+    if not hasattr(cm, "reduction"):
+        print("No reduction specified")
+        #sys.exit("configAutoGroup: need to set 'reduction' in config.") #TODO: add back in when finished and remove else
+    else:
+        reductionFile = os.path.dirname(full_config_file) + "/" + cm.reduction + ".sdl" #TODO: how to determine location of reduction SDL file??
+        reductionData = parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt)
+        setattr(cm, functionOrder, None)
+
     # setup sdl parser configs
     sdl.masterPubVars = cm.masterPubVars
     sdl.masterSecVars = cm.masterSecVars
