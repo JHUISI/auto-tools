@@ -525,476 +525,478 @@ def createTree(op, node1, node2, op_value=None):
 
 
 class BinaryNode:
-	def __init__(self, value, left=None, right=None):		
-		self.negated = False	
-		if(isinstance(value, str)):
-			if value in ['G1', 'G2', 'GT', 'ZR', 'Int', 'bin', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
+    def __init__(self, value, left=None, right=None):
+        self.negated = False
+        if(isinstance(value, str)):
+            if value in ['G1', 'G2', 'GT', 'ZR', 'Int', 'bin', 'Str', 'list', 'symmap', 'object']: # JAA: change me ASAP!!!
                 # denotes group type of an attribute value
-				self.type = ops.TYPE
-				self.attr = types[value]
-				self.attr_index = None                
-				self.delta_index = None                
-			else:
-				self.type = ops.ATTR
-				self.delta_index = None                
-				arr = value.split('_')
-				attr = arr[0]
-				# test for negation in attribute
-				if attr[0] != '-': self.attr = attr
-				else:
-					self.attr = attr[1:]
-					self.negated = True
-				# handle indices 
-				if len(arr) > 1: # True means a_b form
-					self.attr_index = [arr[1]]
-				else: # False means a and no '_' present
-					self.attr_index = None
-		elif value >= ops.BEGIN and value <= ops.END:
-			self.type = value
-			self.attr = None
-			self.attr_index = None
-			self.delta_index = None                
-		else:
-			self.type = ops.NONE
-			self.attr = None
-			self.attr_index = None
-			self.delta_index = None                
-		self.left = left
-		self.right = right
-		self.listNodes = []
+                self.type = ops.TYPE
+                self.attr = types[value]
+                self.attr_index = None
+                self.delta_index = None
+            else:
+                self.type = ops.ATTR
+                self.delta_index = None
+                arr = value.split('_')
+                attr = arr[0]
+                # test for negation in attribute
+                if attr[0] != '-': self.attr = attr
+                else:
+                    self.attr = attr[1:]
+                    self.negated = True
+                # handle indices
+                if len(arr) > 1: # True means a_b form
+                    self.attr_index = [arr[1]]
+                else: # False means a and no '_' present
+                    self.attr_index = None
+        elif value >= ops.BEGIN and value <= ops.END:
+            self.type = value
+            self.attr = None
+            self.attr_index = None
+            self.delta_index = None
+        else:
+            self.type = ops.NONE
+            self.attr = None
+            self.attr_index = None
+            self.delta_index = None
+        self.left = left
+        self.right = right
+        self.listNodes = []
 
-	def __hash__(self):
-		if self.type == ops.ATTR:
-		   return hash(self.attr) % hash_table_size
+    def __hash__(self):
+        if self.type == ops.ATTR:
+           return hash(self.attr) % hash_table_size
 
-	def __str__(self):
-		if self == None: return None
-		elif(self.type == ops.ATTR):
-			# check for negation
-			if self.negated:
-				msg = "-" + self.attr
-			else:
-				msg = self.attr
-			if self.delta_index != None and type(self.delta_index) == list and self.attr == "delta":
-                		token = ""
-                		for t in self.delta_index:
-                    			token += t + "#"
-                		msg += token[:len(token)-1]
-			if self.attr_index != None and type(self.attr_index) == list:
-				token = ""
-				for t in self.attr_index:
-					token += t + "#"
-				l = len(token) 
-				token = token[:l-1]
-				msg += '_' + token
-			return msg
-		elif(self.type == ops.TYPE):
-			return str(self.attr)
-		else:
-			left = str(self.left)
-			right = str(self.right)
-			
-			if debug >= levels.some:
-			   print("Operation: ", self.type)
-			   print("Left operand: ", left) #, "type: ", leftType)
-			   print("Right operand: ", right) #, "type: ", rightType)
-			if(self.type == ops.BEGIN):
-				return (START_TOKEN + ' :: ' + left)
-			elif(self.type == ops.END):
-				return (END_TOKEN + ' :: ' + left)
-			elif(self.type == ops.EXP):
-				return ('(' + left + '^' + right + ')')
-			elif(self.type == ops.MUL):
-				return ('(' + left + ' * ' + right + ')')
-			elif(self.type == ops.DIV):
-				return ('(' + left + ' / ' + right + ')')
-			elif(self.type == ops.ADD):
-				return ('(' + left + ' + ' + right + ')')
-			elif(self.type == ops.SUB):
-				return ('(' + left + ' - ' + right + ')')
-			elif(self.type == ops.EQ):
-				return (left + ' := ' + right)
-			elif(self.type == ops.EQ_TST):
-				return (left + ' == ' + right)
-			elif(self.type == ops.NON_EQ_TST):
-				return (left + ' != ' + right)
-			elif(self.type == ops.PAIR):
-				return ('e(' + left + ',' + right + ')')
-			elif(self.type == ops.HASH):
-				return ('H(' + left + ',' + right + ')')
-			elif(self.type == ops.PROD):
-				return ('prod{' + left + ',' + right + '}')
-			elif(self.type == ops.SUM):
-				return ('sum{' + left + ',' + right + '}')			
-			elif(self.type == ops.ON):
-				 return ('(' + left + ' on ' + right + ')')
-			elif(self.type == ops.FOR):
-				return ('for{' + left + ',' + right + '}')
-			elif(self.type == ops.FORINNER):
-				return ('forinner{' + left + ',' + right + '}')
-			elif(self.type == ops.FORALL):
-				return ('forall{' + left + '}')
-			elif(self.type == ops.RANDOM):
-				return ('random(' + left + ')')
-			elif(self.type == ops.ERROR):
-				return ('error(' + str(self.attr) + ')')
-			elif(self.type == ops.DO):
-				 return (left + ' do { ' + right + ' }')
-			elif(self.type == ops.IF):
-				 return ('if {' + left + '}')
-			elif(self.type == ops.ELSEIF):
-    			 return ('elseif {' + left + '}')
-			elif(self.type == ops.ELSE):
-    			 return 'else '
-			elif(self.type == ops.OF):
-				 return ( left + ' of ' + right)
-			elif(self.type == ops.AND):
-				 return ("{" + left + "} and {" + right + "}") 
-			elif(self.type == ops.XOR):
-				 return ("XOR(" + left + "," + right + ")") 
-			elif(self.type == ops.STRCONCAT):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'strconcat{' + listVal + '}'
-			elif(self.type == ops.CONCAT):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'concat{' + listVal + '}'
-			elif(self.type == ops.LIST):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'list{' + listVal + '}'
-			elif(self.type == ops.SYMMAP):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'symmap{' + listVal + '}'    
-			elif(self.type == ops.EXPAND):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'expand{' + listVal + '}'
-			elif(self.type == ops.FUNC):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return self.attr + '(' + listVal + ')'
-			elif(self.type == ops.SEQ):
-				return (left + '; ' + right)
-			elif(self.type == ops.NONE):
-				 return 'NONE'
-			elif(self.type == ops.NOP):
-				 return 'NOP'
-				# return ( left + ' on ' + right )				
-		return None
-	    
-	def sdl_print(self):
-		if self == None: return None
-		elif(self.type == ops.ATTR):
-			# check for negation
-			if self.negated:
-				msg = "-" + self.attr
-			else:
-				msg = self.attr
-			if self.delta_index != None and type(self.delta_index) == list and self.attr == "delta":
-                		token = ""
-                		for t in self.delta_index:
-                    			token += t + ""
-                		msg += token # [:len(token)-1]
-			if self.attr_index != None and type(self.attr_index) == list:
-				token = ""
-				for t in self.attr_index:
-					token += t + "#"
-				l = len(token) 
-				token = token[:l-1]
-				if token != '': msg += '#' + token
-			return msg
-		elif(self.type == ops.TYPE):
-			return str(self.attr)
-		else:
-			if self.type not in [ops.FUNC, ops.LIST, ops.EXPAND, ops.SYMMAP, ops.CONCAT, ops.STRCONCAT]:
-				left = self.left.sdl_print()
-				if self.type not in [ops.RANDOM, ops.FORALL, ops.IF, ops.ELSE]:
-					right = self.right.sdl_print()
-			
-			if debug >= levels.some:
-			   print("Operation: ", self.type)
-			   print("Left operand: ", left) #, "type: ", self.left.type)
-			   print("Right operand: ", right) #, "type: ", self.right.type)
-			if(self.type == ops.BEGIN):
-				return (START_TOKEN + ' :: ' + left)
-			elif(self.type == ops.END):
-				return (END_TOKEN + ' :: ' + left)
-			elif(self.type == ops.EXP):
-				return ('(' + left + '^' + right + ')')
-			elif(self.type == ops.MUL):
-				return ('(' + left + ' * ' + right + ')')
-			elif(self.type == ops.DIV):
-				return ('(' + left + ' / ' + right + ')')
-			elif(self.type == ops.ADD):
-				return ('(' + left + ' + ' + right + ')')
-			elif(self.type == ops.SUB):
-				return ('(' + left + ' - ' + right + ')')
-			elif(self.type == ops.EQ):
-				return (left + ' := ' + right)
-			elif(self.type == ops.EQ_TST):
-				return (left + ' == ' + right)
-			elif(self.type == ops.NON_EQ_TST):
-				return (left + ' != ' + right)
-			elif(self.type == ops.PAIR):
-				return ('e(' + left + ',' + right + ')')
-			elif(self.type == ops.HASH):
-				return ('H(' + left + ',' + right + ')')
-			elif(self.type == ops.PROD):
-				return ('prod{' + left + ',' + right + '}')
-			elif(self.type == ops.SUM):
-				return ('sum{' + left + ',' + right + '}')			
-			elif(self.type == ops.ON):
-				 return ('(' + left + ' on ' + right + ')')
-			elif(self.type == ops.FOR):
-				return ('for{' + left + ',' + right + '}')
-			elif(self.type == ops.FORINNER):
-				return ('forinner{' + left + ',' + right + '}')
-			elif(self.type == ops.FORALL):
-				return ('forall{' + left + '}')
-			elif(self.type == ops.RANDOM):
-				return ('random(' + left + ')')
-			elif(self.type == ops.ERROR):
-				return ('error(' + self.attr.sdl_print() + ')')
-			elif(self.type == ops.DO):
-				 return (left + ' do { ' + right + ' }')
-			elif(self.type == ops.IF):
-				 return ('if {' + left + '}')
-			elif(self.type == ops.ELSEIF):
-    			 return ('elseif {' + left + '}')
-			elif(self.type == ops.ELSE):
-    			 return 'else '
-			elif(self.type == ops.OF):
-				 return ( left + ' of ' + right)
-			elif(self.type == ops.AND):
-				 return ("{" + left + "} and {" + right + "}") 
-			elif(self.type == ops.STRCONCAT):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'strconcat{' + listVal + '}'
-			elif(self.type == ops.CONCAT):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'concat{' + listVal + '}'
-			elif(self.type == ops.LIST):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'list{' + listVal + '}'
-			elif(self.type == ops.SYMMAP):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'symmap{' + listVal + '}'    
-			elif(self.type == ops.EXPAND):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return 'expand{' + listVal + '}'
-			elif(self.type == ops.FUNC):
-				 listVal = ""
-				 for i in self.listNodes:
-				 	listVal += str(i) + ', '
-				 listVal = listVal[:len(listVal)-2]
-				 return self.attr + '(' + listVal + ')'
-			elif(self.type == ops.SEQ):
-				return (left + '; ' + right)
-			elif(self.type == ops.NONE):
-				 return 'NONE'
-			elif(self.type == ops.NOP):
-				 return 'NOP'
-		return None
+    def __str__(self):
+        if self == None: return None
+        elif(self.type == ops.ATTR):
+            # check for negation
+            if self.negated:
+                msg = "-" + self.attr
+            else:
+                msg = self.attr
+            if self.delta_index != None and type(self.delta_index) == list and self.attr == "delta":
+                        token = ""
+                        for t in self.delta_index:
+                                token += t + "#"
+                        msg += token[:len(token)-1]
+            if self.attr_index != None and type(self.attr_index) == list:
+                token = ""
+                for t in self.attr_index:
+                    token += t + "#"
+                l = len(token)
+                token = token[:l-1]
+                msg += '_' + token
+            return msg
+        elif(self.type == ops.TYPE):
+            return str(self.attr)
+        else:
+            left = str(self.left)
+            right = str(self.right)
 
-	def isAttrIndexEmpty(self):
-		if self.attr_index != None:
-			if len(self.attr_index) > 0: return False
-		return True
+            if debug >= levels.some:
+               print("Operation: ", self.type)
+               print("Left operand: ", left) #, "type: ", leftType)
+               print("Right operand: ", right) #, "type: ", rightType)
+            if(self.type == ops.BEGIN):
+                return (START_TOKEN + ' :: ' + left)
+            elif(self.type == ops.END):
+                return (END_TOKEN + ' :: ' + left)
+            elif(self.type == ops.EXP):
+                return ('(' + left + '^' + right + ')')
+            elif(self.type == ops.MUL):
+                return ('(' + left + ' * ' + right + ')')
+            elif(self.type == ops.DIV):
+                return ('(' + left + ' / ' + right + ')')
+            elif(self.type == ops.ADD):
+                return ('(' + left + ' + ' + right + ')')
+            elif(self.type == ops.SUB):
+                return ('(' + left + ' - ' + right + ')')
+            elif(self.type == ops.EQ):
+                return (left + ' := ' + right)
+            elif(self.type == ops.EQ_TST):
+                return (left + ' == ' + right)
+            elif(self.type == ops.NON_EQ_TST):
+                return (left + ' != ' + right)
+            elif(self.type == ops.PAIR):
+                return ('e(' + left + ',' + right + ')')
+            elif(self.type == ops.HASH):
+                return ('H(' + left + ',' + right + ')')
+            elif(self.type == ops.PROD):
+                return ('prod{' + left + ',' + right + '}')
+            elif(self.type == ops.SUM):
+                return ('sum{' + left + ',' + right + '}')
+            elif(self.type == ops.ON):
+                 return ('(' + left + ' on ' + right + ')')
+            elif(self.type == ops.FOR):
+                return ('for{' + left + ',' + right + '}')
+            elif(self.type == ops.FORINNER):
+                return ('forinner{' + left + ',' + right + '}')
+            elif(self.type == ops.FORALL):
+                return ('forall{' + left + '}')
+            elif(self.type == ops.RANDOM):
+                return ('random(' + left + ')')
+            elif(self.type == ops.ERROR):
+                return ('error(' + str(self.attr) + ')')
+            elif(self.type == ops.DO):
+                 return (left + ' do { ' + right + ' }')
+            elif(self.type == ops.IF):
+                 return ('if {' + left + '}')
+            elif(self.type == ops.ELSEIF):
+                 return ('elseif {' + left + '}')
+            elif(self.type == ops.ELSE):
+                 return 'else '
+            elif(self.type == ops.OF):
+                 return ( left + ' of ' + right)
+            elif(self.type == ops.AND):
+                 return ("{" + left + "} and {" + right + "}")
+            elif(self.type == ops.XOR):
+                 return ("XOR(" + left + "," + right + ")")
+            elif(self.type == ops.STRCONCAT):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'strconcat{' + listVal + '}'
+            elif(self.type == ops.CONCAT):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'concat{' + listVal + '}'
+            elif(self.type == ops.LIST):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'list{' + listVal + '}'
+            elif(self.type == ops.SYMMAP):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'symmap{' + listVal + '}'
+            elif(self.type == ops.EXPAND):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'expand{' + listVal + '}'
+            elif(self.type == ops.FUNC):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return self.attr + '(' + listVal + ')'
+            elif(self.type == ops.SEQ):
+                return (left + '; ' + right)
+            elif(self.type == ops.NONE):
+                 return 'NONE'
+            elif(self.type == ops.NOP):
+                 return 'NOP'
+                # return ( left + ' on ' + right )
+        return None
 
-	def setType(self, value):
-        	self.type = value
-	
-	def setAttrIndex(self, value):
-		if(self.type in [ops.ATTR, ops.HASH]):
-			if self.attr_index == None and type(value) == list: # could be a list of indices
-				self.attr_index = list(value)
-			elif self.attr_index == None:
-				self.attr_index = [value]
-			elif type(value) == list:
-				for i in self.attr_index:
-					if i not in self.attr_index:
-						self.attr_index.append(i)
-			else:
-				if not value in self.attr_index:
-					self.attr_index.append(value)
-			return True
-		return False
-	
-	def getAttribute(self):
-		if (self.type == ops.ATTR):
-			return str(self.attr)
-		return None
+    def sdl_print(self):
+        if self == None: return None
+        elif(self.type == ops.ATTR):
+            # check for negation
+            if self.negated:
+                msg = "-" + self.attr
+            else:
+                msg = self.attr
+            if self.delta_index != None and type(self.delta_index) == list and self.attr == "delta":
+                        token = ""
+                        for t in self.delta_index:
+                                token += t + ""
+                        msg += token # [:len(token)-1]
+            if self.attr_index != None and type(self.attr_index) == list:
+                token = ""
+                for t in self.attr_index:
+                    token += t + "#"
+                l = len(token)
+                token = token[:l-1]
+                if token != '': msg += '#' + token
+            return msg
+        elif(self.type == ops.TYPE):
+            return str(self.attr)
+        else:
+            if self.type not in [ops.FUNC, ops.LIST, ops.EXPAND, ops.SYMMAP, ops.CONCAT, ops.STRCONCAT]:
+                left = self.left.sdl_print()
+                if self.type not in [ops.RANDOM, ops.FORALL, ops.IF, ops.ELSE]:
+                    right = self.right.sdl_print()
+
+            if debug >= levels.some:
+               print("Operation: ", self.type)
+               print("Left operand: ", left) #, "type: ", self.left.type)
+               print("Right operand: ", right) #, "type: ", self.right.type)
+            if(self.type == ops.BEGIN):
+                return (START_TOKEN + ' :: ' + left)
+            elif(self.type == ops.END):
+                return (END_TOKEN + ' :: ' + left)
+            elif(self.type == ops.EXP):
+                return ('(' + left + '^' + right + ')')
+            elif(self.type == ops.MUL):
+                return ('(' + left + ' * ' + right + ')')
+            elif(self.type == ops.DIV):
+                return ('(' + left + ' / ' + right + ')')
+            elif(self.type == ops.ADD):
+                return ('(' + left + ' + ' + right + ')')
+            elif(self.type == ops.SUB):
+                return ('(' + left + ' - ' + right + ')')
+            elif(self.type == ops.EQ):
+                return (left + ' := ' + right)
+            elif(self.type == ops.EQ_TST):
+                return (left + ' == ' + right)
+            elif(self.type == ops.NON_EQ_TST):
+                return (left + ' != ' + right)
+            elif(self.type == ops.PAIR):
+                return ('e(' + left + ',' + right + ')')
+            elif(self.type == ops.HASH):
+                return ('H(' + left + ',' + right + ')')
+            elif(self.type == ops.PROD):
+                return ('prod{' + left + ',' + right + '}')
+            elif(self.type == ops.SUM):
+                return ('sum{' + left + ',' + right + '}')
+            elif(self.type == ops.ON):
+                 return ('(' + left + ' on ' + right + ')')
+            elif(self.type == ops.FOR):
+                return ('for{' + left + ',' + right + '}')
+            elif(self.type == ops.FORINNER):
+                return ('forinner{' + left + ',' + right + '}')
+            elif(self.type == ops.FORALL):
+                return ('forall{' + left + '}')
+            elif(self.type == ops.RANDOM):
+                return ('random(' + left + ')')
+            elif(self.type == ops.ERROR):
+                return ('error(' + self.attr.sdl_print() + ')')
+            elif(self.type == ops.DO):
+                 return (left + ' do { ' + right + ' }')
+            elif(self.type == ops.IF):
+                 return ('if {' + left + '}')
+            elif(self.type == ops.ELSEIF):
+                 return ('elseif {' + left + '}')
+            elif(self.type == ops.ELSE):
+                 return 'else '
+            elif(self.type == ops.OF):
+                 return ( left + ' of ' + right)
+            elif(self.type == ops.AND):
+                 return ("{" + left + "} and {" + right + "}")
+            elif(self.type == ops.STRCONCAT):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'strconcat{' + listVal + '}'
+            elif(self.type == ops.CONCAT):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'concat{' + listVal + '}'
+            elif(self.type == ops.LIST):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'list{' + listVal + '}'
+            elif(self.type == ops.SYMMAP):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'symmap{' + listVal + '}'
+            elif(self.type == ops.EXPAND):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return 'expand{' + listVal + '}'
+            elif(self.type == ops.FUNC):
+                 listVal = ""
+                 for i in self.listNodes:
+                    listVal += str(i) + ', '
+                 listVal = listVal[:len(listVal)-2]
+                 return self.attr + '(' + listVal + ')'
+            elif(self.type == ops.SEQ):
+                return (left + '; ' + right)
+            elif(self.type == ops.NONE):
+                 return 'NONE'
+            elif(self.type == ops.NOP):
+                 return 'NOP'
+        return None
+
+    def isAttrIndexEmpty(self):
+        if self.attr_index:
+            if len(self.attr_index) > 0:
+                return False
+        # means it's None
+        return True
+
+    def setType(self, value):
+            self.type = value
+
+    def setAttrIndex(self, value):
+        if(self.type in [ops.ATTR, ops.HASH]):
+            if self.attr_index == None and type(value) == list: # could be a list of indices
+                self.attr_index = list(value)
+            elif self.attr_index == None:
+                self.attr_index = [value]
+            elif type(value) == list:
+                for i in self.attr_index:
+                    if i not in self.attr_index:
+                        self.attr_index.append(i)
+            else:
+                if not value in self.attr_index:
+                    self.attr_index.append(value)
+            return True
+        return False
+
+    def getAttribute(self):
+        if (self.type == ops.ATTR):
+            return str(self.attr)
+        return None
     
     # Delta specific adds to BinaryNode to account for small exps
-	def isDeltaIndexEmpty(self):
-		if self.delta_index != None:
-			if len(self.delta_index) > 0: return False
-		return True
+    def isDeltaIndexEmpty(self):
+        if self.delta_index:
+            if len(self.delta_index) > 0:
+                return False
+        return True
 
-	def getDeltaIndex(self):
-		return self.delta_index
+    def getDeltaIndex(self):
+        return self.delta_index
     
-	def setDeltaIndexFromSet(self, value):
-		if type(value) not in [set, list]: return
-		if value == None: return
-		value2 = [str(i) for i in sorted(value)]
-		self.delta_index = value2
-		return
+    def setDeltaIndexFromSet(self, value):
+        if type(value) not in [set, list]: return
+        if value == None: return
+        value2 = [str(i) for i in sorted(value)]
+        self.delta_index = value2
+        return
     
-	def setDeltaIndex(self, value):
-		if(self.type in [ops.ATTR, ops.HASH, ops.PAIR]):
-		    value2 = str(value)
-		    if self.delta_index == None: # could be a list of indices
-		        self.delta_index = [value2]
-		    else:
-		        if not value2 in self.delta_index:
-		           self.delta_index.append(value2)
-		    return True
-		return False
+    def setDeltaIndex(self, value):
+        if(self.type in [ops.ATTR, ops.HASH, ops.PAIR]):
+            value2 = str(value)
+            if self.delta_index == None: # could be a list of indices
+                self.delta_index = [value2]
+            else:
+                if not value2 in self.delta_index:
+                   self.delta_index.append(value2)
+            return True
+        return False
 
-	def getRefAttribute(self):
-		if (self.type == ops.ATTR):
-			attr = str(self)
-			return dropListIndexIfNonNum(attr)
-		return None
+    def getRefAttribute(self):
+        if (self.type == ops.ATTR):
+            attr = str(self)
+            return dropListIndexIfNonNum(attr)
+        return None
 
-	def getFullAttribute(self):
-		if (self.type == ops.ATTR):
-			return str(self)
-		return None	
+    def getFullAttribute(self):
+        if (self.type == ops.ATTR):
+            return str(self)
+        return None
 
-	def setAttribute(self, value, clearAttrIndex=True):
-		if self.type in [ops.ATTR, ops.FUNC, ops.ERROR]:
-			self.attr = str(value)
-			#if clearAttrIndex: self.attr_index = None
-			return True
-		return False
-	
-	def addToList(self, value):
- 		if self.type  in [ops.LIST, ops.EXPAND]:
- 			if type(value) == str:
- 				self.listNodes.append(value)
-	def __repr__(self):
-   		return str(self) 
-#	def getMySide(self):
-#		return self.myside
-	
-	def getLeft(self):
-		return self.left if self.left != None else None
-	
-	def getRight(self):
-		return self.right if self.right != None else None
+    def setAttribute(self, value, clearAttrIndex=True):
+        if self.type in [ops.ATTR, ops.FUNC, ops.ERROR]:
+            self.attr = str(value)
+            #if clearAttrIndex: self.attr_index = None
+            return True
+        return False
 
-	def getListNode(self):
-		return self.listNodes
+    def addToList(self, value):
+        if self.type  in [ops.LIST, ops.EXPAND]:
+            if type(value) == str:
+                self.listNodes.append(value)
+    def __repr__(self):
+        return str(self)
+    #	def getMySide(self):
+    #		return self.myside
 
-	def addSubNode(self, left, right):
-		# set subNodes appropriately
-		self.left = self.createSubNode(left) if left != None else None
-		#self.left.myside = side.left
-		self.right = self.createSubNode(right) if left != None else None
-		#self.right.myside = side.right
-		if debug == levels.all:
-			print("addSubNode: ");
-			print("left type =>", type(self.left), ' =>', self.left)
-			print("right type =>", type(self.right), ' =>', self.right)
+    def getLeft(self):
+        return self.left if self.left != None else None
 
-	def createSubNode(self, value):
-		if isinstance(value, str):
-			node = BinaryNode(value)		   
-			return node
-		return value
+    def getRight(self):
+        return self.right if self.right != None else None
 
-	def isNegated(self):
-		return self.negated
+    def getListNode(self):
+        return self.listNodes
 
-	@classmethod
-	def copy(self, this):
-		if this == None: return None
-		new_node = BinaryNode(this.type)
-		new_node.negated = this.negated
-		new_node.attr = this.attr
-		if this.attr_index:
-			new_node.attr_index = list(this.attr_index)
-		else:
-			new_node.attr_index = None
-		if this.delta_index:
-			new_node.delta_index = this.delta_index
-		else:
-			new_node.delta_index = this.delta_index
-		if this.type in [ops.LIST, ops.EXPAND, ops.SYMMAP, ops.FUNC, ops.CONCAT, ops.STRCONCAT]:
-			new_node.listNodes  = this.listNodes
-		# recursively call copy on left 
-		new_node.left = self.copy(this.left)
-		new_node.right = self.copy(this.right)		
-		return new_node	
+    def addSubNode(self, left, right):
+        # set subNodes appropriately
+        self.left = self.createSubNode(left) if left != None else None
+        #self.left.myside = side.left
+        self.right = self.createSubNode(right) if left != None else None
+        #self.right.myside = side.right
+        if debug == levels.all:
+            print("addSubNode: ");
+            print("left type =>", type(self.left), ' =>', self.left)
+            print("right type =>", type(self.right), ' =>', self.right)
 
-	# sets destination ref to src ref (type, attr value, and attr index)
-	@classmethod
-	def setNodeAs(self, dest, src):
-		dest.type = src.type
-		dest.attr = src.attr
-		dest.negated = src.negated
-		if src.attr_index:
-			dest.attr_index = list(src.attr_index)
-		else:
-			dest.attr_index = None
-		if src.delta_index:
-			dest.delta_index = list(src.delta_index)
-		else:
-			dest.delta_index = None           
-		dest.left = src.left
-		dest.right = src.right
-		return
+    def createSubNode(self, value):
+        if isinstance(value, str):
+            node = BinaryNode(value)
+            return node
+        return value
 
-	@classmethod
-	def clearNode(self, dest):
-		dest.type = ops.NONE
-		dest.attr = None
-		dest.negated = False
-		dest.attr_index = None
-		dest.delta_index = None        
-		dest.left = None
-		dest.right = None
-	# only applies function on leaf nodes
-	def traverse(self, function):
-		# visit node then traverse left and right
-		function(self.type, self)
-		if(self.left == None):
-			return None
-		self.left.traverse(function)
-		if(self.right == None):
-			return None
-		self.right.traverse(function)
-		return None	
-	
+    def isNegated(self):
+        return self.negated
+
+    @classmethod
+    def copy(self, this):
+        if this == None: return None
+        new_node = BinaryNode(this.type)
+        new_node.negated = this.negated
+        new_node.attr = this.attr
+        if this.attr_index:
+            new_node.attr_index = list(this.attr_index)
+        else:
+            new_node.attr_index = None
+        if this.delta_index:
+            new_node.delta_index = this.delta_index
+        else:
+            new_node.delta_index = this.delta_index
+        if this.type in [ops.LIST, ops.EXPAND, ops.SYMMAP, ops.FUNC, ops.CONCAT, ops.STRCONCAT]:
+            new_node.listNodes  = this.listNodes
+        # recursively call copy on left
+        new_node.left = self.copy(this.left)
+        new_node.right = self.copy(this.right)
+        return new_node
+
+    # sets destination ref to src ref (type, attr value, and attr index)
+    @classmethod
+    def setNodeAs(self, dest, src):
+        dest.type = src.type
+        dest.attr = src.attr
+        dest.negated = src.negated
+        if src.attr_index:
+            dest.attr_index = list(src.attr_index)
+        else:
+            dest.attr_index = None
+        if src.delta_index:
+            dest.delta_index = list(src.delta_index)
+        else:
+            dest.delta_index = None
+        dest.left = src.left
+        dest.right = src.right
+        return
+
+    @classmethod
+    def clearNode(self, dest):
+        dest.type = ops.NONE
+        dest.attr = None
+        dest.negated = False
+        dest.attr_index = None
+        dest.delta_index = None
+        dest.left = None
+        dest.right = None
+    # only applies function on leaf nodes
+    def traverse(self, function):
+        # visit node then traverse left and right
+        function(self.type, self)
+        if(self.left == None):
+            return None
+        self.left.traverse(function)
+        if(self.right == None):
+            return None
+        self.right.traverse(function)
+        return None
