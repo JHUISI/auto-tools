@@ -10,7 +10,7 @@ z := ZR
 END :: types
 
 
-BEGIN :: func:assumpsetup
+BEGIN :: func:setup
 input := None
  a := random(ZR)
  b := random(ZR)
@@ -21,7 +21,7 @@ input := None
  assumpKey := list{g, a, b, c, z}
 
 output := assumpKey
-END :: func:assumpsetup
+END :: func:setup
 
 
 BEGIN :: func:assump

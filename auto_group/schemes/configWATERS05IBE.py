@@ -24,7 +24,7 @@ ciphertextVar = "ct"
 assumpMasterPubVars = ["assumpVar"]
 assumpMasterSecVars = ["assumpKey"]
 
-assumpSetupFuncName = "assumpsetup"
+assumpSetupFuncName = "setup"
 assumpFuncName = "assump"
 
 reducSetupFuncName = "setup"
