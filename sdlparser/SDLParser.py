@@ -310,6 +310,17 @@ class SDLParser:
                         sys.exit("SDLParser.py found multiple TYPES_HEADER end token declarations.")
                     endLineNos_Functions[currentFuncName] = line_number
                     currentFuncName = NONE_FUNC_NAME
+            elif (op1 == FUNC_TYPES_HEADER):
+                if (op == START_TOKEN):
+                    currentFuncName = FUNC_TYPES_HEADER
+                    if (currentFuncName in startLineNos_Functions):
+                        sys.exit("SDLParser.py found multiple FUNC_TYPES_HEADER start token declarations.")
+                    startLineNos_Functions[currentFuncName] = line_number
+                elif (op == END_TOKEN):
+                    if (currentFuncName in endLineNos_Functions):
+                        sys.exit("SDLParser.py found multiple FUNC_TYPES_HEADER end token declarations.")
+                    endLineNos_Functions[currentFuncName] = line_number
+                    currentFuncName = NONE_FUNC_NAME
             elif (op1 == FORALL_LOOP_HEADER):
                 if (op == START_TOKEN):
                     startLineNo_ForLoop = line_number
@@ -484,16 +495,16 @@ def getVarTypeFromVarName(varName, functionNameArg_TieBreaker, failSilently=Fals
                 retFunctionName = funcName
                 isInAList = varTypes[funcName][currentVarName].isInAList                
                 continue
-            if (funcName == TYPES_HEADER):
+            if funcName in [TYPES_HEADER, FUNC_TYPES_HEADER]:
                 continue
-            if (retFunctionName == TYPES_HEADER):
+            if retFunctionName == TYPES_HEADER or retFunctionName == FUNC_TYPES_HEADER:
                 retVarType = currentVarType
                 retFunctionName = funcName
                 isInAList = varTypes[funcName][currentVarName].isInAList                
                 continue
-            if (currentVarType == retVarType):
+            if currentVarType == retVarType:
                 continue
-            if (varName not in [outputKeyword, returnKeyword]):
+            if varName not in [outputKeyword, returnKeyword]:
                 if (checkForIntAndZR(retVarType, currentVarType) == True):
                     retVarType = types.ZR
                     continue

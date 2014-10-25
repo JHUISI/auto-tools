@@ -30,6 +30,7 @@ FOR_LOOP_HEADER = "for"
 FOR_LOOP_INNER_HEADER = "forinner"
 FORALL_LOOP_HEADER = "forall"
 TYPES_HEADER = "types"
+FUNC_TYPES_HEADER = "functypes"
 COUNT_HEADER = "count" # JAA: app-specific
 PRECOMPUTE_HEADER = "precompute" # JAA: app-specific
 LATEX_HEADER = "latex" # JAA: standard
