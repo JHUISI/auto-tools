@@ -3,6 +3,7 @@ import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
 from src.convertToAsymmetric import *
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, CountOfPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 
 import codegen_CPP
 import codegen_PY
@@ -127,6 +128,152 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     assignInfo_assump = sdl.getAssignInfo()
     assumptionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_assump, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_assump.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
 
+
+    # this consists of the type of the input scheme (e.g., symmetric)
+    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+    # name of the scheme
+    sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
+
+    typesBlock = sdl.getFuncStmts( TYPES_HEADER )
+    info = {'verbose':verbose}
+
+    # we want to ignore user defined functions from our analysis
+    # (unless certain variables that we care about are manipulated there)
+    userCodeBlocks = list(set(list(assignInfo_assump.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
+    options['userFuncList'] += userCodeBlocks
+
+    lines = list(typesBlock[0].keys())
+    lines.sort()
+    typesBlockLines = [ i.rstrip() for i in sdl.getLinesOfCodeFromLineNos(lines) ]
+    begin = ["BEGIN :: " + TYPES_HEADER]
+    end = ["END :: " + TYPES_HEADER]
+
+    # start constructing the preamble for the Asymmetric SDL output
+    newLines0 = [ BV_NAME + " := " + sdl_name, SETTING + " := " + sdl.ASYMMETRIC_SETTING ] 
+    newLines1 = begin + typesBlockLines + end
+    # this fact is already verified by the parser
+    # but if scheme claims symmetric
+    # and really an asymmetric scheme then parser will
+    # complain.
+    assert setting == sdl.SYMMETRIC_SETTING, "No need to convert to asymmetric setting."    
+    # determine user preference in terms of keygen or encrypt
+    short = SHORT_DEFAULT # default option
+    if hasattr(cm, 'short'):
+        if cm.short in SHORT_OPTIONS:
+            short = cm.short
+    print("reducing size of '%s'" % short) 
+
+    varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+    typesH = dict(varTypes)
+    if not hasattr(cm, 'schemeType'):
+        sys.exit("'schemeType' option missing in specified config file.")
+    pairingSearch = []
+    # extract the statements, types, dependency list, influence list and exponents of influence list
+    # for each algorithm in the SDL scheme
+    (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.assumpSetupFuncName )
+    (stmtA, typesA, depListA, depListNoExpA, infListA, infListNoExpA) = sdl.getVarInfoFuncStmts( cm.assumpFuncName )
+    varTypes.update(typesS)
+    varTypes.update(typesA)
+    print(depListS, depListNoExpS)
+    print(depListA, depListNoExpA)
+    # TODO: expand search to encrypt and potentially setup
+    pairingSearch += [stmtS, stmtA] # aka start with decrypt.
+            
+    info[curveID] = options['secparam']
+    info[dropFirstKeyword] = options[dropFirstKeyword]
+    gen = Generators(info)
+    # JAA: commented out for benchmarking    
+    #print("List of generators for scheme")
+    # retrieve the generators selected by the scheme
+    # typically found in the setup routine in most cases.
+    # extract the generators from the setup and keygen routine for later use
+    if hasattr(cm, 'assumpSetupFuncName'):
+        gen.extractGens(stmtS, typesS)
+    if hasattr(cm, 'assumpFuncName'):
+        gen.extractGens(stmtA, typesA)
+    else:
+        sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
+    generators = gen.getGens()
+    # JAA: commented out for benchmarking    
+    print("Generators extracted: ", generators)
+
+    print("\n")
+
+    # need a Visitor class to build these variables  
+    # TODO: expand to other parts of algorithm including setup, keygen, encrypt
+    # Visits each pairing computation in the SDL and
+    # extracts the inputs. This is the beginning of the
+    # analysis of these variables as the SDL is converted into
+    # an asymmetric scheme.
+    hashVarList = []
+    pair_vars_G1_lhs = [] 
+    pair_vars_G1_rhs = []    
+    gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
+    print(pairingSearch)
+    for eachStmt in pairingSearch: # loop through each pairing statement
+        print(pair_vars_G1_lhs)            
+        lines = eachStmt.keys() # for each line, do the following
+        for i in lines:
+            print(pair_vars_G1_lhs)            
+            if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
+                #print("Each: ", eachStmt[i].getAssignNode())
+                # assert that the statement contains a pairing computation
+                if HasPairings(eachStmt[i].getAssignNode()):
+                    path_applied = []
+                    # split pairings if necessary so that we don't influence
+                    # the solve in anyway. We can later recombine these during
+                    # post processing of the SDL
+                    eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
+                    # JAA: commented out for benchmarking                    
+                    #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
+                    if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
+                    print(eachStmt[i].assignNode)
+                    sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
+                elif eachStmt[i].getHashArgsInAssignNode(): 
+                    # in case there's a hashed value...build up list and check later to see if it appears
+                    # in pairing variable list
+                    print("hash => ", str(eachStmt[i].getAssignVar()))
+                    hashVarList.append(str(eachStmt[i].getAssignVar()))
+                else:
+                    continue # not interested
+                
+    # constraint list narrows the solutions that
+    # we care about
+    constraintList = []
+    # for example, include any hashed values that show up in a pairing by default
+    for i in hashVarList:
+        if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
+            constraintList.append(i)
+    # JAA: commented out for benchmarking            
+    print("pair vars LHS:", pair_vars_G1_lhs)
+    print("pair vars RHS:", pair_vars_G1_rhs) 
+    print("list of gens :", generators)
+    print("constraintList: ", constraintList)
+    # for each pairing variable, we construct a dependency graph all the way back to
+    # the generators used. The input of assignTraceback consists of the list of SDL statements,
+    # generators from setup, type info, and the pairing variables.
+    # We do this analysis for both sides
+    info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo_assump, generators, varTypes, pair_vars_G1_lhs, constraintList))
+    info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo_assump, generators, varTypes, pair_vars_G1_rhs, constraintList))
+
+    depList = {}
+    for i in [depListS, depListA]:
+        for (key, val) in i.items():
+            print(key, val)
+            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
+                depList[key] = val
+    print(depList)
+
+    print("\n")
+    info[ 'deps' ] = (depList, assignTraceback(assignInfo_assump, generators, varTypes, depList, constraintList))
+    print(info['deps'])
+
+    print("\n")
+
+    assumptionData['info'] = info
+    assumptionData['depList'] = depList
+    assumptionData['deps'] = info['deps']
+
     return assumptionData
 
 def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
@@ -161,6 +308,156 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     sdl.parseFile(reduction_file, verbose, ignoreCloudSourcing=True)
     assignInfo_reduction = sdl.getAssignInfo()
     reductionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_reduction, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_reduction.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
+
+
+    # this consists of the type of the input scheme (e.g., symmetric)
+    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+    # name of the scheme
+    sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
+
+    typesBlock = sdl.getFuncStmts( TYPES_HEADER )
+    info = {'verbose':verbose}
+
+    # we want to ignore user defined functions from our analysis
+    # (unless certain variables that we care about are manipulated there)
+    userCodeBlocks = list(set(list(assignInfo_reduction.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
+    options['userFuncList'] += userCodeBlocks
+
+    lines = list(typesBlock[0].keys())
+    lines.sort()
+    typesBlockLines = [ i.rstrip() for i in sdl.getLinesOfCodeFromLineNos(lines) ]
+    begin = ["BEGIN :: " + TYPES_HEADER]
+    end = ["END :: " + TYPES_HEADER]
+
+    # start constructing the preamble for the Asymmetric SDL output
+    newLines0 = [ BV_NAME + " := " + sdl_name, SETTING + " := " + sdl.ASYMMETRIC_SETTING ] 
+    newLines1 = begin + typesBlockLines + end
+    # this fact is already verified by the parser
+    # but if scheme claims symmetric
+    # and really an asymmetric scheme then parser will
+    # complain.
+    assert setting == sdl.SYMMETRIC_SETTING, "No need to convert to asymmetric setting."    
+    # determine user preference in terms of keygen or encrypt
+    short = SHORT_DEFAULT # default option
+    if hasattr(cm, 'short'):
+        if cm.short in SHORT_OPTIONS:
+            short = cm.short
+    print("reducing size of '%s'" % short) 
+
+    varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+    typesH = dict(varTypes)
+    if not hasattr(cm, 'schemeType'):
+        sys.exit("'schemeType' option missing in specified config file.")
+    pairingSearch = []
+    # extract the statements, types, dependency list, influence list and exponents of influence list
+    # for each algorithm in the SDL scheme
+    (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
+    (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
+    (stmtC, typesC, depListC, depListNoExpC, infListC, infListNoExpC) = sdl.getVarInfoFuncStmts( cm.reducChallengeFuncName )
+    varTypes.update(typesS)
+    varTypes.update(typesQ)
+    varTypes.update(typesC)
+    print(stmtS)
+    print(stmtQ)
+    print(depListS)
+    print(depListNoExpS)
+    # TODO: expand search to encrypt and potentially setup
+    pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
+            
+    info[curveID] = options['secparam']
+    info[dropFirstKeyword] = options[dropFirstKeyword]
+    gen = Generators(info)
+    # JAA: commented out for benchmarking    
+    #print("List of generators for scheme")
+    # retrieve the generators selected by the scheme
+    # typically found in the setup routine in most cases.
+    # extract the generators from the setup and keygen routine for later use
+    if hasattr(cm, 'reducSetupFuncName'):
+        gen.extractGens(stmtS, typesS)
+    if hasattr(cm, 'reducQueryFuncName'):
+        gen.extractGens(stmtQ, typesQ)
+    if hasattr(cm, 'reducChallengeFuncName'):
+        gen.extractGens(stmtC, typesC)
+    else:
+        sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
+    generators = gen.getGens()
+    # JAA: commented out for benchmarking    
+    print("Generators extracted: ", generators)
+
+    # need a Visitor class to build these variables  
+    # TODO: expand to other parts of algorithm including setup, keygen, encrypt
+    # Visits each pairing computation in the SDL and
+    # extracts the inputs. This is the beginning of the
+    # analysis of these variables as the SDL is converted into
+    # an asymmetric scheme.
+    hashVarList = []
+    pair_vars_G1_lhs = [] 
+    pair_vars_G1_rhs = []    
+    gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
+    print(pairingSearch)
+    for eachStmt in pairingSearch: # loop through each pairing statement
+        print(pair_vars_G1_lhs)            
+        lines = eachStmt.keys() # for each line, do the following
+        for i in lines:
+            print(pair_vars_G1_lhs)            
+            if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
+                #print("Each: ", eachStmt[i].getAssignNode())
+                # assert that the statement contains a pairing computation
+                if HasPairings(eachStmt[i].getAssignNode()):
+                    path_applied = []
+                    # split pairings if necessary so that we don't influence
+                    # the solve in anyway. We can later recombine these during
+                    # post processing of the SDL
+                    eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
+                    # JAA: commented out for benchmarking                    
+                    #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
+                    if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
+                    print(eachStmt[i].assignNode)
+                    sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
+                elif eachStmt[i].getHashArgsInAssignNode(): 
+                    # in case there's a hashed value...build up list and check later to see if it appears
+                    # in pairing variable list
+                    print("hash => ", str(eachStmt[i].getAssignVar()))
+                    hashVarList.append(str(eachStmt[i].getAssignVar()))
+                else:
+                    continue # not interested
+                
+    # constraint list narrows the solutions that
+    # we care about
+    constraintList = []
+    # for example, include any hashed values that show up in a pairing by default
+    for i in hashVarList:
+        if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
+            constraintList.append(i)
+    # JAA: commented out for benchmarking            
+    print("pair vars LHS:", pair_vars_G1_lhs)
+    print("pair vars RHS:", pair_vars_G1_rhs) 
+    print("list of gens :", generators)
+    print("constraintList: ", constraintList)
+    # for each pairing variable, we construct a dependency graph all the way back to
+    # the generators used. The input of assignTraceback consists of the list of SDL statements,
+    # generators from setup, type info, and the pairing variables.
+    # We do this analysis for both sides
+    info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo_reduction, generators, varTypes, pair_vars_G1_lhs, constraintList))
+    info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo_reduction, generators, varTypes, pair_vars_G1_rhs, constraintList))
+
+    depList = {}
+    for i in [depListS, depListQ, depListC]:
+        for (key, val) in i.items():
+            print(key, val)
+            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
+                depList[key] = val
+    print(depList)
+
+    print("\n")
+    info[ 'deps' ] = (depList, assignTraceback(assignInfo_reduction, generators, varTypes, depList, constraintList))
+    print(info['deps'][1])
+
+    print("\n")
+
+    reductionData['info'] = info
+    reductionData['depList'] = depList
+    reductionData['deps'] = info['deps']
 
     return reductionData
 
@@ -224,7 +521,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     
     options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
     startTime = time.clock()
-    outfile = runAutoGroup(sdl_file, cm, options, verbose)
+    outfile = runAutoGroup(sdl_file, cm, options, verbose, assumptionData, reductionData)
     endTime = time.clock()
     if benchmarkOpt: 
         runningTime = (endTime - startTime) * 1000
