@@ -211,10 +211,10 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
-        print(pair_vars_G1_lhs)            
+        #print(pair_vars_G1_lhs)            
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
-            print(pair_vars_G1_lhs)            
+            #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
                 #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
@@ -227,12 +227,12 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
-                    print(eachStmt[i].assignNode)
+                    #print(eachStmt[i].assignNode)
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
-                    print("hash => ", str(eachStmt[i].getAssignVar()))
+                    #print("hash => ", str(eachStmt[i].getAssignVar()))
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
@@ -259,20 +259,31 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     depList = {}
     for i in [depListS, depListA]:
         for (key, val) in i.items():
-            print(key, val)
+            #print(key, val)
             if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
                 depList[key] = val
     print(depList)
 
     print("\n")
     info[ 'deps' ] = (depList, assignTraceback(assignInfo_assump, generators, varTypes, depList, constraintList))
-    print(info['deps'])
+    print("processed deps => ", info['deps'][0])
+    print("processed deps map => ", info['deps'][1])
+
+    print("\n")
+
+    prunedDeps = {}
+    for (key, val) in info['deps'][1].items():
+        #print(key, val)
+        if(not(len(val) == 0)):
+            prunedDeps[key] = val
+    print("pruned deps => ", prunedDeps)
 
     print("\n")
 
     assumptionData['info'] = info
     assumptionData['depList'] = depList
     assumptionData['deps'] = info['deps']
+    assumptionData['prunedMap'] = prunedDeps
 
     return assumptionData
 
@@ -357,8 +368,8 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     varTypes.update(typesS)
     varTypes.update(typesQ)
     varTypes.update(typesC)
-    print(stmtS)
-    print(stmtQ)
+    #print(stmtS)
+    #print(stmtQ)
     print(depListS)
     print(depListNoExpS)
     # TODO: expand search to encrypt and potentially setup
@@ -394,12 +405,12 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
-    print(pairingSearch)
+    #print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
-        print(pair_vars_G1_lhs)            
+        #print(pair_vars_G1_lhs)            
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
-            print(pair_vars_G1_lhs)            
+            #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
                 #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
@@ -412,12 +423,12 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
-                    print(eachStmt[i].assignNode)
+                    #print(eachStmt[i].assignNode)
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
-                    print("hash => ", str(eachStmt[i].getAssignVar()))
+                    #print("hash => ", str(eachStmt[i].getAssignVar()))
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
@@ -444,20 +455,29 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     depList = {}
     for i in [depListS, depListQ, depListC]:
         for (key, val) in i.items():
-            print(key, val)
+            #print(key, val)
             if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
                 depList[key] = val
     print(depList)
 
     print("\n")
     info[ 'deps' ] = (depList, assignTraceback(assignInfo_reduction, generators, varTypes, depList, constraintList))
-    print(info['deps'][1])
+    print("processed deps => ", info['deps'][0])
+    print("processed deps map => ", info['deps'][1])
 
     print("\n")
+
+    prunedDeps = {}
+    for (key, val) in info['deps'][1].items():
+        #print(key, val)
+        if(not(len(val) == 0)):
+            prunedDeps[key] = val
+    print("pruned deps => ", prunedDeps)
 
     reductionData['info'] = info
     reductionData['depList'] = depList
     reductionData['deps'] = info['deps']
+    reductionData['prunedMap'] = prunedDeps
 
     return reductionData
 
