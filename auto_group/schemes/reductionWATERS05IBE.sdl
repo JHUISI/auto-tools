@@ -5,15 +5,15 @@ l := 32
 
 BEGIN :: types
 l := Int
-g := G1
-A := G1
-B := G1
-C := G1
+#g := G1
+#A := G1
+#B := G1
+#C := G1
 Z := GT
-a := ZR
-b := ZR
-c := ZR
-z := ZR
+#a := ZR
+#b := ZR
+#c := ZR
+#z := ZR
 m := Int
 k := Int
 x := list{Int}
@@ -92,11 +92,30 @@ END :: func:K
 
 
 #Do we want to have it take in an instance of the assumption or generate the instance itself?
+#If we take in an instance of the reduction, the parser does not know how to trace the instance back to the generator
 BEGIN :: func:setup
 input := list{assumpKey, assumpVar}
 
-assumpKey := expand{g, a, b, c, z}
-assumpVar := expand{A, B, C, Z}
+#assumpKey := expand{g, a, b, c, z}
+#assumpVar := expand{A, B, C, Z}
+ a := random(ZR)
+ b := random(ZR)
+ c := random(ZR)
+ z := random(ZR)
+ g := random(G1)
+
+ A := g ^ a
+ B := g ^ b
+ C := g ^ c
+
+#Target group element Z is irrelevant and ignored here (CRYPTO 2014)
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := e(g, g) ^ (a * b * c)
+ else
+   Z := e(g, g) ^ z
+ END :: if
 
 #p := random(Int) #we do not actually have access to these group parameters
 #q := random(Int)

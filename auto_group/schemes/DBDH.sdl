@@ -35,9 +35,9 @@ input := assumpKey
  coinflip := random(bin)
  BEGIN :: if
  if { coinflip == 0 }
-   Z := pair(g, g) ^ (a * b * c)
+   Z := e(g, g) ^ (a * b * c)
  else
-   Z := pair(g, g) ^ z
+   Z := e(g, g) ^ z
  END :: if
 
  assumpVar := list{A, B, C, Z}
