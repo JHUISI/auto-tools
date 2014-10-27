@@ -310,6 +310,17 @@ class SDLParser:
                         sys.exit("SDLParser.py found multiple TYPES_HEADER end token declarations.")
                     endLineNos_Functions[currentFuncName] = line_number
                     currentFuncName = NONE_FUNC_NAME
+            elif (op1 == FUNC_TYPES_HEADER):
+                if (op == START_TOKEN):
+                    currentFuncName = FUNC_TYPES_HEADER
+                    if (currentFuncName in startLineNos_Functions):
+                        sys.exit("SDLParser.py found multiple FUNC_TYPES_HEADER start token declarations.")
+                    startLineNos_Functions[currentFuncName] = line_number
+                elif (op == END_TOKEN):
+                    if (currentFuncName in endLineNos_Functions):
+                        sys.exit("SDLParser.py found multiple FUNC_TYPES_HEADER end token declarations.")
+                    endLineNos_Functions[currentFuncName] = line_number
+                    currentFuncName = NONE_FUNC_NAME
             elif (op1 == FORALL_LOOP_HEADER):
                 if (op == START_TOKEN):
                     startLineNo_ForLoop = line_number
@@ -484,16 +495,16 @@ def getVarTypeFromVarName(varName, functionNameArg_TieBreaker, failSilently=Fals
                 retFunctionName = funcName
                 isInAList = varTypes[funcName][currentVarName].isInAList                
                 continue
-            if (funcName == TYPES_HEADER):
+            if funcName in [TYPES_HEADER, FUNC_TYPES_HEADER]:
                 continue
-            if (retFunctionName == TYPES_HEADER):
+            if retFunctionName == TYPES_HEADER or retFunctionName == FUNC_TYPES_HEADER:
                 retVarType = currentVarType
                 retFunctionName = funcName
                 isInAList = varTypes[funcName][currentVarName].isInAList                
                 continue
-            if (currentVarType == retVarType):
+            if currentVarType == retVarType:
                 continue
-            if (varName not in [outputKeyword, returnKeyword]):
+            if varName not in [outputKeyword, returnKeyword]:
                 if (checkForIntAndZR(retVarType, currentVarType) == True):
                     retVarType = types.ZR
                     continue
@@ -882,8 +893,8 @@ def getVarTypeFromVarTypesDict(possibleFuncName, nodeAttrFullName):
         return types.GT
 #    elif typeDef in [types.listStr, types.metalistStr]:
 #        return types.Str
-    elif typeDef in [types.listInt, types.metalistInt]:
-        return types.Int
+#    elif typeDef in [types.listInt, types.metalistInt]:
+#        return types.Int
     
     return typeDef
 
@@ -902,8 +913,6 @@ def getVarTypeInfoForAttr_List(node):
                 return types.GT
             elif firstReturnType in [types.listStr, types.metalistStr]:
                 return types.Str
-            elif firstReturnType in [types.listInt, types.metalistInt]: 
-                return types.Int
             secondReturnType_ListNodes = varTypes[funcNameOfVar][varNameInList].getListNodesList()
             if (len(secondReturnType_ListNodes) == 1):
                 if (secondReturnType_ListNodes[0] == "G1"):
@@ -916,8 +925,6 @@ def getVarTypeInfoForAttr_List(node):
                     return types.ZR
                 if (secondReturnType_ListNodes[0] in ["str", "Str"]):
                     return types.Str
-                if (secondReturnType_ListNodes[0] == "Int"):
-                    return types.Int
             return firstReturnType
 
         (outsideFunctionName, retVarInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, varNameInList)
