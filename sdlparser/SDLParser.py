@@ -1956,7 +1956,7 @@ def getLineNoOfInputStatement(funcName):
         sys.exit("getLineNoOfInputStatement in SDLParser.py received as input for function name an invalid parameter.")
 
     if (funcName not in assignInfo):
-        print(funcName)
+        #print(funcName)
         sys.exit("Function name passed in to getLineNoOfInputStatement in SDLParser.py is not in assignInfo.")
 
     if (inputKeyword not in assignInfo[funcName]):
@@ -2060,7 +2060,7 @@ def updatePublicVarNames():
 
         (retFuncName, retVarInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, currentPubVarName)
         if ( (retFuncName == None) or (retVarInfoObj == None) ):
-            print(currentPubVarName)
+            #print(currentPubVarName)
             sys.exit("updatePublicVarNames in SDLParser.py:  at least one None value returned from getVarNameEntryFromAssignInfo called on one of the master public variable names.")
 
         getOutputVarsDictOfFuncRecursive(publicVarNames, retFuncName, retVarInfoObj)
