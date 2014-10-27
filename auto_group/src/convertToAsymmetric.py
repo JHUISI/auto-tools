@@ -45,6 +45,10 @@ class GetPairingVariables:
         pass
     
     def visit_pair(self, node, data):
+        #print("visit_pair")
+        #print(self.listLHS, node.left.getRefAttribute())
+        #print(self.listRHS, node.right.getRefAttribute())
+
         if str(node.left.getRefAttribute()) == str(node.right.getRefAttribute()):
             return # skip
         
@@ -64,6 +68,10 @@ class GetPairingVariables:
             pass
         # store for latter use
         self.pairing_map[ self.listLHS[-1] ] = self.listRHS[-1]
+
+        #print("visit_pair end")
+        #print(self.listLHS)
+        #print(self.listRHS)
 
 def getOtherPairingVar(var_map, target_var):
     for i,j in var_map.items():
@@ -647,7 +655,7 @@ sdl filename, a config file and the options which include security parameter,
 a drop first requirement in case multiple solutions achieve the user's requirements,
 and a destination path for the generated Asymmetric-based scheme and accompanying code.
 """
-def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
+def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None, reductionData=None):
     sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
     global assignInfo
     # this contains a Variable Object for each statement in the SDL file
@@ -743,7 +751,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
-    #print("Generators extracted: ", generators)
+    print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
@@ -755,9 +763,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
+    #print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
+        #print(pair_vars_G1_lhs)
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
+            #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
                 #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
@@ -786,16 +797,18 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    #print("pair vars LHS:", pair_vars_G1_lhs)
-    #print("pair vars RHS:", pair_vars_G1_rhs) 
-    #print("list of gens :", generators)
-    #print("constraintList: ", constraintList)
+    print("pair vars LHS:", pair_vars_G1_lhs)
+    print("pair vars RHS:", pair_vars_G1_rhs) 
+    print("list of gens :", generators)
+    print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
     # We do this analysis for both sides
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
+
+    #print(info[ 'G1_lhs' ])
 
     # if we want to optimize based on public parameters, one
     # approach would be to observe the dependency graph of
@@ -812,6 +825,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
 
         lhs_orig_vars, lhs_var_map = info['G1_lhs']
         rhs_orig_vars, rhs_var_map = info['G1_rhs']
+
+        assump_orig_vars, assump_var_map = assumptionData['deps']
+        reduc_orig_vars, reduc_var_map = reductionData['deps']
+
         var_list = []
         countMap = {}
         if info['verbose']:
@@ -822,6 +839,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
                 if info['verbose']:  print("Add to list: ", i, ":", lhs_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, lhs_var_map, assignInfo)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
 
         if info['verbose']: print("<=========================>")
         var_list = []  # reset
@@ -829,8 +848,34 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
             if i not in pk_list:
                 if info['verbose']: print("Add to list: ", i, ":", rhs_var_map[i])
                 var_list.append(i)
-        if info['verbose']: print("<=========================>")
         countCommonGenerators(countMap, pk_list, var_list, rhs_var_map, assignInfo)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
+
+#####################
+#added for assumption
+        if info['verbose']: print("<=========================>")
+        var_list = []  # reset
+        for i in assump_orig_vars:
+            if i not in pk_list:
+                if info['verbose']: print("Add to list: ", i, ":", assump_var_map[i])
+                var_list.append(i)
+        countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumptionData['assignInfo'])
+        print("var_list => ", var_list)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
+#added for reduction
+        if info['verbose']: print("<=========================>")
+        var_list = []  # reset
+        for i in reduc_orig_vars:
+            if i not in pk_list:
+                if info['verbose']: print("Add to list: ", i, ":", reduc_var_map[i])
+                var_list.append(i)
+        countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reductionData['assignInfo'])
+        print("var_list => ", var_list)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
+#####################
 
         # define a function that returns the key of the value with highest value
         # but what if there is no real max (everything thesame?)
@@ -849,6 +894,20 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False):
             if i not in pk_list and max_var in rhs_var_map[i]:
                 if getOtherPairingVar(the_map, i) not in constraintList:
                     constraintList.append(i)
+
+        print("Public-key informed constraint list: ", constraintList)
+
+#####################
+        for i in assump_orig_vars: # look for where max_var appears in pairing variable
+            if i not in pk_list and max_var in assump_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList: #TODO: update the_map for pairings in assumption/reduction
+                    constraintList.append(i)
+
+        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
+            if i not in pk_list and max_var in reduc_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList: #TODO: update the_map for pairings in assumption/reduction
+                    constraintList.append(i)
+#####################
 
         print("Public-key informed constraint list: ", constraintList)
 
