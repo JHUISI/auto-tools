@@ -130,6 +130,8 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     assignInfo_assump = sdl.getAssignInfo()
     assumptionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_assump, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_assump.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
 
+    if hasattr(cm, "reductionMap"):
+        assumptionData['varmap'] = cm.reductionMap
 
     # this consists of the type of the input scheme (e.g., symmetric)
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()

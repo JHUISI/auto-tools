@@ -188,6 +188,61 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
     newLines.append(end)
     return newLines
 
+"""
+1. generic function that takes three lists of group assignments..
+    { 'G1' : varList, 'G2' : varList, 'both': varList }
+2. goes through a given 'block' and goes each statement:
+    - exponentiation, multiplication and pairing
+    - rewrite each statement where a generator appears (or derivative of one) using three lists:
+        if leftAssignVar in 'both': create 2 statements
+        if leftAssignVar in 'G1': create 1 statement in G1
+        if leftAssignVar in 'G2': create 1 statement in G2
+"""
+def transformFunctionAssump(entireSDL, funcName, blockStmts, info, noChangeList, deps, varmap, startLines={}):
+    print("transform function assumption")
+    print(entireSDL)
+    print(blockStmts)
+    print(deps)
+    parser = sdl.SDLParser()
+    funcNode = BinaryNode("func:" + str(funcName))
+    begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
+    end = BinaryNode(ops.END, funcNode, None) # "END :: func:" + funcName
+    newLines = [begin] # + list(startLines)
+    stack = []
+    lines = list(blockStmts.keys())
+    lines.sort()
+
+    for index, i in enumerate(lines):
+        assert type(blockStmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+        if blockStmts[i].getIsForLoopBegin():
+            if blockStmts[i].getIsForType(): newLines.append(parser.parse("BEGIN :: for\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+            elif blockStmts[i].getIsForAllType(): newLines.append(parser.parse("BEGIN :: forall\n"))  # "\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+            newLines.append(blockStmts[i].getAssignNode())
+        elif blockStmts[i].getIsForLoopEnd():
+            newLines.append(blockStmts[i].getAssignNode())
+        
+        elif blockStmts[i].getIsIfElseBegin():
+            newLines.append(parser.parse("BEGIN :: if\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+            assign = blockStmts[i].getAssignNode()
+            if info['verbose']: print(i, ":", assign, end="")           
+            handleVarInfo(newLines, assign, blockStmts[i], info, noChangeList)
+        
+        elif blockStmts[i].getIsIfElseEnd():
+            newLines.append(blockStmts[i].getAssignNode()) 
+        
+        elif blockStmts[i].getIsElseBegin():
+            newLines.append(blockStmts[i].getAssignNode())
+        
+        else:
+            assign = blockStmts[i].getAssignNode()
+            if info['verbose']: print(i, ":", assign, end="")
+            print("\nentering handleVarInfoAssump ", deps)
+            handleVarInfoAssump(newLines, assign, blockStmts[i], info, noChangeList, deps, varmap, startLines)
+
+        if info['verbose']: print("")
+    newLines.append(end)
+    return newLines
+
 """theType either types.G1 or types.G2"""
 def updateForIfConditional(node, assignVar, varInfo, info, theType, noChangeList):
     new_node2 = BinaryNode.copy(node)
@@ -259,6 +314,163 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
         elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
             if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
             if assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
+                noChangeList.append(str(assignVar))
+                info['G1'] = info['G1'].union( assignVar )
+                newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+                if info['verbose']: print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
+        else:
+            info['myAsymSDL'].recordUsedVar(blockStmt.getVarDepsNoExponents())                
+            newLine = assign
+        # add to newLines
+        if type(newLine) == list:
+            newLines.extend(newLine)
+        elif newLine != None:
+            #if newLine not in newLines:
+            newLines.append(newLine)
+        return True
+    elif Type(assign) == ops.IF:
+#        print("JAA type: ", Type(assign), blockStmt.getVarDepsNoExponents())
+        # TODO: there might be some missing cases in updateForIfConditional. Revise as appropriate.
+        assignVars = blockStmt.getVarDepsNoExponents()
+        assign2 = assign
+        if not HasPairings(assign):
+            for assignVar in assignVars:
+                if assignVarOccursInG1(assignVar, info):
+                    if info['verbose']: print(" :-> just in G1:", assignVar, end="")
+                    assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G1, noChangeList)
+                elif assignVarOccursInG2(assignVar, info):
+                    if info['verbose']: print(" :-> just in G2:", assignVar, end="")
+                    assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G2, noChangeList)
+            #print("TODO: Not a good sign. how do we handle this case for ", assignVar, "in", assign)
+        else: # pairing case
+            assign2 = updateForPairing(blockStmt, info, noChangeList)
+            
+        if str(assign2) == str(assign):
+            newLines.append(assign)
+        else:
+            newLines.append(assign2)
+    else:
+        print("Unrecognized type: ", Type(assign))
+    return False
+
+def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, varmap, startLines={}):
+    print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'])
+    print(deps)
+    print(varmap)
+    if Type(assign) == ops.EQ:
+        assignVar = blockStmt.getAssignVar()
+        print("\nassignVar => ", assignVar)
+        # store for later
+        newLine = None
+        varTypeObj = info['varTypes'].get(assignVar)
+        # case A: randomness and occurs in startLines
+        if blockStmt.getHasRandomness() and startLines.get(assignVar) != None:
+            newLines.extend( startLines[assignVar] )
+            return True
+            #if not assignVarIsGenerator(assignVar, info):
+        # case B: randomness and varTypeObj != None
+        if blockStmt.getHasRandomness() and varTypeObj != None:
+            if varTypeObj.getType() in [types.ZR, types.GT]:
+                if info['verbose']: print(" :-> not a generator, so add to newLines.", end=" ")
+                #newLine = str(assign) # unmodified
+                newLines.append(assign) # unmodified
+                return True
+            else:
+                if info['verbose']: print(assignVar, " :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
+                if info['varTypes'].get(assignVar).getType() == types.G1:
+                    pass # figure out what to do here
+        if assignVar == outputKeyword:
+            vardeps = blockStmt.getVarDepsNoExponents()
+            if len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
+                if Type(assign.right) == ops.LIST:
+                    newLine = updateForLists(blockStmt, assignVar, info)                    
+                    newLines.append( newLine )
+                    return True
+                elif Type(assign.right) == ops.ATTR:
+                    assign.right = BinaryNode(ops.LIST)
+                    assign.right.listNodes = list(vardeps)
+                    newLine = updateForLists(blockStmt, assignVar, info)
+                    newLines.append( newLine )
+                    return True
+                
+        if assignVarOccursInBoth(assignVar, info):
+            if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+        elif assignVarOccursInG1(assignVar, info):
+            if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+            noChangeList.append(str(assignVar))
+            newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+        elif assignVarOccursInG2(assignVar, info):
+            if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            noChangeList.append(str(assignVar))
+            newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
+        elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
+            if info['verbose']: print(" :-> update pairing.", end=" ")
+            noChangeList.append(str(assignVar))
+            newLine = updateForPairing(blockStmt, info, noChangeList)
+        elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
+            if info['verbose']: print(" :-> updating list...", end=" ")
+            newLine = updateForLists(blockStmt, assignVar, info)
+        elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
+            #TODO: modify here with new code for assumption variables??
+            if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
+
+            print("\nassignVar backtrace => ", assignVar)
+            print(deps[assignVar])
+            print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
+
+            depList = []
+            for (key,val) in deps.items():
+                print(key, val)
+                if(assignVar in val):
+                    depList.append(key)
+            print("depList => ", depList)
+
+            depListGroups = {}
+            numG1 = 0
+            numG2 = 0
+            numBoth = 0
+            for i in depList:
+                if(i in info['G1']):
+                    depListGroups[i] = types.G1
+                    numG1+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G1'])
+                elif(i in info['G2']):
+                    depListGroups[i] = types.G2
+                    numG2+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G2'])
+                elif(i in info['both']):
+                    depListGroups[i] = "both"
+                    numBoth+=1
+                    print(i, " : ", depListGroups[i], " => ", info['both'])
+                elif((i in varmap) and (varmap[i] in info['G1'])):
+                    depListGroups[i] = types.G1
+                    numG1+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
+                elif((i in varmap) and (varmap[i] in info['G2'])):
+                    depListGroups[i] = types.G2
+                    numG2+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
+                elif((i in varmap) and (varmap[i] in info['both'])):
+                    depListGroups[i] = "both"
+                    numBoth+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+
+            print("depListGroups => ", depListGroups)
+            print(numG1, numG2, numBoth)
+
+            if not(numG1 == 0) and not(numG2 == 0):
+                if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+            elif (not(numG1 == 0) and (numG2 == 0)) or (not(numBoth == 0) and (numG1 == 0) and (numG2 == 0)):
+                if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+                noChangeList.append(str(assignVar))
+                newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+            elif (numG1 == 0) and not(numG2 == 0):
+                if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                noChangeList.append(str(assignVar))
+                newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
+            elif assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
                 noChangeList.append(str(assignVar))
                 info['G1'] = info['G1'].union( assignVar )
                 newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
@@ -1193,7 +1405,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     print(assumptionData['options'])
     # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
-    newSDL_assump = AsymAssumpSDL(assumptionData['options'], assumptionData['assignInfo'], groupInfo, assumptionData['typesH'], generatorLines, transFunc, transFuncGen)
+    newSDL_assump = AsymAssumpSDL(assumptionData['options'], assumptionData['assignInfo'], groupInfo, assumptionData['typesH'], generatorLines, transFunc, transFuncGen, reductionData['deps'], assumptionData['varmap'])
     print(assumptionData['config'].functionOrder)
     newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumptionData['config'])
     print(newLinesT)
@@ -1542,7 +1754,7 @@ the new generators for the scheme and other functional details.
 AsymSDL mechanically converts the symmetric scheme to asymmetric based on all the inferred information.
 """
 class AsymAssumpSDL:
-    def __init__(self, options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+    def __init__(self, options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen, deps, varmap):
         self.assignInfo     = assignInfo
         self.groupInfo      = copy.deepcopy(groupInfo)
         self.groupInfo['myAsymSDL'] = self # this is for recording used vars in each function
@@ -1552,6 +1764,8 @@ class AsymAssumpSDL:
         self.transFunc      = transFunc
         self.transFuncGen   = transFuncGen
         self.userFuncList   = options['userFuncList']
+        self.deps           = deps
+        self.varmap         = varmap
 
         if options['computeSize']:
             self.__computeSize = True
@@ -1621,7 +1835,10 @@ class AsymAssumpSDL:
         return
     
     def constructSDL(self, config):
-        print(self.groupInfo)
+        print("\nconstructSDL groupInfo => ", self.groupInfo)
+        print("\nassignInfo => ", self.assignInfo)
+        print("\ndeps => ", self.deps[0])
+        print("\ndeps => ", self.deps[1])
         noChangeList = []
         # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
         for i, j in self.typesH.items():
@@ -1688,7 +1905,8 @@ class AsymAssumpSDL:
                     print("<===== 2 processing PKENC %s =====>" % funcName)
                     self.__currentFunc = funcName
                     print(self.transFunc[funcName])
-                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
+                    print(self.deps[1])
+                    transFuncRes[ funcName ] = transformFunctionAssump(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.deps[1], self.varmap)
                     print("<===== 2 processing PKENC %s =====>" % funcName)
             newLinesA = transFuncRes.get( config.assumpFuncName )
             print(newLinesA)
