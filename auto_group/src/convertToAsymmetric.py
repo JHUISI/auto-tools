@@ -867,7 +867,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         var_list = []  # reset
         for i in assump_orig_vars:
             if i not in pk_list:
-                if info['verbose']: print("Add to list: ", i, ":", assump_var_map[i])
+                if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumptionData['assignInfo'])
         print("var_list => ", var_list)
@@ -880,7 +880,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             print("<=========================>")
         for i in assump_lhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']:  print("Add to list: ", i, ":", assump_lhs_var_map[i])
+                if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumptionData['assignInfo'])
         print(countMap)
@@ -890,7 +890,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         var_list = []  # reset
         for i in assump_rhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']: print("Add to list: ", i, ":", assump_rhs_var_map[i])
+                if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumptionData['assignInfo'])
         print(countMap)
@@ -900,7 +900,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         var_list = []  # reset
         for i in reduc_orig_vars:
             if i not in pk_list:
-                if info['verbose']: print("Add to list: ", i, ":", reduc_var_map[i])
+                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reductionData['assignInfo'])
         print("var_list => ", var_list)
@@ -913,7 +913,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             print("<=========================>")
         for i in reduc_lhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']:  print("Add to list: ", i, ":", reduc_lhs_var_map[i])
+                if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reductionData['assignInfo'])
         print(countMap)
@@ -923,7 +923,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         var_list = []  # reset
         for i in reduc_rhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']: print("Add to list: ", i, ":", reduc_rhs_var_map[i])
+                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
                 var_list.append(i)
         countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reductionData['assignInfo'])
         print(countMap)
@@ -1009,6 +1009,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     txor = transformXOR(None) # accepts dictionary of fixed values
     sdl.ASTVisitor(txor).preorder(ANDs[0])
     #print("<===== Generate XOR clauses =====>")
+
+    print("info => ", info)
+    print("constraintList => ", constraintList)
+    print("txor => ", txor)
         
     #constraints = "[]"
     # given the above formula and the constraint list and options we can
@@ -1026,6 +1030,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     # narrow the specific solution that user asked for
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
+    print("groupInfo => ", groupInfo)
+    newAssignments = groupInfo['newSol']
     symDataTypePK  = {}
     asymDataTypePK = {}
     # we include some code to estimate size of SK/PK and CTs/Sigs
@@ -1187,18 +1193,16 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     print(assumptionData['options'])
     # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
-    newSDL_assump = AsymSDL(assumptionData['options'], assumptionData['assignInfo'], groupInfo, assumptionData['typesH'], generatorLines, transFunc, transFuncGen)
+    newSDL_assump = AsymAssumpSDL(assumptionData['options'], assumptionData['assignInfo'], groupInfo, assumptionData['typesH'], generatorLines, transFunc, transFuncGen)
     print(assumptionData['config'].functionOrder)
-    newLinesT, newLinesS, newLines2, userFuncLines = newSDL_assump.constructSDL(assumptionData['config'])
-    newLinesSe = []
-    newLinesK = []
-    newLines3 = []
+    newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumptionData['config'])
+    print(newLinesT)
 
     # debug output of the SDL file
-    print_sdl(assumptionData['info']['verbose'], newLinesS, newLinesK, newLines2, newLines3)
+    print_sdl(assumptionData['info']['verbose'], newLinesS, newLinesA)
     # output the new SDL file with right suffix (which indicates options that were set)
     outputFile_assump = "assumption_" + assumptionData['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
-    writeConfig(options['path'] + outputFile_assump, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
+    writeConfig(options['path'] + outputFile_assump, assumptionData['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
     return (outputFile, outputFile_assump)
         
@@ -1218,12 +1222,6 @@ class AsymSDL:
         self.transFunc      = transFunc
         self.transFuncGen   = transFuncGen
         self.userFuncList   = options['userFuncList']
-
-        if 'type' in options:
-            self.schemetype = options['type']
-        else:
-            self.schemetype = ""
-
         if options['computeSize']:
             self.__computeSize = True
             if options.get('asymPK') != None: self.__aPKdict = options['asymPK']            
@@ -1240,7 +1238,6 @@ class AsymSDL:
 
     def __getFuncLines(self, funcName):
         usedVars = set()
-        print("func name => ", funcName)
         if funcName != LATEX_HEADER:
             funcConfig = sdl.getVarInfoFuncStmts( funcName )
             Stmts = funcConfig[0]
@@ -1299,13 +1296,13 @@ class AsymSDL:
             if t in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr, types.GT]: 
                 noChangeList.append(i)
         # JAA: commented out for benchmarking    
-        print("Initial noChangeList: ", noChangeList)
+        #print("Initial noChangeList: ", noChangeList)
         #(Stmts, Types, depList, depListNoExp, infList, infListNoExp)
         userFuncLines = []
         if len(self.userFuncList) > 0:
             for userFuncs in self.userFuncList:
                 # JAA: commented out for benchmarking                
-                print("processing user defined func: ", userFuncs)
+                #print("processing user defined func: ", userFuncs)
                 userFuncData = self.__getFuncLines(userFuncs)
                 _userFuncLines = userFuncData[0]
                 noChangeList  = list(set(noChangeList).union( userFuncData[1] ))
@@ -1313,8 +1310,6 @@ class AsymSDL:
         
         # update the generator lists if there's a generator in the list
         for i in noChangeList:
-            print("i => ", i)
-            print(self.generatorLines)
             if i in self.generatorLines.keys():
                 # strip from the data structures
                 print(i, " : ", self.generatorLines[i])
@@ -1327,78 +1322,47 @@ class AsymSDL:
         newLinesS = []
         newLinesK = []
         entireSDL = sdl.getLinesOfCode()
-        print("entire SDL => ", entireSDL, "\n")
         transFuncRes = {}
         Input = {}
-        print(config.functionOrder)
         for funcName in config.functionOrder:
             if funcName in self.transFuncGen.keys():
-                print("<===== 1 processing %s =====>" % funcName)
+                #print("<===== processing %s =====>" % funcName)
                 self.__currentFunc = funcName
                 transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
-                print("<===== 1 processing %s =====>" % funcName)
+                #print("<===== processing %s =====>" % funcName)
                 
         # obtain results
         newLinesT = transformTypes(self.typesH, self.groupInfo)
         if hasattr(config, "extraSetupFuncName"):
             newLinesSe = transFuncRes.get( config.extraSetupFuncName )
-        if hasattr(config, 'setupFuncName') and (self.schemetype == ""):   
+        if hasattr(config, 'setupFuncName'):   
             newLinesS  = transFuncRes.get( config.setupFuncName )
-        elif hasattr(config, 'assumpSetupFuncName') and (self.schemetype == "assumption"):   
-            newLinesS  = transFuncRes.get( config.assumpSetupFuncName )
-        elif hasattr(config, 'keygenFuncName') and (self.schemetype == ""):
+        elif hasattr(config, 'keygenFuncName'):
             newLinesK  = transFuncRes.get( config.keygenFuncName )
-
-        print("newLinesS => ", newLinesS, "\n")
         
         # transform body of SDL scheme
-        if config.schemeType == PKENC and (self.schemetype == ""):
+        if config.schemeType == PKENC:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
-                    print("<===== 2 processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                     self.__currentFunc = funcName
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
-                    print("<===== 2 processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
             newLinesK = transFuncRes.get( config.keygenFuncName )
             newLines2 = transFuncRes.get( config.encryptFuncName )
             newLines3 = transFuncRes.get( config.decryptFuncName )
-
-        elif (config.schemeType == PKENC and (self.schemetype == "assumption")):
-            print("PKENC assumption")
-            print(self.transFunc.keys())
-            for funcName in config.functionOrder:
-                print(funcName)
-                if funcName in self.transFunc.keys():
-                    print("<===== 2 processing PKENC %s =====>" % funcName)
-                    self.__currentFunc = funcName
-                    print(self.transFunc[funcName])
-                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
-                    print("<===== 2 processing PKENC %s =====>" % funcName)
-            newLines2 = transFuncRes.get( config.assumpFuncName )
-            print(newLines2)
                 
-        elif config.schemeType == PKSIG and (self.schemetype == ""):
+        elif config.schemeType == PKSIG:
             for funcName in config.functionOrder:
                 if funcName in self.transFunc.keys():
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                     self.__currentFunc = funcName
                     transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
-                    print("<===== processing %s =====>" % funcName)
+                    #print("<===== processing %s =====>" % funcName)
                 
             newLinesK = transFuncRes.get( config.keygenFuncName )
             newLines2 = transFuncRes.get( config.signFuncName )
             newLines3 = transFuncRes.get( config.verifyFuncName )
-
-        elif config.schemeType == PKSIG and (self.schemetype == "assumption"):
-            print("PKSIG assumption")
-            for funcName in config.functionOrder:
-                if funcName in self.transFunc.keys():
-                    print("<===== processing %s =====>" % funcName)
-                    self.__currentFunc = funcName
-                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
-                    print("<===== processing %s =====>" % funcName)
-                
-            newLines2 = transFuncRes.get( config.assumpFuncName )
         
         # prune generators not used in the scheme 
         usedGenerators = []
@@ -1455,11 +1419,8 @@ class AsymSDL:
                 if newVerifyPK != None:
 #                    print("Actual Verify PK: ", newVerifyPKexp.getRight().listNodes)
                     newLines3 = self.__updatePKExpand(config.keygenPubVar, newVerifyPKexp, vPub, newLines3)
-
-        if (self.schemetype == ""):
-            return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines
-        else:
-            return newLinesT, newLinesS, newLines2, userFuncLines
+            
+        return newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines
 
     def __updatePKList(self, targetVar, newVarNodes, newVarNames, newLinesK):
         nodeLines2 = []
@@ -1563,8 +1524,7 @@ class AsymSDL:
                     newList = list(node.right.listNodes)
                     #print("__getOriginalPK : ", newList)
                     return newList
-        return []    
-                
+        return []       
     
     def __createListNode(self, name, varList):
         _list = BinaryNode(ops.LIST)
@@ -1575,6 +1535,218 @@ class AsymSDL:
         _list = BinaryNode(ops.EXPAND)
         _list.listNodes = list(varList)
         return BinaryNode(ops.EQ, BinaryNode(name), _list)
+
+"""
+Aymmetric Assumption SDL class takes as input the assignment info from the SDL, new group info, type assignments,
+the new generators for the scheme and other functional details.
+AsymSDL mechanically converts the symmetric scheme to asymmetric based on all the inferred information.
+"""
+class AsymAssumpSDL:
+    def __init__(self, options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen):
+        self.assignInfo     = assignInfo
+        self.groupInfo      = copy.deepcopy(groupInfo)
+        self.groupInfo['myAsymSDL'] = self # this is for recording used vars in each function
+        self.generatorMap   = list(self.groupInfo['generatorMapG1'].values()) + list(self.groupInfo['generatorMapG2'].values()) 
+        self.typesH         = copy.deepcopy(typesH)
+        self.generatorLines = copy.deepcopy(generatorLines)
+        self.transFunc      = transFunc
+        self.transFuncGen   = transFuncGen
+        self.userFuncList   = options['userFuncList']
+
+        if options['computeSize']:
+            self.__computeSize = True
+            if options.get('asymPK') != None: self.__aPKdict = options['asymPK']            
+            else: self.__aPKdict = None
+            if options.get('symPK') != None: self.__sPKdict = options['symPK']
+            else: self.__sPKdict = None
+        else:
+            self.__computeSize = False
+            self.__aPKdict = None
+            self.__sPKdict = None            
+        self.verbose        = groupInfo['verbose']
+        self.__currentFunc    = None
+        self.__funcUsedVar    = {}
+
+    def __getFuncLines(self, funcName):
+        usedVars = set()
+        print("func name => ", funcName)
+        if funcName != LATEX_HEADER:
+            funcConfig = sdl.getVarInfoFuncStmts( funcName )
+            Stmts = funcConfig[0]
+            funcName = "func:" + funcName
+        else:
+            Latex = self.assignInfo[LATEX_HEADER]
+            Stmts = {}
+            for i,j in Latex.items():
+                Stmts[ int(j.getLineNo()) ] = j
+
+        begin = "BEGIN :: " + funcName
+        end   = "END :: " + funcName            
+        
+        lines = list(Stmts.keys())
+        lines.sort()
+        newLines = [begin]
+        for index, i in enumerate(lines):
+            assert type(Stmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+            if LATEX_HEADER in funcName:
+                newLines.append( Stmts[i].getLineStrKey() + " := " + Stmts[i].getLineStrValue() )
+                continue
+            if Stmts[i].getIsExpandNode() or Stmts[i].getIsList():
+                newLines.append( str(Stmts[i].getAssignNode()) )
+            elif Stmts[i].getIsForLoopBegin():
+                if Stmts[i].getIsForType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+                elif Stmts[i].getIsForAllType(): newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+                newLines.append(str(Stmts[i].getAssignNode()))
+            elif Stmts[i].getIsForLoopEnd():
+                newLines.append(str(Stmts[i].getAssignNode()))
+            
+            elif Stmts[i].getIsIfElseBegin():
+                newLines.append("\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+                newLines.append( str(Stmts[i].getAssignNode()) )
+            else:
+                if Type(Stmts[i].getAssignNode()) == ops.EQ:
+                    usedVars = usedVars.union( GetAttributeVars(Stmts[i].getAssignNode()) )
+                newLines.append(str(Stmts[i].getAssignNode()))
+                
+        newLines.append( end )
+        return newLines, list(usedVars)
+
+
+    def recordUsedVar(self, varList):
+        assert type(varList) in [set, list], "AsymSDL.recordUsedVar: expected a list or set type."
+        if self.__currentFunc != None:
+            if self.__funcUsedVar.get( self.__currentFunc ) == None:
+                self.__funcUsedVar[ self.__currentFunc ] = set() # create new set iff the first time
+            self.__funcUsedVar[ self.__currentFunc ] = self.__funcUsedVar[ self.__currentFunc ].union(varList)
+        return
+    
+    def constructSDL(self, config):
+        print(self.groupInfo)
+        noChangeList = []
+        # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
+        for i, j in self.typesH.items():
+            t = j.getType()
+            if t in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr, types.GT]: 
+                noChangeList.append(i)
+        # JAA: commented out for benchmarking    
+        print("Initial noChangeList: ", noChangeList)
+        #(Stmts, Types, depList, depListNoExp, infList, infListNoExp)
+        userFuncLines = []
+        if len(self.userFuncList) > 0:
+            for userFuncs in self.userFuncList:
+                # JAA: commented out for benchmarking                
+                print("processing user defined func: ", userFuncs)
+                userFuncData = self.__getFuncLines(userFuncs)
+                _userFuncLines = userFuncData[0]
+                noChangeList  = list(set(noChangeList).union( userFuncData[1] ))
+                userFuncLines.append( _userFuncLines )
+        
+        # update the generator lists if there's a generator in the list
+        for i in noChangeList:
+            print("i => ", i)
+            print(self.generatorLines)
+            if i in self.generatorLines.keys():
+                # strip from the data structures
+                print(i, " : ", self.generatorLines[i])
+                self.generatorLines[ i ] = None
+                self.groupInfo['G1'] = self.groupInfo['G1'].difference( [i] )
+                self.groupInfo['G2'] = self.groupInfo['G2'].difference( [i] )
+                self.groupInfo['both'] = self.groupInfo['both'].difference( [i] ) 
+ 
+        newLinesSe = []
+        newLinesS = []
+        entireSDL = sdl.getLinesOfCode()
+        print("entire SDL => ", entireSDL, "\n")
+        transFuncRes = {}
+        Input = {}
+        print(config.functionOrder)
+        for funcName in config.functionOrder:
+            if funcName in self.transFuncGen.keys():
+                print("<===== 1 processing %s =====>" % funcName)
+                self.__currentFunc = funcName
+                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
+                print("<===== 1 processing %s =====>" % funcName)
+                
+        # obtain results
+        print(self.typesH)
+        newLinesT = transformTypes(self.typesH, self.groupInfo)
+        print("newLinesT => ", newLinesT)
+        if hasattr(config, "extraSetupFuncName"):
+            newLinesSe = transFuncRes.get( config.extraSetupFuncName )
+        if hasattr(config, 'assumpSetupFuncName'):   
+            newLinesS  = transFuncRes.get( config.assumpSetupFuncName )
+
+        print("newLinesS => ", newLinesS, "\n")
+        
+        # transform body of SDL scheme
+        if (config.schemeType == PKENC):
+            print("PKENC assumption")
+            print(self.transFunc.keys())
+            for funcName in config.functionOrder:
+                print(funcName)
+                if funcName in self.transFunc.keys():
+                    print("<===== 2 processing PKENC %s =====>" % funcName)
+                    self.__currentFunc = funcName
+                    print(self.transFunc[funcName])
+                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList)
+                    print("<===== 2 processing PKENC %s =====>" % funcName)
+            newLinesA = transFuncRes.get( config.assumpFuncName )
+            print(newLinesA)
+                
+        elif config.schemeType == PKSIG:
+            print("PKSIG assumption")
+            for funcName in config.functionOrder:
+                if funcName in self.transFunc.keys():
+                    print("<===== processing %s =====>" % funcName)
+                    self.__currentFunc = funcName
+                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
+                    print("<===== processing %s =====>" % funcName)
+                
+            newLinesA = transFuncRes.get( config.assumpFuncName )
+        
+        # prune generators not used in the scheme 
+        usedGenerators = []
+        for i in self.groupInfo['usedVars']:
+            if i in self.generatorMap:
+                # actual generator
+                usedGenerators.append(i)
+        #print("usedVars :=> ", usedGenerators)
+        #print("generators :=> ", self.generatorMap)
+        deleteMe = list(set(self.generatorMap).difference(usedGenerators))
+                
+        if len(deleteMe) > 0:
+            #print("Pruning Generators:\t", deleteMe)
+            newLinesSe = self.__prune(newLinesSe, deleteMe)
+            newLinesS  = self.__prune(newLinesS, deleteMe)
+            newLinesA  = self.__prune(newLinesA, deleteMe)
+
+        return newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines
+
+    def __prune(self, nodeLines, deleteMeList):
+        nodeLines2 = []
+        for node in nodeLines:
+            if Type(node) == ops.EQ:
+                if str(node.left) in deleteMeList:
+                    if self.verbose: print("Delete line: ", node.left)
+                    continue
+                else: # check right side
+                    contain = DelAnyVarInList(deleteMeList) 
+                    sdl.ASTVisitor(contain).preorder( node.right )
+                    if len(contain.foundVar) > 0 and self.verbose: print("Deleted ", contain.foundVar)
+            if self.verbose: print("line: ", node)
+            nodeLines2.append( node )
+        return nodeLines2
+    
+    def __createListNode(self, name, varList):
+        _list = BinaryNode(ops.LIST)
+        _list.listNodes = list(varList)
+        return BinaryNode(ops.EQ, BinaryNode(name), _list)
+    
+    def __createExpandNode(self, name, varList):
+        _list = BinaryNode(ops.EXPAND)
+        _list.listNodes = list(varList)
+        return BinaryNode(ops.EQ, BinaryNode(name), _list)
+
         
 # temporary placement
 def NaiveEvaluation(solutionList, preference):

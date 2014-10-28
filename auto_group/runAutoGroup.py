@@ -311,6 +311,7 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     assumptionData['config'] = cm
 
     assumptionData['options']['type'] = "assumption"
+    assumptionData['newLines0'] = newLines0
 
     return assumptionData
 
