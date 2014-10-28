@@ -462,6 +462,9 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
             if not(numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
                 newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+            elif not(numBoth == 0):
+                if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
             elif (not(numG1 == 0) and (numG2 == 0)) or (not(numBoth == 0) and (numG1 == 0) and (numG2 == 0)):
                 if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
                 noChangeList.append(str(assignVar))
