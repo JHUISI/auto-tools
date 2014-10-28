@@ -168,7 +168,7 @@ else
 
    r := random(ZR)
 
-   d1 := (g1 ^ (-1 / F(ID, xprime, x, m, k, p))) * (g ^ r)
+   d2 := (g1 ^ (-1 / F(ID, xprime, x, m, k, p))) * (g ^ r)
 
    dotProd1 := init(G1)
    BEGIN :: for
@@ -176,8 +176,8 @@ else
       dotProd1 := dotProd1 * (u#i ^ id#i)
    END :: for
 
-   d0 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, x, m, k, p))) * ((uprime * dotProd1) ^ r)
-   d := list{d0, d1} #private key
+   d1 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, x, m, k, p))) * ((uprime * dotProd1) ^ r)
+   d := list{d1, d2} #private key
 END :: if
 
 output := d
