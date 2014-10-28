@@ -431,19 +431,7 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
             numG2 = 0
             numBoth = 0
             for i in depList:
-                if(i in info['G1']):
-                    depListGroups[i] = types.G1
-                    numG1+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G1'])
-                elif(i in info['G2']):
-                    depListGroups[i] = types.G2
-                    numG2+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G2'])
-                elif(i in info['both']):
-                    depListGroups[i] = "both"
-                    numBoth+=1
-                    print(i, " : ", depListGroups[i], " => ", info['both'])
-                elif((i in varmap) and (varmap[i] in info['G1'])):
+                if((i in varmap) and (varmap[i] in info['G1'])):
                     depListGroups[i] = types.G1
                     numG1+=1
                     print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
@@ -455,6 +443,18 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                     depListGroups[i] = "both"
                     numBoth+=1
                     print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+                elif(i in info['G1']):
+                    depListGroups[i] = types.G1
+                    numG1+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G1'])
+                elif(i in info['G2']):
+                    depListGroups[i] = types.G2
+                    numG2+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G2'])
+                elif(i in info['both']):
+                    depListGroups[i] = "both"
+                    numBoth+=1
+                    print(i, " : ", depListGroups[i], " => ", info['both'])
 
             print("depListGroups => ", depListGroups)
             print(numG1, numG2, numBoth)
