@@ -102,6 +102,8 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     if not hasattr(cm, "schemeType"):
         sys.exit("configAutoGroup: need to set 'schemeType' in config.")
 
+    #setattr(cm, isAssumption, "true")
+
     funcOrder = [cm.assumpSetupFuncName, cm.assumpFuncName]
     setattr(cm, functionOrder, funcOrder)
 
@@ -165,6 +167,9 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
     typesH = dict(varTypes)
+
+    assumptionData['typesH'] = typesH
+
     if not hasattr(cm, 'schemeType'):
         sys.exit("'schemeType' option missing in specified config file.")
     pairingSearch = []
@@ -176,6 +181,8 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     varTypes.update(typesA)
     print(depListS, depListNoExpS)
     print(depListA, depListNoExpA)
+    assumptionData['stmtS'] = stmtS
+    assumptionData['stmtA'] = stmtA
     # TODO: expand search to encrypt and potentially setup
     pairingSearch += [stmtS, stmtA] # aka start with decrypt.
             
@@ -280,10 +287,30 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     print("\n")
 
+    the_map = gpv.pairing_map
+    print("the map => ", the_map)
+
     assumptionData['info'] = info
     assumptionData['depList'] = depList
     assumptionData['deps'] = info['deps']
     assumptionData['prunedMap'] = prunedDeps
+    assumptionData['G1_lhs'] = info['G1_lhs']
+    assumptionData['G1_rhs'] = info['G1_rhs']
+
+    assumptionData['the_map'] = the_map
+
+    assumptionData['options'] = options
+
+    assumptionData['gpv'] = gpv
+
+    assumptionData['gen'] = gen
+
+    assumptionData['varTypes'] = varTypes
+
+    assumptionData['assumptionFile'] = assumption_file
+    assumptionData['config'] = cm
+
+    assumptionData['options']['type'] = "assumption"
 
     return assumptionData
 
@@ -357,6 +384,9 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
     typesH = dict(varTypes)
+
+    reductionData['typesH'] = typesH
+
     if not hasattr(cm, 'schemeType'):
         sys.exit("'schemeType' option missing in specified config file.")
     pairingSearch = []
@@ -474,10 +504,24 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
             prunedDeps[key] = val
     print("pruned deps => ", prunedDeps)
 
+    the_map = gpv.pairing_map
+    print("the map => ", the_map)
+
     reductionData['info'] = info
     reductionData['depList'] = depList
     reductionData['deps'] = info['deps']
     reductionData['prunedMap'] = prunedDeps
+
+    reductionData['G1_lhs'] = info['G1_lhs']
+    reductionData['G1_rhs'] = info['G1_rhs']
+
+    reductionData['the_map'] = the_map
+
+    reductionData['options'] = options
+
+    reductionData['varTypes'] = varTypes
+
+    reductionData['options']['type'] = "reduction"
 
     return reductionData
 
@@ -541,14 +585,14 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     
     options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
     startTime = time.clock()
-    outfile = runAutoGroup(sdl_file, cm, options, verbose, assumptionData, reductionData)
+    (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData, reductionData)
     endTime = time.clock()
     if benchmarkOpt: 
         runningTime = (endTime - startTime) * 1000
         print("running time: ", str(runningTime) + "ms")
         os.system("echo '%s' >> %s" % (runningTime, output_file))
     
-    new_input_sdl  = outfile
+    new_input_sdl  = outfile_scheme
     new_output_sdl = output_file
     # JAA: commented out for benchmark purposes
     if verbose:
