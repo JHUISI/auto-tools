@@ -269,7 +269,7 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     for i in [depListS, depListA]:
         for (key, val) in i.items():
             #print(key, val)
-            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
+            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key in cm.assumpMasterPubVars) and not(key in cm.assumpMasterSecVars)):
                 depList[key] = val
     print(depList)
 
@@ -350,6 +350,8 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     assignInfo_reduction = sdl.getAssignInfo()
     reductionData = {'sdl_name':sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute(), 'setting':sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute(), 'assignInfo':assignInfo_reduction, 'typesBlock':sdl.getFuncStmts( TYPES_HEADER ), 'userCodeBlocks':list(set(list(assignInfo_reduction.keys())).difference(cm.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))}
 
+    if hasattr(cm, "reductionMap"):
+        reductionData['varmap'] = cm.reductionMap
 
     # this consists of the type of the input scheme (e.g., symmetric)
     setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
@@ -489,9 +491,12 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     for i in [depListS, depListQ, depListC]:
         for (key, val) in i.items():
             #print(key, val)
-            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output')):
-                depList[key] = val
-    print(depList)
+            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
+                if(key in reductionData['varmap']):
+                    depList[reductionData['varmap'][key]] = val
+                else:
+                    depList[key] = val
+    print("depList => ", depList)
 
     print("\n")
     info[ 'deps' ] = (depList, assignTraceback(assignInfo_reduction, generators, varTypes, depList, constraintList))

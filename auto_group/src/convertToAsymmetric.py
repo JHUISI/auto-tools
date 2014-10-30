@@ -1026,7 +1026,30 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
-    #print(info[ 'G1_lhs' ])
+    print("processed deps map assump => ", assumptionData['info']['deps'][1])
+    print("processed deps map reduc => ", reductionData['info']['deps'][1])
+
+    additionalDeps = dict(list(assumptionData['info']['deps'][0].items()) + list(reductionData['info']['deps'][0].items()))
+    print(additionalDeps, list(additionalDeps.keys()))
+
+    print("lhs => ", info['G1_lhs'][1])
+    for (key,val) in info['G1_lhs'][1].items():
+        print(key,val)
+        if key in additionalDeps:
+            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
+            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalDeps[key]))
+            #print("after => ", info['G1_lhs'][1][key])
+
+    print("rhs => ", info['G1_rhs'][1])
+    for (key,val) in info['G1_rhs'][1].items():
+        print(key,val)
+        if key in additionalDeps:
+            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
+            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalDeps[key]))
+            #print("after => ", info['G1_rhs'][1][key])
+
+    print(info[ 'G1_lhs' ])
+    print(info[ 'G1_rhs' ])
 
     # if we want to optimize based on public parameters, one
     # approach would be to observe the dependency graph of
@@ -1172,15 +1195,15 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
 #####################
 
-        for i in assump_orig_vars: # look for where max_var appears in pairing variable
-            if i not in pk_list and max_var in assump_var_map[i]:
-                if getOtherPairingVar(the_map, i) not in constraintList:
-                    constraintList.append(i)
+#        for i in assump_orig_vars: # look for where max_var appears in pairing variable
+#            if i not in pk_list and max_var in assump_var_map[i]:
+#                if getOtherPairingVar(the_map, i) not in constraintList:
+#                    constraintList.append(i)
 
-        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
-            if i not in pk_list and max_var in reduc_var_map[i]:
-                if getOtherPairingVar(the_map, i) not in constraintList:
-                    constraintList.append(i)
+#        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
+#            if i not in pk_list and max_var in reduc_var_map[i]:
+#                if getOtherPairingVar(the_map, i) not in constraintList:
+#                    constraintList.append(i)
 #####################
 
         print("Public-key informed constraint list: ", constraintList)
