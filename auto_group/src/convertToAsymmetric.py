@@ -82,6 +82,9 @@ def getOtherPairingVar(var_map, target_var):
         if j == target_var:
             return i
 
+def removeList(theList, aList):
+    return list(set(theList).difference(aList))
+
 class transformXOR:
     def __init__(self, fixedValues):
         self.groundTruth = fixedValues
@@ -1191,6 +1194,44 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 if getOtherPairingVar(the_map, i) not in constraintList:
                     constraintList.append(i)
 
+        # worst case is always double the size of public-key elements
+        # here we can process stuff inside the pk_list to see if
+        # we can do better than splitting public-key elements.
+        nonConstrainedList = lhs_orig_vars + rhs_orig_vars
+        nonConstrainedList = removeList(nonConstrainedList, constraintList)
+        nonConstrainedList = removeList(nonConstrainedList, pk_list)
+        genList = []
+        pkVarFoundInDeps = False
+        for i in lhs_orig_vars:
+            if i in pk_list:
+                print("PROCESS THIS PK LIST ELEMENT: ", i)
+                for j in nonConstrainedList:
+                    print(j, ":=>", additionalDeps[j])
+                    if i in additionalDeps[j]: pkVarFoundInDeps = True
+                if not pkVarFoundInDeps:
+                    # we can safely add to constrained list and skip other side
+                    genList.append(i)
+
+        if pkVarFoundInDeps:
+            pkVarFoundInDeps = False # reset because we want to find out about other pk vars
+            for i in rhs_orig_vars:
+                if i in pk_list:
+                    print("PROCESS THIS PK LIST ELEMENT: ", i)
+                    for j in nonConstrainedList:
+                        print(j, ":=>", additionalDeps[j])
+                        if i in additionalDeps[j]: pkVarFoundInDeps = True
+                    if not pkVarFoundInDeps:
+                        genList.append(i)
+
+        # finally, check that genList elements actually influence
+        # constraintList elements already (e.g., can be safely fixed to G1)
+        print("Candidates for further PK optimizations: ", genList)
+        # for i in genList:
+        #     for j in constraintList:
+        #         print("Last check: ", j, ":", additionalDeps[j])
+        #         if i in additionalDeps[j]:
+        #             constraintList.append(i)
+        constraintList += genList
         print("Public-key informed constraint list: ", constraintList)
 
 #####################
@@ -1204,9 +1245,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 #            if i not in pk_list and max_var in reduc_var_map[i]:
 #                if getOtherPairingVar(the_map, i) not in constraintList:
 #                    constraintList.append(i)
+#
+#        print("Public-key informed constraint list: ", constraintList)
 #####################
-
-        print("Public-key informed constraint list: ", constraintList)
 
     # JAA: commented out for benchmarking
     #print("info => G1 lhs : ", info['G1_lhs'])
