@@ -395,15 +395,64 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                     newLine = updateForLists(blockStmt, assignVar, info)
                     newLines.append( newLine )
                     return True
+
+        numG1 = 0
+        numG2 = 0
+        numBoth = 0
+        if(assignVar in deps.keys()):
+            print("\nassignVar backtrace => ", assignVar)
+            print(deps[assignVar])
+            print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
+
+            depList = []
+            for (key,val) in deps.items():
+                print(key, val)
+                if(assignVar in val):
+                    depList.append(key)
+            print("depList => ", depList)
+
+            depListGroups = {}
+            numG1 = 0
+            numG2 = 0
+            numBoth = 0
+            for i in depList:
+                if((i in varmap) and (varmap[i] in info['G1'])):
+                    depListGroups[i] = types.G1
+                    numG1+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
+                elif((i in varmap) and (varmap[i] in info['G2'])):
+                    depListGroups[i] = types.G2
+                    numG2+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
+                elif((i in varmap) and (varmap[i] in info['both'])):
+                    depListGroups[i] = "both"
+                    numBoth+=1
+                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+                elif(i in info['G1']):
+                    depListGroups[i] = types.G1
+                    numG1+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G1'])
+                elif(i in info['G2']):
+                    depListGroups[i] = types.G2
+                    numG2+=1
+                    print(i, " : ", depListGroups[i], " => ", info['G2'])
+                elif(i in info['both']):
+                    depListGroups[i] = "both"
+                    numBoth+=1
+                    print(i, " : ", depListGroups[i], " => ", info['both'])
+
+            print("depListGroups => ", depListGroups)
+            print(numG1, numG2, numBoth)
+
                 
-        if assignVarOccursInBoth(assignVar, info):
+        if assignVarOccursInBoth(assignVar, info) or ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
             if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
-        elif assignVarOccursInG1(assignVar, info):
+        elif assignVarOccursInG1(assignVar, info) or (not(numG1 == 0) and (numG2 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
-        elif assignVarOccursInG2(assignVar, info):
+        elif assignVarOccursInG2(assignVar, info) or (not(numG2 == 0) and (numG1 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
             noChangeList.append(str(assignVar))
             newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
@@ -1989,7 +2038,8 @@ class AsymAssumpSDL:
                 if funcName in self.transFunc.keys():
                     print("<===== processing %s =====>" % funcName)
                     self.__currentFunc = funcName
-                    transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
+                    #transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.generatorLines) 
+                    transFuncRes[ funcName ] = transformFunctionAssump(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.deps[1], self.varmap)
                     print("<===== processing %s =====>" % funcName)
                 
             newLinesA = transFuncRes.get( config.assumpFuncName )

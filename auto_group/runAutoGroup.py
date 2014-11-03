@@ -324,7 +324,10 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
             if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
                 newlist.append(j)
         if(not(len(set(newlist)) == 0)):
-            newDeps[key] = set(newlist)
+            if(key in assumptionData['varmap']):
+                newDeps[assumptionData['varmap'][key]] = set(newlist)
+            else:
+                newDeps[key] = set(newlist)
     assumptionData['newDeps'] = newDeps
     print("***** => ", assumptionData['newDeps'])
 
@@ -507,18 +510,21 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo_reduction, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
     depList = {}
+    depListUnaltered = {}
     for i in [depListS, depListQ, depListC]:
         for (key, val) in i.items():
             #print(key, val)
             if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
                 if(key in reductionData['varmap']):
                     depList[reductionData['varmap'][key]] = val
+                    depListUnaltered[key] = val
                 else:
                     depList[key] = val
+                    depListUnaltered[key] = val
     print("depList => ", depList)
 
     print("\n")
-    info[ 'deps' ] = (depList, assignTraceback(assignInfo_reduction, generators, varTypes, depList, constraintList))
+    info[ 'deps' ] = (depListUnaltered, assignTraceback(assignInfo_reduction, generators, varTypes, depListUnaltered, constraintList))
     print("processed deps => ", info['deps'][0])
     print("processed deps map => ", info['deps'][1])
 
@@ -563,7 +569,11 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
             if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
                 newlist.append(j)
         if(not(len(set(newlist)) == 0)):
-            newDeps[key] = set(newlist)
+            if(key in reductionData['varmap']):
+                newDeps[reductionData['varmap'][key]] = set(newlist)
+            else:
+                newDeps[key] = set(newlist)
+            #newDeps[key] = set(newlist)
     reductionData['newDeps'] = newDeps
     print("***** => ", reductionData['newDeps'])
 
