@@ -1029,10 +1029,15 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
-    print("processed deps map assump => ", assumptionData['info']['deps'][1])
-    print("processed deps map reduc => ", reductionData['info']['deps'][1])
+    print("processed deps map assump => ", assumptionData['newDeps'])
+    print("processed deps map reduc => ", reductionData['newDeps'])
 
-    additionalDeps = dict(list(assumptionData['info']['deps'][0].items()) + list(reductionData['info']['deps'][0].items()))
+    #print(findVarInfo('d1', reductionData['varTypes']))
+    #(name, varInf) = getVarNameEntryFromAssignInfo(reductionData['assignInfo'], 'd1')
+    #print(name, varInf)
+    #print(sdl.getVarTypeFromVarName('d1', None, True))
+
+    additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
     print(additionalDeps, list(additionalDeps.keys()))
 
     print("lhs => ", info['G1_lhs'][1])

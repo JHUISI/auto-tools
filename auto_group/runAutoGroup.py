@@ -309,6 +309,25 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     assumptionData['varTypes'] = varTypes
 
+    #prune varTypes to remove ZR that we don't care about
+    additionalDeps = dict(list(assumptionData['info']['deps'][0].items()))
+    print(additionalDeps)
+    items = []
+    newlist = []
+    newDeps = {}
+    for (key,val) in additionalDeps.items():
+        print(key,val)
+        #items = list(additionalDeps[key])
+        newlist = []
+        for j in val:
+            print(j, sdl.getVarTypeFromVarName(j, None, True))
+            if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
+                newlist.append(j)
+        if(not(len(set(newlist)) == 0)):
+            newDeps[key] = set(newlist)
+    assumptionData['newDeps'] = newDeps
+    print("***** => ", assumptionData['newDeps'])
+
     assumptionData['assumptionFile'] = assumption_file
     assumptionData['config'] = cm
 
@@ -528,6 +547,25 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     reductionData['options'] = options
 
     reductionData['varTypes'] = varTypes
+
+    #prune varTypes to remove ZR that we don't care about
+    additionalDeps = dict(list(reductionData['info']['deps'][0].items()))
+    print(additionalDeps)
+    items = []
+    newlist = []
+    newDeps = {}
+    for (key,val) in additionalDeps.items():
+        print(key,val)
+        #items = list(additionalDeps[key])
+        newlist = []
+        for j in val:
+            print(j, sdl.getVarTypeFromVarName(j, None, True))
+            if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
+                newlist.append(j)
+        if(not(len(set(newlist)) == 0)):
+            newDeps[key] = set(newlist)
+    reductionData['newDeps'] = newDeps
+    print("***** => ", reductionData['newDeps'])
 
     reductionData['options']['type'] = "reduction"
 
