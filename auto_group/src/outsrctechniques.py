@@ -1059,22 +1059,28 @@ class SubstitutePairings:
                 return
         # if e(X \in G1, g) => e(X, gG2) and vice versa                
         elif lhs not in self.generators and rhs in self.generators:
+            # check that lhs is in the list of pairing variables assigned
+            # to G1
             if lhs in self.pairingInfo[G1Prefix]:
 #                node.right.setAttribute( self.mapG2.get(rhs) )
                 new_rhs = self.updateNode(node.right, rhs, self.mapG2.get(rhs))
                 self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs # self.mapG2.get(rhs)
                 varL = [new_rhs]
                 self.usedGens = self.usedGens.union(varL)
-                self.usedVar  = self.usedVar.union(varL)                
-                return
+                self.usedVar  = self.usedVar.union(varL)
+                #return
+            # check that lhs is in the list of pairing variables assigned
+            # to G2
             elif lhs in self.pairingInfo[G2Prefix]:
 #                node.right.setAttribute( self.mapG1.get(rhs) )                
                 new_rhs = self.updateNode(node.right, rhs, self.mapG1.get(rhs))
                 self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs # self.mapG1.get(rhs)
                 varL = [new_rhs]
                 self.usedGens = self.usedGens.union(varL)
-                self.usedVar  = self.usedVar.union(varL)                
-                return
+                self.usedVar  = self.usedVar.union(varL)
+                #return
+            # next we process the rhs generator as before below to determine
+            # what the assignment should be given the selection of the lhs assignment
         else:
             pass # we leave other cases untouched
         
