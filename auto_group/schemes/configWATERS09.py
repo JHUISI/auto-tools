@@ -2,7 +2,7 @@ schemeType = "PKENC"
 #assumes assumption/reduction are in matching order
 assumption = ["DBDH", "DLIN"]
 #assumption = ["DBDH"]
-reduction = ["reductionWATERS09DBDH", "reductionWATERS09DLIN"]
+reduction = ["reductionWATERS09DBDH", "reductionWATERS09DLIN", "reductionWATERS09DLIN2"]
 #reduction = ["reductionWATERS09DBDH"]
 
 schemeType = "PKENC"
