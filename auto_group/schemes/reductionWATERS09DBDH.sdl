@@ -1,0 +1,136 @@
+name := WATERS09DBDH
+setting := symmetric
+l := 32
+
+
+BEGIN :: types
+l := Int
+ID := Str
+M0 := GT
+M1 := GT
+M := list{GT}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+
+#assumption
+ a := random(ZR)
+ b1 := random(ZR)
+ c := random(ZR)
+ z := random(ZR)
+ g := random(G1)
+
+ A := g ^ a
+ B := g ^ b1
+ C := g ^ c
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := e(g, g) ^ (a * b1 * c)
+ else
+   Z := e(g, g) ^ z
+ END :: if
+
+ assumpVar := list{A, B, C, Z}
+
+#begin reduction
+ a1 := random(ZR)
+ b := random(ZR)
+# alpha := c1 * c2
+ yv := random(ZR)
+ yv1 := random(ZR)
+ yv2 := random(ZR)
+ yw := random(ZR)
+ yh := random(ZR)
+ yu := random(ZR)
+
+# g1 := g
+ gb := g ^ b
+ ga1 := g ^ a1
+ ga2 := B
+ gba1 := g ^ (b * a1)
+ gba2 := B ^ b
+ v := g ^ yv
+ v1 := g ^ yv1
+ v2 := g ^ yv2
+ w := g ^ yw
+ u := g ^ yu
+ h := g ^ yh
+ eggalphaa1b := e(A, B) ^ (a1 * b) 
+
+ tau1 := v * (v1 ^ a1)
+ tau1b := tau1 ^ b
+ tau2 := v * (B ^ yv2)
+ tau2b := tau2 ^ b
+
+ reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+ reducVar := list{b, yv, yv1, yv2}
+
+output := list{assumpVar, reducpk, reducVar}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{reducpk, reducVar, assumpVar, ID}
+
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducVar := expand{b, alpha, yv, yv1, yv2}
+assumpVar := expand{A, B, C, Z}
+
+r1 := random(ZR)
+r2 := random(ZR)
+z1 := random(ZR)
+z2 := random(ZR)
+gammaprime := random(ZR)
+tagk := random(ZR)
+
+r := r1 + r2
+idhash := H(ID, ZR)
+
+D1 := (B ^ (-gammaprime * a1)) * (v ^ r)
+D2 := (B ^ gammaprime) * (v1 ^ r) * (g ^ z1)
+D3 := gb ^ -z1
+D4 := (A ^ a1) * (ga1 ^ gammaprime) * (v2 ^ r) * (g ^ z2)
+D5 := gb ^ -z2
+D6 := gb ^ r2
+D7 := g ^ r1
+K := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1
+        
+reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+output := reducsk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{assumpVar, reducpk, reducVar, M, ID}
+
+assumpVar := expand{A, B, C, Z}
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducVar := expand{b, yv, yv1, yv2}
+
+b := random(bin)
+
+s1 := random(ZR) 
+t := random(ZR)
+tagc := random(ZR)
+idhash2 := H(ID, ZR)
+xprime := random(ZR)
+        
+C0 := M#b * (Z ^ (a1 * b))
+C1 := (g ^ (s1 * b)) * (C ^ b)
+C2 := g ^ (b * a1 * s1)
+C3 := g ^ (a1 * s1)
+C4 := B ^ (xprime * b)
+C5 := B ^ xprime
+C6 := (tau1 ^ s1) * (C ^ yv) * (B ^ (yv2 * xprime))
+C7 := (tau1b ^ s1) * (C ^ (yv * b)) * (B ^ (yv2 * xprime * b)) * (w ^ -t)
+E1 := (((u ^ idhash2) * (w ^ tagc)) * h) ^ t
+E2 := g ^ t
+
+ct := list{C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc}
+
+output := ct
+END :: func:challenge

@@ -1,0 +1,49 @@
+name := DLIN
+setting := symmetric
+
+
+BEGIN :: types
+c1 := ZR
+c2 := ZR
+r := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ c1 := random(ZR)
+ c2 := random(ZR)
+ r := random(ZR)
+
+ g := random(G1)
+ f := random(G1)
+ nu := random(G1)
+
+ assumpKey := list{g, f, nu, r, c1, c2}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{{g, f, nu, r, c1, c2}
+
+ G := g ^ c1
+ F := f ^ c2
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   T := nu ^ (c1 + c2)
+ else
+   T := nu ^ r
+#   T := random(G1)
+ END :: if
+
+ assumpVar := list{G, F, T}
+
+output := assumpVar
+END :: func:assump
+
+

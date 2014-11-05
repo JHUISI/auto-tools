@@ -1,0 +1,154 @@
+name := WATERS09DLIN
+setting := symmetric
+l := 32
+
+
+BEGIN :: types
+l := Int
+ID := Str
+M0 := GT
+M1 := GT
+M := list{GT}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+
+#assumption
+ c1 := random(ZR)
+ c2 := random(ZR)
+ r := random(ZR)
+
+ g := random(G1)
+ f := random(G1)
+ nu := random(G1)
+
+ G := g ^ c1
+ F := f ^ c2
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   T := nu ^ (c1 + c2)
+ else
+   T := nu ^ r
+#   T := random(G1)
+ END :: if
+
+ assumpVar := list{G, F, T}
+
+#begin reduction
+ b := random(ZR)
+ alpha := random(ZR)
+ yv := random(ZR)
+ yv1 := random(ZR)
+ yv2 := random(ZR)
+
+ u := random(G1)
+ w := random(G1)
+ h := random(G1)
+
+# g1 := g
+ ga1 := f
+ ga2 := nu
+
+ gb := g ^ b
+ gba1 := f ^ b
+ gba2 := nu ^ b
+ v := g ^ yv
+ v1 := g ^ yv1
+ v2 := g ^ yv2
+
+ tau1 := v * (ga1 ^ yv1)
+ tau2 := v * (ga2 ^ yv2)
+ tau1b := tau1 ^ b
+ tau2b := tau2 ^ b
+ eggalphaa1b := e(g, f) ^ (alpha * b)
+
+ galpha := g ^ alpha
+ galphaa1 := ga1 ^ alpha
+
+ reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+ reducmsk := list{g, galpha, galphaa1, v, v1, v2} #should alpha be part of the msk?
+ reducVar := list{b, alpha, yv, yv1, yv2}
+
+output := list{assumpVar, reducpk, reducmsk, reducVar}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{reducpk, reducmsk, reducVar, ID}
+
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducmsk := expand{g, galpha, galphaa1, v, v1, v2}
+reducVar := expand{b, alpha, yv, yv1, yv2}
+
+r1 := random(ZR)
+r2 := random(ZR)
+z1 := random(ZR)
+z2 := random(ZR)
+tagk := random(ZR)
+
+r := r1 + r2
+idhash := H(ID, ZR)
+
+D1 := galphaa1 * (v ^ r)
+D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
+D3 := gb ^ -z1
+D4 := (v2 ^ r) * (g ^ z2)
+D5 := gb ^ -z2
+D6 := gb ^ r2
+D7 := g ^ r1
+K := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1
+        
+reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+output := reducsk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{assumpVar, reducpk, reducVar, M, ID}
+
+assumpVar := expand{G, F, T}
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducVar := expand{b, alpha, yv, yv1, yv2}
+
+b := random(bin)
+
+s1prime := random(ZR) 
+s2prime := random(ZR) 
+t := random(ZR)
+tagc := random(ZR)
+sprime := s1prime + s2prime
+idhash2 := H(ID, ZR)
+        
+C0prime := M#b * (eggalphaa1b ^ s2prime)
+C1prime := gb ^ sprime
+C2prime := gba1 ^ s1prime
+C3prime := ga1 ^ s1prime
+C4prime := gba2 ^ s2prime
+C5prime := ga2 ^ s2prime
+C6prime := (tau1 ^ s1prime) * (tau2 ^ s2prime)
+C7prime := (((tau1b ^ s1prime) * (tau2b ^ s2prime)) * (w ^ -t))
+E1prime := (((u ^ idhash2) * (w ^ tagc)) * h) ^ t
+E2prime := g ^ t
+
+ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagc}
+
+
+C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
+C1 := C1prime * (G ^ b)
+C2 := C2prime * (F ^ -b)
+C3 := C3prime * F
+C4 := C4prime * (T ^ b)
+C5 := C5prime * T
+C6 := C6prime * (G ^ yv) * (F ^ -yv1) * (T ^ yv2)
+C7 := C7prime * (((G ^ yv) * (F ^ -yv1) * (T ^ yv2)) ^ b)
+E1 := E1prime
+E2 := E2prime
+
+ct := list{C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc}
+
+output := ct
+END :: func:challenge
