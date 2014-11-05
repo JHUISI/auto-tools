@@ -590,8 +590,63 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
 
     #parse assumption arguments
     if not hasattr(cm, "assumption"):
-        print("No assumption specified")
+        print("No assumption specified, running old AutoGroup")
         #sys.exit("configAutoGroup: need to set 'assumption' in config.") #TODO: add back in when finished and remove else
+
+        # setup sdl parser configs
+        sdl.masterPubVars = cm.masterPubVars
+        sdl.masterSecVars = cm.masterSecVars
+        if not hasattr(cm, "schemeType"):
+            sys.exit("configAutoGroup: need to set 'schemeType' in config.")
+        
+        if cm.schemeType == PKENC and getattr(cm, functionOrder, None) == None:
+            funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
+            setattr(cm, functionOrder, funcOrder)
+        elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
+            funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+            setattr(cm, functionOrder, funcOrder)
+
+        print("function order: ", cm.functionOrder)
+        
+        if cm.schemeType == PKENC:
+            for i in encConfigParams:
+                if not hasattr(cm, i):
+                    errorOut(i)
+        elif cm.schemeType == PKSIG:
+            for i in sigConfigParams:
+                if not hasattr(cm, i):
+                    errorOut(i)
+        
+        if not hasattr(cm, "secparam"):
+            secparam = "BN256" # default pairing curve for now
+        else:
+            secparam = cm.secparam
+        
+        dropFirst = None
+        if hasattr(cm, "dropFirst"):
+            dropFirst = cm.dropFirst
+        
+        options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+
+        startTime = time.clock()
+        outfile_scheme = runAutoGroupOld(sdl_file, cm, options, verbose)
+        endTime = time.clock()
+        if benchmarkOpt: 
+            runningTime = (endTime - startTime) * 1000
+            print("running time: ", str(runningTime) + "ms")
+            os.system("echo '%s' >> %s" % (runningTime, output_file))
+    
+        new_input_sdl  = outfile_scheme
+        new_output_sdl = output_file
+        # JAA: commented out for benchmark purposes
+        if verbose:
+            print("Codegen Input: ", new_input_sdl)
+            print("Codegen Output: ", new_output_sdl)
+            print("User defined funcs: ", options['userFuncList'])
+        if not benchmarkOpt:
+            codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
+            codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
+        return
     else:
         print(cm.assumption)
         assumptionData = []
@@ -600,93 +655,93 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             assumptionData.append(parseAssumptionFile(cm, assumptionFile, verbose, benchmarkOpt, estimateOpt))
         setattr(cm, functionOrder, None)
 
-    #parse reduction arguments
-    if not hasattr(cm, "reduction"):
-        print("No reduction specified")
-        #sys.exit("configAutoGroup: need to set 'reduction' in config.") #TODO: add back in when finished and remove else
-    else:
-        print(cm.reduction)
-        reductionData = []
-        for i in cm.reduction:
-            reductionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of reduction SDL file??
-            reductionData.append(parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt))
-        setattr(cm, functionOrder, None)
+        #parse reduction arguments
+        if not hasattr(cm, "reduction"):
+            print("No reduction specified")
+            sys.exit("configAutoGroup: assumption set; need to set 'reduction' in config.") #TODO: add back in when finished and remove else
+        else:
+            print(cm.reduction)
+            reductionData = []
+            for i in cm.reduction:
+                reductionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of reduction SDL file??
+                reductionData.append(parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt))
+            setattr(cm, functionOrder, None)
 
-    # setup sdl parser configs
-    sdl.masterPubVars = cm.masterPubVars
-    sdl.masterSecVars = cm.masterSecVars
-    if not hasattr(cm, "schemeType"):
-        sys.exit("configAutoGroup: need to set 'schemeType' in config.")
-    
-    if cm.schemeType == PKENC and getattr(cm, functionOrder, None) == None:
-        funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
-        setattr(cm, functionOrder, funcOrder)
-    elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
-        funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
-        setattr(cm, functionOrder, funcOrder)
+            # setup sdl parser configs
+            sdl.masterPubVars = cm.masterPubVars
+            sdl.masterSecVars = cm.masterSecVars
+            if not hasattr(cm, "schemeType"):
+                sys.exit("configAutoGroup: need to set 'schemeType' in config.")
+            
+            if cm.schemeType == PKENC and getattr(cm, functionOrder, None) == None:
+                funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
+                setattr(cm, functionOrder, funcOrder)
+            elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
+                funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+                setattr(cm, functionOrder, funcOrder)
 
-    print("function order: ", cm.functionOrder)
-    
-    if cm.schemeType == PKENC:
-        for i in encConfigParams:
-            if not hasattr(cm, i):
-                errorOut(i)
-    elif cm.schemeType == PKSIG:
-        for i in sigConfigParams:
-            if not hasattr(cm, i):
-                errorOut(i)
-    
-    if not hasattr(cm, "secparam"):
-        secparam = "BN256" # default pairing curve for now
-    else:
-        secparam = cm.secparam
-    
-    dropFirst = None
-    if hasattr(cm, "dropFirst"):
-        dropFirst = cm.dropFirst
-    
-    options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+            print("function order: ", cm.functionOrder)
+            
+            if cm.schemeType == PKENC:
+                for i in encConfigParams:
+                    if not hasattr(cm, i):
+                        errorOut(i)
+            elif cm.schemeType == PKSIG:
+                for i in sigConfigParams:
+                    if not hasattr(cm, i):
+                        errorOut(i)
+            
+            if not hasattr(cm, "secparam"):
+                secparam = "BN256" # default pairing curve for now
+            else:
+                secparam = cm.secparam
+            
+            dropFirst = None
+            if hasattr(cm, "dropFirst"):
+                dropFirst = cm.dropFirst
+            
+            options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
 
-    if (len(assumptionData) == 1 and len(reductionData) == 1):
-        startTime = time.clock()
-        (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData[0], reductionData[0])
-        endTime = time.clock()
-        if benchmarkOpt: 
-            runningTime = (endTime - startTime) * 1000
-            print("running time: ", str(runningTime) + "ms")
-            os.system("echo '%s' >> %s" % (runningTime, output_file))
-    
-        new_input_sdl  = outfile_scheme
-        new_output_sdl = output_file
-        # JAA: commented out for benchmark purposes
-        if verbose:
-            print("Codegen Input: ", new_input_sdl)
-            print("Codegen Output: ", new_output_sdl)
-            print("User defined funcs: ", options['userFuncList'])
-        if not benchmarkOpt:
-            codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
-            codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
-        return
-    else:
-        startTime = time.clock()
-        (outfile_scheme, outfile_assump) = runAutoGroupMulti(sdl_file, cm, options, verbose, assumptionData, reductionData)
-        endTime = time.clock()
-        if benchmarkOpt: 
-            runningTime = (endTime - startTime) * 1000
-            print("running time: ", str(runningTime) + "ms")
-            os.system("echo '%s' >> %s" % (runningTime, output_file))
-    
-        new_input_sdl  = outfile_scheme
-        new_output_sdl = output_file
-        # JAA: commented out for benchmark purposes
-        if verbose:
-            print("Codegen Input: ", new_input_sdl)
-            print("Codegen Output: ", new_output_sdl)
-            print("User defined funcs: ", options['userFuncList'])
-        if not benchmarkOpt:
-            codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
-            codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
-        return
+            if (len(assumptionData) == 1 and len(reductionData) == 1):
+                startTime = time.clock()
+                (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData[0], reductionData[0])
+                endTime = time.clock()
+                if benchmarkOpt: 
+                    runningTime = (endTime - startTime) * 1000
+                    print("running time: ", str(runningTime) + "ms")
+                    os.system("echo '%s' >> %s" % (runningTime, output_file))
+            
+                new_input_sdl  = outfile_scheme
+                new_output_sdl = output_file
+                # JAA: commented out for benchmark purposes
+                if verbose:
+                    print("Codegen Input: ", new_input_sdl)
+                    print("Codegen Output: ", new_output_sdl)
+                    print("User defined funcs: ", options['userFuncList'])
+                if not benchmarkOpt:
+                    codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
+                    codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
+                return
+            else:
+                startTime = time.clock()
+                (outfile_scheme, outfile_assump) = runAutoGroupMulti(sdl_file, cm, options, verbose, assumptionData, reductionData)
+                endTime = time.clock()
+                if benchmarkOpt: 
+                    runningTime = (endTime - startTime) * 1000
+                    print("running time: ", str(runningTime) + "ms")
+                    os.system("echo '%s' >> %s" % (runningTime, output_file))
+            
+                new_input_sdl  = outfile_scheme
+                new_output_sdl = output_file
+                # JAA: commented out for benchmark purposes
+                if verbose:
+                    print("Codegen Input: ", new_input_sdl)
+                    print("Codegen Output: ", new_output_sdl)
+                    print("User defined funcs: ", options['userFuncList'])
+                if not benchmarkOpt:
+                    codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
+                    codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
+                return
 
 # run AutoGroup with the designated options
 configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmark, estimateSize)
