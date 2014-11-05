@@ -1431,7 +1431,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     # the rule is that we always assign these elements to G1 (so as long as
     # so as long as it doesn't affect any pairing computations)
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
-        groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        for i in info['notInAPairing']:
+            if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                print(i)
+                groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
         print("Update: new G1 deps=>", groupInfo['G1'])    
 
     # put all the info together so that we can generate the new Asym SDL
@@ -1498,9 +1502,17 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     # the rule is that we always assign these elements to G1 (so as long as
     # so as long as it doesn't affect any pairing computations)
     print(groupInfo)
+    #if assumptionData['info'].get('notInAPairing') != None and len(assumptionData['info']['notInAPairing']) > 0:
+    #    groupInfo['G1'] = groupInfo['G1'].union( assumptionData['info']['notInAPairing'] )
+    #    print("Update: new G1 deps=>", groupInfo['G1'])
     if assumptionData['info'].get('notInAPairing') != None and len(assumptionData['info']['notInAPairing']) > 0:
-        groupInfo['G1'] = groupInfo['G1'].union( assumptionData['info']['notInAPairing'] )
-        print("Update: new G1 deps=>", groupInfo['G1'])    
+        #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        for i in assumptionData['notInAPairing']:
+            if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                print(i)
+                #tmp = list(groupInfo['G1'])
+                groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
+        print("Update: new G1 deps=>", groupInfo['G1'])      
 
     # put all the info together so that we can generate the new Asym SDL
     groupInfo['generators'] = generators 
@@ -2073,9 +2085,16 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     # we still care about group elements that are not used in pairings
     # the rule is that we always assign these elements to G1 (so as long as
     # so as long as it doesn't affect any pairing computations)
+    #if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
+    #    groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+    #    print("Update: new G1 deps=>", groupInfo['G1'])
     if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
-        groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
-        print("Update: new G1 deps=>", groupInfo['G1'])    
+        #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        for i in info['notInAPairing']:
+            if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                print(i)
+                groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
+        print("Update: new G1 deps=>", groupInfo['G1'])   
 
     # put all the info together so that we can generate the new Asym SDL
     groupInfo['generators'] = generators 
@@ -2144,9 +2163,16 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         # the rule is that we always assign these elements to G1 (so as long as
         # so as long as it doesn't affect any pairing computations)
         print(groupInfo)
+        #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+        #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
+        #    print("Update: new G1 deps=>", groupInfo['G1'])
         if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
-            groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
-            print("Update: new G1 deps=>", groupInfo['G1'])    
+            #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+            for i in assumprecord['notInAPairing']:
+                if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                    print(i)
+                    groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
+            print("Update: new G1 deps=>", groupInfo['G1']) 
 
         # put all the info together so that we can generate the new Asym SDL
         groupInfo['generators'] = generators 
@@ -2178,7 +2204,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
         print(assumprecord['options'])
         # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
-        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reductionData[counter]['deps'], assumprecord['varmap'])
+        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reductionData[counter]['deps'], assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
         print(assumprecord['config'].functionOrder)
         newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
         print(newLinesT)
