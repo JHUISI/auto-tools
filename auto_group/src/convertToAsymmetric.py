@@ -361,8 +361,13 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
     print(deps)
     print(varmap)
     if Type(assign) == ops.EQ:
-        assignVar = blockStmt.getAssignVar()
-        print("\nassignVar => ", assignVar)
+        assignVartmp = blockStmt.getAssignVar()
+        print("\nassignVar1 => ", assignVartmp)
+        if(assignVartmp in varmap.keys()):
+            assignVar = varmap[assignVartmp]
+        else:
+            assignVar = assignVartmp
+        print("\nassignVar2 => ", assignVar)
         # store for later
         newLine = None
         varTypeObj = info['varTypes'].get(assignVar)
@@ -402,6 +407,7 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
         if(assignVar in deps.keys()):
             print("\nassignVar backtrace => ", assignVar)
             print(deps[assignVar])
+            #print(deps)
             print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
 
             depList = []
@@ -447,22 +453,22 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                 
         if assignVarOccursInBoth(assignVar, info) or ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
             if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
-            newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+            newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
         elif assignVarOccursInG1(assignVar, info) or (not(numG1 == 0) and (numG2 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
-            noChangeList.append(str(assignVar))
-            newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+            noChangeList.append(str(assignVartmp))
+            newLine = updateAllForG1(assign, assignVartmp, blockStmt, info, False, noChangeList)
         elif assignVarOccursInG2(assignVar, info) or (not(numG2 == 0) and (numG1 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
-            noChangeList.append(str(assignVar))
-            newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
+            noChangeList.append(str(assignVartmp))
+            newLine = updateAllForG2(assign, assignVartmp, blockStmt, info, False, noChangeList)
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
             if info['verbose']: print(" :-> update pairing.", end=" ")
-            noChangeList.append(str(assignVar))
+            noChangeList.append(str(assignVartmp))
             newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
             if info['verbose']: print(" :-> updating list...", end=" ")
-            newLine = updateForLists(blockStmt, assignVar, info)
+            newLine = updateForLists(blockStmt, assignVartmp, info)
         elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
             #TODO: modify here with new code for assumption variables??
             if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
@@ -513,22 +519,22 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
 
             if not(numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
-                newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+                newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
             elif not(numBoth == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
-                newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+                newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
             elif (not(numG1 == 0) and (numG2 == 0)) or (not(numBoth == 0) and (numG1 == 0) and (numG2 == 0)):
                 if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
-                noChangeList.append(str(assignVar))
-                newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+                noChangeList.append(str(assignVartmp))
+                newLine = updateAllForG1(assign, assignVartmp, blockStmt, info, False, noChangeList)
             elif (numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
-                noChangeList.append(str(assignVar))
-                newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
+                noChangeList.append(str(assignVartmp))
+                newLine = updateAllForG2(assign, assignVartmp, blockStmt, info, False, noChangeList)
             elif assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
-                noChangeList.append(str(assignVar))
-                info['G1'] = info['G1'].union( assignVar )
-                newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+                noChangeList.append(str(assignVartmp))
+                info['G1'] = info['G1'].union( assignVartmp )
+                newLine = updateAllForG1(assign, assignVartmp, blockStmt, info, False, noChangeList)
                 if info['verbose']: print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
         else:
             info['myAsymSDL'].recordUsedVar(blockStmt.getVarDepsNoExponents())                
@@ -1538,6 +1544,655 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     writeConfig(options['path'] + outputFile_assump, assumptionData['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
     return (outputFile, outputFile_assump)
+
+
+"""
+runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
+sdl filename, a config file and the options which include security parameter,
+a drop first requirement in case multiple solutions achieve the user's requirements,
+and a destination path for the generated Asymmetric-based scheme and accompanying code.
+"""
+def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData=None, reductionData=None):
+    sdl.parseFile(sdlFile, sdlVerbose, ignoreCloudSourcing=True)
+    global assignInfo
+    # this contains a Variable Object for each statement in the SDL file
+    assignInfo = sdl.getAssignInfo()
+    # this consists of the type of the input scheme (e.g., symmetric)
+    setting = sdl.assignInfo[sdl.NONE_FUNC_NAME][ALGEBRAIC_SETTING].getAssignNode().getRight().getAttribute()
+    # name of the scheme
+    sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
+    # the block of types in the SDL
+    typesBlock = sdl.getFuncStmts( TYPES_HEADER )
+    info = {'verbose':sdlVerbose}
+
+    # we want to ignore user defined functions from our analysis
+    # (unless certain variables that we care about are manipulated there)
+    userCodeBlocks = list(set(list(assignInfo.keys())).difference(config.functionOrder + [TYPES_HEADER, NONE_FUNC_NAME]))
+    options['userFuncList'] += userCodeBlocks
+    print("name is", sdl_name)
+    print("setting is", setting)
+    
+    lines = list(typesBlock[0].keys())
+    lines.sort()
+    typesBlockLines = [ i.rstrip() for i in sdl.getLinesOfCodeFromLineNos(lines) ]
+    begin = ["BEGIN :: " + TYPES_HEADER]
+    end = ["END :: " + TYPES_HEADER]
+
+    # start constructing the preamble for the Asymmetric SDL output
+    newLines0 = [ BV_NAME + " := " + sdl_name, SETTING + " := " + sdl.ASYMMETRIC_SETTING ] 
+    newLines1 = begin + typesBlockLines + end
+    # this fact is already verified by the parser
+    # but if scheme claims symmetric
+    # and really an asymmetric scheme then parser will
+    # complain.
+    assert setting == sdl.SYMMETRIC_SETTING, "No need to convert to asymmetric setting."    
+    # determine user preference in terms of keygen or encrypt
+    short = SHORT_DEFAULT # default option
+    if hasattr(config, 'short'):
+        if config.short in SHORT_OPTIONS:
+            short = config.short
+    print("reducing size of '%s'" % short) 
+
+    varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+    typesH = dict(varTypes)
+    if not hasattr(config, 'schemeType'):
+        sys.exit("'schemeType' option missing in specified config file.")
+    pairingSearch = []
+    # extract the statements, types, dependency list, influence list and exponents of influence list
+    # for each algorithm in the SDL scheme
+    if config.schemeType == PKENC:
+        (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
+        (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+        (stmtE, typesE, depListE, depListNoExpE, infListE, infListNoExpE) = sdl.getVarInfoFuncStmts( config.encryptFuncName )    
+        (stmtD, typesD, depListD, depListNoExpD, infListD, infListNoExpD) = sdl.getVarInfoFuncStmts( config.decryptFuncName )
+        varTypes.update(typesS)
+        varTypes.update(typesK)
+        varTypes.update(typesE)
+        varTypes.update(typesD)
+        # TODO: expand search to encrypt and potentially setup
+        pairingSearch += [stmtS, stmtE, stmtD] # aka start with decrypt.
+    # extract statements, etc ... for each algorithm in the SDL scheme.
+    elif config.schemeType == PKSIG:
+        if hasattr(config, 'setupFuncName'): 
+            (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
+            varTypes.update(typesS)
+            pairingSearch += [stmtS]
+        (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+        (stmtSi, typesSi, depListSi, depListNoExpSi, infListSi, infListNoExpSi) = sdl.getVarInfoFuncStmts( config.signFuncName )    
+        (stmtV, typesV, depListV, depListNoExpV, infListV, infListNoExpV) = sdl.getVarInfoFuncStmts( config.verifyFuncName )
+        varTypes.update(typesK)
+        varTypes.update(typesSi)
+        varTypes.update(typesV)
+        pairingSearch += [stmtV] # aka start with verify
+    else:
+        sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
+            
+    info[curveID] = options['secparam']
+    info[dropFirstKeyword] = options[dropFirstKeyword]
+    gen = Generators(info)
+    # JAA: commented out for benchmarking    
+    #print("List of generators for scheme")
+    # retrieve the generators selected by the scheme
+    # typically found in the setup routine in most cases.
+    if hasattr(config, "extraSetupFuncName"):
+        (stmtSe, typesSe, depListSe, depListNoExpSe, infListSe, infListNoExpSe) = sdl.getVarInfoFuncStmts( config.extraSetupFuncName )
+        gen.extractGens(stmtSe, typesSe)
+        #extractGeneratorList(stmtSe, typesSe, generators)
+        varTypes.update(typesSe)
+    # extract the generators from the setup and keygen routine for later use
+    if hasattr(config, 'setupFuncName'):
+        gen.extractGens(stmtS, typesS)
+    if hasattr(config, 'keygenFuncName'):
+        gen.extractGens(stmtK, typesK)
+    else:
+        sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
+    generators = gen.getGens()
+    # JAA: commented out for benchmarking    
+    print("Generators extracted: ", generators)
+
+    # need a Visitor class to build these variables  
+    # TODO: expand to other parts of algorithm including setup, keygen, encrypt
+    # Visits each pairing computation in the SDL and
+    # extracts the inputs. This is the beginning of the
+    # analysis of these variables as the SDL is converted into
+    # an asymmetric scheme.
+    hashVarList = []
+    pair_vars_G1_lhs = [] 
+    pair_vars_G1_rhs = []    
+    gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
+    #print(pairingSearch)
+    for eachStmt in pairingSearch: # loop through each pairing statement
+        #print(pair_vars_G1_lhs)
+        lines = eachStmt.keys() # for each line, do the following
+        for i in lines:
+            #print(pair_vars_G1_lhs)            
+            if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
+                #print("Each: ", eachStmt[i].getAssignNode())
+                # assert that the statement contains a pairing computation
+                if HasPairings(eachStmt[i].getAssignNode()):
+                    path_applied = []
+                    # split pairings if necessary so that we don't influence
+                    # the solve in anyway. We can later recombine these during
+                    # post processing of the SDL
+                    eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
+                    # JAA: commented out for benchmarking                    
+                    #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
+                    if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
+                    sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
+                elif eachStmt[i].getHashArgsInAssignNode(): 
+                    # in case there's a hashed value...build up list and check later to see if it appears
+                    # in pairing variable list
+                    hashVarList.append(str(eachStmt[i].getAssignVar()))
+                else:
+                    continue # not interested
+                
+    # constraint list narrows the solutions that
+    # we care about
+    constraintList = []
+    # for example, include any hashed values that show up in a pairing by default
+    for i in hashVarList:
+        if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
+            constraintList.append(i)
+    # JAA: commented out for benchmarking            
+    print("pair vars LHS:", pair_vars_G1_lhs)
+    print("pair vars RHS:", pair_vars_G1_rhs) 
+    print("list of gens :", generators)
+    print("constraintList: ", constraintList)
+    # for each pairing variable, we construct a dependency graph all the way back to
+    # the generators used. The input of assignTraceback consists of the list of SDL statements,
+    # generators from setup, type info, and the pairing variables.
+    # We do this analysis for both sides
+    info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
+    info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
+
+    for assumprecord in assumptionData:
+        print("processed deps map assump => ", assumprecord['newDeps'])
+    for reducrecord in reductionData:
+        print("processed deps map reduc => ", reducrecord['newDeps'])
+    
+    #print(findVarInfo('d1', reductionData['varTypes']))
+    #(name, varInf) = getVarNameEntryFromAssignInfo(reductionData['assignInfo'], 'd1')
+    #print(name, varInf)
+    #print(sdl.getVarTypeFromVarName('d1', None, True))
+
+    assumpDeps = []
+    for assumprecord in assumptionData:
+        assumpDeps = assumpDeps + list(assumprecord['newDeps'].items())
+
+    reducDeps = []
+    for reducrecord in reductionData:
+        reducDeps = reducDeps + list(reducrecord['newDeps'].items())
+
+    #print(assumpDeps)
+    #additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
+    additionalDeps = dict(list(assumpDeps) + list(reducDeps))
+    print(additionalDeps, list(additionalDeps.keys()))
+
+    print("lhs => ", info['G1_lhs'][1])
+    for (key,val) in info['G1_lhs'][1].items():
+        print(key,val)
+        if key in additionalDeps:
+            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
+            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalDeps[key]))
+            #print("after => ", info['G1_lhs'][1][key])
+
+    print("rhs => ", info['G1_rhs'][1])
+    for (key,val) in info['G1_rhs'][1].items():
+        print(key,val)
+        if key in additionalDeps:
+            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
+            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalDeps[key]))
+            #print("after => ", info['G1_rhs'][1][key])
+
+    print(info[ 'G1_lhs' ])
+    print(info[ 'G1_rhs' ])
+
+    # if we want to optimize based on public parameters, one
+    # approach would be to observe the dependency graph of
+    # the pairing variables to see which generators are used more
+    # commonly (these are the pairing variables we want to minimize)
+    # one caveat: we can only pick one variable that appears in a pairing
+    if config.schemeType == PKENC and short == SHORT_PUBKEYS:
+        # special case for PK encryption
+        pk_var_obj = varTypes[config.keygenPubVar]
+        if Type(pk_var_obj) == types.list:
+            pk_list = pk_var_obj.getListNodesList()
+        else:
+            pk_list = None
+
+        lhs_orig_vars, lhs_var_map = info['G1_lhs']
+        rhs_orig_vars, rhs_var_map = info['G1_rhs']
+
+        var_list = []
+        countMap = {}
+        if info['verbose']:
+            print("pk list: ", pk_list)
+            print("<=========================>")
+        for i in lhs_orig_vars:
+            if i not in pk_list:
+                if info['verbose']:  print("Add to list: ", i, ":", lhs_var_map[i])
+                var_list.append(i)
+        countCommonGenerators(countMap, pk_list, var_list, lhs_var_map, assignInfo)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
+
+        if info['verbose']: print("<=========================>")
+        var_list = []  # reset
+        for i in rhs_orig_vars:
+            if i not in pk_list:
+                if info['verbose']: print("Add to list: ", i, ":", rhs_var_map[i])
+                var_list.append(i)
+        countCommonGenerators(countMap, pk_list, var_list, rhs_var_map, assignInfo)
+        print(countMap)
+        if info['verbose']: print("<=========================>")
+
+#####################
+#added for assumption
+        for assumprecord in assumptionData:
+
+            assump_orig_vars, assump_var_map = assumprecord['deps']
+            assump_lhs_orig_vars, assump_lhs_var_map = assumprecord['G1_lhs']
+            assump_rhs_orig_vars, assump_rhs_var_map = assumprecord['G1_rhs']
+
+            if info['verbose']: print("<=========================>")
+            var_list = []  # reset
+            for i in assump_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumprecord['assignInfo'])
+            print("var_list => ", var_list)
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+
+            var_list = []
+            if info['verbose']:
+                print("pk list: ", pk_list)
+                print("<=========================>")
+            for i in assump_lhs_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumprecord['assignInfo'])
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+
+            if info['verbose']: print("<=========================>")
+            var_list = []  # reset
+            for i in assump_rhs_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumprecord['assignInfo'])
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+#added for reduction
+        for reducrecord in reductionData:
+
+            reduc_orig_vars, reduc_var_map = reducrecord['deps']
+            reduc_lhs_orig_vars, reduc_lhs_var_map = reducrecord['G1_lhs']
+            reduc_rhs_orig_vars, reduc_rhs_var_map = reducrecord['G1_rhs']
+
+            if info['verbose']: print("<=========================>")
+            var_list = []  # reset
+            for i in reduc_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reducrecord['assignInfo'])
+            print("var_list => ", var_list)
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+
+            var_list = []
+            if info['verbose']:
+                print("pk list: ", pk_list)
+                print("<=========================>")
+            for i in reduc_lhs_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reducrecord['assignInfo'])
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+
+            if info['verbose']: print("<=========================>")
+            var_list = []  # reset
+            for i in reduc_rhs_orig_vars:
+                if i not in pk_list:
+                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
+                    var_list.append(i)
+            countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reducrecord['assignInfo'])
+            print(countMap)
+            if info['verbose']: print("<=========================>")
+#####################
+
+        # define a function that returns the key of the value with highest value
+        # but what if there is no real max (everything thesame?)
+        max_var = max(countMap.keys(), key=lambda x: countMap[x])
+        the_map = gpv.pairing_map
+        print("the map => ", the_map)
+        maps = []
+        for i in assumptionData:
+            maps.append(i['the_map'])
+        for i in reductionData:
+            maps.append(i['the_map'])
+
+        #for i in [assumptionData['the_map'], reductionData['the_map']]:
+        for i in maps:
+            for (key,val) in i.items():
+                the_map[key] = val
+        print("the map => ", the_map)
+        if info['verbose']:
+            print("Max: ", max_var)
+            print("Pairing map: ", the_map)
+        # now we can identify constraints with this knowledge
+        for i in lhs_orig_vars: # look for where max_var appears in pairing variables
+            if i not in pk_list and max_var in lhs_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList:
+                    constraintList.append(i)
+
+        for i in rhs_orig_vars: # look for where max_var appears in pairing variable
+            if i not in pk_list and max_var in rhs_var_map[i]:
+                if getOtherPairingVar(the_map, i) not in constraintList:
+                    constraintList.append(i)
+
+        # worst case is always double the size of public-key elements
+        # here we can process stuff inside the pk_list to see if
+        # we can do better than splitting public-key elements.
+        nonConstrainedList = lhs_orig_vars + rhs_orig_vars
+        nonConstrainedList = removeList(nonConstrainedList, constraintList)
+        nonConstrainedList = removeList(nonConstrainedList, pk_list)
+        genList = []
+        pkVarFoundInDeps = False
+        for i in lhs_orig_vars:
+            if i in pk_list:
+                print("PROCESS THIS PK LIST ELEMENT: ", i)
+                for j in nonConstrainedList:
+                    print(j, ":=>", additionalDeps[j])
+                    if i in additionalDeps[j]: pkVarFoundInDeps = True
+                if not pkVarFoundInDeps:
+                    # we can safely add to constrained list and skip other side
+                    genList.append(i)
+
+        if pkVarFoundInDeps:
+            pkVarFoundInDeps = False # reset because we want to find out about other pk vars
+            for i in rhs_orig_vars:
+                if i in pk_list:
+                    print("PROCESS THIS PK LIST ELEMENT: ", i)
+                    for j in nonConstrainedList:
+                        print(j, ":=>", additionalDeps[j])
+                        if i in additionalDeps[j]: pkVarFoundInDeps = True
+                    if not pkVarFoundInDeps:
+                        genList.append(i)
+
+        # finally, check that genList elements actually influence
+        # constraintList elements already (e.g., can be safely fixed to G1)
+        print("Candidates for further PK optimizations: ", genList)
+        # for i in genList:
+        #     for j in constraintList:
+        #         print("Last check: ", j, ":", additionalDeps[j])
+        #         if i in additionalDeps[j]:
+        #             constraintList.append(i)
+        constraintList += genList
+        print("Public-key informed constraint list: ", constraintList)
+
+#####################
+
+#        for i in assump_orig_vars: # look for where max_var appears in pairing variable
+#            if i not in pk_list and max_var in assump_var_map[i]:
+#                if getOtherPairingVar(the_map, i) not in constraintList:
+#                    constraintList.append(i)
+
+#        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
+#            if i not in pk_list and max_var in reduc_var_map[i]:
+#                if getOtherPairingVar(the_map, i) not in constraintList:
+#                    constraintList.append(i)
+#
+#        print("Public-key informed constraint list: ", constraintList)
+#####################
+
+    # JAA: commented out for benchmarking
+    #print("info => G1 lhs : ", info['G1_lhs'])
+    #print("info => G1 rhs : ", info['G1_rhs'])   
+    #print("<===== Determine Asymmetric Generators =====>")
+    # construct the asymmetric generators for the new SDL
+    (generatorMapG1, generatorMapG2) = gen.setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
+    # generate the relevant SDL lines
+    generatorLines = gen.getGenLines()
+    # JAA: commented out for benchmarking    
+    #print("Generators in G1: ", generatorMapG1)
+    #print("Generators in G2: ", generatorMapG2)
+    #print("Generator Lines: ", generatorLines)
+    #print("<===== Determine Asymmetric Generators =====>\n")
+    
+    #print("<===== Generate XOR clauses =====>")  
+    # let the user's preference for fixing the keys or ciphertext guide this portion of the algorithm.
+    # info[ 'G1' ] : represents (varKeyList, depVarMap).
+    # sanity check that we have an equivalent number of inputs to pairings
+    assert len(pair_vars_G1_lhs) == len(pair_vars_G1_rhs), "Uneven number of pairings. Please inspect your SDL file."
+    # now we can construct the logical formula input to the SMT solver
+    #TODO: add any pairings from assumption/reduction
+    varsLen = len(pair_vars_G1_lhs)
+    xorList = []
+    for i in range(varsLen):
+        xor = BinaryNode(ops.XOR)
+        xor.left = BinaryNode(pair_vars_G1_lhs[i])
+        xor.right = BinaryNode(pair_vars_G1_rhs[i])
+        xorList.append(xor)
+    
+    ANDs = [ BinaryNode(ops.AND) for i in range(len(xorList)-1) ]
+    for i in range(len(ANDs)):
+        ANDs[i].left = BinaryNode.copy(xorList[i])
+        if i < len(ANDs)-1: ANDs[i].right = ANDs[i+1]
+        else: ANDs[i].right = BinaryNode.copy(xorList[i+1])
+    # JAA: commented out for benchmarking        
+    #print("XOR clause: ", ANDs[0])
+    txor = transformXOR(None) # accepts dictionary of fixed values
+    sdl.ASTVisitor(txor).preorder(ANDs[0])
+    #print("<===== Generate XOR clauses =====>")
+
+    print("info => ", info)
+    print("constraintList => ", constraintList)
+    print("txor => ", txor)
+        
+    #constraints = "[]"
+    # given the above formula and the constraint list and options we can
+    # run the solver to produce an initial set of solutions
+    fileSuffix, resultDict = searchForSolution(info, short, constraintList, txor, varTypes, config, generators)
+    # map of Z3 to SDL pairing variables (so we can map the solution to SDL)
+    xorVarMap = txor.getVarMap()
+#    if short != SHORT_FORALL:
+#        res, resMap = NaiveEvaluation(resultDict, short)
+#        print("Group Mapping: ", res)
+#        # determine whether to make True = G1 and False = G2. 
+#        # It depends on which counts more since they're interchangeable...
+#        groupInfo = DeriveGeneralSolution(res, resMap, xorVarMap, info)
+#    else:
+
+    # narrow the specific solution that user asked for
+    groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
+    print("groupInfo => ", groupInfo)
+    newAssignments = groupInfo['newSol']
+    symDataTypePK  = {}
+    asymDataTypePK = {}
+    # we include some code to estimate size of SK/PK and CTs/Sigs
+    # if the 'computeSize' option is set (e.g., --estimate option)
+    #TODO: update??
+    if config.schemeType == PKENC and options['computeSize']:   
+        symDataTypeSK = getAssignmentForName(config.keygenSecVar, varTypes, True)
+        symDataTypeCT = getAssignmentForName(config.ciphertextVar, varTypes, True)
+        asymDataTypeSK = {}
+        asymDataTypeCT = {}
+        newSol = groupInfo['newSol']
+        for i in symDataTypeSK:
+            if i in newSol.keys():
+               asymDataTypeSK[i] = newSol[i]
+            else:
+               asymDataTypeSK[i] = symDataTypeSK[i]
+               
+        for i in symDataTypeCT:
+            if i in newSol.keys():
+               asymDataTypeCT[i] = newSol[i]
+            else:
+               asymDataTypeCT[i] = symDataTypeCT[i]
+        print("<====================>")
+        print("SK => ", list(symDataTypeSK.keys()))
+        print("estimated  sym:  ", estimateSize(symDataTypeSK, symmetric_curves['SS1536']))        
+        print("estimated asym: ", estimateSize(asymDataTypeSK, asymmetric_curves['BN256']))
+        print("CT => ", list(symDataTypeCT.keys()))               
+        print("estimated  sym: ", estimateSize(symDataTypeCT, symmetric_curves['SS1536']))            
+        print("estimated asym: ", estimateSize(asymDataTypeCT, asymmetric_curves['BN256']))
+        print("<====================>")
+    elif config.schemeType == PKSIG and options['computeSize']:
+        symDataTypePK = getAssignmentForName(config.keygenPubVar, varTypes, True)
+        symDataTypeSIG = getAssignmentForName(config.signatureVar, varTypes, True)
+        #asymDataTypePK = {}
+        asymDataTypeSIG = {}
+        newSol = groupInfo['newSol']
+        for i in symDataTypePK:
+            if i in newSol.keys():
+               asymDataTypePK[i] = newSol[i]
+            else:
+               asymDataTypePK[i] = symDataTypePK[i] # keep old type
+               
+        for i in symDataTypeSIG:
+            if i in newSol.keys():
+               asymDataTypeSIG[i] = newSol[i]
+            else:
+               asymDataTypeSIG[i] = symDataTypeSIG[i]
+        print("<====================>")
+#        print("PK => ", list(symDataTypePK.keys()))
+#        print("estimated  sym:  ", estimateSize(symDataTypePK, symmetric_curves['SS1536']))        
+#        print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
+        print("SIG => ", list(symDataTypeSIG.keys()))               
+        print("estimated  sym: ", estimateSize(symDataTypeSIG, symmetric_curves['SS1536']))            
+        print("estimated asym: ", estimateSize(asymDataTypeSIG, asymmetric_curves['BN256']))
+        print("<====================>")
+
+    # we still care about group elements that are not used in pairings
+    # the rule is that we always assign these elements to G1 (so as long as
+    # so as long as it doesn't affect any pairing computations)
+    if info.get('notInAPairing') != None and len(info['notInAPairing']) > 0:
+        groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+        print("Update: new G1 deps=>", groupInfo['G1'])    
+
+    # put all the info together so that we can generate the new Asym SDL
+    groupInfo['generators'] = generators 
+    groupInfo['generatorMapG1'] = generatorMapG1
+    groupInfo['generatorMapG2'] = generatorMapG2
+    groupInfo['baseGeneratorG1'] = info['baseGeneratorG1'] # usually 'g'
+    groupInfo['baseGeneratorG2'] = info['baseGeneratorG2']
+    groupInfo['newTypes'] = {}
+    groupInfo['varTypes'] = {}
+    groupInfo['varTypes'].update(varTypes)
+    groupInfo['usedVars'] = set()
+    groupInfo['verbose'] = info['verbose']
+    transFunc = {}
+    transFuncGen = {}
+
+    # determine the structure of the input SDL and stick as close as
+    # possible to that in the output SDL
+    if hasattr(config, "extraSetupFuncName"):
+        transFuncGen[ config.extraSetupFuncName ] = stmtSe
+    if hasattr(config, 'setupFuncName'):    
+        transFuncGen[ config.setupFuncName ] = stmtS
+    elif hasattr(config, 'keygenFuncName'):
+        transFuncGen[ config.keygenFuncName ] = stmtK
+
+    if config.schemeType == PKENC:
+        transFunc[ config.keygenFuncName ]  = stmtK
+        transFunc[ config.encryptFuncName ] = stmtE
+        transFunc[ config.decryptFuncName ] = stmtD
+    elif config.schemeType == PKSIG:
+        if hasattr(config, 'setupFuncName') or hasattr(config, "extraSetupFuncName"):
+            transFunc[ config.keygenFuncName ] = stmtK
+        transFunc[ config.signFuncName ] = stmtSi
+        transFunc[ config.verifyFuncName ] = stmtV
+    
+    if options['computeSize']:
+        options['symPK']  = symDataTypePK
+        options['asymPK'] = asymDataTypePK
+
+    # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
+    newSDL = AsymSDL(options, assignInfo, groupInfo, typesH, generatorLines, transFunc, transFuncGen)
+    newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines = newSDL.constructSDL(config)
+
+    # debug output of the SDL file
+    print_sdl(info['verbose'], newLinesS, newLinesK, newLines2, newLines3)
+    # output the new SDL file with right suffix (which indicates options that were set)
+    outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
+    writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
+
+###########################
+    outputFile_assump_array = []
+    counter = 0
+    for assumprecord in assumptionData:
+        funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
+        setattr(assumprecord['config'], functionOrder, funcOrder)
+
+        print("function order: ", assumprecord['config'].functionOrder)
+
+        sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
+        (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
+        # generate the relevant SDL lines
+        generatorLines = assumprecord['gen'].getGenLines()
+
+        print(generatorLines)
+
+        # we still care about group elements that are not used in pairings
+        # the rule is that we always assign these elements to G1 (so as long as
+        # so as long as it doesn't affect any pairing computations)
+        print(groupInfo)
+        if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+            groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
+            print("Update: new G1 deps=>", groupInfo['G1'])    
+
+        # put all the info together so that we can generate the new Asym SDL
+        groupInfo['generators'] = generators 
+        groupInfo['generatorMapG1'] = generatorMapG1
+        groupInfo['generatorMapG2'] = generatorMapG2
+        groupInfo['baseGeneratorG1'] = assumprecord['info']['baseGeneratorG1'] # usually 'g'
+        groupInfo['baseGeneratorG2'] = assumprecord['info']['baseGeneratorG2']
+        groupInfo['newTypes'] = {}
+        groupInfo['varTypes'] = {}
+        groupInfo['varTypes'].update(assumprecord['varTypes'])
+        groupInfo['usedVars'] = set()
+        groupInfo['verbose'] = info['verbose']
+        transFunc = {}
+        transFuncGen = {}
+
+        # determine the structure of the input SDL and stick as close as
+        # possible to that in the output SDL
+        if hasattr(assumprecord['config'], 'assumpSetupFuncName'):    
+            transFuncGen[ assumprecord['config'].assumpSetupFuncName ] = assumprecord['stmtS']
+        if hasattr(assumprecord['config'], 'assumpFuncName'):
+            transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
+
+        print(transFunc[ assumprecord['config'].assumpFuncName ])
+        print(assumprecord['stmtA'])
+
+        if options['computeSize']:
+            options['symPK']  = symDataTypePK
+            options['asymPK'] = asymDataTypePK
+
+        print(assumprecord['options'])
+        # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
+        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reductionData[counter]['deps'], assumprecord['varmap'])
+        print(assumprecord['config'].functionOrder)
+        newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
+        print(newLinesT)
+
+        # debug output of the SDL file
+        print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
+        # output the new SDL file with right suffix (which indicates options that were set)
+        outputFile_assump = "assumption_" + assumprecord['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
+        outputFile_assump_array.append(outputFile_assump)
+        writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
+        counter += 1
+
+    return (outputFile, outputFile_assump_array)
+
         
 """
 Aymmetric SDL class takes as input the assignment info from the SDL, new group info, type assignments,
@@ -2050,8 +2705,8 @@ class AsymAssumpSDL:
             if i in self.generatorMap:
                 # actual generator
                 usedGenerators.append(i)
-        #print("usedVars :=> ", usedGenerators)
-        #print("generators :=> ", self.generatorMap)
+        print("usedVars :=> ", usedGenerators)
+        print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
                 
         if len(deleteMe) > 0:
