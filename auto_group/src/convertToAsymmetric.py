@@ -1619,71 +1619,71 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
 #####################
 #added for assumption
-        if info['verbose']: print("<=========================>")
-        var_list = []  # reset
-        for i in assump_orig_vars:
-            if i not in pk_list:
-                if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumptionData['assignInfo'])
-        print("var_list => ", var_list)
-        print(countMap)
-        if info['verbose']: print("<=========================>")
-
-        var_list = []
-        if info['verbose']:
-            print("pk list: ", pk_list)
-            print("<=========================>")
-        for i in assump_lhs_orig_vars:
-            if i not in pk_list:
-                if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumptionData['assignInfo'])
-        print(countMap)
-        if info['verbose']: print("<=========================>")
-
-        if info['verbose']: print("<=========================>")
-        var_list = []  # reset
-        for i in assump_rhs_orig_vars:
-            if i not in pk_list:
-                if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumptionData['assignInfo'])
-        print(countMap)
-        if info['verbose']: print("<=========================>")
+#        if info['verbose']: print("<=========================>")
+#        var_list = []  # reset
+#        for i in assump_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumptionData['assignInfo'])
+#        print("var_list => ", var_list)
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
+#
+#        var_list = []
+#        if info['verbose']:
+#            print("pk list: ", pk_list)
+#            print("<=========================>")
+#        for i in assump_lhs_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumptionData['assignInfo'])
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
+#
+#        if info['verbose']: print("<=========================>")
+#        var_list = []  # reset
+#        for i in assump_rhs_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumptionData['assignInfo'])
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
 #added for reduction
-        if info['verbose']: print("<=========================>")
-        var_list = []  # reset
-        for i in reduc_orig_vars:
-            if i not in pk_list:
-                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reductionData['assignInfo'])
-        print("var_list => ", var_list)
-        print(countMap)
-        if info['verbose']: print("<=========================>")
-
-        var_list = []
-        if info['verbose']:
-            print("pk list: ", pk_list)
-            print("<=========================>")
-        for i in reduc_lhs_orig_vars:
-            if i not in pk_list:
-                if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reductionData['assignInfo'])
-        print(countMap)
-        if info['verbose']: print("<=========================>")
-
-        if info['verbose']: print("<=========================>")
-        var_list = []  # reset
-        for i in reduc_rhs_orig_vars:
-            if i not in pk_list:
-                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reductionData['assignInfo'])
-        print(countMap)
-        if info['verbose']: print("<=========================>")
+#        if info['verbose']: print("<=========================>")
+#        var_list = []  # reset
+#        for i in reduc_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reductionData['assignInfo'])
+#        print("var_list => ", var_list)
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
+#
+#        var_list = []
+#        if info['verbose']:
+#            print("pk list: ", pk_list)
+#            print("<=========================>")
+#        for i in reduc_lhs_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reductionData['assignInfo'])
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
+#
+#        if info['verbose']: print("<=========================>")
+#        var_list = []  # reset
+#        for i in reduc_rhs_orig_vars:
+#            if i not in pk_list:
+#                if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
+#                var_list.append(i)
+#        countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reductionData['assignInfo'])
+#        print(countMap)
+#        if info['verbose']: print("<=========================>")
 #####################
 
         # define a function that returns the key of the value with highest value
@@ -2156,6 +2156,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     # constraint list narrows the solutions that
     # we care about
     constraintList = []
+    
     # for example, include any hashed values that show up in a pairing by default
     for i in hashVarList:
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
@@ -2208,23 +2209,23 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
     #print(assumpDeps)
     #additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
-    additionalDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
-    print("\nadditionalDeps => ", additionalDeps, list(additionalDeps.keys()))
+    additionalNewDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
+    print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
 
-    print("lhs => ", info['G1_lhs'][1])
-    for (key,val) in info['G1_lhs'][1].items():
-        print(key,val)
-        if key in additionalDeps:
+#    print("lhs => ", info['G1_lhs'][1])
+#    for (key,val) in info['G1_lhs'][1].items():
+#        print(key,val)
+#        if key in additionalDeps:
             #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
-            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalDeps[key]))
+#            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalDeps[key]))
             #print("after => ", info['G1_lhs'][1][key])
 
-    print("rhs => ", info['G1_rhs'][1])
-    for (key,val) in info['G1_rhs'][1].items():
-        print(key,val)
-        if key in additionalDeps:
+#    print("rhs => ", info['G1_rhs'][1])
+#    for (key,val) in info['G1_rhs'][1].items():
+#        print(key,val)
+#        if key in additionalDeps:
             #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
-            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalDeps[key]))
+#            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalDeps[key]))
             #print("after => ", info['G1_rhs'][1][key])
 
     print(info[ 'G1_lhs' ])
@@ -2271,87 +2272,94 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
 #####################
 #added for assumption
-        for assumprecord in assumptionData:
-
-            assump_orig_vars, assump_var_map = assumprecord['deps']
-            assump_lhs_orig_vars, assump_lhs_var_map = assumprecord['G1_lhs']
-            assump_rhs_orig_vars, assump_rhs_var_map = assumprecord['G1_rhs']
-
-            if info['verbose']: print("<=========================>")
-            var_list = []  # reset
-            for i in assump_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumprecord['assignInfo'])
-            print("var_list => ", var_list)
-            print(countMap)
-            if info['verbose']: print("<=========================>")
-
-            var_list = []
-            if info['verbose']:
-                print("pk list: ", pk_list)
-                print("<=========================>")
-            for i in assump_lhs_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumprecord['assignInfo'])
-            print(countMap)
-            if info['verbose']: print("<=========================>")
-
-            if info['verbose']: print("<=========================>")
-            var_list = []  # reset
-            for i in assump_rhs_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumprecord['assignInfo'])
-            print(countMap)
-            if info['verbose']: print("<=========================>")
+#        for assumprecord in assumptionData:
+#
+#            assump_orig_vars, assump_var_map = assumprecord['deps']
+#            assump_lhs_orig_vars, assump_lhs_var_map = assumprecord['G1_lhs']
+#            assump_rhs_orig_vars, assump_rhs_var_map = assumprecord['G1_rhs']
+#
+#            if info['verbose']: print("<=========================>")
+#            var_list = []  # reset
+#            for i in assump_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, assump_var_map, assumprecord['assignInfo'])
+#            print("var_list => ", var_list)
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
+#
+#            var_list = []
+#            if info['verbose']:
+#                print("pk list: ", pk_list)
+#                print("<=========================>")
+#            for i in assump_lhs_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']:  print("Add to list (assump): ", i, ":", assump_lhs_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, assump_lhs_var_map, assumprecord['assignInfo'])
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
+#
+#            if info['verbose']: print("<=========================>")
+#            var_list = []  # reset
+#            for i in assump_rhs_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']: print("Add to list (assump): ", i, ":", assump_rhs_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, assump_rhs_var_map, assumprecord['assignInfo'])
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
 #added for reduction
-        for reducrecord in reductionData:
-
-            reduc_orig_vars, reduc_var_map = reducrecord['deps']
-            reduc_lhs_orig_vars, reduc_lhs_var_map = reducrecord['G1_lhs']
-            reduc_rhs_orig_vars, reduc_rhs_var_map = reducrecord['G1_rhs']
-
-            if info['verbose']: print("<=========================>")
-            var_list = []  # reset
-            for i in reduc_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reducrecord['assignInfo'])
-            print("var_list => ", var_list)
-            print(countMap)
-            if info['verbose']: print("<=========================>")
-
-            var_list = []
-            if info['verbose']:
-                print("pk list: ", pk_list)
-                print("<=========================>")
-            for i in reduc_lhs_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reducrecord['assignInfo'])
-            print(countMap)
-            if info['verbose']: print("<=========================>")
-
-            if info['verbose']: print("<=========================>")
-            var_list = []  # reset
-            for i in reduc_rhs_orig_vars:
-                if i not in pk_list:
-                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
-                    var_list.append(i)
-            countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reducrecord['assignInfo'])
-            print(countMap)
-            if info['verbose']: print("<=========================>")
+#        for reducrecord in reductionData:
+#
+#            reduc_orig_vars, reduc_var_map = reducrecord['deps']
+#            reduc_lhs_orig_vars, reduc_lhs_var_map = reducrecord['G1_lhs']
+#            reduc_rhs_orig_vars, reduc_rhs_var_map = reducrecord['G1_rhs']
+#
+#            print("reduc_orig_vars => ", reduc_orig_vars)
+#            print("reduc_lhs_orig_vars => ", reduc_lhs_orig_vars)
+#            print("reduc_rhs_orig_vars => ", reduc_rhs_orig_vars)
+#
+#            if info['verbose']: print("<=========================>")
+#            var_list = []  # reset
+#            for i in reduc_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, reduc_var_map, reducrecord['assignInfo'])
+#            print("var_list => ", var_list)
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
+#
+#            var_list = []
+#            if info['verbose']:
+#                print("pk list: ", pk_list)
+#                print("<=========================>")
+#            for i in reduc_lhs_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']:  print("Add to list (reduc): ", i, ":", reduc_lhs_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, reduc_lhs_var_map, reducrecord['assignInfo'])
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
+#
+#            if info['verbose']: print("<=========================>")
+#            var_list = []  # reset
+#            for i in reduc_rhs_orig_vars:
+#                if i not in pk_list:
+#                    if info['verbose']: print("Add to list (reduc): ", i, ":", reduc_rhs_var_map[i])
+#                    var_list.append(i)
+#            countCommonGenerators(countMap, pk_list, var_list, reduc_rhs_var_map, reducrecord['assignInfo'])
+#            print(countMap)
+#            if info['verbose']: print("<=========================>")
 #####################
 
         # define a function that returns the key of the value with highest value
         # but what if there is no real max (everything thesame?)
+        if "g" in countMap.keys():
+            countMap.pop("g", None)
+        print(countMap)
         max_var = max(countMap.keys(), key=lambda x: countMap[x])
         the_map = gpv.pairing_map
         print("the map => ", the_map)
@@ -2373,12 +2381,15 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         # now we can identify constraints with this knowledge
         for i in lhs_orig_vars: # look for where max_var appears in pairing variables
             if i not in pk_list and max_var in lhs_var_map[i]:
+                print(lhs_var_map[i])
                 if getOtherPairingVar(the_map, i) not in constraintList:
+                    print("lhs => ", i)
                     constraintList.append(i)
 
         for i in rhs_orig_vars: # look for where max_var appears in pairing variable
             if i not in pk_list and max_var in rhs_var_map[i]:
                 if getOtherPairingVar(the_map, i) not in constraintList:
+                    print("rhs => ", i)
                     constraintList.append(i)
 
         # worst case is always double the size of public-key elements
@@ -2420,6 +2431,8 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         #             constraintList.append(i)
         constraintList += genList
         print("Public-key informed constraint list: ", constraintList)
+
+        #exit(0)
 
 #####################
 
@@ -2478,6 +2491,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
     print("info => ", info)
     print("constraintList => ", constraintList)
+    #constraintList = ['w', 'h', 'u', 'D1', 'D2', 'K', 'C6', 'D4']
     print("txor => ", txor)
         
     #constraints = "[]"
