@@ -67,7 +67,7 @@ input := None
  tau2b := tau2 ^ b
 
  reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
- reducVar := list{b, yv, yv1, yv2}
+ reducVar := list{b, a1, yv, yv1, yv2, yw, yh, yu}
 
 output := list{assumpVar, reducpk, reducVar}
 END :: func:setup
@@ -77,7 +77,7 @@ BEGIN :: func:queries
 input := list{reducpk, reducVar, assumpVar, ID}
 
 reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
-reducVar := expand{b, alpha, yv, yv1, yv2}
+reducVar := expand{b, a1, yv, yv1, yv2, yw, yh, yu}
 assumpVar := expand{A, B, C, Z}
 
 r1 := random(ZR)
@@ -93,9 +93,12 @@ idhash := H(ID, ZR)
 D1 := (B ^ (-gammaprime * a1)) * (v ^ r)
 D2 := (B ^ gammaprime) * (v1 ^ r) * (g ^ z1)
 D3 := gb ^ -z1
-D4 := (A ^ a1) * (ga1 ^ gammaprime) * (v2 ^ r) * (g ^ z2)
-D5 := gb ^ -z2
-D6 := gb ^ r2
+#D4 := (A ^ a1) * (ga1 ^ gammaprime) * (v2 ^ r) * (g ^ z2)
+D4 := (A ^ a1) * (g ^ (a1 * gammaprime)) * (v2 ^ r) * (g ^ z2)
+#D5 := gb ^ -z2
+D5 := g ^ (b * -z2)
+#D6 := gb ^ r2
+D6 := g ^ (b * r2)
 D7 := g ^ r1
 K := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1
         
@@ -109,7 +112,7 @@ input := list{assumpVar, reducpk, reducVar, M, ID}
 
 assumpVar := expand{A, B, C, Z}
 reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
-reducVar := expand{b, yv, yv1, yv2}
+reducVar := expand{b, a1, yv, yv1, yv2, yw, yh, yu}
 
 b := random(bin)
 
