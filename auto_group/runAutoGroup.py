@@ -427,8 +427,8 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     varTypes.update(typesC)
     #print(stmtS)
     #print(stmtQ)
-    print(depListS)
-    print(depListNoExpS)
+    print("depListS => ", depListS)
+    print("depListNoExpS => ", depListNoExpS)
     # TODO: expand search to encrypt and potentially setup
     pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
             

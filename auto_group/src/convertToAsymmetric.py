@@ -2182,18 +2182,34 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     #print(name, varInf)
     #print(sdl.getVarTypeFromVarName('d1', None, True))
 
-    assumpDeps = []
+    assumpDepstmp = {}
     for assumprecord in assumptionData:
-        assumpDeps = assumpDeps + list(assumprecord['newDeps'].items())
+        #assumpDeps = dict(list(assumpDeps.items()) + list(assumprecord['newDeps'].items()))
+        assumpDepstmp = dict(list(assumpDepstmp.items()) + list(assumprecord['newDeps'].items()) + [(k, list(assumpDepstmp[k]) + list(assumprecord['newDeps'][k])) for k in set(assumprecord['newDeps']) & set(assumpDepstmp)])
 
-    reducDeps = []
+    assumpDeps = {}
+    for (key,val) in assumpDepstmp.items():
+        assumpDeps[key] = set(val)
+    print("\nassumpDeps => ", assumpDeps)
+
+    reducDepstmp = {}
     for reducrecord in reductionData:
-        reducDeps = reducDeps + list(reducrecord['newDeps'].items())
+        #print("\nblah")
+        #print(reducDepstmp.items())
+        #print(reducrecord['newDeps'].items())
+        reducDepstmp = dict(list(reducDepstmp.items()) + list(reducrecord['newDeps'].items()) + [(k, list(reducDepstmp[k]) + list(reducrecord['newDeps'][k])) for k in set(reducrecord['newDeps']) & set(reducDepstmp)])
+        #reducDeps = dict(list(reducDeps.items()) + list(reducrecord['newDeps'].items()))
+        #print(reducDepstmp)
+
+    reducDeps = {}
+    for (key,val) in reducDepstmp.items():
+        reducDeps[key] = set(val)
+    print("\nreducDeps => ", reducDeps)
 
     #print(assumpDeps)
     #additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
-    additionalDeps = dict(list(assumpDeps) + list(reducDeps))
-    print(additionalDeps, list(additionalDeps.keys()))
+    additionalDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
+    print("\nadditionalDeps => ", additionalDeps, list(additionalDeps.keys()))
 
     print("lhs => ", info['G1_lhs'][1])
     for (key,val) in info['G1_lhs'][1].items():
@@ -2344,6 +2360,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
             maps.append(i['the_map'])
         for i in reductionData:
             maps.append(i['the_map'])
+        print("maps => ", maps)
 
         #for i in [assumptionData['the_map'], reductionData['the_map']]:
         for i in maps:
@@ -2601,6 +2618,22 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 ###########################
     outputFile_assump_array = []
     counter = 0
+
+    #merge reductionData['deps']??
+    reducDeps0 = {}
+    reducDeps1 = {}
+    for reducrecord in reductionData:
+        tmp0 = reducrecord['deps'][0]
+        tmp1 = reducrecord['deps'][1]
+
+        print(tmp0, type(tmp0))
+        print(tmp1, type(tmp1))
+
+        reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
+        reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
+    reducDeps = (reducDeps0, reducDeps1)
+    print(reducDeps)
+
     for assumprecord in assumptionData:
         funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
         setattr(assumprecord['config'], functionOrder, funcOrder)
@@ -2659,7 +2692,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
         print(assumprecord['options'])
         # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
-        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reductionData[counter]['deps'], assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
+        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
         print(assumprecord['config'].functionOrder)
         newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
         print(newLinesT)
@@ -2839,9 +2872,10 @@ class AsymSDL:
             if i in self.generatorMap:
                 # actual generator
                 usedGenerators.append(i)
-        #print("usedVars :=> ", usedGenerators)
-        #print("generators :=> ", self.generatorMap)
+        print("usedVars :=> ", usedGenerators)
+        print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
+        print("deleteMe => ", deleteMe)
                 
         if len(deleteMe) > 0:
             #print("Pruning Generators:\t", deleteMe)
