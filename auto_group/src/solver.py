@@ -31,6 +31,7 @@ SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
 SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
 SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
+schemeTypeKeyword = "scheme"
 verboseKeyword = "verbose"
 variableKeyword = "variables"
 clauseKeyword = "clauses"
@@ -38,6 +39,8 @@ constraintKeyword = "constraints"
 hardConstKeyword = "hard_constraints"
 bothKeyword = "both"
 dropFirstKeyword = "dropFirst"
+pkMapKeyword = "pk_map"
+pkListKeyword = "pk_list"
 mofnKeyword = "mofn"
 searchKeyword = "searchBoth"
 weightKeyword = "weight"
@@ -50,6 +53,9 @@ curveKeyword = "findCurve"
 dropKeyword  = "dropFirst"
 unSat = "unsat"
 isSet = "isSet"
+pkEncType = "PKENC" # encryption
+pkSigType = "PKSIG" # signatures
+
 
 SS512 = { 'ZR':512, 'G1': 512, 'G2': 512, 'GT': 1024 }
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
@@ -284,6 +290,19 @@ def get_models(Formula):
         else:
             return result
 
+def initDict(someList):
+    d = {}
+    for i in someList:
+        d[i] = set()
+    return d
+
+def sumDict(d):
+    c = 0
+    for i,j in d.items():
+        c += sum(list(j), 0)
+    return c
+
+
 class ModelEval:
     def __init__(self, indexList, variables, Z3vars, countValue):
         self.indexList = indexList
@@ -291,7 +310,53 @@ class ModelEval:
         self.Z3vars = Z3vars
         self.countValue = countValue
         self.verbose = False
-    
+
+    def __sumTheSets(self, d):
+        c = 0
+        for i,j in d.items():
+            c += sum(list(j), 0)
+        return c
+
+    def __countSplits(self, d):
+        s = 0
+        for i,j in d.items():
+            if len(j) > 1: # meaning we have a split
+                s += 1 # increment split count
+        return s
+
+    def evaluateSolutionsFromDepMap(self, M, depMap, depList, cache=None):
+        first = self.indexList[0]
+        G1, G2 = 0, 1
+        pts = {G1:1, G2:2} # simple point system
+        resultMap = {}
+        countMap = {} # stores intermediate results
+        for solIndex in self.indexList:
+            counts = initDict(depList)
+            if self.verbose:
+                print(solIndex, "=> Solution:", M[solIndex])
+            for v in M[solIndex]:
+                assign = int(str(M[solIndex][v]))
+                key = str(v)
+                #print(v, ":", assign, depMap.get(key))
+                if depMap.get(key):
+                    for j in depMap.get(key):
+                        counts[j] = counts[j].union({pts[assign]})
+            resultMap[solIndex] = (self.__countSplits(counts), self.__sumTheSets(counts))
+            countMap[solIndex] = dict(counts)
+            if self.verbose:
+                print("Result: ", counts, ", splits:", resultMap[solIndex][0], ", sum:", resultMap[solIndex][1], "\n")
+        #print("Final: ", resultMap)
+        # find the minimum by comparing the second element of each tuple
+        optimal_split = min(resultMap.items(), key=lambda x: x[1])
+        index = optimal_split[0]
+        print("Min splits: ", optimal_split[1][0])
+        print("The sum: ", optimal_split[1][1])
+        print("Found Solution: ", M[index])
+        print("Results: ", countMap[index])
+        return M[index], countMap[index]
+
+
+
     def minimizeWeightFunc(self, M, weights, counts, cache=None):
         w0 = self.Z3vars['w0'] = weights['G1'] # IntVal(weights['G1'])
         w1 = self.Z3vars['w1'] = weights['G2'] # IntVal(weights['G2'])
@@ -379,7 +444,7 @@ def getWeights(option, specificOp):
         return {'G1': IntVal(curve.get('G1')), 'G2': IntVal(curve.get('G2'))}
     elif option == expOp or option == mulOp:
         (curve, paramid) = getBenchmarkInfo() # miracl by default
-        assert curve != None, "error occured with " + paramid + " benchmark info."
+        assert curve != None, "error occurred with " + paramid + " benchmark info."
         assert paramid.upper() == specificOp.upper(), "need to create benchmark dictionary for " + paramid
         return {'G1':IntVal(math.ceil(curve[paramid][option]['G1'])), 'G2':IntVal(math.ceil(curve[paramid][option]['G2'])) }
 
@@ -449,6 +514,8 @@ def findMinimalRef(M, data1, data2, skipList=[]):
         
 def solveUsingSMT(optionDict, shortOpt, timeOpt):
     verbose     = optionDict.get(verboseKeyword)
+    schemeType  = optionDict.get(schemeTypeKeyword)
+    print("Scheme type: ", schemeType)
     variables   = optionDict.get(variableKeyword)
     clauses     = optionDict.get(clauseKeyword)
     constraints = optionDict.get(constraintKeyword)
@@ -456,6 +523,9 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     
     searchAll   = optionDict.get(searchKeyword)    
     hard_constraints = optionDict.get(hardConstKeyword)
+    pk_map_vars = optionDict.get(pkMapKeyword)
+    pk_list     = optionDict.get(pkListKeyword)
+
     # JAA: commented out for benchmarking    
     #print("hardConstraints: ", hard_constraints)
     counts  = {}
@@ -487,7 +557,14 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
             
     M = get_models([And(Conditions), And(Values)])
     print("Unique solutions: ", len(M))
-    
+
+    if shortOpt == SHORT_PUBKEYS and schemeType == pkEncType:
+        print("Using Solver to minimize the PK constraints...")
+        modEval = ModelEval(range(len(M)), variables, Z3vars, None)
+        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list)
+        return (convertToBoolean(modRef), sat)
+
+
     # if only minimizing one aspect: size: SK or CT, PK or SIG OR time: exp or mul
     if not bothConst[isSet]:
         if shortOpt != "": # minimize SK or CT OR PK or SIG
