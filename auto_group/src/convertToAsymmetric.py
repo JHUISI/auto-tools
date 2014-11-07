@@ -1147,44 +1147,6 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
                 if getOtherPairingVar(the_map, i) not in constraintList:
                     constraintList.append(i)
 
-        # worst case is always double the size of public-key elements
-        # here we can process stuff inside the pk_list to see if
-        # we can do better than splitting public-key elements.
-        nonConstrainedList = lhs_orig_vars + rhs_orig_vars
-        nonConstrainedList = removeList(nonConstrainedList, constraintList)
-        nonConstrainedList = removeList(nonConstrainedList, pk_list)
-        genList = []
-        pkVarFoundInDeps = False
-        for i in lhs_orig_vars:
-            if i in pk_list:
-                print("PROCESS THIS PK LIST ELEMENT: ", i)
-                for j in nonConstrainedList:
-                    print(j, ":=>", additionalDeps[j])
-                    if i in additionalDeps[j]: pkVarFoundInDeps = True
-                if not pkVarFoundInDeps:
-                    # we can safely add to constrained list and skip other side
-                    genList.append(i)
-
-        if pkVarFoundInDeps:
-            pkVarFoundInDeps = False # reset because we want to find out about other pk vars
-            for i in rhs_orig_vars:
-                if i in pk_list:
-                    print("PROCESS THIS PK LIST ELEMENT: ", i)
-                    for j in nonConstrainedList:
-                        print(j, ":=>", additionalDeps[j])
-                        if i in additionalDeps[j]: pkVarFoundInDeps = True
-                    if not pkVarFoundInDeps:
-                        genList.append(i)
-
-        # finally, check that genList elements actually influence
-        # constraintList elements already (e.g., can be safely fixed to G1)
-        print("Candidates for further PK optimizations: ", genList)
-        # for i in genList:
-        #     for j in constraintList:
-        #         print("Last check: ", j, ":", additionalDeps[j])
-        #         if i in additionalDeps[j]:
-        #             constraintList.append(i)
-        constraintList += genList
         print("Public-key informed constraint list: ", constraintList)
 
 #####################
@@ -2215,18 +2177,18 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 #    print("lhs => ", info['G1_lhs'][1])
 #    for (key,val) in info['G1_lhs'][1].items():
 #        print(key,val)
-#        if key in additionalDeps:
-            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
-#            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalDeps[key]))
-            #print("after => ", info['G1_lhs'][1][key])
+#        if key in additionalNewDeps:
+#            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
+#            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
+#            #print("after => ", info['G1_lhs'][1][key])
 
 #    print("rhs => ", info['G1_rhs'][1])
 #    for (key,val) in info['G1_rhs'][1].items():
 #        print(key,val)
-#        if key in additionalDeps:
-            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
-#            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalDeps[key]))
-            #print("after => ", info['G1_rhs'][1][key])
+#        if key in additionalNewDeps:
+#            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
+#            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
+#            #print("after => ", info['G1_rhs'][1][key])
 
     print(info[ 'G1_lhs' ])
     print(info[ 'G1_rhs' ])
@@ -2490,6 +2452,25 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     #print("<===== Generate XOR clauses =====>")
 
     print("info => ", info)
+
+    print("lhs => ", info['G1_lhs'][1])
+    for (key,val) in info['G1_lhs'][1].items():
+        print(key,val)
+        if key in additionalNewDeps:
+            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
+            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
+            #print("after => ", info['G1_lhs'][1][key])
+
+    print("rhs => ", info['G1_rhs'][1])
+    for (key,val) in info['G1_rhs'][1].items():
+        print(key,val)
+        if key in additionalNewDeps:
+            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
+            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
+            #print("after => ", info['G1_rhs'][1][key])
+
+    print("info => ", info)
+
     print("constraintList => ", constraintList)
     #constraintList = ['w', 'h', 'u', 'D1', 'D2', 'K', 'C6', 'D4']
     print("txor => ", txor)
