@@ -1,6 +1,6 @@
 schemeType = "PKENC"
-assumption = "DBDH"
-reduction = "reductionWATERS05IBE"
+assumption = ["DBDH"]
+reduction = ["reductionWATERS05IBE"]
 
 #short = "secret-keys"
 #short = "ciphertext"
