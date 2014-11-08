@@ -1106,12 +1106,10 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
     print(info[ 'G1_lhs' ])
     print(info[ 'G1_rhs' ])
 
-    # if we want to optimize based on public parameters, one
-    # approach would be to observe the dependency graph of
-    # the pairing variables to see which generators are used more
-    # commonly (these are the pairing variables we want to minimize)
-    # one caveat: we can only pick one variable that appears in a pairing
+
+    ### REFACTORED Public-Key minimization for Encryption
     if config.schemeType == PKENC and short == SHORT_PUBKEYS:
+    # change to SHORT_PUBKEYS in short so we can achieve all three!
         # special case for PK encryption
         pk_var_obj = varTypes[config.keygenPubVar]
         if Type(pk_var_obj) == types.list:
@@ -1122,66 +1120,27 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         lhs_orig_vars, lhs_var_map = info['G1_lhs']
         rhs_orig_vars, rhs_var_map = info['G1_rhs']
 
-        var_list = []
-        countMap = {}
+        # build up the map for the PK list
+        pk_map = {}
         if info['verbose']:
             print("pk list: ", pk_list)
             print("<=========================>")
         for i in lhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']:  print("Add to list: ", i, ":", lhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, lhs_var_map, assignInfo)
-        print(countMap)
-        if info['verbose']: print("<=========================>")
-
-        if info['verbose']: print("<=========================>")
-        var_list = []  # reset
+                pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
+            else:
+                pk_map[i] = set({i})
         for i in rhs_orig_vars:
             if i not in pk_list:
-                if info['verbose']: print("Add to list: ", i, ":", rhs_var_map[i])
-                var_list.append(i)
-        countCommonGenerators(countMap, pk_list, var_list, rhs_var_map, assignInfo)
-        print(countMap)
-        if info['verbose']: print("<=========================>")
+                pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
+            else:
+                pk_map[i] = set({i})
 
-#####################
-
-        # define a function that returns the key of the value with highest value
-        # but what if there is no real max (everything thesame?)
-        max_var = max(countMap.keys(), key=lambda x: countMap[x])
-        the_map = gpv.pairing_map
-        print("the map => ", the_map)
         if info['verbose']:
-            print("Max: ", max_var)
-            print("Pairing map: ", the_map)
-        # now we can identify constraints with this knowledge
-        for i in lhs_orig_vars: # look for where max_var appears in pairing variables
-            if i not in pk_list and max_var in lhs_var_map[i]:
-                if getOtherPairingVar(the_map, i) not in constraintList:
-                    constraintList.append(i)
+            print("Final PK map: ", pk_map)
+        info['pk_map']  = pk_map
+        info['pk_list'] = pk_list
 
-        for i in rhs_orig_vars: # look for where max_var appears in pairing variable
-            if i not in pk_list and max_var in rhs_var_map[i]:
-                if getOtherPairingVar(the_map, i) not in constraintList:
-                    constraintList.append(i)
-
-        print("Public-key informed constraint list: ", constraintList)
-
-#####################
-
-#        for i in assump_orig_vars: # look for where max_var appears in pairing variable
-#            if i not in pk_list and max_var in assump_var_map[i]:
-#                if getOtherPairingVar(the_map, i) not in constraintList:
-#                    constraintList.append(i)
-
-#        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
-#            if i not in pk_list and max_var in reduc_var_map[i]:
-#                if getOtherPairingVar(the_map, i) not in constraintList:
-#                    constraintList.append(i)
-#
-#        print("Public-key informed constraint list: ", constraintList)
-#####################
 
     # JAA: commented out for benchmarking
     #print("info => G1 lhs : ", info['G1_lhs'])
