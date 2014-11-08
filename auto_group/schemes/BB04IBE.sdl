@@ -51,13 +51,16 @@ END :: func:Ftwo
 
 BEGIN :: func:keygen
 input := list{j, pk, msk, ID}
-pk := expand{g, g1, g2, h}
+pk := expand{g, g1, g2, h1, h2}
 msk := expand{g2alpha}
+
+one := 1
+two := 2
 
 r1 := random(ZR)
 r2 := random(ZR)
 
-d1 := g2alpha * (Fone(ID#1, pk) ^ r1) * (Ftwo(ID#2, pk) ^ r2)
+d1 := g2alpha * (((g1 ^ ID#one) * h1) ^ r1) * (((g1 ^ ID#two) * h2) ^ r2)
 
 d2 := g ^ r1
 d3 := g ^ r2
@@ -71,13 +74,16 @@ BEGIN :: func:encrypt
 input := list{j, pk, M, ID}
 pk := expand{g, g1, g2, h1, h2}
 
+one := 1
+two := 2
+
 s := random(ZR)
 
 C1 := (e(g1, g2) ^ s) * M
 C2 := g ^ s
 
-C3 := Fone(ID#1, pk) ^ s
-C4 := Ftwo(ID#2, pk) ^ s
+C3 := (((g1 ^ ID#one) * h1) ^ r1) ^ s
+C4 := (((g1 ^ ID#two) * h2) ^ r2) ^ s
 
 ct := list{C1, C2, C3, C4}
 output := ct

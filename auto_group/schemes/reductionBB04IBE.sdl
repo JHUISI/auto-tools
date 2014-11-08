@@ -37,8 +37,11 @@ g3 := C
 alpha1 := random(ZR)
 alpha2 := random(ZR)
 
-h1 := (g1 ^ -IDstar#1) * (g ^ alpha1)
-h2 := (g1 ^ -IDstar#2) * (g ^ alpha2)
+one := 1
+two := 2
+
+h1 := (g1 ^ -IDstar#one) * (g ^ alpha1)
+h2 := (g1 ^ -IDstar#two) * (g ^ alpha2)
 
 pk := list{g, g1, g2, h1, h2}
 
@@ -50,20 +53,22 @@ END :: func:setup
 
 
 BEGIN :: func:Fone
-input := list{x, pk}
+input := list{x, pk, reductionParams}
 pk := expand{g, g1, g2, h1, h2}
+reductionParams := expand{g3, alpha1, alpha2, IDstar}
 
-Fonejx := (g1 ^ x) * h1
+Fonejx := (g1 ^ (x - IDstar#1)) * (g ^ alpha1)
 
 output := Fonejx
 END :: func:Fone
 
 
 BEGIN :: func:Ftwo
-input := list{x, pk}
+input := list{x, pk, IDstar}
 pk := expand{g, g1, g2, h1, h2}
+reductionParams := expand{g3, alpha1, alpha2, IDstar}
 
-Ftwojx := (g1 ^ x) * h2
+Ftwojx := (g1 ^ (x - IDstar#2)) * (g ^ alpha2)
 
 output := Ftwojx
 END :: func:Ftwo
@@ -74,20 +79,23 @@ input := list{j, pk, ID, reductionParams}
 pk := expand{g, g1, g2, h1, h2}
 reductionParams := expand{g3, alpha1, alpha2, IDstar}
 
+one := 1
+two := 2
+
 r1 := random(ZR)
 r2 := random(ZR)
 
 BEGIN :: if
- if { j == 1}
-    d1 := (g2 ^ ((-alpha1) / (ID#1 - IDstar#1))) * (Fone(ID#1, pk) ^ r1) * (Ftwo(ID#2, pk) ^ r2)
+ if { j == 1 }
+    d1 := (g2 ^ ((-alpha1) / (ID#one - IDstar#one))) * (((g1 ^ (ID#one - IDstar#one)) * (g ^ alpha1)) ^ r1) * (((g1 ^ (ID#two - IDstar#two)) * (g ^ alpha2)) ^ r2)
  else
-    d1 := (g2 ^ ((-alpha2) / (ID#2 - IDstar#2))) * (Fone(ID#1, pk) ^ r1) * (Ftwo(ID#2, pk) ^ r2)
+    d1 := (g2 ^ ((-alpha2) / (ID#two - IDstar#two))) * (((g1 ^ (ID#one - IDstar#one)) * (g ^ alpha1)) ^ r1) * (((g1 ^ (ID#two - IDstar#two)) * (g ^ alpha2)) ^ r2)
 END :: if
 
-d1 := g ^ r1
-d2 := (g2 ^ (-1 / (ID#2 - IDstar#2))) * (g ^ r2)
+d2 := g ^ r1
+d3 := (g2 ^ (-1 / (ID#two - IDstar#two))) * (g ^ r2)
 
-sk := list{d1, di}
+sk := list{d1, d2, d3}
 output := sk
 END :: func:queries
 

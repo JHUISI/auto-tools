@@ -67,7 +67,7 @@ END :: for
 dotProd1 := init(G1)
 BEGIN :: for
  for{k := 1, j}
-    dotProd1 := dotProd1 * (F(k, ID#k, pk) ^ r#k)
+    dotProd1 := dotProd1 * (((g1 ^ ID#k) * (h#k)) ^ r#k)
 END :: for
 
 d1 := g2alpha * dotProd1
@@ -88,7 +88,7 @@ C2 := g ^ s
 
 BEGIN :: for
  for{k := 1, j}
-    Ci#k := F(k, ID#k, pk) ^ s
+    Ci#k := (((g1 ^ ID#k) * (h#k)) ^ s)
 END :: for
 
 ct := list{C1, C2, Ci}
@@ -100,7 +100,7 @@ BEGIN :: func:decrypt
 input := list{pk, sk, ct}
 pk := expand{g, g1, g2, h}
 ct := expand{C1, C2, Ci}
-sk := expand{d1, gri}
+sk := expand{d1, di}
 
 dotProd2 := init(GT)
 BEGIN :: for

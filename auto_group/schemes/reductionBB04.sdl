@@ -60,10 +60,11 @@ END :: func:setup
 
 
 BEGIN :: func:F
-input := list{j, x, pk}
+input := list{j, x, pk, reductionParams}
 pk := expand{g, g1, g2, h}
+reductionParams := expand{g3, alphai, IDstar}
 
-Fjx := (g1 ^ x) * (h#j)
+Fjx := (g1 ^ (x - IDstar#j)) * (g ^ alphai#j)
 
 output := Fjx
 END :: func:F
@@ -82,7 +83,7 @@ END :: for
 dotProd1 := init(G1)
 BEGIN :: for
  for{v := 1, j}
-    dotProd1 := dotProd1 * (F(v, ID#k, pk) ^ r#v)
+    dotProd1 := dotProd1 * (((g1 ^ (ID#v - IDstar#v)) * (g ^ alphai#v)) ^ r#v)
 END :: for
 
 d1 := (g2 ^ ((-alphai#j) / (ID#j - IDstar#j))) * dotProd1
