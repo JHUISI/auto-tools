@@ -1,0 +1,97 @@
+name := BB04IBE
+setting := symmetric
+
+BEGIN :: types
+j := Int
+M := GT
+ID := list{ZR}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+g := random(G1)
+alpha := random(ZR)
+
+g1 := g ^ alpha
+
+h1 := random(G1)
+h2 := random(G1)
+
+g2 := random(G1)
+
+g2alpha := g2 ^ alpha
+
+msk := list{g2alpha}
+pk := list{g, g1, g2, h1, h2}
+
+output := list{msk, pk}
+END :: func:setup
+
+
+BEGIN :: func:Fone
+input := list{x, pk}
+pk := expand{g, g1, g2, h1, h2}
+
+Fonejx := (g1 ^ x) * h1
+
+output := Fonejx
+END :: func:Fone
+
+
+BEGIN :: func:Ftwo
+input := list{x, pk}
+pk := expand{g, g1, g2, h1, h2}
+
+Ftwojx := (g1 ^ x) * h2
+
+output := Ftwojx
+END :: func:Ftwo
+
+
+BEGIN :: func:keygen
+input := list{j, pk, msk, ID}
+pk := expand{g, g1, g2, h}
+msk := expand{g2alpha}
+
+r1 := random(ZR)
+r2 := random(ZR)
+
+d1 := g2alpha * (Fone(ID#1, pk) ^ r1) * (Ftwo(ID#2, pk) ^ r2)
+
+d2 := g ^ r1
+d3 := g ^ r2
+
+sk := list{d1, d2, d3}
+output := sk
+END :: func:keygen
+
+
+BEGIN :: func:encrypt
+input := list{j, pk, M, ID}
+pk := expand{g, g1, g2, h1, h2}
+
+s := random(ZR)
+
+C1 := (e(g1, g2) ^ s) * M
+C2 := g ^ s
+
+C3 := Fone(ID#1, pk) ^ s
+C4 := Ftwo(ID#2, pk) ^ s
+
+ct := list{C1, C2, C3, C4}
+output := ct
+END :: func:encrypt
+
+
+BEGIN :: func:decrypt
+input := list{pk, sk, ct}
+pk := expand{g, g1, g2, h1, h2}
+ct := expand{C1, C2, C3, C4}
+sk := expand{d1, d2, d3}
+
+m := C1 * ((e(C3, d2) * e(C4, d3)) / (e(C2, d1)))
+
+output := m
+END :: func:decrypt
+

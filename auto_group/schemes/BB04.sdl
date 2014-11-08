@@ -1,0 +1,116 @@
+name := BB04
+setting := symmetric
+l := 2
+
+BEGIN :: types
+l := Int
+j := Int
+M := GT
+ID := list{ZR}
+y := list{ZR}
+h := list{G1}
+r := list{ZR}
+di := list{G1}
+Ci := list{G1}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+g := random(G1)
+alpha := random(ZR)
+
+g1 := g ^ alpha
+
+BEGIN :: for
+ for{i := 1, l}
+    y#i := random(ZR)
+    h#i := g ^ y#i
+END :: for
+
+g2 := random(G1)
+
+g2alpha := g2 ^ alpha
+
+msk := list{g2alpha}
+pk := list{g, g1, g2, h}
+
+output := list{msk, pk}
+END :: func:setup
+
+
+BEGIN :: func:F
+input := list{j, x, pk}
+pk := expand{g, g1, g2, h}
+
+Fjx := (g1 ^ x) * (h#j)
+
+output := Fjx
+END :: func:F
+
+
+BEGIN :: func:keygen
+input := list{j, pk, msk, ID}
+pk := expand{g, g1, g2, h}
+msk := expand{g2alpha}
+
+BEGIN :: for
+ for{i := 1, j}
+    r#i := random(ZR)
+END :: for
+
+BEGIN :: for
+ for{i := 1, j}
+    di#i := g ^ r#i
+END :: for
+
+dotProd1 := init(G1)
+BEGIN :: for
+ for{k := 1, j}
+    dotProd1 := dotProd1 * (F(k, ID#k, pk) ^ r#k)
+END :: for
+
+d1 := g2alpha * dotProd1
+
+sk := list{d1, di}
+output := sk
+END :: func:keygen
+
+
+BEGIN :: func:encrypt
+input := list{j, pk, M, ID}
+pk := expand{g, g1, g2, h}
+
+s := random(ZR)
+
+C1 := (e(g1, g2) ^ s) * M
+C2 := g ^ s
+
+BEGIN :: for
+ for{k := 1, j}
+    Ci#k := F(k, ID#k, pk) ^ s
+END :: for
+
+ct := list{C1, C2, Ci}
+output := ct
+END :: func:encrypt
+
+
+BEGIN :: func:decrypt
+input := list{pk, sk, ct}
+pk := expand{g, g1, g2, h}
+ct := expand{C1, C2, Ci}
+sk := expand{d1, gri}
+
+dotProd2 := init(GT)
+BEGIN :: for
+ for{k := 1, j}
+    dotProd2 := dotProd2 * e(Ci#k, di#k)
+END :: for
+
+
+m := C1 * ((dotProd2) / (e(C2, d1)))
+
+output := m
+END :: func:decrypt
+
