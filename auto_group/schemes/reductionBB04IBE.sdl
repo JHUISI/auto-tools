@@ -52,26 +52,26 @@ output := list{msk, pk, reductionParams, assumpVar}
 END :: func:setup
 
 
-BEGIN :: func:Fone
-input := list{x, pk, reductionParams}
-pk := expand{g, g1, g2, h1, h2}
-reductionParams := expand{g3, alpha1, alpha2, IDstar}
-
-Fonejx := (g1 ^ (x - IDstar#1)) * (g ^ alpha1)
-
-output := Fonejx
-END :: func:Fone
-
-
-BEGIN :: func:Ftwo
-input := list{x, pk, IDstar}
-pk := expand{g, g1, g2, h1, h2}
-reductionParams := expand{g3, alpha1, alpha2, IDstar}
-
-Ftwojx := (g1 ^ (x - IDstar#2)) * (g ^ alpha2)
-
-output := Ftwojx
-END :: func:Ftwo
+#BEGIN :: func:Fone
+#input := list{x, pk, reductionParams}
+#pk := expand{g, g1, g2, h1, h2}
+#reductionParams := expand{g3, alpha1, alpha2, IDstar}
+#
+#Fonejx := (g1 ^ (x - IDstar#1)) * (g ^ alpha1)
+#
+#output := Fonejx
+#END :: func:Fone
+#
+#
+#BEGIN :: func:Ftwo
+#input := list{x, pk, IDstar}
+#pk := expand{g, g1, g2, h1, h2}
+#reductionParams := expand{g3, alpha1, alpha2, IDstar}
+#
+#Ftwojx := (g1 ^ (x - IDstar#2)) * (g ^ alpha2)
+#
+#output := Ftwojx
+#END :: func:Ftwo
 
 
 BEGIN :: func:queries

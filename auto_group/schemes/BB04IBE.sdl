@@ -29,28 +29,28 @@ output := list{msk, pk}
 END :: func:setup
 
 
-BEGIN :: func:Fone
-input := list{x, pk}
-pk := expand{g, g1, g2, h1, h2}
-
-Fonejx := (g1 ^ x) * h1
-
-output := Fonejx
-END :: func:Fone
-
-
-BEGIN :: func:Ftwo
-input := list{x, pk}
-pk := expand{g, g1, g2, h1, h2}
-
-Ftwojx := (g1 ^ x) * h2
-
-output := Ftwojx
-END :: func:Ftwo
+#BEGIN :: func:Fone
+#input := list{x, pk}
+#pk := expand{g, g1, g2, h1, h2}
+#
+#Fonejx := (g1 ^ x) * h1
+#
+#output := Fonejx
+#END :: func:Fone
+#
+#
+#BEGIN :: func:Ftwo
+#input := list{x, pk}
+#pk := expand{g, g1, g2, h1, h2}
+#
+#Ftwojx := (g1 ^ x) * h2
+#
+#output := Ftwojx
+#END :: func:Ftwo
 
 
 BEGIN :: func:keygen
-input := list{j, pk, msk, ID}
+input := list{j, pk, msk, ID1, ID2}
 pk := expand{g, g1, g2, h1, h2}
 msk := expand{g2alpha}
 

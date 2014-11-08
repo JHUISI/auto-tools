@@ -59,15 +59,15 @@ output := list{msk, pk, reductionParams, assumpVar}
 END :: func:setup
 
 
-BEGIN :: func:F
-input := list{j, x, pk, reductionParams}
-pk := expand{g, g1, g2, h}
-reductionParams := expand{g3, alphai, IDstar}
-
-Fjx := (g1 ^ (x - IDstar#j)) * (g ^ alphai#j)
-
-output := Fjx
-END :: func:F
+#BEGIN :: func:F
+#input := list{j, x, pk, reductionParams}
+#pk := expand{g, g1, g2, h}
+#reductionParams := expand{g3, alphai, IDstar}
+#
+#Fjx := (g1 ^ (x - IDstar#j)) * (g ^ alphai#j)
+#
+#output := Fjx
+#END :: func:F
 
 
 BEGIN :: func:queries

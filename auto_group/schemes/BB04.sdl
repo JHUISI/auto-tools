@@ -39,14 +39,14 @@ output := list{msk, pk}
 END :: func:setup
 
 
-BEGIN :: func:F
-input := list{j, x, pk}
-pk := expand{g, g1, g2, h}
-
-Fjx := (g1 ^ x) * (h#j)
-
-output := Fjx
-END :: func:F
+#BEGIN :: func:F
+#input := list{j, x, pk}
+#pk := expand{g, g1, g2, h}
+#
+#Fjx := (g1 ^ x) * (h#j)
+#
+#output := Fjx
+#END :: func:F
 
 
 BEGIN :: func:keygen
