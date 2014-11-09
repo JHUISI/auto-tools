@@ -228,7 +228,7 @@ def transformFunctionAssump(entireSDL, funcName, blockStmts, info, noChangeList,
             newLines.append(parser.parse("BEGIN :: if\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
             assign = blockStmts[i].getAssignNode()
             if info['verbose']: print(i, ":", assign, end="")           
-            handleVarInfo(newLines, assign, blockStmts[i], info, noChangeList)
+            handleVarInfoAssump(newLines, assign, blockStmts[i], info, noChangeList, deps, varmap, startLines)
         
         elif blockStmts[i].getIsIfElseEnd():
             newLines.append(blockStmts[i].getAssignNode()) 
@@ -689,6 +689,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
     info[minKeyword] = {}
     dropFirst = info.get('dropFirst')
     pkMapData  = info.get('pk_map')
+    pkMapMin = None
     pkListMin = info.get('pk_list')
     # check if user set the min operation field in config file?
     # this indicates interest in measuring 
