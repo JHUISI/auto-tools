@@ -40,7 +40,7 @@ input := assumpKey
    Z := e(g, g) ^ z
  END :: if
 
- assumpVar := list{A, B, C, Z}
+ assumpVar := list{g, A, B, C, Z}
 
 output := assumpVar
 END :: func:assump

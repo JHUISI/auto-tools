@@ -1,9 +1,9 @@
-name := lCBDHE
+name := qCBDHE
 setting := symmetric
-l := 10
+q := 10
 
 BEGIN :: types
-l := Int
+q := Int
 alpha := ZR
 gl = list{G1}
 END :: types
@@ -27,14 +27,14 @@ input := assumpKey
 assumpKey := expand{g, h, alpha}
 
 BEGIN :: for
-    for {i := 1, 2*l}
+    for {i := 1, 2*q}
         BEGIN :: if
-            if {i != l+1}
+            if {i != q+1}
                 gl#i := g ^ (alpha ^ i)
         END :: if
 END :: for
 
-egh := e(g, h) ^ (alpha ^ (l+1))
+egh := e(g, h) ^ (alpha ^ (q+1))
 
 assumpVar := list{g, h, gl, egh}
 output := assumpVar

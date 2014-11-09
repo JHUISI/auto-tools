@@ -32,7 +32,7 @@ input := assumpKey
 
  W := e(g, g) ^ (a * b * c)
 
- assumpVar := list{A, B, C, W}
+ assumpVar := list{g, A, B, C, W}
 
 output := assumpVar
 END :: func:assump

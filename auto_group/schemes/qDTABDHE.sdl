@@ -1,9 +1,9 @@
-name := lDBDHE
+name := qDTABDHE
 setting := symmetric
-l := 10
+q := 10
 
 BEGIN :: types
-l := Int
+q := Int
 alpha := ZR
 gl = list{G1}
 END :: types
@@ -28,22 +28,24 @@ input := list{assumpKey}
 assumpKey := expand{g, h, alpha, t}
 
 BEGIN :: for
-    for{i := 1, 2*l}
+    for{i := 1, q}
         BEGIN :: if
-            if {i != l+1}
+            if {i != q+1}
                 gl#i := g ^ (alpha ^ i)
         END :: if
 END :: for
 
+hprime := h ^ (alpha ^ (q+2))
+
 coinflip := random(bin)
 BEGIN :: if
  if { coinflip == 0 }
-    egh := e(g, h) ^ (alpha ^ (l+1))
+    egh := e(g, h) ^ (alpha ^ (q+1))
  else
     egh := e(g, h) ^ t
 END :: if
 
-assumpVar := list{g, h, gl, egh}
+assumpVar := list{g, h, hprime, gl, egh}
 output := assumpVar
 END :: func:assump
 
