@@ -1,0 +1,49 @@
+name := lDBDHE
+setting := symmetric
+l := 10
+
+BEGIN :: types
+l := Int
+alpha := ZR
+gl = list{G1}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+alpha := random(ZR)
+t := random(ZR)
+
+g := random(G1)
+h := random(G1)
+
+assumpKey := list{g, h, alpha, t}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := list{assumpKey}
+assumpKey := expand{g, h, alpha, t}
+
+BEGIN :: for
+    for{i := 1, 2*l}
+        BEGIN :: if
+            if {i != l+1}
+                gl#i := g ^ (alpha ^ i)
+        END :: if
+END :: for
+
+coinflip := random(bin)
+BEGIN :: if
+ if { coinflip == 0 }
+    egh := e(g, h) ^ (alpha ^ (l+1))
+ else
+    egh := e(g, h) ^ t
+END :: if
+
+assumpVar := list{g, h, gl, egh}
+output := assumpVar
+END :: func:assump
+
