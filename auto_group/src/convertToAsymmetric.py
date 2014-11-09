@@ -465,6 +465,9 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
             if info['verbose']: print(" :-> update pairing.", end=" ")
             noChangeList.append(str(assignVartmp))
+            print(blockStmt)
+            print(info)
+            print(noChangeList)
             newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
             if info['verbose']: print(" :-> updating list...", end=" ")
@@ -1587,6 +1590,14 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     print("info => ", info)
     print("constraintList => ", constraintList)
     print("txor => ", txor)
+    print("generators => ", generators)
+    
+    #merge in generators from assumption
+    print(assumptionData['gen'].getGens())
+    assumpGens = assumptionData['gen'].getGens()
+
+    generators = set(generators + assumpGens)
+    print(generators)
         
     #constraints = "[]"
     # given the above formula and the constraint list and options we can
@@ -1604,7 +1615,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     # narrow the specific solution that user asked for
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-    print("groupInfo => ", groupInfo)
+    print("groupInfo solution => ", groupInfo)
+    print(groupInfo['pairing'])
     newAssignments = groupInfo['newSol']
     symDataTypePK  = {}
     asymDataTypePK = {}
@@ -1778,6 +1790,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         options['asymPK'] = asymDataTypePK
 
     print(assumptionData['options'])
+    print("\ngeneratorLines => ", generatorLines)
+    print(groupInfo)
     # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
     newSDL_assump = AsymAssumpSDL(assumptionData['options'], assumptionData['assignInfo'], groupInfo, assumptionData['typesH'], generatorLines, transFunc, transFuncGen, reductionData['deps'], assumptionData['varmap'])
     print(assumptionData['config'].functionOrder)
@@ -2123,6 +2137,13 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     print("constraintList => ", constraintList)
     #constraintList = ['w', 'h', 'u', 'D1', 'D2', 'K', 'C6', 'D4']
     print("txor => ", txor)
+
+    #merge in generators from assumption
+    for assumprec in assumptionData:
+        assumpGens = assumprec['gen'].getGens()
+        generators = generators + assumpGens
+    generators = set(generators)
+    print(generators)
         
     #constraints = "[]"
     # given the above formula and the constraint list and options we can
@@ -2816,7 +2837,7 @@ class AsymAssumpSDL:
             if funcName in self.transFuncGen.keys():
                 print("<===== 1 processing %s =====>" % funcName)
                 self.__currentFunc = funcName
-                transFuncRes[ funcName ] = transformFunction(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.generatorLines)
+                transFuncRes[ funcName ] = transformFunctionAssump(entireSDL, funcName, self.transFuncGen[ funcName ], self.groupInfo, noChangeList, self.deps[1], self.varmap, self.generatorLines)
                 print("<===== 1 processing %s =====>" % funcName)
                 
         # obtain results
