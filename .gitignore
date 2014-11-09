@@ -9,3 +9,6 @@ config.log
 config.mk
 dist/
 build/
+Test*.cpp
+Test*.h
+Test*.py
