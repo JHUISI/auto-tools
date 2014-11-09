@@ -1,5 +1,5 @@
 schemeType = "PKENC"
-assumption = ["lDBDHE"]
+assumption = ["qDBDHE"]
 reduction = ["reductionBGW05"]
 
 #short = "secret-keys"
