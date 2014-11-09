@@ -453,13 +453,16 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                 
         if assignVarOccursInBoth(assignVar, info) or ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
             if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            info['both'] = set(list(info['both']) + list(assignVartmp)) #assignVartmp??
             newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
         elif assignVarOccursInG1(assignVar, info) or (not(numG1 == 0) and (numG2 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+            info['G1'] = set(list(info['G1']) + list(assignVartmp)) #assignVartmp??
             noChangeList.append(str(assignVartmp))
             newLine = updateAllForG1(assign, assignVartmp, blockStmt, info, False, noChangeList)
         elif assignVarOccursInG2(assignVar, info) or (not(numG2 == 0) and (numG1 == 0) and (numBoth == 0)):
             if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            info['G2'] = set(list(info['G2']) + list(assignVartmp)) #assignVartmp??
             noChangeList.append(str(assignVartmp))
             newLine = updateAllForG2(assign, assignVartmp, blockStmt, info, False, noChangeList)
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
@@ -522,16 +525,20 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
 
             if not(numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                info['both'] = set(list(info['both']) + list(assignVartmp)) #assignVartmp??
                 newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
             elif not(numBoth == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                info['both'] = set(list(info['both']) + list(assignVartmp)) #assignVartmp??
                 newLine = updateAllForBoth(assign, assignVartmp, blockStmt, info, True, noChangeList)
             elif (not(numG1 == 0) and (numG2 == 0)) or (not(numBoth == 0) and (numG1 == 0) and (numG2 == 0)):
                 if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+                info['G1'] = set(list(info['G1']) + list(assignVartmp)) #assignVartmp??
                 noChangeList.append(str(assignVartmp))
                 newLine = updateAllForG1(assign, assignVartmp, blockStmt, info, False, noChangeList)
             elif (numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+                info['G2'] = set(list(info['G2']) + list(assignVartmp)) #assignVartmp??
                 noChangeList.append(str(assignVartmp))
                 newLine = updateAllForG2(assign, assignVartmp, blockStmt, info, False, noChangeList)
             elif assignVar not in info['pairing'][G1Prefix] and assignVar not in info['pairing'][G2Prefix]:
@@ -3455,6 +3462,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
     return new_node2
 
 def updateForLists(varInfo, assignVar, info):
+    print("updateForLists")
     global oldListTypeRefs, newListTypeRefs
     newList = []
     inBoth = info['both']
@@ -3462,10 +3470,12 @@ def updateForLists(varInfo, assignVar, info):
     oldListTypeRefs[ str(assignVar) ] = list(orig_list) # record the original list
 
     for i in orig_list:
+        print("i => ", i)
         if i in inBoth or assignVarIsGenerator(i, info):
             newList.extend([i + G1Prefix, i + G2Prefix])
         else:
             newList.append(i)
+    print(varInfo.getAssignNode())
     new_node = BinaryNode.copy(varInfo.getAssignNode())
     new_node.right.listNodes = newList
     #print("\n\tnewList: ", new_node)
