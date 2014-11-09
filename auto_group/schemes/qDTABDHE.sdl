@@ -15,9 +15,9 @@ alpha := random(ZR)
 t := random(ZR)
 
 g := random(G1)
-h := random(G1)
+gprime := random(G1)
 
-assumpKey := list{g, h, alpha, t}
+assumpKey := list{g, gprime, alpha, t}
 
 output := assumpKey
 END :: func:setup
@@ -25,7 +25,7 @@ END :: func:setup
 
 BEGIN :: func:assump
 input := list{assumpKey}
-assumpKey := expand{g, h, alpha, t}
+assumpKey := expand{g, gprime, alpha, t}
 
 BEGIN :: for
     for{i := 1, q}
@@ -35,17 +35,17 @@ BEGIN :: for
         END :: if
 END :: for
 
-hprime := h ^ (alpha ^ (q+2))
+gprimeq2 := gprime ^ (alpha ^ (q+2))
 
 coinflip := random(bin)
 BEGIN :: if
  if { coinflip == 0 }
-    egh := e(g, h) ^ (alpha ^ (q+1))
+    egh := e(g, gprime) ^ (alpha ^ (q+1))
  else
-    egh := e(g, h) ^ t
+    egh := e(g, gprime) ^ t
 END :: if
 
-assumpVar := list{g, h, hprime, gl, egh}
+assumpVar := list{g, gprime, gprimeq2, gl, egh}
 output := assumpVar
 END :: func:assump
 
