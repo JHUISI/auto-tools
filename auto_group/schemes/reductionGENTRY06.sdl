@@ -47,7 +47,13 @@ gprimeq2 := gprime ^ (alpha ^ (q+2))
 assumpKey := list{coeff}
 assumpVar := list{g, gprime, gprimeq2, gl, egh}
 
-h := g ^ falpha(coeff, gl)
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+h := g ^ falphaeval
 
 one := 1
 g1 := gl#one
@@ -58,59 +64,6 @@ output := list{pk, assumpKey, assumpVar}
 END :: func:setup
 
 
-BEGIN :: func:falpha
-input := list{coeff, gl}
-
-falphaeval := init(G1)
-BEGIN :: for
- for{i := 0,q}
-    falphaeval := gl#i ^ coeff#i
-END :: for
-
-output := falphaeval
-END :: func:falpha
-
-
-BEGIN :: func:f
-input := list{x, coeff}
-
-feval := init(G1)
-BEGIN :: for
- for{i := 0,q}
-    feval := coeff#i * (x ^ i)
-END :: for
-
-output := feval
-END :: func:f
-
-
-BEGIN :: func:FID
-input := list{x, coeff, ID}
-
-fideval := (f(x, coeff) - f(ID, coeff)) / (x - ID)
-
-output := fideval
-END :: func:FID
-
-
-BEGIN :: func:f2
-input := list{x, coeff}
-
-f2eval := x ^ (q + 2)
-
-output := f2eval
-END :: func:f2
-
-
-BEGIN :: func:F2ID
-input := list{x, coeff, ID}
-
-f2ideval := (f2(x, coeff) - f2(ID, coeff)) / (x - ID)
-
-output := f2ideval
-END :: func:F2ID
-
-
 BEGIN :: func:queries
 input := list{pk, msk, id, assumpKey}
 pk := expand{g, g1, h}
@@ -118,11 +71,23 @@ assumpKey := expand{coeff}
 
 ID := H(id, ZR)
 
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+feval := init(ZR)
+BEGIN :: for
+ for{i := 0,q}
+    feval := coeff#i * (ID ^ i)
+END :: for
+
 one := 1
 BEGIN :: if
 if { ID != alpha }
     rID := f(ID, coeff)
-    hID := (g ^ falpha(coeff, gl)) * (g ^ -f(ID, coeff)) * (gl#one ^ -1) * (g ^ ID)
+    hID := (g ^ falphaeval) * (g ^ (-feval)) * (gl#one ^ -1) * (g ^ ID)
 else
 #    output := error
 END :: if
@@ -145,20 +110,34 @@ bm := random(bin)
 
 ID := H(id, ZR)
 
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+feval := init(ZR)
+BEGIN :: for
+ for{i := 0,q}
+    feval := coeff#i * (ID ^ i)
+END :: for
+
 BEGIN :: if
 if { ID != alpha }
     rID := f(ID, coeff)
-    hID := (g ^ falpha(coeff, gl)) * (g ^ -f(ID, coeff)) * (gl#one ^ -1) * (g ^ ID)
+    hID := (g ^ falphaeval) * (g ^ (-feval)) * (gl#one ^ -1) * (g ^ ID)
 else
 #    output := error
 END :: if
 
-U := gprimeq2 * (g ^ -f2(ID, coeff))
+f2eval := ID ^ (q + 2)
+
+U := gprimeq2 * (g ^ (-feval))
 
 dotProd1 := init(G1)
 BEGIN :: for
  for{ i := 0,q }
-    dotProd1 := dotProd1 * (gl#i ^ coeff#i)
+    dotProd1 := dotProd1 * (gl#i ^ coeff#i)#make sure to use correct coefficients here
 END :: for
 
 V := egh * e(h, dotProd1)
