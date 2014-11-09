@@ -7,17 +7,19 @@ END :: types
 
 BEGIN :: func:keygen
 input := None
-g := random(G1)
+g1 := random(G1)
+g2 := random(G1)
+
 x := random(ZR)
 y := random(ZR)
 
-u := g ^ x
-v := g ^ y
+u := g2 ^ x
+v := g2 ^ y
 
-z := e(g,g)
+#z := e(g,g)
 
 sk := list{x, y}
-pk := list{g, u, v, z}
+pk := list{g1, g2, u, v}
 
 output := list{sk, pk}
 END :: func:keygen
@@ -25,15 +27,15 @@ END :: func:keygen
 
 BEGIN :: func:sign
 input := list{pk, sk, m} 
-pk := expand{g, u, v, z}
+pk := expand{g1, g2, u, v}
 sk := expand{x, y}
 
 r := random(ZR)
 BEGIN :: if
-if { (x + m + y*r) != 0 }
- S := g ^ (1 / (x + m + y*r))
-else
- output := False
+ if { (x + m + (y*r)) != 0 }
+    S := g1 ^ (1 / (x + m + (y*r)))
+ else
+    output := False
 END :: if
 
 sig := list{S, r}
@@ -43,14 +45,15 @@ END :: func:sign
 
 BEGIN :: func:verify
 input := list{pk, m, sig}
-pk := expand{g, u, v, z}
+pk := expand{g1, g2, u, v}
 sig := expand{S, r}
 
 BEGIN :: if
-if { e(S, u * (g^m) * (v^r)) == z }
-   output := True
-else
-   output := False
+ if { e(S, u * (g2 ^ m) * (v ^ r)) == e(g1, g2) }
+    output := True
+ else
+    output := False
 END :: if
+
 END :: func:verify
 
