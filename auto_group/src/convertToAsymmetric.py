@@ -705,6 +705,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
     pkMapData  = info.get('pk_map')
     pkMapMin = None
     pkListMin = info.get('pk_list')
+    assumpMapMin = None
     assumpData = info.get('assump_map')
     assumpList = info.get('assump_list')
     # check if user set the min operation field in config file?
