@@ -25,12 +25,15 @@ searchBoth = True # mode that forces the solver to come up w/ a bunch of solutio
 satisfiable = True or False
 resultDictionary = [('x', True), ('y', False), ... ]
 """
+SHORT_ASSUMPTION = "assumption"
 SHORT_SECKEYS = "secret-keys" # for minimizing secret-key representation
 SHORT_PUBKEYS = "public-keys" # for minimizing public-key representation
 SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
 SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
 SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
+assumpKeyword = "assump_map"
+assumpListKeyword = "assump_list"
 schemeTypeKeyword = "scheme"
 verboseKeyword = "verbose"
 variableKeyword = "variables"
@@ -525,6 +528,8 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     hard_constraints = optionDict.get(hardConstKeyword)
     pk_map_vars = optionDict.get(pkMapKeyword)
     pk_list     = optionDict.get(pkListKeyword)
+    assump_map_vars = optionDict.get(assumpKeyword)
+    assump_list = optionDict.get(assumpListKeyword)
 
     # JAA: commented out for benchmarking    
     #print("hardConstraints: ", hard_constraints)
@@ -556,7 +561,18 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
                 Values.extend( [Or(Y == 0, Y == 1)] )
             
     M = get_models([And(Conditions), And(Values)])
+    if(len(M) == 0):
+        print("Failed to find a satisfiable solution given constraints. Try again with different or relaxed constraints.")
+        return unsat
     print("Unique solutions: ", len(M))
+
+    # minimize the assumption, if the option is selected
+    # (currently, for encryption only)
+    if shortOpt == SHORT_ASSUMPTION and schemeType == pkEncType:
+        print("Using Solver to minimize the size of the assumption...")
+        modEval = ModelEval(range(len(M)), variables, Z3vars, None)
+        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list)
+        return (convertToBoolean(modRef), sat)
 
     if shortOpt == SHORT_PUBKEYS and schemeType == pkEncType:
         print("Using Solver to minimize the PK constraints...")

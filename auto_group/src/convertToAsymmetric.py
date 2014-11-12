@@ -6,13 +6,14 @@ from src.solver import *
 import operator
 
 assignInfo = None
+SHORT_ASSUMPTION = "assumption" # for minimizing the assumption
 SHORT_SECKEYS = "secret-keys" # for
 SHORT_PUBKEYS = "public-keys"
 SHORT_CIPHERTEXT = "ciphertext" # in case, an encryption scheme
 SHORT_SIGNATURE  = "signature" # in case, a sig algorithm
 SHORT_FORALL = "both"
 SHORT_DEFAULT = "all"
-SHORT_OPTIONS = [SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
+SHORT_OPTIONS = [SHORT_ASSUMPTION, SHORT_SECKEYS, SHORT_PUBKEYS, SHORT_CIPHERTEXT, SHORT_SIGNATURE, SHORT_FORALL]
 minOp = "operation"
 PKENC = "PKENC" # encryption
 PKSIG = "PKSIG" # signatures
@@ -583,7 +584,8 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
 
 def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
                         hardConstraints, constraints, bothConstraints,
-                        countOpt, minOptions, dropFirst, pkMapMin, pkListMin):
+                        countOpt, minOptions, dropFirst, pkMapMin, pkListMin,
+                        assumpMapMin, assumpList):
     
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
     options[verboseKeyword] = verbose
@@ -602,6 +604,8 @@ def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
     options[dropFirstKeyword] = dropFirst
     options[pkMapKeyword]  = pkMapMin
     options[pkListKeyword] = pkListMin
+    options[assumpKeyword] = assumpMapMin
+    options[assumpListKeyword] = assumpList
     options[schemeTypeKeyword] = conf.schemeType
     (result, satisfiable) = solveUsingSMT(options, shortOpt, timeOpt)
     return (satisfiable, result)
@@ -701,6 +705,8 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
     pkMapData  = info.get('pk_map')
     pkMapMin = None
     pkListMin = info.get('pk_list')
+    assumpData = info.get('assump_map')
+    assumpList = info.get('assump_list')
     # check if user set the min operation field in config file?
     # this indicates interest in measuring 
     if hasattr(conf, minOp):
@@ -725,6 +731,15 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                     print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints                        
+        elif shortOpt == SHORT_ASSUMPTION:
+            fileSuffix = 'as'
+            assert type(conf.assumption) in [str, list], "assumption in config file expected as a string or list"
+            constraints = []
+            assumpMapMin = {}
+            for i,j in assumpData.items():
+                assumpMapMin[xorVarMap.get(i)] = j
+            print("Assumption map: ", assumpMapMin)
+            print("Assumption list: ", assumpList)
         elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKENC:
             # create constraints around keys
             fileSuffix = 'ky'
@@ -732,7 +747,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             constraints = []
             pkMapMin = {}
             for i,j in pkMapData.items():
-                pkMapMin[ xorVarMap.get(i) ] = j
+                pkMapMin[xorVarMap.get(i)] = j
             print("Updated pk map  : ", pkMapMin)
             print("Original pk list: ", pkListMin)
             # here is where we need to encode some stuff in the pairing
@@ -866,7 +881,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         countOpt = info[minKeyword] # the cost of group operations
         (satisfiable, resultDict) = instantiateZ3Solver(info['verbose'], conf, shortOpt, timeOpt, txor.getVariables(), txor.getClauses(),
                                                         hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst,
-                                                        pkMapMin, pkListMin)
+                                                        pkMapMin, pkListMin, assumpMapMin, assumpList)
         if satisfiable == False:
             #print("Adjusing constraints...")
             adjustConstraints = True
@@ -954,6 +969,26 @@ def transformTypes(typesH, info):
     
     newLines.append(typesHeadEnd)
     return newLines
+
+def searchForChildren(key, depValue, data_map, info):
+    lhs_orig_vars, lhs_var_map = info['G1_lhs']
+    rhs_orig_vars, rhs_var_map = info['G1_rhs']
+
+    depList = []
+    for i in lhs_orig_vars:
+        if key in lhs_var_map[i]:
+            data_map[i] = data_map[i].union([depValue])
+            depList.append(i)
+
+    for i in rhs_orig_vars:
+        if key in rhs_var_map[i]:
+            data_map[i] = data_map[i].union([depValue])
+            depList.append(i)
+
+    # recursively visit children of depList
+    for i in depList:
+        searchForChildren(i, depValue, data_map, info)
+    return
 
 """
 runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
@@ -1519,6 +1554,43 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     print(info[ 'G1_lhs' ])
     print(info[ 'G1_rhs' ])
+    # if we want to minimize the assumption
+    if short == SHORT_ASSUMPTION:
+        # need to build a map of pairing variables to assumptions
+        assumpKey = assumptionData.get('prunedMap') # is this the right data structure?
+        assumpDepList = []
+        for i,j in assumpKey.items():
+            assumpDepList += list(j)
+        assumpDepList = list(set(assumpDepList))
+        assumpDepList += list(assumpKey.keys())
+        assumpDepList.sort()
+        lhs_orig_vars, lhs_var_map = info['G1_lhs']
+        rhs_orig_vars, rhs_var_map = info['G1_rhs']
+        assump_map = {}
+        for i in lhs_orig_vars + rhs_orig_vars:
+            assump_map[i] = set()
+        # first do a backwards analysis from pairing variables and up
+        for i in assumpDepList: # lhs_orig_vars:
+            for j in lhs_orig_vars:
+                for k in lhs_var_map[j]:
+                    if k in additionalDeps and i in additionalDeps[k]:
+                        print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        assump_map[j] = assump_map[j].union([i])
+
+            for j in rhs_orig_vars:
+                for k in rhs_var_map[j]:
+                    if k in additionalDeps and i in additionalDeps[k]:
+                        print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        assump_map[j] = assump_map[j].union([i])
+
+        # do a top down tracing to
+        for i in assumpDepList:
+            searchForChildren(i, i, assump_map, info)
+
+        # might want to check for any deps in additional deps?
+        print("Assumption Map: ", assump_map)
+        info['assump_map'] = assump_map
+        info['assump_list'] = assumpDepList
 
     ### REFACTORED Public-Key minimization for Encryption
     if config.schemeType == PKENC and short == SHORT_PUBKEYS:
