@@ -1575,13 +1575,13 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             for j in lhs_orig_vars:
                 for k in lhs_var_map[j]:
                     if k in additionalDeps and i in additionalDeps[k]:
-                        print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
                         assump_map[j] = assump_map[j].union([i])
 
             for j in rhs_orig_vars:
                 for k in rhs_var_map[j]:
                     if k in additionalDeps and i in additionalDeps[k]:
-                        print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
                         assump_map[j] = assump_map[j].union([i])
 
         # do a top down tracing to
@@ -2126,11 +2126,13 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         for i in lhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
+                pk_map[i] = set(additionalNewDeps[i]).intersection(pk_list)
             else:
                 pk_map[i] = set({i})
         for i in rhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
+                pk_map[i] = set(additionalNewDeps[i]).intersection(pk_list)
             else:
                 pk_map[i] = set({i})
 
