@@ -32,14 +32,14 @@ ga2 := g ^ a2
 #gba1 := gb ^ a1
 gba1 := g ^ (b * a1)
 #gba2 := gb ^ a2
-gba2 := g ^ (b ^ a2)
+gba2 := g ^ (b * a2)
 tau1 := v * (v1 ^ a1)
 tau2 := v * (v2 ^ a2)        
 tau1b := tau1 ^ b
 tau2b := tau2 ^ b
 eggalphaa1b := e(g, g)^(alpha * (a1 * b)) 
 galpha := g ^ alpha
-galphaa1 := galpha ^ a1
+galphaa1 := g ^ (alpha * a1)
 
 mpk := list{g, gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
 msk := list{galpha, galphaa1, v, v1, v2, alpha}
@@ -63,7 +63,8 @@ r := r1 + r2
 idhash := H(id, ZR)
 
 D1 := galphaa1 * (v ^ r)
-D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
 D3 := gb ^ -z1
 D4 := (v2 ^ r) * (g ^ z2)
 D5 := gb ^ -z2

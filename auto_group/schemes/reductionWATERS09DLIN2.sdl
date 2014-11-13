@@ -83,13 +83,13 @@ input := None
  u := (f ^ (-Ared)) * (g ^ yu)
  h := (f ^ (-Bred)) * (g ^ yh)
 
-# ga1 := g ^ a1
-# ga2 := g ^ a2
+ ga1 := g ^ a1
+ ga2 := g ^ a2
  galpha := g ^ alpha
  galphaa1 := g ^ (alpha * a1)
 
-# reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
- reducpk := list{gb, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+ reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+# reducpk := list{gb, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
  reducmsk := list{g, galpha, galphaa1, v, v1, v2} #should alpha be part of the msk?
  reducVar := list{{alpha, a1, a2, yv1, yv2, yw, yu, yh}
  Fvar := list{Ared, Bred}
@@ -119,7 +119,8 @@ BEGIN :: if
     idhash := H(ID, ZR)
 
     D1 := galphaa1 * (v ^ r)
-    D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+    D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
     D3 := gb ^ -z1
     D4 := (v2 ^ r) * (g ^ z2)
     D5 := gb ^ -z2
@@ -140,7 +141,9 @@ BEGIN :: if
     idhash := H(ID, ZR)
 
     D1prime := galphaa1 * (v ^ r)
-    D2prime := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+#    D2prime := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+    D2prime := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
     D3prime := gb ^ -z1
     D4prime := (v2 ^ r) * (g ^ z2)
     D5prime := gb ^ -z2
@@ -150,10 +153,13 @@ BEGIN :: if
 
     gamma := random(ZR)
 
+#    D1 := D1prime * (g ^ (-a1 * a2 * gamma))
     D1 := D1prime * (g ^ (-a1 * a2 * gamma))
-    D2 := D2prime * (g ^ (a2 * gamma))
+#    D2 := D2prime * (g ^ (a2 * gamma))
+    D2 := D2prime * (ga2 ^ gamma)
     D3 := D3prime
-    D4 := D4prime * (g ^ (a1 * gamma))
+#    D4 := D4prime * (g ^ (a1 * gamma))
+    D4 := D4prime * (ga1 ^ gamma)
     D5 := D5prime
     D6 := D6prime
     D7 := D7prime
@@ -171,7 +177,9 @@ BEGIN :: if
     idhash := H(ID, ZR)
 
     D1prime := galphaa1 * (v ^ rprime)
-    D2prime := (g ^ -alpha) * (v1 ^ rprime) * (g ^ z1prime)
+#    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+#    D2prime := (g ^ -alpha) * (v1 ^ rprime) * (g ^ z1prime)
+    D2prime := (galpha ^ -1) * (v1 ^ rprime) * (g ^ z1prime)
     D3prime := gb ^ -z1prime
     D4prime := (v2 ^ rprime) * (g ^ z2prime)
     D5prime := gb ^ -z2prime
@@ -217,8 +225,10 @@ C0prime := M#b * (eggalphaa1b ^ s2prime)
 C1prime := gb ^ sprime
 C2prime := gba1 ^ s1prime
 C3prime := g ^ (a1 * s1prime)
+#C3prime := ga1 ^ s1prime
 C4prime := gba2 ^ s2prime
 C5prime := g ^ (a2 * s2prime)
+#C5prime := ga2 ^ s2prime)
 C6prime := (tau1 ^ s1prime) * (tau2 ^ s2prime)
 C7prime := (((tau1b ^ s1prime) * (tau2b ^ s2prime)) * (w ^ -t))
 E1prime := (((u ^ idhash2) * (w ^ tagc)) * h) ^ t

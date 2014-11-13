@@ -124,8 +124,11 @@ xprime := random(ZR)
         
 C0 := M#b * (Z ^ (a1 * b))
 C1 := (g ^ (s1 * b)) * (C ^ b)
+#C1 := (gb ^ (s1)) * (C ^ b)
 C2 := g ^ (b * a1 * s1)
+#C2 := gba1 ^ s1
 C3 := g ^ (a1 * s1)
+#C3 := ga1 ^ s1
 C4 := B ^ (xprime * b)
 C5 := B ^ xprime
 C6 := (tau1 ^ s1) * (C ^ yv) * (B ^ (yv2 * xprime))

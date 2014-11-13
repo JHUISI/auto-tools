@@ -136,7 +136,6 @@ E2prime := g ^ t
 
 ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagc}
 
-
 C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
 C1 := C1prime * (G ^ b)
 C2 := C2prime * (F ^ -b)
