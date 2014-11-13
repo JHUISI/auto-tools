@@ -312,7 +312,7 @@ class ModelEval:
         self.variables = variables
         self.Z3vars = Z3vars
         self.countValue = countValue
-        self.verbose = False
+        self.verbose = True
 
     def __sumTheSets(self, d):
         c = 0
@@ -344,8 +344,10 @@ class ModelEval:
                 if depMap.get(key):
                     for j in depMap.get(key):
                         counts[j] = counts[j].union({pts[assign]})
-            resultMap[solIndex] = (self.__countSplits(counts), self.__sumTheSets(counts))
-            countMap[solIndex] = dict(counts)
+            split_value = self.__countSplits(counts)
+            if split_value > 0:
+                resultMap[solIndex] = (split_value, self.__sumTheSets(counts))
+                countMap[solIndex] = dict(counts)
             if self.verbose:
                 print("Result: ", counts, ", splits:", resultMap[solIndex][0], ", sum:", resultMap[solIndex][1], "\n")
         #print("Final: ", resultMap)
