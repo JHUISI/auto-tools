@@ -2126,15 +2126,22 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         for i in lhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
-                pk_map[i] = set(additionalNewDeps[i]).intersection(pk_list)
+                pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
+                for k in additionalNewDeps[i]:
+                    if k in additionalNewDeps:
+                        pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
             else:
                 pk_map[i] = set({i})
         for i in rhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
-                pk_map[i] = set(additionalNewDeps[i]).intersection(pk_list)
+                pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
+                for k in additionalNewDeps[i]:
+                    if k in additionalNewDeps:
+                        pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
             else:
                 pk_map[i] = set({i})
+
 
         if info['verbose']:
             print("Final PK map: ", pk_map)
