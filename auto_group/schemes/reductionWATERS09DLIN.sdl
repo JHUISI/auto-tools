@@ -108,11 +108,12 @@ END :: func:queries
 
 
 BEGIN :: func:challenge
-input := list{assumpVar, reducpk, reducVar, M, ID}
+input := list{assumpVar, reducpk, reducVar, reducmsk, M, ID}
 
 assumpVar := expand{G, F, T}
 reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
 reducVar := expand{b, alpha, yv, yv1, yv2}
+reducmsk := expand{g, galpha, galphaa1, v, v1, v2}
 
 b := random(bin)
 
@@ -137,6 +138,7 @@ E2prime := g ^ t
 ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagc}
 
 C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
+#C0 := C0prime * ((e(G, gba1) * e(galpha, F)))
 C1 := C1prime * (G ^ b)
 C2 := C2prime * (F ^ -b)
 C3 := C3prime * F

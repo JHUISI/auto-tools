@@ -206,46 +206,59 @@ END :: func:queries
 
 
 BEGIN :: func:challenge
-input := list{assumpVar, reducpk, reducVar, M, ID}
+input := list{assumpVar, reducpk, reducVar, M, ID, IDstar, Fvar}
 
 assumpVar := expand{G, F, T}
 reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
 reducVar := expand{alpha, a1, a2, yv1, yv2, yw, yu, yh}
+Fvar := expand{Ared, Bred}
 
 b := random(bin)
 
 s1prime := random(ZR) 
 s2prime := random(ZR) 
 t := random(ZR)
-tagc := random(ZR)
+#tagc := random(ZR)
 sprime := s1prime + s2prime
 idhash2 := H(ID, ZR)
+
+idhashstar := H(IDstar, ZR)
+tagcstar := (Ared * idhashstar) + Bred
         
 C0prime := M#b * (eggalphaa1b ^ s2prime)
 C1prime := gb ^ sprime
 C2prime := gba1 ^ s1prime
-C3prime := g ^ (a1 * s1prime)
-#C3prime := ga1 ^ s1prime
+#C3prime := g ^ (a1 * s1prime)
+C3prime := ga1 ^ s1prime
 C4prime := gba2 ^ s2prime
-C5prime := g ^ (a2 * s2prime)
-#C5prime := ga2 ^ s2prime)
+#C5prime := g ^ (a2 * s2prime)
+C5prime := ga2 ^ s2prime
 C6prime := (tau1 ^ s1prime) * (tau2 ^ s2prime)
 C7prime := (((tau1b ^ s1prime) * (tau2b ^ s2prime)) * (w ^ -t))
-E1prime := (((u ^ idhash2) * (w ^ tagc)) * h) ^ t
+E1prime := (((u ^ idhashstar) * (w ^ tagcstar)) * h) ^ t
 E2prime := g ^ t
 
-ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagc}
+ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagcstar}
 
-C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
-C1 := C1prime * (G ^ b)
-C2 := C2prime * (F ^ -b)
-C3 := C3prime * F
-C4 := C4prime * (T ^ b)
-C5 := C5prime * T
-C6 := C6prime * (G ^ yv) * (F ^ -yv1) * (T ^ yv2)
-C7 := C7prime * (((G ^ yv) * (F ^ -yv1) * (T ^ yv2)) ^ b)
-E1 := E1prime
-E2 := E2prime
+x := random(ZR)
+
+#C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
+C0 := C0prime
+C1 := C1prime
+C2 := C2prime
+C3 := C3prime
+C4 := C4prime * (gba2 ^ x)
+C5 := C5prime * (ga2)
+#C5 := C5prime * (g ^ a2)
+C6 := C6prime * (v2 ^ (a2 * x))
+#C7 := C7prime * (f ^ (yv2 * x * a2)) * (nu ^ (-a1 * x * yw * a2))
+#C7 := C7prime * ((tau2b ^ x) * (v ^ (yw * x)))
+C7 := C7prime * ((gba2 ^ (yv2 * x)) * (v ^ (yw * x)))
+#E1 := E1prime * (nu ^ (((idhash2 * yu) + (yh) + (tagcstar * yw)) * (a1 * a2 * x)))
+E1 := E1prime * (((v ^ (-idhash2 * yu)) * (v ^ (-yh)) * (v ^ (-tagcstar * yw))) ^ x)
+E2 := E2prime * (v ^ (-1 * x))
+
+tagc := tagcstar
 
 ct := list{C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc}
 
