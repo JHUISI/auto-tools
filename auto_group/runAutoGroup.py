@@ -107,8 +107,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     funcOrder = [cm.assumpSetupFuncName, cm.assumpFuncName]
     setattr(cm, functionOrder, funcOrder)
 
-    print("function order: ", cm.functionOrder)
-
     #TODO: create something like this for assumption?
     #for i in encConfigParams:
     #    if not hasattr(cm, i):
@@ -181,8 +179,7 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     (stmtA, typesA, depListA, depListNoExpA, infListA, infListNoExpA) = sdl.getVarInfoFuncStmts( cm.assumpFuncName )
     varTypes.update(typesS)
     varTypes.update(typesA)
-    print(depListS, depListNoExpS)
-    print(depListA, depListNoExpA)
+
     assumptionData['stmtS'] = stmtS
     assumptionData['stmtA'] = stmtA
     # TODO: expand search to encrypt and potentially setup
@@ -204,7 +201,7 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
-    print("Generators extracted: ", generators)
+    #print("Generators extracted: ", generators)
 
     print("\n")
 
@@ -218,7 +215,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
-    print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
         #print(pair_vars_G1_lhs)            
         lines = eachStmt.keys() # for each line, do the following
@@ -254,10 +250,10 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    print("pair vars LHS:", pair_vars_G1_lhs)
-    print("pair vars RHS:", pair_vars_G1_rhs) 
-    print("list of gens :", generators)
-    print("constraintList: ", constraintList)
+    #print("pair vars LHS:", pair_vars_G1_lhs)
+    #print("pair vars RHS:", pair_vars_G1_rhs) 
+    #print("list of gens :", generators)
+    #print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -271,26 +267,16 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
             #print(key, val)
             if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key in cm.assumpMasterPubVars) and not(key in cm.assumpMasterSecVars)):
                 depList[key] = val
-    print(depList)
 
-    print("\n")
     info[ 'deps' ] = (depList, assignTraceback(assignInfo_assump, generators, varTypes, depList, constraintList))
-    print("processed deps => ", info['deps'][0])
-    print("processed deps map => ", info['deps'][1])
-
-    print("\n")
 
     prunedDeps = {}
     for (key, val) in info['deps'][1].items():
         #print(key, val)
         if(not(len(val) == 0)):
             prunedDeps[key] = val
-    print("pruned deps => ", prunedDeps)
-
-    print("\n")
 
     the_map = gpv.pairing_map
-    print("the map => ", the_map)
 
     assumptionData['info'] = info
     assumptionData['depList'] = depList
@@ -311,16 +297,13 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     #prune varTypes to remove ZR that we don't care about
     additionalDeps = dict(list(assumptionData['info']['deps'][0].items()))
-    print(additionalDeps)
     items = []
     newlist = []
     newDeps = {}
     for (key,val) in additionalDeps.items():
-        print(key,val)
         #items = list(additionalDeps[key])
         newlist = []
         for j in val:
-            print(j, sdl.getVarTypeFromVarName(j, None, True))
             if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
                 newlist.append(j)
         if(not(len(set(newlist)) == 0)):
@@ -329,7 +312,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
             else:
                 newDeps[key] = set(newlist)
     assumptionData['newDeps'] = newDeps
-    print("***** => ", assumptionData['newDeps'])
 
     assumptionData['assumptionFile'] = assumption_file
     assumptionData['config'] = cm
@@ -348,8 +330,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     funcOrder = [cm.reducSetupFuncName, cm.reducQueryFuncName, cm.reducChallengeFuncName]
     setattr(cm, functionOrder, funcOrder)
-
-    print("function order: ", cm.functionOrder)
 
     #TODO: create something like this for assumption?
     #for i in encConfigParams:
@@ -427,8 +407,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     varTypes.update(typesC)
     #print(stmtS)
     #print(stmtQ)
-    print("depListS => ", depListS)
-    print("depListNoExpS => ", depListNoExpS)
+
     # TODO: expand search to encrypt and potentially setup
     pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
             
@@ -450,7 +429,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
-    print("Generators extracted: ", generators)
+    #print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
@@ -498,10 +477,10 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    print("pair vars LHS:", pair_vars_G1_lhs)
-    print("pair vars RHS:", pair_vars_G1_rhs) 
-    print("list of gens :", generators)
-    print("constraintList: ", constraintList)
+    #print("pair vars LHS:", pair_vars_G1_lhs)
+    #print("pair vars RHS:", pair_vars_G1_rhs) 
+    #print("list of gens :", generators)
+    #print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -521,24 +500,16 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 else:
                     depList[key] = val
                     depListUnaltered[key] = val
-    print("depList => ", depList)
 
-    print("\n")
     info[ 'deps' ] = (depListUnaltered, assignTraceback(assignInfo_reduction, generators, varTypes, depListUnaltered, constraintList))
-    print("processed deps => ", info['deps'][0])
-    print("processed deps map => ", info['deps'][1])
-
-    print("\n")
 
     prunedDeps = {}
     for (key, val) in info['deps'][1].items():
         #print(key, val)
         if(not(len(val) == 0)):
             prunedDeps[key] = val
-    print("pruned deps => ", prunedDeps)
 
     the_map = gpv.pairing_map
-    print("the map => ", the_map)
 
     reductionData['info'] = info
     reductionData['depList'] = depList
@@ -556,16 +527,13 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     #prune varTypes to remove ZR that we don't care about
     additionalDeps = dict(list(reductionData['info']['deps'][0].items()))
-    print(additionalDeps)
     items = []
     newlist = []
     newDeps = {}
     for (key,val) in additionalDeps.items():
-        print(key,val)
         #items = list(additionalDeps[key])
         newlist = []
         for j in val:
-            print(j, sdl.getVarTypeFromVarName(j, None, True))
             if((sdl.getVarTypeFromVarName(j, None, True) == types.G1) or (sdl.getVarTypeFromVarName(j, None, True) == types.G2)):
                 newlist.append(j)
         if(not(len(set(newlist)) == 0)):
@@ -575,13 +543,13 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 newDeps[key] = set(newlist)
             #newDeps[key] = set(newlist)
     reductionData['newDeps'] = newDeps
-    print("***** => ", reductionData['newDeps'])
-
     reductionData['options']['type'] = "reduction"
 
     return reductionData
 
 def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
+    runningTime = 0
+
     # get full path (assuming not provided)
     full_config_file = os.path.abspath(config_file)
     pkg_name = os.path.basename(full_config_file)
@@ -632,7 +600,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
         outfile_scheme = runAutoGroupOld(sdl_file, cm, options, verbose)
         endTime = time.clock()
         if benchmarkOpt: 
-            runningTime = (endTime - startTime) * 1000
+            runningTime += (endTime - startTime) * 1000
             print("running time: ", str(runningTime) + "ms")
             os.system("echo '%s' >> %s" % (runningTime, output_file))
     
@@ -648,11 +616,21 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
         return
     else:
-        print(cm.assumption)
+        #print(cm.assumption)
         assumptionData = []
         for i in cm.assumption:
             assumptionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of assumption SDL file??
-            assumptionData.append(parseAssumptionFile(cm, assumptionFile, verbose, benchmarkOpt, estimateOpt))
+
+            startTime = time.clock()
+            assumptionFileParseRun = parseAssumptionFile(cm, assumptionFile, verbose, benchmarkOpt, estimateOpt)
+            endTime = time.clock()
+
+            assumptionData.append(assumptionFileParseRun)
+
+            if benchmarkOpt: 
+                runningTime += (endTime - startTime) * 1000
+                print("running time: ", str(runningTime) + "ms")
+
         setattr(cm, functionOrder, None)
 
         #parse reduction arguments
@@ -664,7 +642,17 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             reductionData = []
             for i in cm.reduction:
                 reductionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of reduction SDL file??
-                reductionData.append(parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt))
+
+                startTime = time.clock()
+                reductionFileParseRun = parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt)
+                endTime = time.clock()
+
+                reductionData.append(reductionFileParseRun)
+
+                if benchmarkOpt: 
+                    runningTime += (endTime - startTime) * 1000
+                    print("running time: ", str(runningTime) + "ms")
+
             setattr(cm, functionOrder, None)
 
             # setup sdl parser configs
@@ -680,8 +668,6 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
                 setattr(cm, functionOrder, funcOrder)
 
-            print("function order: ", cm.functionOrder)
-            
             if cm.schemeType == PKENC:
                 for i in encConfigParams:
                     if not hasattr(cm, i):
@@ -707,7 +693,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData[0], reductionData[0])
                 endTime = time.clock()
                 if benchmarkOpt: 
-                    runningTime = (endTime - startTime) * 1000
+                    runningTime += (endTime - startTime) * 1000
                     print("running time: ", str(runningTime) + "ms")
                     os.system("echo '%s' >> %s" % (runningTime, output_file))
             
@@ -727,7 +713,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 (outfile_scheme, outfile_assump) = runAutoGroupMulti(sdl_file, cm, options, verbose, assumptionData, reductionData)
                 endTime = time.clock()
                 if benchmarkOpt: 
-                    runningTime = (endTime - startTime) * 1000
+                    runningTime += (endTime - startTime) * 1000
                     print("running time: ", str(runningTime) + "ms")
                     os.system("echo '%s' >> %s" % (runningTime, output_file))
             
