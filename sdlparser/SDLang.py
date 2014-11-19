@@ -54,7 +54,9 @@ downType = {'listStr':'Str', 'listInt':'Int', 'listZR':'ZR', 'listG1':'G1', 'lis
             'metalistG1':'listG1', 'metalistG2':'listG2', 'metalistGT':'listGT' }
 standardTypes = [ types.ZR, types.G1, types.G2, types.GT ] # types.int, types.str
 declarator = Enum('func', 'verify')
-ops = Enum('BEGIN', 'ERROR', 'TYPE','AND', 'OR', 'XOR', 'ADD', 'SUB', 'MUL', 'DIV', 'EXP', 'EQ', 'EQ_TST', 'NON_EQ_TST', 'PAIR', 'ATTR', 'HASH', 'RANDOM','FOR','DO', 'FORINNER', 'FORALL', 'PROD', 'SUM', 'ON', 'OF', 'STRCONCAT', 'CONCAT', 'LIST', 'SYMMAP', 'EXPAND', 'FUNC', 'SEQ', 'IF', 'ELSEIF', 'ELSE', 'NOP', 'END', 'NONE')
+ops = Enum('BEGIN', 'ERROR', 'TYPE','AND', 'OR', 'XOR', 'ADD', 'SUB', 'MUL', 'DIV', 'EXP', 'EQ', 'EQ_TST', 'NON_EQ_TST', 'LE', 'GT', 'LEQ', 'GEQ',
+           'PAIR', 'ATTR', 'HASH', 'RANDOM','FOR','DO', 'FORINNER', 'FORALL', 'PROD', 'SUM', 'ON', 'OF', 'STRCONCAT', 'CONCAT',
+           'LIST', 'SYMMAP', 'EXPAND', 'FUNC', 'SEQ', 'IF', 'ELSEIF', 'ELSE', 'NOP', 'END', 'NONE')
 side = Enum('left', 'right')
 levels = Enum('none', 'some', 'all')
 debug = levels.none
@@ -463,6 +465,14 @@ def createTree(op, node1, node2, op_value=None):
         node = BinaryNode(ops.EQ_TST)
     elif(op == "!="):
         node = BinaryNode(ops.NON_EQ_TST)
+    elif(op == "<"):
+        node = BinaryNode(ops.LE)
+    elif(op == ">"):
+        node = BinaryNode(ops.GT)
+    elif(op == "<="):
+        node = BinaryNode(ops.LEQ)
+    elif(op == ">="):
+        node = BinaryNode(ops.GEQ)
     elif(op == "e("):
         node = BinaryNode(ops.PAIR)
     elif(op == "H("):
@@ -619,6 +629,14 @@ class BinaryNode:
                 return (left + ' == ' + right)
             elif(self.type == ops.NON_EQ_TST):
                 return (left + ' != ' + right)
+            elif(self.type == ops.LE):
+                return (left + ' < ' + right)
+            elif(self.type == ops.GT):
+                return (left + ' > ' + right)
+            elif(self.type == ops.LEQ):
+                return (left + ' <= ' + right)
+            elif(self.type == ops.GEQ):
+                return (left + ' >= ' + right)
             elif(self.type == ops.PAIR):
                 return ('e(' + left + ',' + right + ')')
             elif(self.type == ops.HASH):
@@ -751,6 +769,14 @@ class BinaryNode:
                 return (left + ' == ' + right)
             elif(self.type == ops.NON_EQ_TST):
                 return (left + ' != ' + right)
+            elif(self.type == ops.LE):
+                return (left + ' < ' + right)
+            elif(self.type == ops.GT):
+                return (left + ' > ' + right)
+            elif(self.type == ops.LEQ):
+                return (left + ' <= ' + right)
+            elif(self.type == ops.GEQ):
+                return (left + ' >= ' + right)
             elif(self.type == ops.PAIR):
                 return ('e(' + left + ',' + right + ')')
             elif(self.type == ops.HASH):
