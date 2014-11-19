@@ -182,6 +182,23 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     assumptionData['stmtS'] = stmtS
     assumptionData['stmtA'] = stmtA
+
+    dg_assump_setup = generateGraph(cm.assumpSetupFuncName, (typesS, depListNoExpS), types.G1, varTypes)
+    dg_assump_setup.adjustByMap(assumptionData.get('varmap'))
+    dg_assump_itself = generateGraph(cm.assumpFuncName, (typesA, depListNoExpA), types.G1, varTypes)
+    dg_assump_itself.adjustByMap(assumptionData.get('varmap'))
+
+    dg_assumption = DotGraph("assumption")
+    dg_assumption += dg_assump_setup + dg_assump_itself
+
+    if verbose:
+        print("<=== Assumption Instance Graph ===>")
+        print(dg_assumption)
+        print("<=== Assumption Instance Graph ===>")
+
+    # always record these
+    assumptionData['assumptionGraph'] = dg_assumption
+
     # TODO: expand search to encrypt and potentially setup
     pairingSearch += [stmtS, stmtA] # aka start with decrypt.
             
@@ -405,6 +422,35 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     varTypes.update(typesS)
     varTypes.update(typesQ)
     varTypes.update(typesC)
+
+    dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
+    dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
+    dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
+    dg_reduc_query.adjustByMap(reductionData.get('varmap'))
+    dg_reduc_chall = generateGraph(cm.reducChallengeFuncName, (typesC, depListNoExpC), types.G1, varTypes)
+    dg_reduc_chall.adjustByMap(reductionData.get('varmap'))
+
+    if verbose:
+        print("<=== Reduction Setup Graph ===>")
+        print(dg_reduc_setup)
+        print("<=== Reduction Setup Graph ===>")
+
+        print("<=== Reduction Query Graph ===>")
+        print(dg_reduc_query)
+        print("<=== Reduction Query Graph ===>")
+
+        print("<=== Reduction Challenge Graph ===>")
+        print(dg_reduc_chall)
+        print("<=== Reduction Challenge Graph ===>")
+
+    dg_reduction = DotGraph("reduction")
+    dg_reduction += dg_reduc_setup + dg_reduc_query + dg_reduc_chall
+    if verbose:
+        print("<=== Reduction Graph ===>")
+        print(dg_reduction)
+        print("<=== Reduction Graph ===>")
+
+    reductionData['reductionGraph'] = dg_reduction
     #print(stmtS)
     #print(stmtQ)
 
@@ -555,6 +601,11 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     pkg_name = os.path.basename(full_config_file)
     
     cm = imp.load_source(pkg_name, full_config_file)
+    #check if gen visual dep graph
+    if hasattr(cm, "graphit"):
+        graphit = cm.graphit
+    else:
+        graphit = False
 
     #parse assumption arguments
     if not hasattr(cm, "assumption"):
@@ -594,7 +645,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
         if hasattr(cm, "dropFirst"):
             dropFirst = cm.dropFirst
         
-        options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+        options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path, 'graphit':graphit}
 
         startTime = time.clock()
         outfile_scheme = runAutoGroupOld(sdl_file, cm, options, verbose)
@@ -686,7 +737,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             if hasattr(cm, "dropFirst"):
                 dropFirst = cm.dropFirst
             
-            options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path}
+            options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path, 'graphit':graphit}
 
             if (len(assumptionData) == 1 and len(reductionData) == 1):
                 startTime = time.clock()

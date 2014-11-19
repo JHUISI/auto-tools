@@ -6,6 +6,7 @@ j := Int
 M := list{GT}
 ID := list{ZR}
 IDstar := list{ZR}
+msk := G1
 END :: types
 
 

@@ -28,12 +28,99 @@ oldListTypeRefs = {}
 newListTypeRefs = {}
 loc = "src"
 
+class DotGraph:
+    def __init__(self, name):
+        self.name = name
+        self.nodes = set()
+        self.edges = []
+        self.rootNode = None
+        self.addedEdgeToRoot = False
+
+    def setRootNode(self, var):
+        self.rootNode = var
+
+    # a -> b
+    def addDirectedEdge(self, a, b):
+        if a != b:
+            # we don't want any cyclical stuff here
+            self.nodes = self.nodes.union([a, b])
+            if a == self.rootNode:
+                self.addedEdgeToRoot = True
+                self.edges.append((a, b))
+            else:
+                self.edges.append((a, b))
+            return True
+        else:
+            # node has no parent
+            self.edges.append((a, ""))
+            return True
+
+    def adjustByMap(self, data):
+        edges = []
+        for i in self.edges:
+            (a, b) = i
+            if a in data:
+                a = data[a]
+            if b in data:
+                b = data[b]
+            edges.append((a, b))
+        self.edges = edges
+
+    # merges edges that show up for a given function
+    def update(self, graph_dict):
+        if self.name in graph_dict:
+            self.edges.extend(graph_dict.get(self.name))
+        return
+
+    def smart_update(self, graph_dict):
+        if self.name in graph_dict:
+            the_edges = graph_dict.get(self.name)
+            for i in the_edges:
+                (a, b) = i
+                if a in self.nodes or b in self.nodes:
+                    self.edges.append(i)
+        return
+
+    def add(self, other):
+        # just add to myself
+        self.edges += other.edges
+        self.edges = list(set(self.edges)) # in case there are duplicated pairs (x,y)
+        self.nodes = self.nodes.union( other.nodes )
+        return self
+
+    def __add__(self, other):
+        if type(self) == type(other):
+            return self.add(other)
+
+    # generate the
+    def __str__(self):
+        out_str = "digraph "
+        out_str += self.name + " {\n"
+        for i in self.edges:
+            (a, b) = i
+            out_str += str(a)
+            if b != "": out_str += " -> " + str(b)
+            out_str += "\n"
+        out_str += "}\n"
+        return out_str
+
 class GetPairingVariables:
     def __init__(self, list1, list2):
         assert type(list1) == type(list2) and type(list1) == list, "GetPairingVariables: invalid input type"
         self.listLHS = list1
         self.listRHS = list2
         self.pairing_map = {}
+        self.pairing_count = 1
+        self.dep_graph = {}
+
+    def getDepGraph(self):
+        return self.dep_graph
+
+    def setFunctionName(self, name):
+        self.name = name
+        #self.pairing_count += 1
+        if name not in self.dep_graph:
+            self.dep_graph[name] = []
 
     def retrieveNode(self, node):
         if Type(node) == ops.EXP:
@@ -68,8 +155,16 @@ class GetPairingVariables:
         else:
             pass
         # store for latter use
-        self.pairing_map[ self.listLHS[-1] ] = self.listRHS[-1]
-
+        lhs_var = self.listLHS[-1]
+        rhs_var = self.listRHS[-1]
+        self.pairing_map[ lhs_var ] = rhs_var
+        if self.name:
+            lhs_oid = "\"P" + str(self.pairing_count)
+            rhs_oid = "\"P" + str(self.pairing_count)
+            # assume self.name has been defined via
+            self.dep_graph[self.name].append( (lhs_var, lhs_oid + "[0]\"") )
+            self.dep_graph[self.name].append( (rhs_var, rhs_oid + "[1]\"") )
+            self.pairing_count += 1 # increment since we're done with this pairing
         #print("visit_pair end")
         #print(self.listLHS)
         #print(self.listRHS)
@@ -991,6 +1086,111 @@ def searchForChildren(key, depValue, data_map, info):
         searchForChildren(i, depValue, data_map, info)
     return
 
+def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_graph):
+    sdl.parseFile(sdl_filename, sdlVerbose, ignoreCloudSourcing=True)
+    varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+
+    # TODO: extend to signatures
+    if config.schemeType == PKENC:
+        (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
+        (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+        (stmtE, typesE, depListE, depListNoExpE, infListE, infListNoExpE) = sdl.getVarInfoFuncStmts( config.encryptFuncName )
+        (stmtD, typesD, depListD, depListNoExpD, infListD, infListNoExpD) = sdl.getVarInfoFuncStmts( config.decryptFuncName )
+        varTypes.update(typesS)
+        varTypes.update(typesK)
+        varTypes.update(typesE)
+        varTypes.update(typesD)
+        # add smart update only if there is an existing edge in the graph (e.g., a -> b, either a or b in the set of nodes)
+        dg_setup1 = generateGraphForward(config.setupFuncName, (stmtS, typesS, infListNoExpS), types.G1)
+        dg_keygen1 = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G1, varTypes)
+        dg_encrypt1 = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G1, varTypes)
+        dg_decrypt1 = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G1, varTypes)
+        dg_scheme1 = DotGraph(sdl_name)
+        #if info.get('verbose'):
+        print("<=== Setup Graph ===>")
+        print(dg_setup1)
+        print("<=== Setup Graph ===>")
+
+        print("<=== Keygen Graph ===>")
+        print(dg_keygen1)
+        print("<=== Keygen Graph ===>")
+
+        print("<=== Encrypt Graph ===>")
+        print(dg_encrypt1)
+        print("<=== Encrypt Graph ===>")
+
+        print("<=== Decrypt Graph ===>")
+        print(dg_decrypt1)
+        print("<=== Decrypt Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme1 += dg_setup1 + dg_keygen1 + dg_encrypt1 + dg_decrypt1
+        dg_scheme1.smart_update(pair_graph)
+        print("<=== Scheme Graph ===>")
+        print(dg_scheme1)
+        print("<=== Scheme Graph ===>")
+
+        dg_setup2 = generateGraphForward(config.setupFuncName, (stmtS, typesS, infListNoExpS), types.G2)
+        dg_keygen2 = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G2, varTypes)
+        dg_encrypt2 = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G2, varTypes)
+        dg_decrypt2 = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G2, varTypes)
+        dg_scheme2 = DotGraph(sdl_name)
+        #if info.get('verbose'):
+        print("<=== Setup Graph ===>")
+        print(dg_setup2)
+        print("<=== Setup Graph ===>")
+
+        print("<=== Keygen Graph ===>")
+        print(dg_keygen2)
+        print("<=== Keygen Graph ===>")
+
+        print("<=== Encrypt Graph ===>")
+        print(dg_encrypt2)
+        print("<=== Encrypt Graph ===>")
+
+        print("<=== Decrypt Graph ===>")
+        print(dg_decrypt2)
+        print("<=== Decrypt Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme2 += dg_setup2 + dg_keygen2 + dg_encrypt2 + dg_decrypt2
+        dg_scheme2.smart_update(pair_graph)
+        print("<=== G2 side of Scheme Graph ===>")
+        print(dg_scheme2)
+        print("<=== G2 side of Scheme Graph ===>")
+    elif config.schemeType == PKSIG:
+        pass # fix this
+
+
+def buildSplitGraphForAssumption(sdl_filename, sdl_name, config, sdlVerbose):
+    sdl.parseFile(sdl_filename, sdlVerbose, ignoreCloudSourcing=True)
+    varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
+
+    (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.assumpSetupFuncName )
+    (stmtA, typesA, depListA, depListNoExpA, infListA, infListNoExpA) = sdl.getVarInfoFuncStmts( config.assumpFuncName )
+    varTypes.update(typesS)
+    varTypes.update(typesA)
+
+    dg_assumption1 = DotGraph(sdl_name)
+    dg_assump_setup1 = generateGraph(config.assumpSetupFuncName, (typesS, depListNoExpS), types.G1, varTypes)
+    dg_assump_itself1 = generateGraph(config.assumpFuncName, (typesA, depListNoExpA), types.G1, varTypes)
+
+    dg_assumption1 += dg_assump_setup1 + dg_assump_itself1
+    print("<=== Assumption Instance Graph ===>")
+    print(dg_assumption1)
+    print("<=== Assumption Instance Graph ===>")
+
+    dg_assumption2 = DotGraph(sdl_name)
+    dg_assump_setup2 = generateGraph(config.assumpSetupFuncName, (typesS, depListNoExpS), types.G2, varTypes)
+    dg_assump_itself2 = generateGraph(config.assumpFuncName, (typesA, depListNoExpA), types.G2, varTypes)
+
+    dg_assumption2 += dg_assump_setup2 + dg_assump_itself2
+    print("<=== Assumption Instance Graph ===>")
+    print(dg_assumption2)
+    print("<=== Assumption Instance Graph ===>")
+
+    sys.exit(0)
+
 """
 runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
 sdl filename, a config file and the options which include security parameter,
@@ -1071,7 +1271,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         pairingSearch += [stmtV] # aka start with verify
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
-            
+
     info[curveID] = options['secparam']
     info[dropFirstKeyword] = options[dropFirstKeyword]
     gen = Generators(info)
@@ -1130,7 +1330,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
-                
+
     # constraint list narrows the solutions that
     # we care about
     constraintList = []
@@ -1367,6 +1567,108 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
 
     return outputFile
 
+dotProdPrefix = 'dotProd'
+def stripExtraVars( someList ):
+    newList = []
+    for i in someList:
+        if i != 'G1' and dotProdPrefix not in i:
+            newList.append(i)
+        else:
+            pass
+            #print("got one: ", i)
+    return newList
+
+def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
+    the = typeMap.get(a)
+    the_list = depMap.get(a)
+    if the_list:
+        if len(the_list) == 0 and the.type == target_type:
+            #print("Missing case: ", a) # probably a root?
+            graph.addDirectedEdge(a, a)
+    else:
+        print("No record for: ", a)
+        return
+
+    filtered = stripExtraVars(depMap.get(a))
+    for b in filtered:
+        the2 = typeMap.get(str(b))
+        if not the2 and addlTypes: # not in
+            the2 = addlTypes.get(str(b))
+        else:
+            print("Need add'l types to verify an edge is possible for: ", b)
+        if the2.type == target_type:
+            # b -> a (we want it backwards)
+            graph.addDirectedEdge(b, a)
+    return
+
+def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
+    dg = DotGraph(alg_name)
+    (stmtS, typesS, infListNoExpS) = alg_structure
+
+    eachStmt = stmtS
+    lines = eachStmt.keys() # for each line, do the following
+    for i in lines:
+        if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
+            #print("Each: ", eachStmt[i].getAssignNode())
+            # assert that the statement contains a pairing computation
+            source = eachStmt[i].getAssignVar()
+            if eachStmt[i].getHasRandomness():
+                the_type = typesS.get(str(source))
+                #print("Random: ", the_type.type)
+                if the_type.type == target_type:
+                    dg.addDirectedEdge(source, source)
+                else:
+                    continue # can ignore since we don't care about that link
+            elif eachStmt[i].isList:
+                continue
+            elif HasPairings(eachStmt[i].getAssignNode()):
+                continue
+            else:
+                #print("Do some inf parsing here...")
+                depList = eachStmt[i].getVarDepsNoExponents()
+                for t in depList:
+                    the_type = typesS.get(str(t))
+                    # if part of target type, then include as a direct edge
+                    if the_type and the_type.type == target_type:
+                        dg.addDirectedEdge(t, source)
+    return dg
+
+def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None):
+    dg = DotGraph(alg_name)
+    (typesS, depListNoExpS) = alg_structure
+    output = typesS.get('output')
+    if len(output.listNodesList) == 0:
+        # in case of indirection in output := someVar and someVar := list{x,y,z}
+        someVar = output.srcLine.replace(" ", "").split(":=")[1]
+        output = typesS.get(someVar)
+
+    if output:
+        elems = output.listNodesList
+        if len(elems) > 0: # not an empty list
+            # start trace from the list of output elements
+            for i in elems:
+                # get the type of each one then traceback
+                i_type = typesS.get(str(i))
+                if not i_type:
+                    if addlTypes:
+                        i_type = addlTypes.get(str(i))
+                    else:
+                        print("What to do in this case?")
+                if i_type.type == target_type: # assuming symmetric
+                    # check its dependencies
+                    if i in depListNoExpS:
+                        addAllEdgesIfSourceGroup(dg, i, depListNoExpS, typesS, target_type, addlTypes)
+                if i_type.type == types.list: # just a data structure so can ignore
+                    for j in depListNoExpS[i]:
+                        # build edges with 'j' as the target
+                        addAllEdgesIfSourceGroup(dg, j, depListNoExpS, typesS, target_type, addlTypes)
+        else:
+            print("We have two layers of indirection.. :-(")
+    #print("Dot graph: ", str(dg))
+    return dg
+
+
+
 """
 runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
 sdl filename, a config file and the options which include security parameter,
@@ -1447,7 +1749,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         pairingSearch += [stmtV] # aka start with verify
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
-            
+
     info[curveID] = options['secparam']
     info[dropFirstKeyword] = options[dropFirstKeyword]
     gen = Generators(info)
@@ -1499,6 +1801,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
+                    # record where we found the pairing (help with constructing dep graph)
+                    gpv.setFunctionName(eachStmt[i].funcName)
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
@@ -1506,7 +1810,57 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
-                
+
+
+    if options.get('graphit') and config.schemeType == PKENC:
+        pair_graph = gpv.getDepGraph()
+        print("Pairing info: ", pair_graph)
+        dg_setup = generateGraph(config.setupFuncName, (typesS, depListNoExpS))
+        dg_setup.update(pair_graph)
+        dg_keygen = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G1, varTypes)
+        dg_keygen.update(pair_graph)
+        dg_encrypt = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G1, varTypes)
+        dg_encrypt.update(pair_graph)
+        dg_decrypt = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G1, varTypes)
+        dg_decrypt.update(pair_graph)
+        dg_scheme = DotGraph(sdl_name)
+        #if info.get('verbose'):
+        print("<=== Setup Graph ===>")
+        print(dg_setup)
+        print("<=== Setup Graph ===>")
+
+        print("<=== Keygen Graph ===>")
+        print(dg_keygen)
+        print("<=== Keygen Graph ===>")
+
+        print("<=== Encrypt Graph ===>")
+        print(dg_encrypt)
+        print("<=== Encrypt Graph ===>")
+
+        print("<=== Decrypt Graph ===>")
+        print(dg_decrypt)
+        print("<=== Decrypt Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme += dg_setup + dg_keygen + dg_encrypt + dg_decrypt
+        print("<=== Scheme Graph ===>")
+        print(dg_scheme)
+        print("<=== Scheme Graph ===>")
+
+        dg_assumption = assumptionData['assumptionGraph']
+        dg_reduction = reductionData['reductionGraph']
+        print("<=== Reduction Graph ===>")
+        print(dg_reduction)
+        print("<=== Reduction Graph ===>")
+
+        merged_graph = DotGraph("merged")
+        merged_graph += dg_scheme + dg_assumption + dg_reduction
+        print("<=== Merged Graph ===>")
+        print(merged_graph)
+        print("<=== Merged Graph ===>")
+
+        #sys.exit(0)
+
     # constraint list narrows the solutions that
     # we care about
     constraintList = []
@@ -1812,6 +2166,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
 
+    # TODO: clean this up for the scheme
+    #new_pair_graph = dict(pair_graph)
+    # need to update variable names wherever necessary
+    #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
+
 ###########################
     funcOrder = [assumptionData['config'].assumpSetupFuncName, assumptionData['config'].assumpFuncName]
     setattr(assumptionData['config'], functionOrder, funcOrder)
@@ -1883,6 +2242,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     # output the new SDL file with right suffix (which indicates options that were set)
     outputFile_assump = "assumption_" + assumptionData['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(options['path'] + outputFile_assump, assumptionData['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
+
+    buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumptionData['sdl_name'], config, sdlVerbose)
 
     return (outputFile, outputFile_assump)
 
@@ -2019,14 +2380,73 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
-                    sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
+                    gpv.setFunctionName(eachStmt[i].funcName)
+                    sdl.ASTVisitor( gpv ).preorder(eachStmt[i].getAssignNode())
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
-                
+
+    if options.get('graphit') and config.schemeType == PKENC:
+        pair_graph = gpv.getDepGraph()
+        print("Pairing info: ", pair_graph)
+        dg_setup = generateGraph(config.setupFuncName, (typesS, depListNoExpS))
+        dg_setup.update(pair_graph)
+        dg_keygen = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G1, varTypes)
+        dg_keygen.update(pair_graph)
+        dg_encrypt = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G1, varTypes)
+        dg_encrypt.update(pair_graph)
+        dg_decrypt = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G1, varTypes)
+        dg_decrypt.update(pair_graph)
+        dg_scheme = DotGraph(sdl_name)
+        #if info.get('verbose'):
+        print("<=== Setup Graph ===>")
+        print(dg_setup)
+        print("<=== Setup Graph ===>")
+
+        print("<=== Keygen Graph ===>")
+        print(dg_keygen)
+        print("<=== Keygen Graph ===>")
+
+        print("<=== Encrypt Graph ===>")
+        print(dg_encrypt)
+        print("<=== Encrypt Graph ===>")
+
+        print("<=== Decrypt Graph ===>")
+        print(dg_decrypt)
+        print("<=== Decrypt Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme += dg_setup + dg_keygen + dg_encrypt + dg_decrypt
+        print("<=== Scheme Graph ===>")
+        print(dg_scheme)
+        print("<=== Scheme Graph ===>")
+        merged_graph = DotGraph("merged")
+        merged_graph += dg_scheme
+
+        for assumprecord in assumptionData:
+            dg_assumption = assumprecord['assumptionGraph']
+            print("<=== Assumption Graph ===>")
+            print(dg_assumption)
+            print("<=== Assumption Graph ===>")
+            # merge
+            merged_graph += dg_assumption
+
+        for reducrecord in reductionData:
+            dg_reduction = reducrecord['reductionGraph']
+            print("<=== Reduction Graph ===>")
+            print(dg_reduction)
+            print("<=== Reduction Graph ===>")
+            # merge
+            merged_graph += dg_reduction
+
+        print("<=== Merged Graph ===>")
+        print(merged_graph)
+        print("<=== Merged Graph ===>")
+        sys.exit(0)
+
     # constraint list narrows the solutions that
     # we care about
     constraintList = []
