@@ -11,6 +11,7 @@ hashtag = "#"
 comma = ","
 times = " \\times "
 NoneKeyword = "None"
+underscore = "_"
 
 encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
 sigConfigParams = ["keygenPubVar", "keygenSecVar", "signatureVar", "keygenFuncName", "signFuncName", "verifyFuncName"]
