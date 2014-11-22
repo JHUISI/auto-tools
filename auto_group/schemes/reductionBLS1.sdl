@@ -1,0 +1,44 @@
+name := BLS
+setting := symmetric
+
+BEGIN :: types
+ M := Str
+END :: types
+
+BEGIN :: func:setup
+input := None
+ g := random(G1)
+
+ a := random(ZR)
+ b := random(ZR)
+
+ assumpKey := list{g, a, b}
+
+ A := g ^ a
+ B := g ^ b
+
+ W := g ^ (a * b)
+
+ assumpVar := list{g, A, B, W}
+
+ v := A
+
+ reductionKey := list{g, v}
+output := list{assumpKey, assumpVar, reductionKey}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{assumpVar, reductionKey, M}
+ assumpVar := expand{g, A, B, W}
+ reductionKey := list{g, v}
+
+
+ r := random(ZR)
+ h := g ^ r
+ s := v ^ r
+
+ sig := list{s}
+output := sig
+END :: func:queries
+
