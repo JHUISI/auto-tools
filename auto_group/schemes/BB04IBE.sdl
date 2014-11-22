@@ -5,6 +5,7 @@ BEGIN :: types
 j := Int
 M := GT
 ID := list{ZR}
+msk := G1
 END :: types
 
 
@@ -50,7 +51,7 @@ END :: func:setup
 
 
 BEGIN :: func:keygen
-input := list{j, pk, msk, ID1, ID2}
+input := list{j, pk, msk, ID}
 pk := expand{g, g1, g2, h1, h2}
 msk := expand{g2alpha}
 

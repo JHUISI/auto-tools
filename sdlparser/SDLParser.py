@@ -146,7 +146,7 @@ class SDLParser:
         ExpOp = Literal("^")
         AddOp = Literal("+")
         SubOp = Literal("-")        
-        Equality = Literal("==") | Literal("!=") # | Word("<>", max=1)
+        ComparisonOps = Literal("==") | Literal("!=") | Literal("<=") | Literal(">=") | Literal("<") | Literal(">")
         Assignment =  Literal(":=")
         Pairing = Literal("e(") # Pairing token
         Hash = Literal("H(") # TODO: provide a way to specify arbitrary func. calls
@@ -175,7 +175,7 @@ class SDLParser:
         ADDSubOp = AddOp | SubOp
         #BinOp = MultiLine | AndOp | ExpOp | MulOp | DivOp | AddOp | SubOp | Equality
         # captures order of parsing token operators 
-        Operators = Assignment | Equality | BoolOp | ForDo | ProdOf | SumOf | IfCond # | MultiLine  # ExpOp | MulOp | DivOp | AddOp | SubOp
+        Operators = Assignment | ComparisonOps | BoolOp | ForDo | ProdOf | SumOf | IfCond # | MultiLine  # ExpOp | MulOp | DivOp | AddOp | SubOp
 
         # describes an individual leaf node
         leafNode = Word(alphanums + '_-+#\\?').setParseAction( createNode ) # JAA: removed '*'
@@ -232,7 +232,8 @@ class SDLParser:
         op = stack.pop()
         if debug >= levels.some:
             print("op: %s" % op)
-        if op in ["+","-","*", "/","^", ":=", "==", "!=", "e(", "for{", "forinner{", "do","prod{", "on", "sum{", "of", "and", ";"]:
+        if op in ["+","-","*", "/","^", ":=", "==", "!=", "<", ">", "<=", ">=","e(",
+                  "for{", "forinner{", "do","prod{", "on", "sum{", "of", "and", ";"]:
             op2 = self.evalStack(stack, line_number)
             op1 = self.evalStack(stack, line_number)
             return createTree(op, op1, op2)

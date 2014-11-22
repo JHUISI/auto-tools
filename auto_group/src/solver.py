@@ -312,7 +312,7 @@ class ModelEval:
         self.variables = variables
         self.Z3vars = Z3vars
         self.countValue = countValue
-        self.verbose = True
+        self.verbose = False
 
     def __sumTheSets(self, d):
         c = 0
