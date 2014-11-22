@@ -836,7 +836,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
 #                return
 #            else:
             startTime = time.clock()
-            (outfile_scheme, outfile_assump) = runAutoGroupMulti(sdl_file, cm, options, verbose, assumptionData, reductionData)
+            (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData, reductionData)
             endTime = time.clock()
             if benchmarkOpt: 
                 runningTime += (endTime - startTime) * 1000
