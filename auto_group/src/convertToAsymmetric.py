@@ -1927,55 +1927,58 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     additionalNewDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
     print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
 
-#TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
-#    print("lhs => ", info['G1_lhs'][1])
-#    for (key,val) in info['G1_lhs'][1].items():
-#        print(key,val)
-#        if key in additionalNewDeps:
-#            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
-#            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
-#            #print("after => ", info['G1_lhs'][1][key])
+    #TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
+    print("lhs => ", info['G1_lhs'][1])
+    for (key,val) in info['G1_lhs'][1].items():
+        print(key,val)
+        if key in additionalNewDeps:
+            #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
+            info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
+            #print("after => ", info['G1_lhs'][1][key])
 
-#    print("rhs => ", info['G1_rhs'][1])
-#    for (key,val) in info['G1_rhs'][1].items():
-#        print(key,val)
-#        if key in additionalNewDeps:
-#            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
-#            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
-#            #print("after => ", info['G1_rhs'][1][key])
+    print("rhs => ", info['G1_rhs'][1])
+    for (key,val) in info['G1_rhs'][1].items():
+        print(key,val)
+        if key in additionalNewDeps:
+            #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
+            info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
+            #print("after => ", info['G1_rhs'][1][key])
 
     print(info[ 'G1_lhs' ])
     print(info[ 'G1_rhs' ])
 
-#TODO: need to update this for the multi-case
+    #TODO: need to update this for the multi-case
     # if we want to minimize the assumption
     if short == SHORT_ASSUMPTION:
-        # need to build a map of pairing variables to assumptions
-        assumpKey = assumptionData.get('prunedMap') # is this the right data structure?
         assumpDepList = []
-        for i,j in assumpKey.items():
-            assumpDepList += list(j)
-        assumpDepList = list(set(assumpDepList))
-        assumpDepList += list(assumpKey.keys())
-        assumpDepList.sort()
-        lhs_orig_vars, lhs_var_map = info['G1_lhs']
-        rhs_orig_vars, rhs_var_map = info['G1_rhs']
         assump_map = {}
-        for i in lhs_orig_vars + rhs_orig_vars:
-            assump_map[i] = set()
-        # first do a backwards analysis from pairing variables and up
-        for i in assumpDepList: # lhs_orig_vars:
-            for j in lhs_orig_vars:
-                for k in lhs_var_map[j]:
-                    if k in additionalDeps and i in additionalDeps[k]:
-                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
-                        assump_map[j] = assump_map[j].union([i])
 
-            for j in rhs_orig_vars:
-                for k in rhs_var_map[j]:
-                    if k in additionalDeps and i in additionalDeps[k]:
-                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
-                        assump_map[j] = assump_map[j].union([i])
+        for assumprecord in assumptionData:
+            # need to build a map of pairing variables to assumptions
+            assumpKey = assumprecord.get('prunedMap') # is this the right data structure?
+            print("assumpKey => ", assumpKey)
+            for i,j in assumpKey.items():
+                assumpDepList += list(j)
+            assumpDepList = list(set(assumpDepList))
+            assumpDepList += list(assumpKey.keys())
+            assumpDepList.sort()
+            lhs_orig_vars, lhs_var_map = info['G1_lhs']
+            rhs_orig_vars, rhs_var_map = info['G1_rhs']
+            for i in lhs_orig_vars + rhs_orig_vars:
+                assump_map[i] = set()
+            # first do a backwards analysis from pairing variables and up
+            for i in assumpDepList: # lhs_orig_vars:
+                for j in lhs_orig_vars:
+                    for k in lhs_var_map[j]:
+                        if k in additionalNewDeps and i in additionalNewDeps[k]:
+                            print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
+                            assump_map[j] = assump_map[j].union([i])
+
+                for j in rhs_orig_vars:
+                    for k in rhs_var_map[j]:
+                        if k in additionalNewDeps and i in additionalNewDeps[k]:
+                            print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
+                            assump_map[j] = assump_map[j].union([i])
 
         # do a top down tracing to
         for i in assumpDepList:
@@ -2087,6 +2090,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     print("info => ", info)
 
+#TODO: Do we need this?  Or is it the same as above?
     print("lhs => ", info['G1_lhs'][1])
     for (key,val) in info['G1_lhs'][1].items():
         print(key,val)
