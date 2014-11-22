@@ -1,0 +1,85 @@
+name := waters05SIG
+setting := symmetric
+l := 32
+
+BEGIN :: types
+alpha := ZR
+m := list{ZR}
+M := ZR
+y := list{ZR}
+u := list{G1}
+l := Int
+END :: types
+
+
+BEGIN :: func:keygen
+input := None
+ alpha := random(ZR) 
+ g := random(G1)
+ g1 := g ^ alpha
+ g2 := random(G1)
+ ut := random(G1)
+
+BEGIN :: for
+for{i := 0, l}
+ y#i := random(ZR)
+ u#i := g ^ y#i
+END :: for
+
+ sk := g2 ^ alpha
+ pk := list{g, g1, g2, u, ut} 
+output := list{pk, sk}
+END :: func:keygen
+
+
+BEGIN :: func:sign
+input := list{pk, sk, M}
+ pk := expand{g, g1, g2, u, ut} 
+
+ m := intToBits(M, l)
+ r  := random(ZR)
+ S2 := g ^ r 
+
+ dotProd1 := init(G1)
+BEGIN :: for
+for{i := 0, l}
+ dotProd1 := dotProd1 * (u#i ^ m#i)
+END :: for
+
+ S1 := (sk * (ut * dotProd1)^r)
+ sig := list{S1, S2}
+output := sig
+END :: func:sign
+
+
+BEGIN :: func:verify
+ input := list{pk, M, sig}
+ pk := expand{g, g1, g2, u, ut}
+ sig := expand{S1, S2}
+
+ m := intToBits(M, l)
+ dotProd2 := init(G1)
+ 
+BEGIN :: for
+for{i := 0, l}
+  dotProd2 := dotProd2 * (u#i ^ m#i)
+END :: for
+
+BEGIN :: if
+if { (e(S1, g) / e(S2, ut * dotProd2)) == e(g1, g2) }
+   output := True
+else
+   output := False
+END :: if
+
+END :: func:verify
+
+BEGIN :: latex
+S1 := S_1
+S2 := S_2
+g2 := g_2
+u1b := \hat{u_1\prime}
+u2b := \hat{u_2\prime}
+ut := \hat{u}
+END :: latex
+

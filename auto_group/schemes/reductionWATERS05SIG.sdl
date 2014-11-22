@@ -1,0 +1,175 @@
+name := WATERS05SIG
+setting := symmetric
+l := 32
+
+
+BEGIN :: types
+l := Int
+Z := GT
+m := Int
+k := Int
+x := list{Int}
+xprime := Int
+y := list{ZR}
+yprime := ZR
+u := list{G1}
+ID := Str
+M0 := GT
+M1 := GT
+M := list{GT}
+q := Int
+p := Int
+END :: types
+
+
+BEGIN :: func:F
+input := list{ID, xprime, x, m, k, p}
+
+idh := H(ID, ZR)
+id := intToBits(idh, l)
+
+xi := init(Int)
+BEGIN :: for
+for{i := 0, l}
+   xi := xi + (x#i ^ id#i)
+END :: for
+
+Fv := (p - (m * k)) + xprime + xi
+
+output := Fv
+END :: func:F
+
+
+BEGIN :: func:J
+input := list{ID, yprime, y}
+
+idh := H(ID, ZR)
+id := intToBits(idh, l)
+
+yi := init(ZR)
+BEGIN :: for
+for{i := 0, l}
+   yi := yi + (y#i ^ id#i)
+END :: for
+
+Jv := yprime + yi
+
+output := Jv
+END :: func:J
+
+
+BEGIN :: func:K
+input := list{ID, xprime, x}
+
+idh := H(ID, ZR)
+id := intToBits(idh, l)
+
+xi := init(Int)
+BEGIN :: for
+for{i := 0, l}
+   xi := xi + (x#i ^ id#i)
+END :: for
+
+cond := xprime + xi
+
+BEGIN :: if
+if { cond == 0 }
+   Kv := 0
+else
+   Kv := 1
+END :: if
+
+output := Kv
+END :: func:K
+
+
+BEGIN :: func:setup
+input := list{assumpKey, assumpVar}
+
+#assumpKey := expand{g, a, b, c, z}
+#assumpVar := expand{A, B, C, Z}
+ a := random(ZR)
+ b := random(ZR)
+ c := random(ZR)
+ z := random(ZR)
+ g := random(G1)
+
+ A := g ^ a
+ B := g ^ b
+ C := g ^ c
+
+#Target group element Z is irrelevant and ignored here (CRYPTO 2014)
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := e(g, g) ^ (a * b * c)
+ else
+   Z := e(g, g) ^ z
+ END :: if
+
+m := 4 * q
+k := random(Int) #this is not totally in keeping with the reduction...can we specify random values from a certain range? do we need to?
+xprime := random(Int)
+
+BEGIN :: for
+for{i := 0, l}
+   x#i := random(ZR)
+END :: for
+
+yprime := random(ZR)
+BEGIN :: for
+for{i := 0, l}
+   y#i := random(ZR)
+END :: for
+
+g1 := A
+g2 := B
+
+uexp := ((p - k*m) + xprime)
+ut := g2 ^ uexp
+
+BEGIN :: for
+for{i := 0, l}
+   u#i := (g2 ^ x#i) * (g ^ y#i)
+END :: for
+
+reductionKey := list{g, g1, g2, ut, u}
+reductionParams := list{p, q, m, k, xprime, x, yprime, y}
+output := list{reductionKey, reductionParams}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{reductionKey, reductionParams, M}
+reductionKey := expand{g, g1, g2, ut, u}
+reductionParams := expand{p, q, m, k, xprime, x, yprime, y}
+
+BEGIN :: if
+if { K(ID, xprime) == 0 }
+#simulator aborts??
+    output := error
+else
+   idh := H(ID, ZR)
+   id := intToBits(idh, l)
+
+
+ m := intToBits(M, l)
+ r  := random(ZR)
+ S2 := (g1 ^ (-1 / F(m, xprime, x, m, k, p))) * (g ^ r )
+
+ dotProd1 := init(G1)
+BEGIN :: for
+for{i := 0, l}
+ dotProd1 := dotProd1 * (u#i ^ m#i)
+END :: for
+
+
+ S1 := (g1 ^ (-1 * J(m, yprime) / F(m, xprime, x, m, k, p))) * ((ut * dotProd1)^r)
+#   d1 := (g1 ^ (-1 * J(ID, yprime) / F(ID, xprime, x, m, k, p))) * ((uprime * dotProd1) ^ r)
+
+ sig := list{S1, S2}
+
+output := sig
+END :: func:queries
+
+
