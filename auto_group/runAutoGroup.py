@@ -346,8 +346,14 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     if not hasattr(cm, "schemeType"):
         sys.exit("configAutoGroup: need to set 'schemeType' in config.")
 
-    funcOrder = [cm.reducSetupFuncName, cm.reducQueryFuncName, cm.reducChallengeFuncName]
-    setattr(cm, functionOrder, funcOrder)
+    if cm.schemeType == PKENC:
+        funcOrder = [cm.reducSetupFuncName, cm.reducQueryFuncName, cm.reducChallengeFuncName]
+        setattr(cm, functionOrder, funcOrder)
+    elif cm.schemeType == PKSIG:
+        funcOrder = [cm.reducSetupFuncName, cm.reducQueryFuncName]
+        setattr(cm, functionOrder, funcOrder)
+    else:
+        sys.exit("configAutoGroup: unrecognized 'schemeType' in config.")
 
     #TODO: create something like this for assumption?
     #for i in encConfigParams:
@@ -417,67 +423,121 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     pairingSearch = []
     # extract the statements, types, dependency list, influence list and exponents of influence list
     # for each algorithm in the SDL scheme
-    (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
-    (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
-    (stmtC, typesC, depListC, depListNoExpC, infListC, infListNoExpC) = sdl.getVarInfoFuncStmts( cm.reducChallengeFuncName )
-    varTypes.update(typesS)
-    varTypes.update(typesQ)
-    varTypes.update(typesC)
+    if cm.schemeType == PKENC:
+        (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
+        (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
+        (stmtC, typesC, depListC, depListNoExpC, infListC, infListNoExpC) = sdl.getVarInfoFuncStmts( cm.reducChallengeFuncName )
+        varTypes.update(typesS)
+        varTypes.update(typesQ)
+        varTypes.update(typesC)
 
-    if hasattr(cm, 'graphit') and cm.graphit:
-        dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
-        dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
-        dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
-        dg_reduc_query.adjustByMap(reductionData.get('varmap'))
-        dg_reduc_chall = generateGraph(cm.reducChallengeFuncName, (typesC, depListNoExpC), types.G1, varTypes)
-        dg_reduc_chall.adjustByMap(reductionData.get('varmap'))
+        if hasattr(cm, 'graphit') and cm.graphit:
+            dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
+            dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
+            dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
+            dg_reduc_query.adjustByMap(reductionData.get('varmap'))
+            dg_reduc_chall = generateGraph(cm.reducChallengeFuncName, (typesC, depListNoExpC), types.G1, varTypes)
+            dg_reduc_chall.adjustByMap(reductionData.get('varmap'))
 
-        if verbose:
-            print("<=== Reduction Setup Graph ===>")
-            print(dg_reduc_setup)
-            print("<=== Reduction Setup Graph ===>")
+            if verbose:
+                print("<=== Reduction Setup Graph ===>")
+                print(dg_reduc_setup)
+                print("<=== Reduction Setup Graph ===>")
 
-            print("<=== Reduction Query Graph ===>")
-            print(dg_reduc_query)
-            print("<=== Reduction Query Graph ===>")
+                print("<=== Reduction Query Graph ===>")
+                print(dg_reduc_query)
+                print("<=== Reduction Query Graph ===>")
 
-            print("<=== Reduction Challenge Graph ===>")
-            print(dg_reduc_chall)
-            print("<=== Reduction Challenge Graph ===>")
+                print("<=== Reduction Challenge Graph ===>")
+                print(dg_reduc_chall)
+                print("<=== Reduction Challenge Graph ===>")
 
-        dg_reduction = DotGraph("reduction")
-        dg_reduction += dg_reduc_setup + dg_reduc_query + dg_reduc_chall
-        if verbose:
-            print("<=== Reduction Graph ===>")
-            print(dg_reduction)
-            print("<=== Reduction Graph ===>")
+            dg_reduction = DotGraph("reduction")
+            dg_reduction += dg_reduc_setup + dg_reduc_query + dg_reduc_chall
+            if verbose:
+                print("<=== Reduction Graph ===>")
+                print(dg_reduction)
+                print("<=== Reduction Graph ===>")
 
-        reductionData['reductionGraph'] = dg_reduction
-    #print(stmtS)
-    #print(stmtQ)
+            reductionData['reductionGraph'] = dg_reduction
+        #print(stmtS)
+        #print(stmtQ)
 
-    # TODO: expand search to encrypt and potentially setup
-    pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
-            
-    info[curveID] = options['secparam']
-    info[dropFirstKeyword] = options[dropFirstKeyword]
-    gen = Generators(info)
-    # JAA: commented out for benchmarking    
-    #print("List of generators for scheme")
-    # retrieve the generators selected by the scheme
-    # typically found in the setup routine in most cases.
-    # extract the generators from the setup and keygen routine for later use
-    if hasattr(cm, 'reducSetupFuncName'):
-        gen.extractGens(stmtS, typesS)
-    if hasattr(cm, 'reducQueryFuncName'):
-        gen.extractGens(stmtQ, typesQ)
-    if hasattr(cm, 'reducChallengeFuncName'):
-        gen.extractGens(stmtC, typesC)
-    else:
-        sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
-    generators = gen.getGens()
-    # JAA: commented out for benchmarking    
-    #print("Generators extracted: ", generators)
+        # TODO: expand search to encrypt and potentially setup
+        pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
+                
+        info[curveID] = options['secparam']
+        info[dropFirstKeyword] = options[dropFirstKeyword]
+        gen = Generators(info)
+        # JAA: commented out for benchmarking    
+        #print("List of generators for scheme")
+        # retrieve the generators selected by the scheme
+        # typically found in the setup routine in most cases.
+        # extract the generators from the setup and keygen routine for later use
+        if hasattr(cm, 'reducSetupFuncName'):
+            gen.extractGens(stmtS, typesS)
+        if hasattr(cm, 'reducQueryFuncName'):
+            gen.extractGens(stmtQ, typesQ)
+        if hasattr(cm, 'reducChallengeFuncName'):
+            gen.extractGens(stmtC, typesC)
+        else:
+            sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
+        generators = gen.getGens()
+        # JAA: commented out for benchmarking    
+        #print("Generators extracted: ", generators)
+    elif cm.schemeType == PKSIG:
+        (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
+        (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
+        varTypes.update(typesS)
+        varTypes.update(typesQ)
+
+        if hasattr(cm, 'graphit') and cm.graphit:
+            dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
+            dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
+            dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
+            dg_reduc_query.adjustByMap(reductionData.get('varmap'))
+
+            if verbose:
+                print("<=== Reduction Setup Graph ===>")
+                print(dg_reduc_setup)
+                print("<=== Reduction Setup Graph ===>")
+
+                print("<=== Reduction Query Graph ===>")
+                print(dg_reduc_query)
+                print("<=== Reduction Query Graph ===>")
+
+            dg_reduction = DotGraph("reduction")
+            dg_reduction += dg_reduc_setup + dg_reduc_query
+            if verbose:
+                print("<=== Reduction Graph ===>")
+                print(dg_reduction)
+                print("<=== Reduction Graph ===>")
+
+            reductionData['reductionGraph'] = dg_reduction
+        #print(stmtS)
+        #print(stmtQ)
+
+        # TODO: expand search to encrypt and potentially setup
+        pairingSearch += [stmtS, stmtQ] # aka start with decrypt.
+                
+        info[curveID] = options['secparam']
+        info[dropFirstKeyword] = options[dropFirstKeyword]
+        gen = Generators(info)
+        # JAA: commented out for benchmarking    
+        #print("List of generators for scheme")
+        # retrieve the generators selected by the scheme
+        # typically found in the setup routine in most cases.
+        # extract the generators from the setup and keygen routine for later use
+        if hasattr(cm, 'reducSetupFuncName'):
+            gen.extractGens(stmtS, typesS)
+        if hasattr(cm, 'reducQueryFuncName'):
+            gen.extractGens(stmtQ, typesQ)
+        else:
+            sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
+        generators = gen.getGens()
+        # JAA: commented out for benchmarking    
+        #print("Generators extracted: ", generators)
+
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
@@ -538,16 +598,29 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     depList = {}
     depListUnaltered = {}
-    for i in [depListS, depListQ, depListC]:
-        for (key, val) in i.items():
-            #print(key, val)
-            if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
-                if(key in reductionData['varmap']):
-                    depList[reductionData['varmap'][key]] = val
-                    depListUnaltered[key] = val
-                else:
-                    depList[key] = val
-                    depListUnaltered[key] = val
+
+    if cm.schemeType == PKENC:
+        for i in [depListS, depListQ, depListC]:
+            for (key, val) in i.items():
+                #print(key, val)
+                if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
+                    if(key in reductionData['varmap']):
+                        depList[reductionData['varmap'][key]] = val
+                        depListUnaltered[key] = val
+                    else:
+                        depList[key] = val
+                        depListUnaltered[key] = val
+    elif cm.schemeType == PKSIG:
+        for i in [depListS, depListQ]:
+            for (key, val) in i.items():
+                #print(key, val)
+                if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
+                    if(key in reductionData['varmap']):
+                        depList[reductionData['varmap'][key]] = val
+                        depListUnaltered[key] = val
+                    else:
+                        depList[key] = val
+                        depListUnaltered[key] = val
 
     info[ 'deps' ] = (depListUnaltered, assignTraceback(assignInfo_reduction, generators, varTypes, depListUnaltered, constraintList))
 
@@ -624,7 +697,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
             setattr(cm, functionOrder, funcOrder)
         elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
-            funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+            funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
             setattr(cm, functionOrder, funcOrder)
 
         print("function order: ", cm.functionOrder)
@@ -718,7 +791,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
                 setattr(cm, functionOrder, funcOrder)
             elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
-                funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+                funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
                 setattr(cm, functionOrder, funcOrder)
 
             if cm.schemeType == PKENC:
