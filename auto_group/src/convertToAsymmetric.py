@@ -2381,6 +2381,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
+                    # record where we found the pairing (help with constructing dep graph)
                     gpv.setFunctionName(eachStmt[i].funcName)
                     sdl.ASTVisitor( gpv ).preorder(eachStmt[i].getAssignNode())
                 elif eachStmt[i].getHashArgsInAssignNode(): 
@@ -2446,7 +2447,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         print("<=== Merged Graph ===>")
         print(merged_graph)
         print("<=== Merged Graph ===>")
-        sys.exit(0)
+        #sys.exit(0)
 
     # constraint list narrows the solutions that
     # we care about
@@ -2507,6 +2508,7 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     additionalNewDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
     print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
 
+#TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
 #    print("lhs => ", info['G1_lhs'][1])
 #    for (key,val) in info['G1_lhs'][1].items():
 #        print(key,val)
@@ -2525,6 +2527,46 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
 
     print(info[ 'G1_lhs' ])
     print(info[ 'G1_rhs' ])
+
+#TODO: need to update this for the multi-case
+    # if we want to minimize the assumption
+    if short == SHORT_ASSUMPTION:
+        # need to build a map of pairing variables to assumptions
+        assumpKey = assumptionData.get('prunedMap') # is this the right data structure?
+        assumpDepList = []
+        for i,j in assumpKey.items():
+            assumpDepList += list(j)
+        assumpDepList = list(set(assumpDepList))
+        assumpDepList += list(assumpKey.keys())
+        assumpDepList.sort()
+        lhs_orig_vars, lhs_var_map = info['G1_lhs']
+        rhs_orig_vars, rhs_var_map = info['G1_rhs']
+        assump_map = {}
+        for i in lhs_orig_vars + rhs_orig_vars:
+            assump_map[i] = set()
+        # first do a backwards analysis from pairing variables and up
+        for i in assumpDepList: # lhs_orig_vars:
+            for j in lhs_orig_vars:
+                for k in lhs_var_map[j]:
+                    if k in additionalDeps and i in additionalDeps[k]:
+                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        assump_map[j] = assump_map[j].union([i])
+
+            for j in rhs_orig_vars:
+                for k in rhs_var_map[j]:
+                    if k in additionalDeps and i in additionalDeps[k]:
+                        #print("Found: ", i, "=>", j, ":", additionalDeps[k])
+                        assump_map[j] = assump_map[j].union([i])
+
+        # do a top down tracing to
+        for i in assumpDepList:
+            searchForChildren(i, i, assump_map, info)
+
+        # might want to check for any deps in additional deps?
+        print("Assumption Map: ", assump_map)
+        info['assump_map'] = assump_map
+        info['assump_list'] = assumpDepList
+
 
     ### REFACTORED Public-Key minimization for Encryption
     if config.schemeType == PKENC and short == SHORT_PUBKEYS:
@@ -2789,6 +2831,11 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
     # output the new SDL file with right suffix (which indicates options that were set)
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
+
+    # TODO: clean this up for the scheme
+    #new_pair_graph = dict(pair_graph)
+    # need to update variable names wherever necessary
+    #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
 
 ###########################
     outputFile_assump_array = []
