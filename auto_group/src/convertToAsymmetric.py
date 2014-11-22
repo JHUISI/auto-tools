@@ -1269,6 +1269,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         varTypes.update(typesSi)
         varTypes.update(typesV)
         pairingSearch += [stmtV] # aka start with verify
+        #pairingSearch += [stmtSi, stmtV] # aka start with verify
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
 
@@ -2877,6 +2878,10 @@ def runAutoGroupMulti(sdlFile, config, options, sdlVerbose=False, assumptionData
         outputFile_assump = "assumption_" + assumprecord['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
         outputFile_assump_array.append(outputFile_assump)
         writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
+
+        #TODO: figure out why this line is giving errors for sig schemes
+        #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+
         counter += 1
 
     return (outputFile, outputFile_assump_array)
