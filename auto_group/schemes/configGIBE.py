@@ -2,10 +2,11 @@ schemeType = "PKENC"
 assumption = ["qDTABDHE"]
 reduction = ["reductionGENTRY06"]
 
+short = "assumption"
 #short = "secret-keys"
 #short = "ciphertext"
 #short = "both"
-short = "public-keys"
+#short = "public-keys"
 #operation = "exp"
 
 setupFuncName = "setup"

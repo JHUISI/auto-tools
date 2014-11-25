@@ -2,9 +2,10 @@ schemeType = "PKENC"
 assumption = ["qDBDHE"]
 reduction = ["reductionBGW05"]
 
+short = "assumption"
 #short = "secret-keys"
 #short = "ciphertext"
-short = "public-keys"
+#short = "public-keys"
 
 setupFuncName = "setup"
 keygenFuncName = "keygen"

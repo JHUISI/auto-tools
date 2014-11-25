@@ -8,6 +8,7 @@ reduction = ["reductionWATERS05IBE"]
 #short = "both"
 #dropFirst = "secret-keys"
 short = "public-keys"
+#short = "assumption"
 
 setupFuncName = "setup"
 keygenFuncName = "keygen"

@@ -4,11 +4,11 @@ reduction = ["reductionWATERS05SIG"]
 
 #short = "assumption"
 #short = "secret-keys"
-#short = "signature"
+short = "signature"
 #operation = "exp"
 #short = "both"
 #dropFirst = "secret-keys"
-short = "public-keys"
+#short = "public-keys"
 
 keygenFuncName 	= "keygen"
 signFuncName 	= "sign"
