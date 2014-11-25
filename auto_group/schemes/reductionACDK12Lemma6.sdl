@@ -1,0 +1,117 @@
+name := acdk12
+setting := symmetric
+
+BEGIN :: types
+ m1 := ZR
+ m2 := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := list{None}
+ x := random(ZR)
+ y := random(ZR)
+ z := random(ZR)
+
+ Gone := random(G1)
+ Gtwo := random(G1)
+ Gthree := random(G1)
+
+ assumpKey := list{x, y, z}
+
+ X := Gone ^ x
+ Y := Gtwo ^ y
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := Gthree ^ (x + y)
+ else
+   Z := Gthree ^ z
+ END :: if
+
+ assumpVar := list{Gone, Gtwo, Gthree, X, Y, Z}
+
+ b := random(ZR)
+ alpha := random(ZR)
+ rho := random(ZR)
+
+ v := random(ZR)
+ v1 := random(ZR)
+ v2 := random(ZR)
+
+ G := Gthree
+
+ C := random(G1)
+ F := random(G1)
+ U1 := random(G1)
+ U2 := random(G1)
+ gk := list{G, C, F, U1, U2}
+
+ B := Gthree ^ b
+ A1 := Gone
+ A2 := Gtwo
+ B1 := Gone ^ b
+ B2 := Gtwo ^ b
+ K1 := Gthree ^ alpha
+ K2 := Gone ^ alpha
+ X1 := Gthree ^ rho
+ X2 := Gone ^ ((alpha * b) / rho)
+
+ V := Gthree ^ v
+ V1 := Gthree ^ v1
+ V2 := Gthree ^ v2
+
+ R1 := (Gthree ^ v) * (Gone ^ v1)
+ R2 := (Gthree ^ v) * (Gtwo ^ v2)
+
+ U := random(G1)
+ H := random(G1)
+
+ W1 := R1 ^ b
+ W2 := R2 ^ b
+
+ vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, U, H, X1, X2}
+ sk := list{K1, K2}
+
+output := list{gk, vk, sk, assumpKey, assumpVar}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{gk, vk, sk, m1, m2, assumpKey, assumpVar}
+ gk := expand{G, C, F, U1, U2}
+ vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
+ sk := expand{K1, K2}
+ assumpVar := expand{Gone, Gtwo, Gthree, X, Y, Z}
+ assumpKey := expand{x, y, z}
+
+ Ms1 := C ^ m1
+ Ms2 := C ^ m2
+ Ms3 := F ^ m1
+ Ms4 := F ^ m2
+ Ms5 := U1 ^ m1
+ Ms6 := U2 ^ m2
+
+ r1 := random(ZR)
+ r2 := random(ZR)
+ z1 := random(ZR)
+ z2 := random(ZR)
+ r := r1 + r2
+
+ gamma := random(bin)
+
+ S0 := (Ms5 * Ms6 * H) ^ r1
+ S1 := K2 * (V ^ r) * (Gtwo ^ (-x * gamma))
+ S2 := ((K1 ^ -1) * (V1 ^ r) * (V ^ z1) * (Gtwo ^ gamma))
+ S3 := B ^ -z1
+ S4 := (V2 ^ r) * (G ^ z2) * (Gone ^ gamma)
+ S5 := B ^ -z2
+ S6 := B ^ r2
+ S7 := G ^ r1
+
+ M := list{Ms1, Ms2, Ms3, Ms4, Ms5, Ms6}
+ sig := list{S0, S1, S2, S3, S4, S5, S6, S7}
+output := list{M, sig}
+END :: func:queries
+
