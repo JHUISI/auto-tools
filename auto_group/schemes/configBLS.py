@@ -1,14 +1,15 @@
 schemeType = "PKSIG"
 assumption = ["CDH"]
-reduction = ["reductionBLS1", "reductionBLS5"]
+#reduction = ["reductionBLS1", "reductionBLS5"]
+reduction = ["reductionBLS1", "reductionBLS5", "reductionBLS6"]
 
 #short = "assumption"
 #short = "secret-keys"
-#short = "ciphertext"
+short = "signature"
 #operation = "exp"
 #short = "both"
 #dropFirst = "secret-keys"
-short = "public-keys"
+#short = "public-keys"
 
 keygenFuncName 	= "keygen"
 signFuncName 	= "sign"
