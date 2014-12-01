@@ -569,8 +569,7 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     print("Unique solutions: ", len(M))
 
     # minimize the assumption, if the option is selected
-    # (currently, for encryption only)
-    if shortOpt == SHORT_ASSUMPTION and schemeType == pkEncType:
+    if shortOpt == SHORT_ASSUMPTION: # and schemeType == pkEncType:
         print("Using Solver to minimize the size of the assumption...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list)
