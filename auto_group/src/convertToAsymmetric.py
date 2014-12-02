@@ -1847,7 +1847,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         merged_graph = DotGraph("merged")
         merged_graph += dg_scheme
 
-        for assumprecord in assumptionData:
+        for (assumpname, assumprecord) in assumptionData.items():
             dg_assumption = assumprecord['assumptionGraph']
             print("<=== Assumption Graph ===>")
             print(dg_assumption)
@@ -1855,7 +1855,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             # merge
             merged_graph += dg_assumption
 
-        for reducrecord in reductionData:
+        for (reducname, reducrecord) in reductionData.items():
             dg_reduction = reducrecord['reductionGraph']
             print("<=== Reduction Graph ===>")
             print(dg_reduction)
@@ -1888,9 +1888,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
-    for assumprecord in assumptionData:
+    for (assumpname, assumprecord) in assumptionData.items():
         print("processed deps map assump => ", assumprecord['newDeps'])
-    for reducrecord in reductionData:
+    for (reducname, reducrecord) in reductionData.items():
         print("processed deps map reduc => ", reducrecord['newDeps'])
     
     #print(findVarInfo('d1', reductionData['varTypes']))
@@ -1899,7 +1899,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #print(sdl.getVarTypeFromVarName('d1', None, True))
 
     assumpDepstmp = {}
-    for assumprecord in assumptionData:
+    for (assumpname, assumprecord) in assumptionData.items():
         #assumpDeps = dict(list(assumpDeps.items()) + list(assumprecord['newDeps'].items()))
         assumpDepstmp = dict(list(assumpDepstmp.items()) + list(assumprecord['newDeps'].items()) + [(k, list(assumpDepstmp[k]) + list(assumprecord['newDeps'][k])) for k in set(assumprecord['newDeps']) & set(assumpDepstmp)])
 
@@ -1909,7 +1909,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     print("\nassumpDeps => ", assumpDeps)
 
     reducDepstmp = {}
-    for reducrecord in reductionData:
+    for (reducname, reducrecord) in reductionData.items():
         #print("\nblah")
         #print(reducDepstmp.items())
         #print(reducrecord['newDeps'].items())
@@ -1928,6 +1928,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
 
     #TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
+    #TODO: check where this merge should be located...
     print("lhs => ", info['G1_lhs'][1])
     for (key,val) in info['G1_lhs'][1].items():
         print(key,val)
@@ -1953,7 +1954,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         assumpDepList = []
         assump_map = {}
 
-        for assumprecord in assumptionData:
+        for (assumpname, assumprecord) in assumptionData.items():
             # need to build a map of pairing variables to assumptions
             assumpKey = assumprecord.get('prunedMap') # is this the right data structure?
             print("assumpKey => ", assumpKey)
@@ -2114,7 +2115,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     print("txor => ", txor)
 
     #merge in generators from assumption
-    for assumprec in assumptionData:
+    for (assumpname, assumprec) in assumptionData.items():
         assumpGens = assumprec['gen'].getGens()
         generators = generators + assumpGens
     generators = set(generators)
@@ -2261,98 +2262,187 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
 
 ###########################
-    outputFile_assump_array = []
-    counter = 0
+    if(len(reductionData) == 1):
+        outputFile_assump_array = []
+        counter = 0
 
-    #merge reductionData['deps']??
-    reducDeps0 = {}
-    reducDeps1 = {}
-    for reducrecord in reductionData:
-        tmp0 = reducrecord['deps'][0]
-        tmp1 = reducrecord['deps'][1]
+        #merge reductionData['deps']??
+        reducDeps0 = {}
+        reducDeps1 = {}
+        for (reducname, reducrecord) in reductionData.items():
+            tmp0 = reducrecord['deps'][0]
+            tmp1 = reducrecord['deps'][1]
 
-        print(tmp0, type(tmp0))
-        print(tmp1, type(tmp1))
+            print(tmp0, type(tmp0))
+            print(tmp1, type(tmp1))
 
-        reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
-        reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
-    reducDeps = (reducDeps0, reducDeps1)
-    print(reducDeps)
+            reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
+            reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
+        reducDeps = (reducDeps0, reducDeps1)
+        print(reducDeps)
 
-    for assumprecord in assumptionData:
-        funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
-        setattr(assumprecord['config'], functionOrder, funcOrder)
+        for (assumpname, assumprecord) in assumptionData.items():
+            funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
+            setattr(assumprecord['config'], functionOrder, funcOrder)
 
-        print("function order: ", assumprecord['config'].functionOrder)
+            print("function order: ", assumprecord['config'].functionOrder)
 
-        sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
-        (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
-        # generate the relevant SDL lines
-        generatorLines = assumprecord['gen'].getGenLines()
+            sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
+            (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
+            # generate the relevant SDL lines
+            generatorLines = assumprecord['gen'].getGenLines()
 
-        print(generatorLines)
+            print(generatorLines)
 
-        # we still care about group elements that are not used in pairings
-        # the rule is that we always assign these elements to G1 (so as long as
-        # so as long as it doesn't affect any pairing computations)
-        print(groupInfo)
-        #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
-        #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
-        #    print("Update: new G1 deps=>", groupInfo['G1'])
-        if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
-            #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
-            for i in assumprecord['notInAPairing']:
-                if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
-                    print(i)
-                    groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
-            print("Update: new G1 deps=>", groupInfo['G1']) 
+            # we still care about group elements that are not used in pairings
+            # the rule is that we always assign these elements to G1 (so as long as
+            # so as long as it doesn't affect any pairing computations)
+            print(groupInfo)
+            #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+            #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
+            #    print("Update: new G1 deps=>", groupInfo['G1'])
+            if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+                #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+                for i in assumprecord['notInAPairing']:
+                    if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                        print(i)
+                        groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
+                print("Update: new G1 deps=>", groupInfo['G1']) 
 
-        # put all the info together so that we can generate the new Asym SDL
-        groupInfo['generators'] = generators 
-        groupInfo['generatorMapG1'] = generatorMapG1
-        groupInfo['generatorMapG2'] = generatorMapG2
-        groupInfo['baseGeneratorG1'] = assumprecord['info']['baseGeneratorG1'] # usually 'g'
-        groupInfo['baseGeneratorG2'] = assumprecord['info']['baseGeneratorG2']
-        groupInfo['newTypes'] = {}
-        groupInfo['varTypes'] = {}
-        groupInfo['varTypes'].update(assumprecord['varTypes'])
-        groupInfo['usedVars'] = set()
-        groupInfo['verbose'] = info['verbose']
-        transFunc = {}
-        transFuncGen = {}
+            # put all the info together so that we can generate the new Asym SDL
+            groupInfo['generators'] = generators 
+            groupInfo['generatorMapG1'] = generatorMapG1
+            groupInfo['generatorMapG2'] = generatorMapG2
+            groupInfo['baseGeneratorG1'] = assumprecord['info']['baseGeneratorG1'] # usually 'g'
+            groupInfo['baseGeneratorG2'] = assumprecord['info']['baseGeneratorG2']
+            groupInfo['newTypes'] = {}
+            groupInfo['varTypes'] = {}
+            groupInfo['varTypes'].update(assumprecord['varTypes'])
+            groupInfo['usedVars'] = set()
+            groupInfo['verbose'] = info['verbose']
+            transFunc = {}
+            transFuncGen = {}
 
-        # determine the structure of the input SDL and stick as close as
-        # possible to that in the output SDL
-        if hasattr(assumprecord['config'], 'assumpSetupFuncName'):    
-            transFuncGen[ assumprecord['config'].assumpSetupFuncName ] = assumprecord['stmtS']
-        if hasattr(assumprecord['config'], 'assumpFuncName'):
-            transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
+            # determine the structure of the input SDL and stick as close as
+            # possible to that in the output SDL
+            if hasattr(assumprecord['config'], 'assumpSetupFuncName'):    
+                transFuncGen[ assumprecord['config'].assumpSetupFuncName ] = assumprecord['stmtS']
+            if hasattr(assumprecord['config'], 'assumpFuncName'):
+                transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
 
-        print(transFunc[ assumprecord['config'].assumpFuncName ])
-        print(assumprecord['stmtA'])
+            print(transFunc[ assumprecord['config'].assumpFuncName ])
+            print(assumprecord['stmtA'])
 
-        if options['computeSize']:
-            options['symPK']  = symDataTypePK
-            options['asymPK'] = asymDataTypePK
+            if options['computeSize']:
+                options['symPK']  = symDataTypePK
+                options['asymPK'] = asymDataTypePK
 
-        print(assumprecord['options'])
-        # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
-        newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
-        print(assumprecord['config'].functionOrder)
-        newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
-        print(newLinesT)
+            print(assumprecord['options'])
+            # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
+            newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
+            print(assumprecord['config'].functionOrder)
+            newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
+            print(newLinesT)
 
-        # debug output of the SDL file
-        print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
-        # output the new SDL file with right suffix (which indicates options that were set)
-        outputFile_assump = "assumption_" + assumprecord['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
-        outputFile_assump_array.append(outputFile_assump)
-        writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
+            # debug output of the SDL file
+            print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
+            # output the new SDL file with right suffix (which indicates options that were set)
+            outputFile_assump = "assumption_" + assumprecord['sdl_name'] + "_asym_" + fileSuffix + sdlSuffix
+            outputFile_assump_array.append(outputFile_assump)
+            writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
-        #TODO: figure out why this line is giving errors for sig schemes
-        #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+            #TODO: figure out why this line is giving errors for sig schemes
+            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
-        counter += 1
+            counter += 1
+    else: #multiple reduction/assumption code
+        for (reducname, reducrecord) in reductionData.items():
+            outputFile_assump_array = []
+            counter = 0
+
+            reducDeps = (reducrecord['deps'][0], reducrecord['deps'][1])
+            print(reducDeps)
+
+            #print(reducrecord['assump'])
+
+            if hasattr(config, "assumption_reduction_map"):
+                assumpname = config.assumption_reduction_map[reducname]
+            else:
+                sys.exit("configAutoGroup: need to set 'assumption_reduction_map' in config.")
+
+            assumprecord = assumptionData[assumpname]
+           
+            funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
+            setattr(assumprecord['config'], functionOrder, funcOrder)
+
+            print("function order: ", assumprecord['config'].functionOrder)
+
+            sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
+            (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
+            # generate the relevant SDL lines
+            generatorLines = assumprecord['gen'].getGenLines()
+
+            print(generatorLines)
+
+            # we still care about group elements that are not used in pairings
+            # the rule is that we always assign these elements to G1 (so as long as
+            # so as long as it doesn't affect any pairing computations)
+            print(groupInfo)
+            #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+            #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
+            #    print("Update: new G1 deps=>", groupInfo['G1'])
+            if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
+                #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
+                for i in assumprecord['notInAPairing']:
+                    if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
+                        print(i)
+                        groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
+                print("Update: new G1 deps=>", groupInfo['G1']) 
+
+            # put all the info together so that we can generate the new Asym SDL
+            groupInfo['generators'] = generators 
+            groupInfo['generatorMapG1'] = generatorMapG1
+            groupInfo['generatorMapG2'] = generatorMapG2
+            groupInfo['baseGeneratorG1'] = assumprecord['info']['baseGeneratorG1'] # usually 'g'
+            groupInfo['baseGeneratorG2'] = assumprecord['info']['baseGeneratorG2']
+            groupInfo['newTypes'] = {}
+            groupInfo['varTypes'] = {}
+            groupInfo['varTypes'].update(assumprecord['varTypes'])
+            groupInfo['usedVars'] = set()
+            groupInfo['verbose'] = info['verbose']
+            transFunc = {}
+            transFuncGen = {}
+
+            # determine the structure of the input SDL and stick as close as
+            # possible to that in the output SDL
+            if hasattr(assumprecord['config'], 'assumpSetupFuncName'):    
+                transFuncGen[ assumprecord['config'].assumpSetupFuncName ] = assumprecord['stmtS']
+            if hasattr(assumprecord['config'], 'assumpFuncName'):
+                transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
+
+            print(transFunc[ assumprecord['config'].assumpFuncName ])
+            print(assumprecord['stmtA'])
+
+            if options['computeSize']:
+                options['symPK']  = symDataTypePK
+                options['asymPK'] = asymDataTypePK
+
+            print(assumprecord['options'])
+            # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
+            newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
+            print(assumprecord['config'].functionOrder)
+            newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
+            print(newLinesT)
+
+            # debug output of the SDL file
+            print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
+            # output the new SDL file with right suffix (which indicates options that were set)
+            outputFile_assump = "assumption_" + assumprecord['sdl_name'] + "_" + reducname + "_asym_" + fileSuffix + sdlSuffix
+            outputFile_assump_array.append(outputFile_assump)
+            writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
+
+            #TODO: figure out why this line is giving errors for sig schemes
+            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
     return (outputFile, outputFile_assump_array)
 

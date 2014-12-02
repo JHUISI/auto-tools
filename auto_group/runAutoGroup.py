@@ -664,7 +664,15 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 newDeps[key] = set(newlist)
             #newDeps[key] = set(newlist)
     reductionData['newDeps'] = newDeps
+
     reductionData['options']['type'] = "reduction"
+
+    reductionData['reductionFile'] = reduction_file
+
+    #if hasattr(cm, "assumption_reduction_map"):
+    #    reductionData['assumption'] = cm.assumption_reduction_map[reduction_name]
+    #else:
+    #    reductionData['assumption'] = ""
 
     return reductionData
 
@@ -746,7 +754,8 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
         return
     else:
         #print(cm.assumption)
-        assumptionData = []
+        #assumptionData = []
+        assumptionData = {}
         for i in cm.assumption:
             assumptionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of assumption SDL file??
 
@@ -754,7 +763,8 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             assumptionFileParseRun = parseAssumptionFile(cm, assumptionFile, verbose, benchmarkOpt, estimateOpt)
             endTime = time.clock()
 
-            assumptionData.append(assumptionFileParseRun)
+            #assumptionData.append(assumptionFileParseRun)
+            assumptionData[i] = assumptionFileParseRun
 
             if benchmarkOpt: 
                 runningTime += (endTime - startTime) * 1000
@@ -768,7 +778,8 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             sys.exit("configAutoGroup: assumption set; need to set 'reduction' in config.") #TODO: add back in when finished and remove else
         else:
             print(cm.reduction)
-            reductionData = []
+            #reductionData = []
+            reductionData = {}
             for i in cm.reduction:
                 reductionFile = os.path.dirname(full_config_file) + "/" + i + ".sdl" #TODO: how to determine location of reduction SDL file??
 
@@ -776,7 +787,8 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 reductionFileParseRun = parseReductionFile(cm, reductionFile, verbose, benchmarkOpt, estimateOpt)
                 endTime = time.clock()
 
-                reductionData.append(reductionFileParseRun)
+                #reductionData.append(reductionFileParseRun)
+                reductionData[i] = reductionFileParseRun
 
                 if benchmarkOpt: 
                     runningTime += (endTime - startTime) * 1000
