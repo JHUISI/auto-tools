@@ -1809,7 +1809,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
-
+    # expand graphing to PKSIGs
     if options.get('graphit') and config.schemeType == PKENC:
         pair_graph = gpv.getDepGraph()
         print("Pairing info: ", pair_graph)
@@ -2524,17 +2524,18 @@ class AsymSDL:
         print("usedVars :=> ", usedGenerators)
         print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
-        print("deleteMe => ", deleteMe)
-                
+
         if len(deleteMe) > 0:
-            #print("Pruning Generators:\t", deleteMe)
+            print("Always Prune Generators: ", deleteMe)
             newLinesSe = self.__prune(newLinesSe, deleteMe)
             newLinesS  = self.__prune(newLinesS, deleteMe)
             newLinesK  = self.__prune(newLinesK, deleteMe)
             newLines2  = self.__prune(newLines2, deleteMe)
             newLines3  = self.__prune(newLines3, deleteMe)
-        
-        if config.schemeType == PKSIG:
+        else:
+            print("No unused geenrators to prune!")
+
+        if hasattr(config, 'enablePKprune') and config.enablePKprune and config.schemeType == PKSIG:
             # 1. get new pk list if defined in scheme
             origPKList = self.__getOriginalPK(config.keygenPubVar, newLinesSe + newLinesS + newLinesK)
             # 2. find out where pk was originally defined
@@ -2543,7 +2544,7 @@ class AsymSDL:
             if len(origPKList) > 0:
                 pkData = self.optimizePK(config, origPKList)
                 (sPub, vPub, newSignPK, newVerifyPK, newSignPKexp, newVerifyPKexp) = pkData
-                
+
                 # apply PKSIG optimizations to pk
                 newVarNames = []
                 newVarNodes = []
@@ -2560,12 +2561,12 @@ class AsymSDL:
                     newLinesS = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesS)
                 elif defInFuncName == "keygen":
                     newLinesK = self.__updatePKList(config.keygenPubVar, newVarNodes, newVarNames, newLinesK)
-                
+
                 # sPub => keygen AND sign
-                # vPub => verify 
+                # vPub => verify
                 if defInFuncName != "keygen" and newSignPK != None:
                     newLinesK = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLinesK)
-                
+
                 if newSignPK != None:
                     newLines2 = self.__updatePKExpand(config.keygenPubVar, newSignPKexp, sPub, newLines2)
                 if newVerifyPK != None:

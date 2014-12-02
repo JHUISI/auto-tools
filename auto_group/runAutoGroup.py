@@ -682,6 +682,9 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     else:
         graphit = False
 
+    # disable splitting of pk into spk/vpk
+    cm.enablePKprune = False
+
     #parse assumption arguments
     if not hasattr(cm, "assumption"):
         print("No assumption specified, running old AutoGroup")
