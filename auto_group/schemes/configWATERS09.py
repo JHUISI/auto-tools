@@ -44,3 +44,6 @@ reducMasterSecVars = ["reducmsk", "reducVar"]
 reductionMap = {'g':'g', 'f':'f', 'nu':'nu', 'c1':'c1', 'r':'r', 'G':'G', 'F':'F', 'T':'T', 'A':'A', 'B':'B', 'C':'C'}
 
 #graphit = False
+
+assumption_reduction_map = { "reductionWATERS09DBDH" : "DBDH", "reductionWATERS09DLIN" : "DLIN", "reductionWATERS09DLIN2" : "DLIN" }
+
