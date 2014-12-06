@@ -36,11 +36,14 @@ verbose = print_usage = print_options = benchmark = estimateSize = False
 sdl_file = None
 output_file = None
 config_file = None
+short_option = None
 dest_path = ""
 library = 'miracl'
 
 try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'o:s:c:behv', ['outfile=', 'sdl=', 'config=', 'benchmark', 'estimate', 'help', 'verbose', 'path=', 'print'])
+    options, remainder = getopt.getopt(sys.argv[1:], 'o:s:c:behv', ['outfile=', 'sdl=', 'config=', 'benchmark',
+                                                                    'estimate', 'help', 'verbose', 'path=',
+                                                                    'print', 'short='])
 except:
     sys.exit("ERROR: Specified invalid arguments.")
     
@@ -66,6 +69,8 @@ for opt, arg in options:
         dest_path = arg        
     elif opt == '--print':
         print_options = True
+    elif opt == '--short':
+        short_option = arg
 
 if verbose:
     print('OPTIONS   :', options)
@@ -82,6 +87,7 @@ if print_options:
     print('PATH:      :', dest_path)
     print('BENCHMARK  :', benchmark)
     print('ESTIMATES  :', estimateSize)
+    print('SHORT OPT  :', short_option)
 
 sys.exit("Need to specify SDL file.\nArguments: " + help_info) if sdl_file == None else None
 sys.exit("Need to specify config file.\nArguments: " + help_info) if config_file == None else None
@@ -676,7 +682,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     return reductionData
 
-def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt):
+def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt, shortOpt):
     runningTime = 0
 
     # get full path (assuming not provided)
@@ -692,6 +698,14 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
 
     # disable splitting of pk into spk/vpk
     cm.enablePKprune = False
+    if shortOpt:
+        # overrides the one in the cm
+        cm.short = shortOpt
+        if cm.short not in SHORT_OPTIONS:
+            sys.exit("You specified an invalid option.\nValid ones: " + str(SHORT_OPTIONS))
+        else:
+            print("Running with short = ", cm.short)
+
 
     #parse assumption arguments
     if not hasattr(cm, "assumption"):
@@ -725,6 +739,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
         if not hasattr(cm, "secparam"):
             secparam = "BN256" # default pairing curve for now
         else:
+            # need to check this against possible curve types
             secparam = cm.secparam
         
         dropFirst = None
@@ -850,4 +865,4 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             return
 
 # run AutoGroup with the designated options
-configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmark, estimateSize)
+configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmark, estimateSize, short_option)

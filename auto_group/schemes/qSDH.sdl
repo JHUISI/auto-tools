@@ -32,7 +32,7 @@ BEGIN :: for
     for{i := 1, q}
         gl#i := g2 ^ (x ^ i)
 END :: for
-
+# is this right?
 c := init(ZR)
 C := g1 ^ (1 / (x + c))
 

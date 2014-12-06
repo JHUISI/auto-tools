@@ -112,6 +112,7 @@ class GetPairingVariables:
         self.pairing_map = {}
         self.pairing_count = 1
         self.dep_graph = {}
+        self.name = None
 
     def getDepGraph(self):
         return self.dep_graph
@@ -162,8 +163,9 @@ class GetPairingVariables:
             lhs_oid = "\"P" + str(self.pairing_count)
             rhs_oid = "\"P" + str(self.pairing_count)
             # assume self.name has been defined via
-            self.dep_graph[self.name].append( (lhs_var, lhs_oid + "[0]\"") )
-            self.dep_graph[self.name].append( (rhs_var, rhs_oid + "[1]\"") )
+            if self.name:
+                self.dep_graph[self.name].append( (lhs_var, lhs_oid + "[0]\"") )
+                self.dep_graph[self.name].append( (rhs_var, rhs_oid + "[1]\"") )
             self.pairing_count += 1 # increment since we're done with this pairing
         #print("visit_pair end")
         #print(self.listLHS)
@@ -1797,7 +1799,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     # the solve in anyway. We can later recombine these during
                     # post processing of the SDL
                     eachStmt[i].assignNode = SplitPairings(eachStmt[i].getAssignNode(), path_applied)
-                    # JAA: commented out for benchmarking                    
+                    # JAA: commented out for benchmarking
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
                     # record where we found the pairing (help with constructing dep graph)
