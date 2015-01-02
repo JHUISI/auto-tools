@@ -838,8 +838,9 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 assumpMapMin[xorVarMap.get(i)] = j
             print("Assumption map: ", assumpMapMin)
             print("Assumption list: ", assumpList)
-        elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKENC:
+        elif shortOpt == SHORT_PUBKEYS and conf.forAutoGroupPlus:
             # create constraints around keys
+            assert pkMapData != None, "pkMapData was not set"
             fileSuffix = 'ky'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
             constraints = []
@@ -849,7 +850,8 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             print("Updated pk map  : ", pkMapMin)
             print("Original pk list: ", pkListMin)
             # here is where we need to encode some stuff in the pairing
-        elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKSIG:
+        # to remain backwards compatible with AutoGroup
+        elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKSIG and not conf.forAutoGroupPlus:
             # create constraints around keys
             fileSuffix = 'ky'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
@@ -863,7 +865,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                     print("DEBUG: n-of-n constraints: ", newConstraintList)
                     print("DEBUG: m-of-n constraints: ", flexConstraints)
                 constraints = newConstraintList
-                mofnConstraints = flexConstraints            
+                mofnConstraints = flexConstraints
         elif shortOpt == SHORT_CIPHERTEXT:
             fileSuffix = 'ct'
             assert type(conf.ciphertextVar) == str, "ciphertextVar in config file expected as a string"
@@ -1358,38 +1360,38 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
 
 
     ### REFACTORED Public-Key minimization for Encryption
-    if config.schemeType == PKENC and short == SHORT_PUBKEYS:
-    # change to SHORT_PUBKEYS in short so we can achieve all three!
-        # special case for PK encryption
-        pk_var_obj = varTypes[config.keygenPubVar]
-        if Type(pk_var_obj) == types.list:
-            pk_list = pk_var_obj.getListNodesList()
-        else:
-            pk_list = None
-
-        lhs_orig_vars, lhs_var_map = info['G1_lhs']
-        rhs_orig_vars, rhs_var_map = info['G1_rhs']
-
-        # build up the map for the PK list
-        pk_map = {}
-        if info['verbose']:
-            print("pk list: ", pk_list)
-            print("<=========================>")
-        for i in lhs_orig_vars:
-            if i not in pk_list:
-                pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
-            else:
-                pk_map[i] = set({i})
-        for i in rhs_orig_vars:
-            if i not in pk_list:
-                pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
-            else:
-                pk_map[i] = set({i})
-
-        if info['verbose']:
-            print("Final PK map: ", pk_map)
-        info['pk_map']  = pk_map
-        info['pk_list'] = pk_list
+    # if short == SHORT_PUBKEYS and config.schemeType in [PKENC, PKSIG]:
+    # # change to SHORT_PUBKEYS in short so we can achieve all three!
+    #     # special case for PK encryption
+    #     pk_var_obj = varTypes[config.keygenPubVar]
+    #     if Type(pk_var_obj) == types.list:
+    #         pk_list = pk_var_obj.getListNodesList()
+    #     else:
+    #         pk_list = None
+    #
+    #     lhs_orig_vars, lhs_var_map = info['G1_lhs']
+    #     rhs_orig_vars, rhs_var_map = info['G1_rhs']
+    #
+    #     # build up the map for the PK list
+    #     pk_map = {}
+    #     if info['verbose']:
+    #         print("pk list: ", pk_list)
+    #         print("<=========================>")
+    #     for i in lhs_orig_vars:
+    #         if i not in pk_list:
+    #             pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
+    #         else:
+    #             pk_map[i] = set({i})
+    #     for i in rhs_orig_vars:
+    #         if i not in pk_list:
+    #             pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
+    #         else:
+    #             pk_map[i] = set({i})
+    #
+    #     if info['verbose']:
+    #         print("Final PK map: ", pk_map)
+    #     info['pk_map']  = pk_map
+    #     info['pk_list'] = pk_list
 
 
     # JAA: commented out for benchmarking
@@ -1669,6 +1671,17 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
             print("We have two layers of indirection.. :-(")
     #print("Dot graph: ", str(dg))
     return dg
+
+def lookForMoreDeps(i, the_map, dep_map, the_target_list):
+    if not the_map.get(i) or not dep_map.get(i):
+        return False
+    the_map[i] = the_map[i].union( set(dep_map[i]).intersection(the_target_list) )
+    for k in dep_map[i]:
+        if k in dep_map:
+            the_map[i] = the_map[i].union( set(the_map[k]).intersection(the_target_list) )
+
+    return True
+
 
 """
 runAutoGroup is the main entry point into the AutoGroup tool. It takes as input the
@@ -1994,9 +2007,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
 
     ### REFACTORED Public-Key minimization for Encryption
-    if config.schemeType == PKENC and short == SHORT_PUBKEYS:
-    # change to SHORT_PUBKEYS in short so we can achieve all three!
-        # special case for PK encryption
+    if short == SHORT_PUBKEYS and config.schemeType in [PKENC, PKSIG]:
+        # special case for PK encryption and signatures
         pk_var_obj = varTypes[config.keygenPubVar]
         if Type(pk_var_obj) == types.list:
             pk_list = pk_var_obj.getListNodesList()
@@ -2014,19 +2026,32 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         for i in lhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(lhs_var_map[i]).intersection(pk_list)
-                pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
-                for k in additionalNewDeps[i]:
-                    if k in additionalNewDeps:
-                        pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
+                if i in additionalNewDeps:
+                    pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
+                    for k in additionalNewDeps[i]:
+                        if k in additionalNewDeps:
+                            pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
+                else:
+                    # check other structures?
+                    sys.exit(i + " missing lhs!")
             else:
                 pk_map[i] = set({i})
         for i in rhs_orig_vars:
             if i not in pk_list:
                 pk_map[i] = set(rhs_var_map[i]).intersection(pk_list)
-                pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
-                for k in additionalNewDeps[i]:
-                    if k in additionalNewDeps:
-                        pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
+                if i in additionalNewDeps:
+                    pk_map[i] = pk_map[i].union( set(additionalNewDeps[i]).intersection(pk_list) )
+                    for k in additionalNewDeps[i]:
+                        if k in additionalNewDeps:
+                            pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
+                else:
+                    # variable i must have been introduced from the scheme (let's look in orig map)
+                    #pk_map[i] = pk_map[i].union( set(rhs_var_map[i]).intersection(pk_list) )
+                    #print("output: ", rhs_var_map[i])
+                    lookForMoreDeps(i, pk_map, rhs_var_map, pk_list)
+                    print("updated pk_map: ", pk_map)
+                    sys.exit(i + " missing rhs: ")
+
             else:
                 pk_map[i] = set({i})
 
@@ -2036,19 +2061,6 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         info['pk_map']  = pk_map
         info['pk_list'] = pk_list
 
-#####################
-
-#        for i in assump_orig_vars: # look for where max_var appears in pairing variable
-#            if i not in pk_list and max_var in assump_var_map[i]:
-#                if getOtherPairingVar(the_map, i) not in constraintList:
-#                    constraintList.append(i)
-
-#        for i in reduc_orig_vars: # look for where max_var appears in pairing variable
-#            if i not in pk_list and max_var in reduc_var_map[i]:
-#                if getOtherPairingVar(the_map, i) not in constraintList:
-#                    constraintList.append(i)
-#
-#        print("Public-key informed constraint list: ", constraintList)
 #####################
 
     # JAA: commented out for benchmarking

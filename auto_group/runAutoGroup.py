@@ -1,85 +1,51 @@
-import os, sys, getopt, imp, time
+import os
+import sys
+import imp
+import time
+import argparse
 import src.sdlpath
 import SDLParser as sdl
 from SDLang import *
 from src.convertToAsymmetric import *
-from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, CountOfPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
+from src.outsrctechniques import SubstituteVar, SubstitutePairings, SplitPairings, HasPairings, \
+    CountOfPairings, MaintainOrder, PairInstanceFinderImproved, TestForMultipleEq, GetAttributeVars, \
+    GetEquqlityNodes, CountExpOp, CountMulOp, DelAnyVarInList
 
 import codegen_CPP
 import codegen_PY
 
-description = "sym.-to-asym. conversion for cryptographic schemes in SDL."
-help_info   = """
-\t-s, --sdl  [ filename ]
-\t\t: input SDL file description of scheme.
+description_text = "sym.-to-asym. conversion for cryptographic schemes in SDL."
+parser = argparse.ArgumentParser(description=description_text)
+parser.add_argument('-o', '--outfile', help="generate code of new scheme in C++/Python for Charm", required=True)
+parser.add_argument('-s', '--sdl', help="input SDL file description of scheme", required=True)
+parser.add_argument('-v', '--verbose', help="enable verbose mode", action="store_true")
+parser.add_argument('-c', '--config', help="configuration parameters needed for AutoGroup", required=True)
+parser.add_argument('-l', '--library', help="which library to benchmark against: miracl or relic", default="miracl")
+parser.add_argument('-b', '--benchmark', default=False, help="benchmark AutoGroup execution time", action="store_true")
+parser.add_argument('-e', '--estimate', default=False, help="estimate bandwidth for keys and ciphertext/signatures", action="store_true")
+parser.add_argument('--short', help="what to minimize: public-keys, secret-keys, assumption, ciphertext, signatures")
+parser.add_argument('--path', help="destination for AutoGroup output files. Default: current dir")
+parser.add_argument('--print', help="print the selected options", default=False, action="store_true")
 
-\t-c, --config [ SDL config file ]
-\t\t: configuration parameters needed for AutoGroup.
+args = parser.parse_args()
+output_file  = args.outfile
+sdl_file     = args.sdl
+verbose      = args.verbose
+config_file  = args.config
+library      = args.library
+benchmark    = args.benchmark
+estimateSize = args.estimate
+short_option = args.short
+dest_path    = args.path
+print_options  = args.print
 
-\t-v, --verbose   [ no-argument ]
-\t\t: enable verbose mode.
+if not dest_path:
+    dest_path = ""
 
-\t-o, --outfile  [ filename prefix ]
-\t\t: generate code of new scheme in C++/Python for Charm.
+if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
 
-\t-b, --benchmark  [ no-arguments ]
-\t\t: benchmark AutoGroup execution time.
-
-\t-e, --estimate [ no-arguments ]
-\t\t: estimate bandwidth for keys and ciphertext/signatures.
-
-\t--path [ path/to/dir/ ]
-\t\t: destination for AutoGroup output files. Default: current dir.
-"""
-
-verbose = print_usage = print_options = benchmark = estimateSize = False
-sdl_file = None
-output_file = None
-config_file = None
-short_option = None
-dest_path = ""
-library = 'miracl'
-
-try:
-    options, remainder = getopt.getopt(sys.argv[1:], 'o:s:c:behv', ['outfile=', 'sdl=', 'config=', 'benchmark',
-                                                                    'estimate', 'help', 'verbose', 'path=',
-                                                                    'print', 'short='])
-except:
-    sys.exit("ERROR: Specified invalid arguments.")
-    
-
-for opt, arg in options:
-    if opt in ('-h', '--help'):
-        print_usage = True
-    elif opt in ('-o', '--outfile'):
-        output_file = arg
-    elif opt in ('-s', '--sdl'):
-        sdl_file = arg
-    elif opt in ('-v', '--verbose'):
-        verbose = True
-    elif opt in ('-c', '--config'):
-        config_file = arg
-    elif opt in ('-l', '--library'):
-        library = arg
-    elif opt in ('-b', '--benchmark'):
-        benchmark = True
-    elif opt in ('-e', '--estimate'):
-        estimateSize = True
-    elif opt == '--path':
-        dest_path = arg        
-    elif opt == '--print':
-        print_options = True
-    elif opt == '--short':
-        short_option = arg
-
-if verbose:
-    print('OPTIONS   :', options)
-if print_usage:
-    print("AutoGroup: ", description)
-    print("\nArguments:")
-    print(help_info)
-    sys.exit(0)
 if print_options:
+    print("\nArguments:")
     print('VERBOSE    :', verbose)
     print('CONFIG     :', config_file)
     print('SDL INPUT  :', sdl_file)
@@ -89,12 +55,6 @@ if print_options:
     print('ESTIMATES  :', estimateSize)
     print('SHORT OPT  :', short_option)
 
-sys.exit("Need to specify SDL file.\nArguments: " + help_info) if sdl_file == None else None
-sys.exit("Need to specify config file.\nArguments: " + help_info) if config_file == None else None
-sys.exit("Need an output file for codegen.\nArguments: " + help_info) if output_file == None else None
-if dest_path != "" and dest_path[-1] != '/': dest_path += '/'
-
-verboseFlag = "-v"
 encConfigParams = ["keygenPubVar", "keygenSecVar", "ciphertextVar", "keygenFuncName", "encryptFuncName", "decryptFuncName"]
 sigConfigParams = ["keygenPubVar", "keygenSecVar", "signatureVar", "keygenFuncName", "signFuncName", "verifyFuncName"]
 
@@ -747,6 +707,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             dropFirst = cm.dropFirst
         
         options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path, 'graphit':graphit}
+        cm.forAutoGroupPlus = False
 
         startTime = time.clock()
         outfile_scheme = runAutoGroupOld(sdl_file, cm, options, verbose)
@@ -843,6 +804,7 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 dropFirst = cm.dropFirst
             
             options = {'secparam':secparam, 'userFuncList':[], 'computeSize':estimateOpt, 'dropFirst':dropFirst, 'path':dest_path, 'graphit':graphit}
+            cm.forAutoGroupPlus = True
 
             startTime = time.clock()
             (outfile_scheme, outfile_assump) = runAutoGroup(sdl_file, cm, options, verbose, assumptionData, reductionData)

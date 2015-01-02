@@ -295,11 +295,13 @@ def get_models(Formula):
 
 def initDict(someList):
     d = {}
+    print("theList: ", someList)
     for i in someList:
         d[i] = set()
     return d
 
 def sumDict(d):
+    assert type(d) == dict, "Expected d to be a dictionary!"
     c = 0
     for i,j in d.items():
         c += sum(list(j), 0)
@@ -333,6 +335,7 @@ class ModelEval:
         pts = {G1:1, G2:2} # simple point system
         resultMap = {}
         countMap = {} # stores intermediate results
+        print("evaluateSolutionsFromDepMap: ", depList)
         for solIndex in self.indexList:
             counts = initDict(depList)
             if self.verbose:
@@ -575,7 +578,7 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list)
         return (convertToBoolean(modRef), sat)
 
-    if shortOpt == SHORT_PUBKEYS and schemeType == pkEncType:
+    if shortOpt == SHORT_PUBKEYS: #and schemeType == pkEncType:
         print("Using Solver to minimize the PK constraints...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list)
