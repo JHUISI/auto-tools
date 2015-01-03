@@ -2032,8 +2032,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                         if k in additionalNewDeps:
                             pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
                 else:
-                    # check other structures?
-                    sys.exit(i + " missing lhs!")
+                    lookForMoreDeps(i, pk_map, lhs_var_map, pk_list)
             else:
                 pk_map[i] = set({i})
         for i in rhs_orig_vars:
@@ -2045,13 +2044,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                         if k in additionalNewDeps:
                             pk_map[i] = pk_map[i].union( set(additionalNewDeps[k]).intersection(pk_list) )
                 else:
-                    # variable i must have been introduced from the scheme (let's look in orig map)
-                    #pk_map[i] = pk_map[i].union( set(rhs_var_map[i]).intersection(pk_list) )
-                    #print("output: ", rhs_var_map[i])
                     lookForMoreDeps(i, pk_map, rhs_var_map, pk_list)
-                    print("updated pk_map: ", pk_map)
-                    sys.exit(i + " missing rhs: ")
-
             else:
                 pk_map[i] = set({i})
 
