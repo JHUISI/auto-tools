@@ -2,7 +2,7 @@
 
 cleanup() {
     # do some cleaning here
-    rm *.txt #*.sdl
+    rm *.txt *.sdl
     exit $1
 }
 
