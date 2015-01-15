@@ -83,8 +83,8 @@ s := random(ZR)
 C1 := (e(g1, g2) ^ s) * M
 C2 := g ^ s
 
-C3 := (((g1 ^ ID#one) * h1) ^ r1) ^ s
-C4 := (((g1 ^ ID#two) * h2) ^ r2) ^ s
+C3 := (((g1 ^ ID#one) * h1)) ^ s
+C4 := (((g1 ^ ID#two) * h2)) ^ s
 
 ct := list{C1, C2, C3, C4}
 output := ct
