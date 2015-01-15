@@ -94,8 +94,10 @@ void DFA::constructDFA(string rexpr, string alpha)
 		alphabet[i] = string(&alpha[i], 1);
 	}
 
-	system(cmd.c_str());
-
+	int err_code = system(cmd.c_str());
+	if(!err_code) { 
+	    cerr << "Failed to execute " << cmd << endl; 
+	}
 	// parse the tmpFile and print string
 	string line;
 	ifstream myfile(tmpFile.c_str());
@@ -126,7 +128,10 @@ bool DFA::accept(CharmListStr & w)
 		s += w[i];
 	}
 	cmd += "'" + s + "'";
-	system(cmd.c_str());
+	int err_code = system(cmd.c_str());
+	if(!err_code) { 
+	    cerr << "Failed to execute " << cmd << endl; 
+	}
 
 	string line;
 	ifstream myfile(tmpFile.c_str());
@@ -170,7 +175,11 @@ int DFA::getAcceptState(CharmMetaListInt & t)
 	}
 	ss << "}\"";
 	string cmd = pyDFA + " -ga '" + regex + "' '" + alphabetStr + "' '" + tmpFile + "' " + ss.str();
-	system(cmd.c_str());
+	int err_code = system(cmd.c_str());
+	if(!err_code) { 
+	    cerr << "Failed to execute " << cmd << endl; 
+	}
+
 
 	string line;
 	ifstream myfile(tmpFile.c_str());
@@ -214,7 +223,10 @@ CharmMetaListInt DFA::getTransitions(CharmListStr & w)
 		s += w[i];
 	}
 	cmd += "'" + s + "'";
-	system(cmd.c_str());
+	int err_code = system(cmd.c_str());
+	if(!err_code) { 
+	    cerr << "Failed to execute " << cmd << endl; 
+	}
 
 	string line;
 	ifstream myfile(tmpFile.c_str());

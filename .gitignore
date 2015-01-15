@@ -12,3 +12,4 @@ build/
 Test*.cpp
 Test*.h
 Test*.py
+*.o

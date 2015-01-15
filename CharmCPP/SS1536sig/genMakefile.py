@@ -43,7 +43,7 @@ def buildMakefile(config_file, flag, cppFiles, makefileName):
     cppFileName = cppFiles[0].strip(".cpp") # first will be used as target name as well
     charmLib = options['CHARM_LIB'][3:]
     if(options['BUILD_MIRACL'] == YES):
-        charmLibOpt = "-l" + charmLib
+        charmLibOpt = "-l" + charmLib 
         localPathToHeaders = "-I../miracl"
     elif(options['BUILD_RELIC'] == YES):
         charmLibOpt = "-l" + charmLib + " -lrelic"
@@ -52,7 +52,10 @@ def buildMakefile(config_file, flag, cppFiles, makefileName):
         sys.exit("Unrecognized crypto library to build.")
         
     cmd = "%.o: %.cpp"
-    CXXFLAGS = options['CXXFLAGS'] + " -D" + str(flag)
+    CXXFLAGS = options['CXXFLAGS']
+    if flag != "":
+        CXXFLAGS += " -D" + str(flag)
+
     if len(cppFiles) > 1:
         cppFileName1 = cppFiles[1].strip(".cpp") + ".o" # to specify object file
         makefileStr = makefile % (timestamp, options['prefix'], options['CXX'], CXXFLAGS, options['incdir'], localPathToHeaders, cppFileName, cppFileName1, charmLibOpt, cmd)
@@ -78,5 +81,3 @@ if __name__ == "__main__":
     #buildMakefile("../config.mk", "TestCharm.cpp", "MakefileTmp")
     buildMakefile(config, flag, file, makefileName)
     os.system("make -f %s" % makefileName)
-    
-    
