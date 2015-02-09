@@ -91,17 +91,20 @@ input := list{None}
  vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, U, H, X1, X2}
  sk := list{K1, K2}
 
-output := list{gk, vk, sk, assumpKey, assumpVar}
+ reducKey := list{ a1, a2, b, alpha, rho, delta, v1, v2, chi1, chi2, chi3 }
+
+output := list{gk, vk, sk, assumpKey, assumpVar, reducKey}
 END :: func:setup
 
 
 BEGIN :: func:queries
-input := list{gk, vk, sk, m1, m2, assumpKey, assumpVar, j}
+input := list{gk, vk, sk, m1, m2, assumpKey, assumpVar, reducKey, j}
  gk := expand{G, C, F, U1, U2}
  vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
  sk := expand{K1, K2}
  assumpVar := expand{Gone, Gtwo, Gthree, X, Y, Z}
  assumpKey := expand{x, y, z}
+ reducKey := expand{ a1, a2, b, alpha, rho, delta, v1, v2, chi1, chi2, chi3 }
 
 
 BEGIN :: if
@@ -133,43 +136,62 @@ BEGIN :: if
     S6 := B ^ r2
     S7 := G ^ r1
 
-
  elseif { j > i }
 
+     Ms1 := C ^ m1
+     Ms2 := C ^ m2
+     Ms3 := F ^ m1
+     Ms4 := F ^ m2
+     Ms5 := U1 ^ m1
+     Ms6 := U2 ^ m2
+
+     r1 := random(ZR)
+     r2 := random(ZR)
+     z1 := random(ZR)
+     z2 := random(ZR)
+     r := r1 + r2
+
+     gamma := random(bin)
+
+     S0 := (Ms5 * Ms6 * H) ^ r1
+     S1 := K2 * (V ^ r) * (Gtwo ^ (-x * gamma))
+     S2 := ((K1 ^ -1) * (V1 ^ r) * (V ^ z1) * (Gtwo ^ gamma))
+     S3 := B ^ -z1
+     S4 := (V2 ^ r) * (G ^ z2) * (Gone ^ gamma)
+     S5 := B ^ -z2
+     S6 := B ^ r2
+     S7 := G ^ r1
 
  else
+    wj1 := random(ZR)
+    wj2 := random(ZR)
 
+    Ms1 := C ^ wj1
+    Ms2 := C ^ wj2
+    Ms3 := F ^ wj1
+    Ms4 := F ^ wj2
+    Ms5 := U1 ^ wj1
+    Ms6 := U2 ^ wj2
+
+    r1 := random(ZR)
+    r2 := random(ZR)
+    z1 := random(ZR)
+    z2 := random(ZR)
+    r := r1 + r2
+
+    gamma := random(bin)
+
+#not sure about this S0 computation...
+    S0 := Y ^ (chi1 * wj1 + chi2 * wj2 + chi3)
+    S1 := (Gtwo ^ (alpha * a1)) * (Z ^ (-a1 * a2 * delta))
+    S2 := (G ^ -alpha) * (Y ^ v1) * (Z ^ (a2 * delta)) * (G ^ s1)
+    S3 := (X ^ v1) * (Gone ^ (-s1))
+    S4 := (Y ^ v2) * (Z ^ (a1 * delta)) * (Gtwo ^ s2)
+    S5 := (X ^ v2) * (Gone ^ -s2)
+    S6 := X
+    S7 := Y
 
 END :: if
-
-
-
-
-
-
- Ms1 := C ^ m1
- Ms2 := C ^ m2
- Ms3 := F ^ m1
- Ms4 := F ^ m2
- Ms5 := U1 ^ m1
- Ms6 := U2 ^ m2
-
- r1 := random(ZR)
- r2 := random(ZR)
- z1 := random(ZR)
- z2 := random(ZR)
- r := r1 + r2
-
- gamma := random(bin)
-
- S0 := (Ms5 * Ms6 * H) ^ r1
- S1 := K2 * (V ^ r) * (Gtwo ^ (-x * gamma))
- S2 := ((K1 ^ -1) * (V1 ^ r) * (V ^ z1) * (Gtwo ^ gamma))
- S3 := B ^ -z1
- S4 := (V2 ^ r) * (G ^ z2) * (Gone ^ gamma)
- S5 := B ^ -z2
- S6 := B ^ r2
- S7 := G ^ r1
 
  M := list{Ms1, Ms2, Ms3, Ms4, Ms5, Ms6}
  sig := list{S0, S1, S2, S3, S4, S5, S6, S7}

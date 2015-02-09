@@ -2,8 +2,8 @@ schemeType = "PKSIG"
 assumption = ["DLIN-ACDKNO", "CDH-ACDKNO"]
 reduction = ["reductionACDK12Lemma6", "reductionACDK12Lemma7", "reductionACDK12Lemma8"]
 
-#short = "public_keys"
-short = "signature"
+short = "public_keys"
+#short = "signature"
 #short = "assumption"
 #short = "both"
 #operation = "exp"
