@@ -2754,6 +2754,10 @@ class AsymSDL:
             
     def __prune(self, nodeLines, deleteMeList):
         nodeLines2 = []
+
+        if not nodeLines:
+            return nodeLines2
+
         for node in nodeLines:
             if Type(node) == ops.EQ:
                 if str(node.left) in deleteMeList:
@@ -2981,6 +2985,10 @@ class AsymAssumpSDL:
 
     def __prune(self, nodeLines, deleteMeList):
         nodeLines2 = []
+
+        if not nodeLines:
+            return nodeLines2
+
         for node in nodeLines:
             if Type(node) == ops.EQ:
                 if str(node.left) in deleteMeList:
