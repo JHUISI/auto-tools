@@ -340,7 +340,7 @@ class ModelEval:
         G1, G2 = 0, 1
         specificOp = optionDict.get(minKeyword)
         curve      = asymmetric_curves.get(specificOp)
-        assert curve != None, "Specified an invalid type-III curve: " + curve
+        assert curve != None, "Specified an invalid type-III curve: " + specificOp
         pts = {G1: curve.get('G1'), G2: curve.get('G2')}
         #pts = {G1:1, G2:2} # simple point system (replace with
 
