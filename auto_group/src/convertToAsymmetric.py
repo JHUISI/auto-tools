@@ -816,7 +816,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         xorVarMap = txor.getVarMap()
         if shortOpt == SHORT_SECKEYS:
             # create constraints around keys
-            fileSuffix = 'ky'
+            fileSuffix = 'sk'
             assert type(conf.keygenSecVar) == str, "keygenSecVar in config file expected as a string"
             if not adjustConstraints:
                 constraints = getConstraintList(info, hardConstraintList, conf.keygenSecVar, xorVarMap, varTypes, generators)
@@ -830,7 +830,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
                 constraints = newConstraintList
                 mofnConstraints = flexConstraints                        
         elif shortOpt == SHORT_ASSUMPTION:
-            fileSuffix = 'as'
+            fileSuffix = 'assm'
             assert type(conf.assumption) in [str, list], "assumption in config file expected as a string or list"
             constraints = []
             assumpMapMin = {}
@@ -841,7 +841,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         elif shortOpt == SHORT_PUBKEYS and conf.forAutoGroupPlus:
             # create constraints around keys
             assert pkMapData != None, "pkMapData was not set"
-            fileSuffix = 'ky'
+            fileSuffix = 'pk'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
             constraints = []
             pkMapMin = {}
@@ -853,7 +853,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         # to remain backwards compatible with AutoGroup
         elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKSIG and not conf.forAutoGroupPlus:
             # create constraints around keys
-            fileSuffix = 'ky'
+            fileSuffix = 'pk'
             assert type(conf.keygenPubVar) == str, "keygenPubVar in config file expected as a string"
             if not adjustConstraints:
                 constraints = getConstraintList(info, hardConstraintList, conf.keygenPubVar, xorVarMap, varTypes, generators)
@@ -1070,7 +1070,7 @@ def transformTypes(typesH, info):
     newLines.append(typesHeadEnd)
     return newLines
 
-def searchForChildren(key, depValue, data_map, info):
+def searchForChildren(key, depValue, data_map, info, seen_before):
     lhs_orig_vars, lhs_var_map = info['G1_lhs']
     rhs_orig_vars, rhs_var_map = info['G1_rhs']
 
@@ -1086,8 +1086,14 @@ def searchForChildren(key, depValue, data_map, info):
             depList.append(i)
 
     # recursively visit children of depList
+    depList = list(set(depList))
+    #print("depList: ", depList, ", seen before: ", seen_before)
     for i in depList:
-        searchForChildren(i, depValue, data_map, info)
+        if i not in seen_before:
+            seen_before.append(i)
+            seen_before = list(set(seen_before))
+            searchForChildren(i, depValue, data_map, info, seen_before)
+
     return
 
 def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_graph):
@@ -1998,8 +2004,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
         # do a top down tracing to
         for i in assumpDepList:
-            searchForChildren(i, i, assump_map, info)
-
+            searchForChildren(i, i, assump_map, info, seen_before=[])
         # might want to check for any deps in additional deps?
         print("Assumption Map: ", assump_map)
         info['assump_map'] = assump_map

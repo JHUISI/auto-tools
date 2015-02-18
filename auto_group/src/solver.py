@@ -314,7 +314,13 @@ class ModelEval:
         self.variables = variables
         self.Z3vars = Z3vars
         self.countValue = countValue
-        self.verbose = False
+        self.verbose = None
+
+    def enableVerboseMode(self):
+        self.verbose = True
+
+    def disableVerboseMode(self):
+        self.verbose = None
 
     def __sumTheSets(self, d):
         c = 0
@@ -329,10 +335,15 @@ class ModelEval:
                 s += 1 # increment split count
         return s
 
-    def evaluateSolutionsFromDepMap(self, M, depMap, depList, cache=None):
+    def evaluateSolutionsFromDepMap(self, M, depMap, depList, optionDict, rankSolutions=None):
         first = self.indexList[0]
         G1, G2 = 0, 1
-        pts = {G1:1, G2:2} # simple point system
+        specificOp = optionDict.get(minKeyword)
+        curve      = asymmetric_curves.get(specificOp)
+        assert curve != None, "Specified an invalid type-III curve: " + curve
+        pts = {G1: curve.get('G1'), G2: curve.get('G2')}
+        #pts = {G1:1, G2:2} # simple point system (replace with
+
         resultMap = {}
         countMap = {} # stores intermediate results
         print("evaluateSolutionsFromDepMap: ", depList)
@@ -355,6 +366,11 @@ class ModelEval:
                 print("Result: ", counts, ", splits:", resultMap[solIndex][0], ", sum:", resultMap[solIndex][1], "\n")
         #print("Final: ", resultMap)
         # find the minimum by comparing the second element of each tuple
+        #if rankSolutions:
+        #    sols = sorted(resultMap.items())
+        #    print("Solutions: ", sols)
+        #    sys.exit(-1)
+
         optimal_split = min(resultMap.items(), key=lambda x: x[1])
         index = optimal_split[0]
         print("Min splits: ", optimal_split[1][0])
@@ -575,13 +591,14 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     if shortOpt == SHORT_ASSUMPTION: # and schemeType == pkEncType:
         print("Using Solver to minimize the size of the assumption...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
-        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list)
+        if verbose: modEval.enableVerboseMode()
+        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list, optionDict)
         return (convertToBoolean(modRef), sat)
 
     if shortOpt == SHORT_PUBKEYS: #and schemeType == pkEncType:
         print("Using Solver to minimize the PK constraints...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
-        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list)
+        (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list, optionDict, rankSolutions=True)
         return (convertToBoolean(modRef), sat)
 
 
