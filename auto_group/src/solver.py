@@ -58,7 +58,7 @@ unSat = "unsat"
 isSet = "isSet"
 pkEncType = "PKENC" # encryption
 pkSigType = "PKSIG" # signatures
-
+pairingVarMapKeyword = "pairingVarMap"
 
 SS512 = { 'ZR':512, 'G1': 512, 'G2': 512, 'GT': 1024 }
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
@@ -338,14 +338,22 @@ class ModelEval:
     def evaluateSolutionsFromDepMap(self, M, depMap, depList, optionDict, rankSolutions=None):
         first = self.indexList[0]
         G1, G2 = 0, 1
+        varMap = optionDict.get(pairingVarMapKeyword)
         specificOp = optionDict.get(minKeyword)
         curve      = asymmetric_curves.get(specificOp)
         assert curve != None, "Specified an invalid type-III curve: " + specificOp
         pts = {G1: curve.get('G1'), G2: curve.get('G2')}
         #pts = {G1:1, G2:2} # simple point system (replace with
+        # TODO: move this to another
+        for i,j in varMap.items():
+            #print(i, "=>", j)
+            if i in depList:
+                depMap[j] = depMap[j].union([i])
+                #print("append this to ", depMap.get(j))
 
         resultMap = {}
-        countMap = {} # stores intermediate results
+        countMap = {}  # stores intermediate results
+        print("DepMap: ", depMap)
         print("evaluateSolutionsFromDepMap: ", depList)
         for solIndex in self.indexList:
             counts = initDict(depList)
@@ -378,7 +386,6 @@ class ModelEval:
         print("Found Solution: ", M[index])
         print("Results: ", countMap[index])
         return M[index], countMap[index]
-
 
 
     def minimizeWeightFunc(self, M, weights, counts, cache=None):

@@ -682,7 +682,7 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
 def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
                         hardConstraints, constraints, bothConstraints,
                         countOpt, minOptions, dropFirst, pkMapMin, pkListMin,
-                        assumpMapMin, assumpList):
+                        assumpMapMin, assumpList, xorVarMap):
     
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
     options[verboseKeyword] = verbose
@@ -704,6 +704,7 @@ def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
     options[assumpKeyword] = assumpMapMin
     options[assumpListKeyword] = assumpList
     options[schemeTypeKeyword] = conf.schemeType
+    options[pairingVarMapKeyword] = xorVarMap
     (result, satisfiable) = solveUsingSMT(options, shortOpt, timeOpt)
     return (satisfiable, result)
 
@@ -981,7 +982,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         countOpt = info[minKeyword] # the cost of group operations
         (satisfiable, resultDict) = instantiateZ3Solver(info['verbose'], conf, shortOpt, timeOpt, txor.getVariables(), txor.getClauses(),
                                                         hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst,
-                                                        pkMapMin, pkListMin, assumpMapMin, assumpList)
+                                                        pkMapMin, pkListMin, assumpMapMin, assumpList, xorVarMap)
         if satisfiable == False:
             #print("Adjusing constraints...")
             adjustConstraints = True
