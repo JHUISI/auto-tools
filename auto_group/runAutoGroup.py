@@ -682,7 +682,10 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
             setattr(cm, functionOrder, funcOrder)
         elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
-            funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+            if(hasattr(cm, "setupFuncName")):
+                funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+            else:
+                funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
             setattr(cm, functionOrder, funcOrder)
 
         print("function order: ", cm.functionOrder)
@@ -782,7 +785,10 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
                 funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.encryptFuncName, cm.decryptFuncName]
                 setattr(cm, functionOrder, funcOrder)
             elif cm.schemeType == PKSIG and getattr(cm, functionOrder, None) == None:
-                funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+                if(hasattr(cm, "setupFuncName")):
+                    funcOrder = [cm.setupFuncName, cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
+                else:
+                    funcOrder = [cm.keygenFuncName, cm.signFuncName, cm.verifyFuncName]
                 setattr(cm, functionOrder, funcOrder)
 
             if cm.schemeType == PKENC:
