@@ -1,0 +1,21 @@
+
+# Auto-generated makefile on 02:58AM on February 20, 2015
+prefix := /usr/local
+CXX := g++
+CXXFLAGS := -DASYMMETRIC=1 -DBUILD_BN_CURVE=1 -DBUILD_RELIC=0 -DBUILD_MIRACL=1 -O2 -m64 -g -Wall  -fstack-protector-all -Wendif-labels
+
+INCLUDES := -I. -I.. -I../builtin -I${prefix}/include -I../miracl
+
+NAME := TestACDKNO_pk_test
+OBJECTS := $(NAME).o benchACDKNOAsymPK.o
+LIB  := -lCharmMiraclbn
+
+.PHONY: $(NAME)
+$(NAME): $(OBJECTS)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJECTS) $(LIB) -o $(NAME)
+
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
+
+clean:
+	rm -f *.o $(NAME)
