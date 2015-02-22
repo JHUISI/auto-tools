@@ -393,6 +393,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
         (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
         (stmtC, typesC, depListC, depListNoExpC, infListC, infListNoExpC) = sdl.getVarInfoFuncStmts( cm.reducChallengeFuncName )
+        depListData = {cm.reducChallengeFuncName: depListNoExpC, cm.reducQueryFuncName: depListNoExpQ, cm.reducSetupFuncName: depListNoExpS}
         varTypes.update(typesS)
         varTypes.update(typesQ)
         varTypes.update(typesC)
@@ -454,6 +455,8 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     elif cm.schemeType == PKSIG:
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
         (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
+        depListData = {cm.reducChallengeFuncName: depListNoExpC, cm.reducQueryFuncName: depListNoExpQ, cm.reducSetupFuncName: depListNoExpS}
+
         varTypes.update(typesS)
         varTypes.update(typesQ)
 
@@ -515,15 +518,17 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     pair_vars_G1_lhs = [] 
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
+    gpv.setDepListData( depListData )
     #print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
-        #print(pair_vars_G1_lhs)            
+        #print(pair_vars_G1_lhs)
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
             #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
                 #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
+                gpv.setFuncName( eachStmt[i].getFuncName() )
                 if HasPairings(eachStmt[i].getAssignNode()):
                     path_applied = []
                     # split pairings if necessary so that we don't influence
@@ -569,7 +574,10 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         for i in [depListS, depListQ, depListC]:
             for (key, val) in i.items():
                 #print(key, val)
-                if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
+                if(not(len(val) == 0) and not(key == 'input') and
+                   not(key == 'output') and not(key == cm.reducCiphertextVar) and
+                   not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and
+                   not(key in cm.reducMasterSecVars)):
                     if(key in reductionData['varmap']):
                         depList[reductionData['varmap'][key]] = val
                         depListUnaltered[key] = val
