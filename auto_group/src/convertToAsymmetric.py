@@ -2357,9 +2357,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
 
     # TODO: clean this up for the scheme
-    new_pair_graph = dict(pair_graph)
+    #new_pair_graph = dict(pair_graph)
     # need to update variable names wherever necessary
-    buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
+    #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
 
 ###########################
     if(len(reductionData) == 1):
@@ -2452,7 +2452,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
             #TODO: figure out why this line is giving errors for sig schemes
-            buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
             counter += 1
     else: #multiple reduction/assumption code
@@ -2542,7 +2542,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
             #TODO: figure out why this line is giving errors for sig schemes
-            buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
     return (outputFile, outputFile_assump_array)
 
