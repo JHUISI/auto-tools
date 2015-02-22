@@ -103,7 +103,7 @@ class DotGraph:
             out_str += "\n"
         out_str += "}\n"
         return out_str
-
+DOTPROD = 'dotProd'
 class GetPairingVariables:
     def __init__(self, list1, list2):
         assert type(list1) == type(list2) and type(list1) == list, "GetPairingVariables: invalid input type"
@@ -113,6 +113,29 @@ class GetPairingVariables:
         self.pairing_count = 1
         self.dep_graph = {}
         self.name = None
+        self.depListData = None
+        self.funcName = None
+
+    def setDepListData(self, data):
+        self.depListData = data
+
+    def setFuncName(self, varName):
+        self.funcName = varName
+
+    def processDepListData(self, varName):
+        if self.depListData and self.funcName:
+            the_data = self.depListData.get(self.funcName)
+            if the_data:
+                dep_list = the_data.get(varName)
+                if varName in dep_list:
+                    real_dep = list(set(dep_list).difference([varName, G1Prefix]))
+                    if len(real_dep) == 1:
+                        return real_dep[0]
+                    else:
+                        raise Exception("Didn't anticipate this case: ", real_dep)
+        # if anything goes wrong above, then for now just return input
+        # (not many cases like this though)
+        return varName
 
     def getDepGraph(self):
         return self.dep_graph
@@ -128,6 +151,7 @@ class GetPairingVariables:
             return node.left
         #elif Type(node) == ops.MUL:
         #    pass
+        raise Exception('failed to retrieve nodes in GetPairingVariables')
         return
         
     def visit(self, node, data):
@@ -140,21 +164,29 @@ class GetPairingVariables:
 
         if str(node.left.getRefAttribute()) == str(node.right.getRefAttribute()):
             return # skip
-        
+        the_lhs_var = the_rhs_var = None
         if Type(node.left) == ops.ATTR and Type(node.right) == ops.ATTR:
-            self.listLHS.append(str(node.left.getRefAttribute()))
-            self.listRHS.append(str(node.right.getRefAttribute()))
+            the_lhs_var = str(node.left.getRefAttribute())
+            the_rhs_var = str(node.right.getRefAttribute())
         elif Type(node.left) == ops.ATTR and Type(node.right) != ops.ATTR:
-            self.listLHS.append(str(node.left.getRefAttribute()))
-            self.listRHS.append(str(self.retrieveNode(node.right)))
+            the_lhs_var = str(node.left.getRefAttribute())
+            the_rhs_var = str(self.retrieveNode(node.right))
         elif Type(node.left) != ops.ATTR and Type(node.right) == ops.ATTR:
-            self.listLHS.append(str(self.retrieveNode(node.left)))
-            self.listRHS.append(str(node.right.getRefAttribute()))
+            the_lhs_var = str(self.retrieveNode(node.left))
+            the_rhs_var = str(node.right.getRefAttribute())
         elif Type(node.left) != ops.ATTR and Type(node.right) != ops.ATTR:
-            self.listLHS.append(str(self.retrieveNode(node.left)))
-            self.listRHS.append(str(self.retrieveNode(node.right)))
+            the_lhs_var = str(self.retrieveNode(node.left))
+            the_rhs_var = str(self.retrieveNode(node.right))
         else:
             pass
+
+        if the_lhs_var and the_rhs_var:
+            if DOTPROD in the_lhs_var:
+                the_lhs_var = self.processDepListData(the_lhs_var)
+            if DOTPROD in the_rhs_var:
+                the_rhs_var = self.processDepListData(the_rhs_var)
+            self.listLHS.append(the_lhs_var)
+            self.listRHS.append(the_rhs_var)
         # store for latter use
         lhs_var = self.listLHS[-1]
         rhs_var = self.listRHS[-1]
@@ -1626,7 +1658,13 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
             source = eachStmt[i].getAssignVar()
             if eachStmt[i].getHasRandomness():
                 the_type = typesS.get(str(source))
-                #print("Random: ", the_type.type)
+                if the_type:
+                    print("Random: ", the_type.type)
+                elif not the_type and LIST_INDEX_SYMBOL in str(source):
+                    new_source = source.split(LIST_INDEX_SYMBOL)[0]
+                    the_type = typesS.get(str(new_source))
+                    print("Random type: ", the_type.type)
+                assert the_type != None, "generateGraphForward => invalid type: " + str(source)
                 if the_type.type == target_type:
                     dg.addDirectedEdge(source, source)
                 else:
@@ -1666,6 +1704,14 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
                         i_type = addlTypes.get(str(i))
                     else:
                         print("What to do in this case?")
+                if not i_type and LIST_INDEX_SYMBOL in str(i):
+                    i_star = i.split(LIST_INDEX_SYMBOL)[0]
+                    i_type = typesS.get(i_star) or addlTypes.get(i_star)
+                    print("i_type :=> ", i_type)
+                #assert i_type != None, "generateGraph => invalid type: " + str(i)
+                if not i_type:
+                    print("Could not find var type for: " + str(i))
+                    continue
                 if i_type.type == target_type: # assuming symmetric
                     # check its dependencies
                     if i in depListNoExpS:
@@ -1801,8 +1847,29 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     # analysis of these variables as the SDL is converted into
     # an asymmetric scheme.
     hashVarList = []
-    pair_vars_G1_lhs = [] 
-    pair_vars_G1_rhs = []    
+    pair_vars_G1_lhs = []
+    pair_vars_G1_rhs = []
+    pair_list = []
+    for (assumpname, assumprecord) in assumptionData.items():
+        the_lhs = assumprecord.get('G1_lhs')[0]
+        the_rhs = assumprecord.get('G1_rhs')[0]
+        for i,j in zip(the_lhs, the_rhs):
+            if (i == j): # skip e(g,g)
+                continue
+            if (i, j) not in pair_list and (j, i) not in pair_list:
+                # add (i,j) combo to pair_list
+                pair_list.append( (i, j) )
+
+    for (reducname, reducrecord) in reductionData.items():
+        the_lhs = reducrecord.get('G1_lhs')[0]
+        the_rhs = reducrecord.get('G1_rhs')[0]
+        for i,j in zip(the_lhs, the_rhs):
+            if (i == j): # skip e(g, g)
+                continue
+            if (i, j) not in pair_list and (j, i) not in pair_list:
+                # add (i,j) combo to pair_list
+                pair_list.append( (i, j) )
+
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     #print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
@@ -1831,6 +1898,30 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
+
+
+    the_lhs = pair_vars_G1_lhs
+    the_rhs = pair_vars_G1_rhs
+    for i,j in zip(the_lhs, the_rhs):
+        if (i == j): # skip e(g, g)
+            continue
+        if (i, j) not in pair_list and (j, i) not in pair_list:
+            # add (i,j) combo to pair_list
+            pair_list.append( (i, j) )
+
+    # reset
+    pair_vars_G1_lhs = []
+    pair_vars_G1_rhs = []
+    for the_pairs in pair_list:
+        (i, j) = the_pairs
+        pair_vars_G1_lhs.append(i)
+        pair_vars_G1_rhs.append(j)
+    print("LHS of pairings in assump/reduc: ", pair_vars_G1_lhs)
+    print("RHS of pairings in assump/reduc: ", pair_vars_G1_rhs)
+
+    #pair_vars_G1_lhs = ['g', 'h']
+    #pair_vars_G1_rhs = ['gprime', 'gl']
+
     # expand graphing to PKSIGs
     if options.get('graphit') and config.schemeType == PKENC:
         pair_graph = gpv.getDepGraph()
@@ -2076,7 +2167,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #print("Generator Lines: ", generatorLines)
     #print("<===== Determine Asymmetric Generators =====>\n")
     
-    #print("<===== Generate XOR clauses =====>")  
+    print("<===== Generate XOR clauses =====>")
     # let the user's preference for fixing the keys or ciphertext guide this portion of the algorithm.
     # info[ 'G1' ] : represents (varKeyList, depVarMap).
     # sanity check that we have an equivalent number of inputs to pairings
@@ -2097,10 +2188,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         if i < len(ANDs)-1: ANDs[i].right = ANDs[i+1]
         else: ANDs[i].right = BinaryNode.copy(xorList[i+1])
     # JAA: commented out for benchmarking        
-    #print("XOR clause: ", ANDs[0])
+    print("XOR clause: ", ANDs[0])
     txor = transformXOR(None) # accepts dictionary of fixed values
     sdl.ASTVisitor(txor).preorder(ANDs[0])
-    #print("<===== Generate XOR clauses =====>")
+    print("<===== Generate XOR clauses =====>")
 
     print("info => ", info)
 
@@ -2270,9 +2361,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
 
     # TODO: clean this up for the scheme
-    #new_pair_graph = dict(pair_graph)
+    new_pair_graph = dict(pair_graph)
     # need to update variable names wherever necessary
-    #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
+    buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
 
 ###########################
     if(len(reductionData) == 1):
@@ -2365,7 +2456,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
             #TODO: figure out why this line is giving errors for sig schemes
-            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+            buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
             counter += 1
     else: #multiple reduction/assumption code
@@ -2455,7 +2546,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             writeConfig(options['path'] + outputFile_assump, assumprecord['newLines0'], newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines)
 
             #TODO: figure out why this line is giving errors for sig schemes
-            #buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
+            buildSplitGraphForAssumption(options['path'] + outputFile_assump, assumprecord['sdl_name'], assumprecord['config'], sdlVerbose)
 
     return (outputFile, outputFile_assump_array)
 
@@ -3102,9 +3193,9 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    #print("Both G1 & G2: ", both)
-    #print("Just G1: ", G1)
-    #print("Just G2: ", G2)
+    print("Both G1 & G2: ", both)
+    print("Just G1: ", G1)
+    print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 

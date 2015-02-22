@@ -346,15 +346,18 @@ class ModelEval:
         #pts = {G1:1, G2:2} # simple point system (replace with
         # TODO: move this to another
         for i,j in varMap.items():
-            #print(i, "=>", j)
+            print(i, "=>", j)
             if i in depList:
                 depMap[j] = depMap[j].union([i])
-                #print("append this to ", depMap.get(j))
+                print("append this to ", depMap.get(j))
 
         resultMap = {}
         countMap = {}  # stores intermediate results
+        print("<====================================>")
+        print("VarMap: ", varMap)
         print("DepMap: ", depMap)
         print("evaluateSolutionsFromDepMap: ", depList)
+        print("<====================================>")
         for solIndex in self.indexList:
             counts = initDict(depList)
             if self.verbose:
