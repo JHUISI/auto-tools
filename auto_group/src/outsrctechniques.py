@@ -1018,11 +1018,39 @@ class SubstitutePairings:
             rhs = str(self.retrieveNode(node.right).getRefAttribute())
         if self.verbose: print("\nDEBUG: lhs=", lhs, ", rhs=", rhs)
         if lhs in self.generators and rhs in self.generators: # covers lhs == rhs OR lhs != rhs
-            node.left.setAttribute( self.mapG1.get(lhs) )
-            node.right.setAttribute( self.mapG2.get(rhs) )
-            varL = [self.mapG1.get(lhs), self.mapG2.get(rhs)]
-            self.usedGens = self.usedGens.union(varL)            
-            self.usedVar  = self.usedVar.union(varL)
+            if lhs in self.bothGroups and rhs in self.bothGroups:
+                # most common case
+                node.left.setAttribute( self.mapG1.get(lhs) )
+                node.right.setAttribute( self.mapG2.get(rhs) )
+                varL = [self.mapG1.get(lhs), self.mapG2.get(rhs)]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            elif lhs in self.bothGroups:
+                if rhs in self.pairingInfo[G1Prefix]:
+                    # lhs = G2, rhs = G1
+                    lhs_var, rhs_var = self.mapG2.get(lhs), self.mapG1.get(rhs)
+                else:
+                    # lhs = G1, rhs = G2
+                    lhs_var, rhs_var = self.mapG1.get(lhs), self.mapG2.get(rhs)
+                node.left.setAttribute( lhs_var )
+                node.right.setAttribute( rhs_var )
+                varL = [lhs_var, rhs_var]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            elif rhs in self.bothGroups:
+                if lhs in self.pairingInfo[G1Prefix]:
+                    # lhs = G1, rhs = G2
+                    lhs_var, rhs_var = self.mapG1.get(lhs), self.mapG2.get(rhs)
+                else:
+                    # lhs = G2, rhs = G1
+                    lhs_var, rhs_var = self.mapG2.get(lhs), self.mapG1.get(rhs)
+                node.left.setAttribute( lhs_var )
+                node.right.setAttribute( rhs_var )
+                varL = [lhs_var, rhs_var]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            else:
+                pass
             return
         elif lhs == rhs and lhs in self.bothGroups: # e(g, g)
             new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)

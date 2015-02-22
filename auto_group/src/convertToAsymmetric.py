@@ -1916,11 +1916,6 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         (i, j) = the_pairs
         pair_vars_G1_lhs.append(i)
         pair_vars_G1_rhs.append(j)
-    print("LHS of pairings in assump/reduc: ", pair_vars_G1_lhs)
-    print("RHS of pairings in assump/reduc: ", pair_vars_G1_rhs)
-
-    #pair_vars_G1_lhs = ['g', 'h']
-    #pair_vars_G1_rhs = ['gprime', 'gl']
 
     # expand graphing to PKSIGs
     if options.get('graphit') and config.schemeType == PKENC:
@@ -2167,7 +2162,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #print("Generator Lines: ", generatorLines)
     #print("<===== Determine Asymmetric Generators =====>\n")
     
-    print("<===== Generate XOR clauses =====>")
+    #print("<===== Generate XOR clauses =====>")
     # let the user's preference for fixing the keys or ciphertext guide this portion of the algorithm.
     # info[ 'G1' ] : represents (varKeyList, depVarMap).
     # sanity check that we have an equivalent number of inputs to pairings
@@ -2188,12 +2183,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         if i < len(ANDs)-1: ANDs[i].right = ANDs[i+1]
         else: ANDs[i].right = BinaryNode.copy(xorList[i+1])
     # JAA: commented out for benchmarking        
-    print("XOR clause: ", ANDs[0])
+    #print("XOR clause: ", ANDs[0])
     txor = transformXOR(None) # accepts dictionary of fixed values
     sdl.ASTVisitor(txor).preorder(ANDs[0])
-    print("<===== Generate XOR clauses =====>")
+    #print("<===== Generate XOR clauses =====>")
 
-    print("info => ", info)
+    #print("info => ", info)
 
 #TODO: Do we need this?  Or is it the same as above?
     print("lhs => ", info['G1_lhs'][1])
@@ -2216,7 +2211,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     print("constraintList => ", constraintList)
     #constraintList = ['w', 'h', 'u', 'D1', 'D2', 'K', 'C6', 'D4']
-    print("txor => ", txor)
+    # debug output
+    #print("txor => ", txor)
 
     #merge in generators from assumption
     for (assumpname, assumprec) in assumptionData.items():
@@ -3193,9 +3189,9 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    #print("Both G1 & G2: ", both)
+    #print("Just G1: ", G1)
+    #print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 
