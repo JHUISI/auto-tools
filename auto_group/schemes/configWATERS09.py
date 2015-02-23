@@ -47,3 +47,4 @@ reductionMap = {'g':'g', 'f':'f', 'nu':'nu', 'c1':'c1', 'r':'r', 'G':'G', 'F':'F
 
 assumption_reduction_map = { "reductionWATERS09DBDH" : "DBDH", "reductionWATERS09DLIN" : "DLIN", "reductionWATERS09DLIN2" : "DLIN" }
 
+graphit = True

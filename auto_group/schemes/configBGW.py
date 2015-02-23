@@ -38,3 +38,4 @@ reducMasterSecVars = ["assumpKey", "reductionParams"]
 #maps assumption variables to reduction variables ie 'ct2':'C2' (assump:reduc)
 reductionMap = {'g':'g', 'g1':'g1', 'g2':'g2', 'ct1':'C1', 'ct2':'C2', 'ct3':'C3', 'd1':'d1', 'd2':'d2', 'A':'A', 'B':'B', 'C':'C', 'uprime':'ut'}
 
+graphit = True
