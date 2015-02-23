@@ -4,6 +4,7 @@ import src.sdlpath, math
 from src.benchmark_interface import *
 import sdlparser.SDLParser as sdl
 from sdlparser.SDLang import *
+from src.outsrctechniques import HasPairings
 
 """
 format of config file:
@@ -59,6 +60,7 @@ isSet = "isSet"
 pkEncType = "PKENC" # encryption
 pkSigType = "PKSIG" # signatures
 pairingVarMapKeyword = "pairingVarMap"
+mergedGraphKeyword = "mergedGraph"
 
 SS512 = { 'ZR':512, 'G1': 512, 'G2': 512, 'GT': 1024 }
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
@@ -545,8 +547,26 @@ def findMinimalRef(M, data1, data2, skipList=[]):
             minRefList = data3Index[minVal]
     #print("min: ", data1[minRef], data2[minRef], str(M[minRef]).replace("\n", "").replace("\t", ""))
     return minRef, minCount, minRefList # M[minRef]
-        
-def solveUsingSMT(optionDict, shortOpt, timeOpt):
+
+def checkValidSplit(info, optionDict, a_model):
+    xorMap       = optionDict.get(pairingVarMapKeyword)
+    merged_graph = optionDict.get(mergedGraphKeyword)
+    # build a complete dep map of scheme, reduction and assumption from the model
+    group_info = buildCompleteMap(a_model, info, xorMap)
+    # using group_info map, extract a graph split (basically, apply BFS from root)
+    # also check whether the split is valid
+    (graph0, graph1, is_valid_split) = generateSplit(group_info, merged_graph)
+    # TODO: write merged_graph, graph0 and graph1 to disk
+    if is_valid_split:
+        print("SOLUTION IS A VALID SPLIT!!!")
+    else:
+        print("REJECTING SPLIT!!!")
+        sys.exit(-1)
+
+    return (a_model, sat)
+
+
+def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
     verbose     = optionDict.get(verboseKeyword)
     schemeType  = optionDict.get(schemeTypeKeyword)
     print("Scheme type: ", schemeType)
@@ -555,14 +575,13 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     constraints = optionDict.get(constraintKeyword)
     bothConst   = optionDict.get(bothKeyword)
     
-    searchAll   = optionDict.get(searchKeyword)    
+    searchAll    = optionDict.get(searchKeyword)
     hard_constraints = optionDict.get(hardConstKeyword)
-    pk_map_vars = optionDict.get(pkMapKeyword)
-    pk_list     = optionDict.get(pkListKeyword)
+    pk_map_vars  = optionDict.get(pkMapKeyword)
+    pk_list      = optionDict.get(pkListKeyword)
     assump_map_vars = optionDict.get(assumpKeyword)
-    assump_list = optionDict.get(assumpListKeyword)
-
-    # JAA: commented out for benchmarking    
+    assump_list  = optionDict.get(assumpListKeyword)
+    # JAA: commented out for benchmarking
     #print("hardConstraints: ", hard_constraints)
     counts  = {}
     Z3vars = {}
@@ -603,13 +622,13 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         if verbose: modEval.enableVerboseMode()
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list, optionDict)
-        return (convertToBoolean(modRef), sat)
+        return checkValidSplit(info, optionDict, convertToBoolean(modRef))
 
     if shortOpt == SHORT_PUBKEYS: #and schemeType == pkEncType:
         print("Using Solver to minimize the PK constraints...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list, optionDict, rankSolutions=True)
-        return (convertToBoolean(modRef), sat)
+        return checkValidSplit(info, optionDict, convertToBoolean(modRef))
 
 
     # if only minimizing one aspect: size: SK or CT, PK or SIG OR time: exp or mul
@@ -690,4 +709,668 @@ def solveUsingSMT(optionDict, shortOpt, timeOpt):
     else:
         pass
     
-    return (convertToBoolean(modRef), sat)
+    #return (convertToBoolean(modRef), sat)
+    return checkValidSplit(info, optionDict, convertToBoolean(modRef))
+
+
+
+### METHODS FOR VERIFYING SOLUTION
+
+_G1Prefix = 'G1'
+_G2Prefix = 'G2'
+_bothPrefix = 'both'
+
+class DotGraph:
+    def __init__(self, name):
+        self.name = name
+        self.nodes = set()
+        self.edges = []
+        self.rootNode = None
+        self.addedEdgeToRoot = False
+        self.outgoingEdges = {}
+        self.pairingIdentifiers = None
+
+
+    def setPairingIds(self, ids):
+        assert type(ids) == set, "cannot set an empty list of pairing IDs"
+        self.pairingIdentifiers = ids
+        self.nodes = self.nodes.union(ids)
+
+    def getRootNode(self):
+        if self.rootNode:
+            return self.rootNode
+        else:
+            rootNodes = []
+            for i in self.edges:
+                (a, b) = i
+                if b == "":
+                    rootNodes.append(a)
+            return rootNodes
+
+    def getOutgoingEdges(self, e):
+        if type(e) != list:
+            e_list = [e]
+        else:
+            e_list = list(e)
+        for i in e_list:
+            return self.outgoingEdges.get(i)
+
+    def setRootNode(self, var):
+        if self.rootNode:
+            self.rootNode.append(var)
+        else:
+            self.rootNode = [var]
+        self.edges.append((var, ""))
+
+    def __stripLIST(self, var):
+        if LIST_INDEX_SYMBOL in var:
+            return var.split(LIST_INDEX_SYMBOL)[0]
+        return var
+
+    def __processOutgoingEdge(self, tupl):
+        # now process (a -> b)
+        (a, b) = tupl
+        if b != "":
+            if self.outgoingEdges.get(a):
+                self.outgoingEdges[a].append(b)
+            else:
+                self.outgoingEdges[a] = [b]
+        return
+
+    def computeOutgoingEdges(self):
+        for i in self.edges:
+            (a, b) = i
+            self.__processOutgoingEdge((a, b))
+
+        the_edges = self.edges
+        the_nodes = []
+        for i in self.nodes:
+            if self.outgoingEdges.get(i):
+                the_nodes.append(i)
+        for i in self.edges:
+            (a, b) = i
+            if a != "" and a not in the_nodes:
+                the_nodes.append(a)
+            if b != "" and b not in the_nodes:
+                the_nodes.append(b)
+        return (the_nodes, the_edges, self.outgoingEdges)
+
+    # a -> b
+    def addDirectedEdge(self, a, b):
+        if a != b:
+            a = self.__stripLIST(a)
+            b = self.__stripLIST(b)
+            # we don't want any cyclical stuff here
+            self.nodes = self.nodes.union([a, b])
+            if a == self.rootNode:
+                self.addedEdgeToRoot = True
+                self.edges.append((a, b))
+            else:
+                self.edges.append((a, b))
+            return True
+        else:
+            # node has no parent
+            self.edges.append((a, ""))
+            return True
+
+    def adjustByMap(self, data):
+        edges = []
+        for i in self.edges:
+            (a, b) = i
+            if a in data: # use varmap
+                a = data[a]
+            if b in data: # use varmap
+                b = data[b]
+            edges.append((a, b))
+        self.edges = edges
+
+        nodes = set()
+        for i in self.nodes:
+            if i in data: # use varmap
+                n = data[i]
+            else: # keep it
+                n = i
+            nodes = nodes.union([n])
+        self.nodes = nodes
+
+
+    # merges edges that show up for a given function
+    def update(self, graph_dict):
+        if self.name in graph_dict:
+            self.edges.extend(graph_dict.get(self.name))
+        return
+
+    def smart_update(self, graph_dict):
+        if self.name in graph_dict:
+            the_edges = graph_dict.get(self.name)
+            for i in the_edges:
+                (a, b) = i
+                if a in self.nodes or b in self.nodes:
+                    self.edges.append(i)
+        return
+
+    def add(self, other):
+        # just add to myself
+        self.edges += other.edges
+        self.edges = list(set(self.edges)) # in case there are duplicated pairs (x,y)
+        self.nodes = self.nodes.union( other.nodes )
+        if other.outgoingEdges:
+            for i,j in other.outgoingEdges.items():
+                if self.outgoingEdges.get(i):
+                    self.outgoingEdges[i] = list(set(self.outgoingEdges[i]).union(j))
+                else:
+                    self.outgoingEdges[i] = j
+        if other.pairingIdentifiers:
+            self.pairingIdentifiers = self.pairingIdentifiers.union(other.pairingIdentifiers)
+        return self
+
+    def __add__(self, other):
+        if type(self) == type(other):
+            return self.add(other)
+
+    def check_equal(self, other):
+        return (set(self.edges) == set(other.edges) and
+                set(self.nodes) == set(other.nodes))
+
+    def __eq__(self, other):
+        if type(self) == type(other):
+            return self.check_equal(other)
+
+    def __ne__(self, other):
+        if type(self) == type(other):
+            return not self.check_equal(other)
+
+    # generate the
+    def __str__(self):
+        out_str = "digraph "
+        out_str += self.name + " {\n"
+        for i in self.edges:
+            (a, b) = i
+            out_str += str(a)
+            if b != "": out_str += " -> " + str(b)
+            out_str += "\n"
+        out_str += "}\n"
+        return out_str
+
+def generateSplit(group_info, merged_graph):
+    """
+    :param group_info: final group assignments from split
+    :param root_node: root node of merged dep graph
+    :param nodes: all nodes in merged graph
+    :param edges: all edges in merged graph
+    :param out_going: outgoing edges for each nodes (will be used w/ BFS to split)
+    :return:
+    """
+    root_node = merged_graph.getRootNode()
+    nodes, edges, out_going = merged_graph.computeOutgoingEdges()
+    pair_ids = merged_graph.pairingIdentifiers
+    assert pair_ids != None, "Need pairing identifiers to generate a split!"
+    graph0 = DotGraph("graph0")
+    graph1 = DotGraph("graph1")
+    stack = []
+    # build up the stack
+    if type(root_node) == list:
+        stack = list(root_node)
+    else:
+        stack.append(root_node)
+
+    # extract group mapping
+    bothList = group_info.get(_bothPrefix)
+    G1List = group_info.get(_G1Prefix)
+    G2List = group_info.get(_G2Prefix)
+    marked = []
+
+    # set the root node for each graph
+    # as dictated by the split
+    for r in root_node:
+        if r in bothList:
+            graph0.setRootNode(r)
+            graph1.setRootNode(r)
+        elif r in G1List:
+            graph0.setRootNode(r)
+        elif r in G2List:
+            graph1.setRootNode(r)
+        else:
+            print("generateSplit: Root node not in one of the group maps => ", r)
+            sys.exit(-1)
+
+    # now we can begin BFS traversal
+    while len(stack) > 0:
+        # visit the top node
+        a = stack.pop() # top node
+
+        # get all the children
+        out_going_edges = out_going.get(a)
+        if out_going_edges:
+            for b in out_going_edges:
+                # (a -> b)
+                # check whether 'a' occurs in both, G1 or G2
+                if a in bothList:
+                    if b in bothList:
+                        # must be in both
+                        graph0.addDirectedEdge(a, b)
+                        graph1.addDirectedEdge(a, b)
+                    elif b in G1List:
+                        graph0.addDirectedEdge(a, b)
+                    elif b in G2List:
+                        graph1.addDirectedEdge(a, b)
+                    elif b in pair_ids:
+                        # have reached edges of the form "'a' -> PX[0|1]"
+                        if a in group_info['pairing'][_G1Prefix]:
+                            graph0.addDirectedEdge(a, b)
+                        elif a in group_info['pairing'][_G2Prefix]:
+                            graph1.addDirectedEdge(a, b)
+                        else:
+                            print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
+                            sys.exit(-1)
+                    else:
+                        #if a in group_info.get('pairing'):
+                        print("No mapping for variable: ", b)
+                        # check pairing here
+                elif a in G1List:
+                    if b in G1List or b in bothList or b in pair_ids:
+                        graph0.addDirectedEdge(a, b)
+                    else: # clearly a violation so output error msg
+                        print("Doesn't make sense: G1=", a, '-> !G1=', b)
+                elif a in G2List:
+                    if b in G2List or b in bothList or b in pair_ids:
+                        graph1.addDirectedEdge(a, b)
+                    else: # clearly a violation so output error msg
+                        print("Doesn't make sense: G2=", a, '-> !G2=', b)
+                else:
+                    print("Var doesn't exist in map: ", a)
+
+                if b not in marked:
+                    stack.append(b)
+                    marked.append(b)
+
+    print("<====== SHOW SPLIT ======>")
+    print("Graph0: ", graph0)
+    print("Graph1: ", graph1)
+    print("<====== SHOW SPLIT ======>")
+
+    new_merged_graph = graph0 + graph1
+    if merged_graph == new_merged_graph:
+        is_valid_split = True
+    else:
+        is_valid_split = False
+
+    return (graph0, graph1, is_valid_split)
+
+
+def buildCompleteMap(resultModel, info, xorMap):
+    reductionData = info.get('reductionData')
+    assumptionData = info.get('assumptionData')
+    reduceDeps1 = info.get('merged_deps')
+
+    reducDeps0 = {}
+    reducDeps1 = {}
+    for (reducname, reducrecord) in reductionData.items():
+        tmp0 = reducrecord['deps'][0]
+        tmp1 = reducrecord['deps'][1]
+        print(tmp0, type(tmp0))
+        print(tmp1, type(tmp1))
+        reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
+        reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
+    reducDeps = (reducDeps0, reducDeps1)
+    print(reducDeps)
+
+    #1) GenerateSplitSolutionMap
+    group_info = GenerateSplitSolutionMap(resultModel, xorMap, info, reducDeps1)
+    group_info['verbose'] = info['verbose']
+
+    for (assumpname, assumprecord) in assumptionData.items():
+        varmap = assumprecord['varmap']
+        if info['verbose']: print("VarMap => ", varmap)
+        assumpKey = assumprecord.get('prunedMap')
+        for var in assumpKey.keys():
+            if info['verbose']: print("<============>")
+            new_key = processVarWithDep(group_info, var, reducDeps1, varmap)
+            if new_key:
+                # traverse the assumpKey dependencies (top half of the merged graph
+                # to see how things should be assigned
+                dep_vars_list = assumpKey.get(var)
+                for var_dep in dep_vars_list:
+                    if var_dep in group_info[_bothPrefix]:
+                        # no need to change anything (since there's probably a reason for that)
+                        continue
+                    if var_dep not in group_info[new_key]:
+                        addToInfo(new_key, var_dep, group_info)
+                        other_groups = set([_bothPrefix, _G1Prefix, _G2Prefix]).difference([new_key])
+                        # adjust dep map as well
+                        removeFromInfo(other_groups, var_dep, group_info)
+            if info['verbose']: print("<============>")
+
+    #print("Final Group Info: ", group_info)
+    print("Both G1 & G2: ", group_info[_bothPrefix])
+    print("Just G1: ", group_info[_G1Prefix])
+    print("Just G2: ", group_info[_G2Prefix])
+
+    return group_info
+
+
+def addToInfo(key, assignVar, info):
+    """
+    :param key: 'G1', 'G2' or 'both'
+    :param assignVar: var in question
+    :param info: mapping of existing group assignments
+    :return:
+    """
+    assert key in [_G1Prefix, _G2Prefix, _bothPrefix]
+    info[key] = info[key].union([assignVar])
+    return
+
+def removeFromInfo(keys, assignVar, info):
+    assert type(keys) in [set, list], "invalid input for keys in removeFromInfo"
+    for key in keys:
+        if assignVar in info.get(key):
+            info[key].remove(assignVar)
+    return
+
+
+def processVarWithDep(info, assignVar, deps, varmap):
+    verbose = info['verbose']
+    numG1 = 0
+    numG2 = 0
+    numBoth = 0
+    if(assignVar in deps.keys()):
+        #print("\nassignVar backtrace => ", assignVar)
+        #print(deps[assignVar])
+        #print(deps)
+        #print("G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
+
+        depList = []
+        for (key,val) in deps.items():
+            #print(key, val)
+            if(assignVar in val):
+                depList.append(key)
+        #print("depList => ", depList)
+
+        depListGroups = {}
+        numG1 = 0
+        numG2 = 0
+        numBoth = 0
+        for i in depList:
+            if((i in varmap) and (varmap[i] in info['G1'])):
+                depListGroups[i] = types.G1
+                numG1+=1
+                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
+            elif((i in varmap) and (varmap[i] in info['G2'])):
+                depListGroups[i] = types.G2
+                numG2+=1
+                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
+            elif((i in varmap) and (varmap[i] in info['both'])):
+                depListGroups[i] = "both"
+                numBoth+=1
+                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+            elif(i in info['G1']):
+                depListGroups[i] = types.G1
+                numG1+=1
+                #print(i, " : ", depListGroups[i], " => ", info['G1'])
+            elif(i in info['G2']):
+                depListGroups[i] = types.G2
+                numG2+=1
+                #print(i, " : ", depListGroups[i], " => ", info['G2'])
+            elif(i in info['both']):
+                depListGroups[i] = "both"
+                numBoth+=1
+                #print(i, " : ", depListGroups[i], " => ", info['both'])
+
+        #print("depListGroups => ", depListGroups)
+        #print(numG1, numG2, numBoth)
+
+        if ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
+            if verbose: print(" :-> split computation in G1 & G2")
+            addToInfo(_bothPrefix, assignVar, info)
+            # make sure it's not in G1 or G2 list
+            removeFromInfo(['G1','G2'], assignVar, info)
+            return _bothPrefix
+        elif (not(numG1 == 0) and (numG2 == 0) and (numBoth == 0)):
+            if verbose: print(" :-> just in G1.")
+            addToInfo(_G1Prefix, assignVar, info)
+            removeFromInfo(['G2', 'both'], assignVar, info)
+            return _G1Prefix
+        elif (not(numG2 == 0) and (numG1 == 0) and (numBoth == 0)):
+            if verbose: print(" :-> just in G2.")
+            addToInfo(_G2Prefix, assignVar, info)
+            removeFromInfo(['G1', 'both'], assignVar, info)
+            return _G2Prefix
+        else:
+            print("Safe to ignore this var: ", assignVar)
+    return None
+
+
+
+
+def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
+    print("<===== Deriving Specific Solution from Results =====>")
+    G1_deps = set()
+    G2_deps = set()
+    resultMap = {}
+    newSol = {}
+    # convert from z3 model to dictionary
+    for tupl in resultModel:
+        (k, v) = tupl
+        resultMap[ k ] = v
+
+    # map the
+    pairingInfo = {}
+    pairingInfo[_G1Prefix] = []
+    pairingInfo[_G2Prefix] = []
+    for i in info['G1_lhs'][0] + info['G1_rhs'][0]:
+        # get the z3 var for it
+        z3Var = xorMap.get(i) # gives us an alphabet
+        # look up value in resultMap
+        varValue = resultMap.get(z3Var)
+        # get group
+        if varValue == True:
+            group = _G1Prefix
+        else:
+            group = _G2Prefix
+
+        if i in info['G1_lhs'][0]:
+            deps = info['G1_lhs'][1].get(i)
+        else:
+            deps = info['G1_rhs'][1].get(i)
+
+        deps = list(deps); deps.append(i) # var name to the list
+
+        print(i, ":=>", group, ": deps =>", deps)
+        newSol[ i ] = group
+        if group == _G1Prefix:
+            G1_deps = G1_deps.union(deps)
+            pairingInfo[_G1Prefix].append(i)
+        elif group == _G2Prefix:
+            G2_deps = G2_deps.union(deps)
+            pairingInfo[_G2Prefix].append(i)
+        else:
+            raise Exception("Invalid assignment: ", group)
+    print("<===== Deriving Specific Solution from Results =====>")
+    both = G1_deps.intersection(G2_deps)
+    G1 = G1_deps.difference(both)
+    G2 = G2_deps.difference(both)
+    print("Both G1 & G2: ", both)
+    print("Just G1: ", G1)
+    print("Just G2: ", G2)
+    return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
+
+def _assignVarOccursInBoth(varName, info):
+    """determines if varName occurs in the 'both' set. For varName's that have a '#' indicator, we first split it
+    then see if arg[0] is in the 'both' set."""
+    if varName.find(LIST_INDEX_SYMBOL) != -1:
+        varNameStrip = varName.split(LIST_INDEX_SYMBOL)[0]
+    else:
+        varNameStrip = None
+    if varName in info['both']:
+        return True
+    elif varNameStrip != None and varNameStrip in info['both']:
+        return True
+    return False
+
+def _assignVarOccursInG1(varName, info):
+    """determines if varName occurs in the 'G1' set. For varName's that have a '#' indicator, we first split it
+    then see if arg[0] is in the 'G1' set."""
+    if varName.find(LIST_INDEX_SYMBOL) != -1:
+        varNameStrip = varName.split(LIST_INDEX_SYMBOL)[0]
+    else:
+        varNameStrip = None
+    if varName in info['G1']:
+        return True
+    elif varNameStrip != None and varNameStrip in info['G1']:
+        return True
+    return False
+
+def _assignVarOccursInG2(varName, info):
+    """determines if varName occurs in the 'G2' set. For varName's that have a '#' indicator, we first split it
+    then see if arg[0] is in the 'G2' set."""
+    if varName.find(LIST_INDEX_SYMBOL) != -1:
+        varNameStrip = varName.split(LIST_INDEX_SYMBOL)[0]
+    else:
+        varNameStrip = None
+    if varName in info['G2']:
+        return True
+    elif varNameStrip != None and varNameStrip in info['G2']:
+        return True
+    return False
+
+
+def _handleVarInfo(assign, blockStmt, info, noChangeList, startLines={}):
+    if Type(assign) == ops.EQ:
+        assignVar = blockStmt.getAssignVar()
+        # store for later
+        newLine = None
+        varTypeObj = info['varTypes'].get(assignVar)
+        # case A: randomness and occurs in startLines
+        if blockStmt.getHasRandomness() and startLines.get(assignVar) != None:
+            newLines.extend( startLines[assignVar] )
+            return True
+            #if not assignVarIsGenerator(assignVar, info):
+        # case B: randomness and varTypeObj != None
+        if blockStmt.getHasRandomness() and varTypeObj != None:
+            if varTypeObj.getType() in [types.ZR, types.GT]:
+                pass # ignore
+                #if info['verbose']: print(" :-> not a generator, so add to newLines.", end=" ")
+                #newLine = str(assign) # unmodified
+                #newLines.append(assign) # unmodified
+                #return True
+            else:
+                if info['verbose']: print(assignVar, " :-> what type ?= ", info['varTypes'].get(assignVar).getType(), end=" ")
+                if info['varTypes'].get(assignVar).getType() == types.G1:
+                    pass # figure out what to do here
+
+        if _assignVarOccursInBoth(assignVar, info):
+            if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            #newLine = updateAllForBoth(assign, assignVar, blockStmt, info, True, noChangeList)
+        elif _assignVarOccursInG1(assignVar, info):
+            if info['verbose']: print(" :-> just in G1:", blockStmt.getVarDepsNoExponents(), end=" ")
+            noChangeList.append(str(assignVar))
+            #newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+        elif _assignVarOccursInG2(assignVar, info):
+            if info['verbose']: print(" :-> just in G2:", blockStmt.getVarDepsNoExponents(), end=" ")
+            noChangeList.append(str(assignVar))
+            #newLine = updateAllForG2(assign, assignVar, blockStmt, info, False, noChangeList)
+        elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
+            if info['verbose']: print(" :-> update pairing.", end=" ")
+            #noChangeList.append(str(assignVar))
+            #newLine = updateForPairing(blockStmt, info, noChangeList)
+        elif len(set(blockStmt.getVarDepsNoExponents()).intersection(info['generators'])) > 0:
+            if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
+            if assignVar not in info['pairing'][_G1Prefix] and assignVar not in info['pairing'][_G2Prefix]:
+                noChangeList.append(str(assignVar))
+                info['G1'] = info['G1'].union( assignVar )
+                #newLine = updateAllForG1(assign, assignVar, blockStmt, info, False, noChangeList)
+                if info['verbose']: print(":-> var deps = ", blockStmt.getVarDepsNoExponents())
+        else:
+            pass
+            #info['myAsymSDL'].recordUsedVar(blockStmt.getVarDepsNoExponents())
+            #newLine = assign
+        # add to newLines
+        # if type(newLine) == list:
+        #     newLines.extend(newLine)
+        # elif newLine != None:
+        #     #if newLine not in newLines:
+        #     newLines.append(newLine)
+        return True
+    elif Type(assign) == ops.IF:
+#        print("JAA type: ", Type(assign), blockStmt.getVarDepsNoExponents())
+        # TODO: there might be some missing cases in updateForIfConditional. Revise as appropriate.
+        assignVars = blockStmt.getVarDepsNoExponents()
+        assign2 = assign
+        if not HasPairings(assign):
+            for assignVar in assignVars:
+                if _assignVarOccursInG1(assignVar, info):
+                    if info['verbose']: print(" :-> just in G1:", assignVar, end="")
+                    #assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G1, noChangeList)
+                elif _assignVarOccursInG2(assignVar, info):
+                    if info['verbose']: print(" :-> just in G2:", assignVar, end="")
+                    #assign2 = updateForIfConditional(assign2, assignVar, blockStmt, info, types.G2, noChangeList)
+            #print("TODO: Not a good sign. how do we handle this case for ", assignVar, "in", assign)
+        else: # pairing case
+            pass
+            #assign2 = updateForPairing(blockStmt, info, noChangeList)
+
+        # if str(assign2) == str(assign):
+        #     newLines.append(assign)
+        # else:
+        #     newLines.append(assign2)
+    else:
+        print("Unrecognized type: ", Type(assign))
+    return False
+
+
+"""
+1. generic function that takes three lists of group assignments..
+    { 'G1' : varList, 'G2' : varList, 'both': varList }
+2. goes through a given 'block' and goes each statement:
+    - exponentiation, multiplication and pairing
+    - rewrite each statement where a generator appears (or derivative of one) using three lists:
+        if leftAssignVar in 'both': create 2 statements
+        if leftAssignVar in 'G1': create 1 statement in G1
+        if leftAssignVar in 'G2': create 1 statement in G2
+"""
+def GenerateSchemeSplit(entireSDL, funcName, blockStmts, info, noChangeList, startLines={}):
+    #print("transform function")
+    #print(entireSDL)
+    #print(blockStmts)
+    parser = sdl.SDLParser()
+    funcNode = BinaryNode("func:" + str(funcName))
+    begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
+    end = BinaryNode(ops.END, funcNode, None) # "END :: func:" + funcName
+    newLines = [begin] # + list(startLines)
+    stack = []
+    lines = list(blockStmts.keys())
+    lines.sort()
+
+    for index, i in enumerate(lines):
+        assert type(blockStmts[i]) == sdl.VarInfo, "transformFunction: blockStmts must be VarInfo Objects."
+        if blockStmts[i].getIsForLoopBegin():
+            if blockStmts[i].getIsForType():
+                pass
+                #newLines.append(parser.parse("BEGIN :: for\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' for')
+            elif blockStmts[i].getIsForAllType():
+                pass
+                #newLines.append(parser.parse("BEGIN :: forall\n"))  # "\n" + START_TOKEN + " " + BLOCK_SEP + ' forall')
+            #newLines.append(blockStmts[i].getAssignNode())
+        elif blockStmts[i].getIsForLoopEnd():
+            #newLines.append(blockStmts[i].getAssignNode())
+            pass
+        elif blockStmts[i].getIsIfElseBegin():
+            #newLines.append(parser.parse("BEGIN :: if\n")) # "\n" + START_TOKEN + " " + BLOCK_SEP + ' if')
+            assign = blockStmts[i].getAssignNode()
+            if info['verbose']: print(i, ":", assign, end="")
+            _handleVarInfo(assign, blockStmts[i], info, noChangeList)
+
+        elif blockStmts[i].getIsIfElseEnd():
+            #newLines.append(blockStmts[i].getAssignNode())
+            pass
+        elif blockStmts[i].getIsElseBegin():
+            #newLines.append(blockStmts[i].getAssignNode())
+            pass
+        else:
+            assign = blockStmts[i].getAssignNode()
+            if info['verbose']: print(i, ":", assign, end="")
+            _handleVarInfo(assign, blockStmts[i], info, noChangeList, startLines)
+
+        if info['verbose']: print("")
+    #newLines.append(end)
+    return # newLines

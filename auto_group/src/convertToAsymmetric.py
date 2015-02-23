@@ -22,87 +22,14 @@ curveID = "curve"
 
 G1Prefix = "G1"
 G2Prefix = "G2"
+bothPrefix = "both"
 Gtypes = [G1Prefix, G2Prefix]
 length = 5 # length of temporary file
 oldListTypeRefs = {}
 newListTypeRefs = {}
 loc = "src"
 
-class DotGraph:
-    def __init__(self, name):
-        self.name = name
-        self.nodes = set()
-        self.edges = []
-        self.rootNode = None
-        self.addedEdgeToRoot = False
 
-    def setRootNode(self, var):
-        self.rootNode = var
-
-    # a -> b
-    def addDirectedEdge(self, a, b):
-        if a != b:
-            # we don't want any cyclical stuff here
-            self.nodes = self.nodes.union([a, b])
-            if a == self.rootNode:
-                self.addedEdgeToRoot = True
-                self.edges.append((a, b))
-            else:
-                self.edges.append((a, b))
-            return True
-        else:
-            # node has no parent
-            self.edges.append((a, ""))
-            return True
-
-    def adjustByMap(self, data):
-        edges = []
-        for i in self.edges:
-            (a, b) = i
-            if a in data:
-                a = data[a]
-            if b in data:
-                b = data[b]
-            edges.append((a, b))
-        self.edges = edges
-
-    # merges edges that show up for a given function
-    def update(self, graph_dict):
-        if self.name in graph_dict:
-            self.edges.extend(graph_dict.get(self.name))
-        return
-
-    def smart_update(self, graph_dict):
-        if self.name in graph_dict:
-            the_edges = graph_dict.get(self.name)
-            for i in the_edges:
-                (a, b) = i
-                if a in self.nodes or b in self.nodes:
-                    self.edges.append(i)
-        return
-
-    def add(self, other):
-        # just add to myself
-        self.edges += other.edges
-        self.edges = list(set(self.edges)) # in case there are duplicated pairs (x,y)
-        self.nodes = self.nodes.union( other.nodes )
-        return self
-
-    def __add__(self, other):
-        if type(self) == type(other):
-            return self.add(other)
-
-    # generate the
-    def __str__(self):
-        out_str = "digraph "
-        out_str += self.name + " {\n"
-        for i in self.edges:
-            (a, b) = i
-            out_str += str(a)
-            if b != "": out_str += " -> " + str(b)
-            out_str += "\n"
-        out_str += "}\n"
-        return out_str
 DOTPROD = 'dotProd'
 class GetPairingVariables:
     def __init__(self, list1, list2):
@@ -115,6 +42,7 @@ class GetPairingVariables:
         self.name = None
         self.depListData = None
         self.funcName = None
+        self.pair_ids = set()
 
     def setDepListData(self, data):
         self.depListData = data
@@ -139,6 +67,9 @@ class GetPairingVariables:
 
     def getDepGraph(self):
         return self.dep_graph
+
+    def getPairingIds(self):
+        return self.pair_ids
 
     def setFunctionName(self, name):
         self.name = name
@@ -194,10 +125,12 @@ class GetPairingVariables:
         if self.name:
             lhs_oid = "\"P" + str(self.pairing_count)
             rhs_oid = "\"P" + str(self.pairing_count)
-            # assume self.name has been defined via
-            if self.name:
-                self.dep_graph[self.name].append( (lhs_var, lhs_oid + "[0]\"") )
-                self.dep_graph[self.name].append( (rhs_var, rhs_oid + "[1]\"") )
+            # assume self.name has been defined via setFuncName
+            the_lhs_oid = lhs_oid + "[0]\""
+            the_rhs_oid = rhs_oid + "[1]\""
+            self.dep_graph[self.name].append( (lhs_var, the_lhs_oid) )
+            self.dep_graph[self.name].append( (rhs_var, the_rhs_oid) )
+            self.pair_ids = self.pair_ids.union([the_lhs_oid, the_rhs_oid])
             self.pairing_count += 1 # increment since we're done with this pairing
         #print("visit_pair end")
         #print(self.listLHS)
@@ -711,11 +644,12 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
         print("Unrecognized type: ", Type(assign))
     return False
 
-def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
+def instantiateZ3Solver(info, conf, shortOpt, timeOpt, variables, clauses,
                         hardConstraints, constraints, bothConstraints,
                         countOpt, minOptions, dropFirst, pkMapMin, pkListMin,
                         assumpMapMin, assumpList, xorVarMap):
-    
+
+    verbose = info.get('verbose')
     options = {variableKeyword:variables, clauseKeyword:clauses, constraintKeyword:constraints}
     options[verboseKeyword] = verbose
          
@@ -737,7 +671,8 @@ def instantiateZ3Solver(verbose, conf, shortOpt, timeOpt, variables, clauses,
     options[assumpListKeyword] = assumpList
     options[schemeTypeKeyword] = conf.schemeType
     options[pairingVarMapKeyword] = xorVarMap
-    (result, satisfiable) = solveUsingSMT(options, shortOpt, timeOpt)
+    options[mergedGraphKeyword] = info.get(mergedGraphKeyword)
+    (result, satisfiable) = solveUsingSMT(info, options, shortOpt, timeOpt)
     return (satisfiable, result)
 
 def getAssignmentForName(var, varTypes, estimate=False):
@@ -1012,7 +947,7 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
         hardConstraints = [xorVarMap.get(i) for i in hardConstraintList]
         minOptions = info[curveID] # user should provide this information
         countOpt = info[minKeyword] # the cost of group operations
-        (satisfiable, resultDict) = instantiateZ3Solver(info['verbose'], conf, shortOpt, timeOpt, txor.getVariables(), txor.getClauses(),
+        (satisfiable, resultDict) = instantiateZ3Solver(info, conf, shortOpt, timeOpt, txor.getVariables(), txor.getClauses(),
                                                         hardConstraints, constraints, bothConstraints, countOpt, minOptions, dropFirst,
                                                         pkMapMin, pkListMin, assumpMapMin, assumpList, xorVarMap)
         if satisfiable == False:
@@ -1202,7 +1137,7 @@ def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_gr
         print(dg_scheme2)
         print("<=== G2 side of Scheme Graph ===>")
     elif config.schemeType == PKSIG:
-        pass # fix this
+        pass # TODO: fix this
 
 
 def buildSplitGraphForAssumption(sdl_filename, sdl_name, config, sdlVerbose):
@@ -1640,6 +1575,9 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
             the2 = addlTypes.get(str(b))
         else:
             print("Need add'l types to verify an edge is possible for: ", b)
+        if the2 == None:
+            print("Could not locate type info: " + str(b))
+            continue
         if the2.type == target_type:
             # b -> a (we want it backwards)
             graph.addDirectedEdge(b, a)
@@ -1683,6 +1621,15 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
                         dg.addDirectedEdge(t, source)
     return dg
 
+def is_related(found_type, target_type):
+    if target_type == types.G1 and found_type in [types.G1, types.listG1, types.metalistG1]:
+        return True
+    elif target_type == types.G2 and found_type in [types.G2, types.listG2, types.metalistG2]:
+        return True
+    # only concerned with these two cases
+    return False
+
+
 def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None):
     dg = DotGraph(alg_name)
     (typesS, depListNoExpS) = alg_structure
@@ -1721,7 +1668,25 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
                         # build edges with 'j' as the target
                         addAllEdgesIfSourceGroup(dg, j, depListNoExpS, typesS, target_type, addlTypes)
         else:
-            print("We have two layers of indirection.. :-(")
+            print("We have two layers of indirection.. :-> ", someVar)
+            the_type = typesS.get(someVar)
+            found_type = None
+            if not the_type and addlTypes:
+                the_type = addlTypes.get(someVar)
+                if the_type:
+                    print(someVar, "=>", the_type.type)
+                    found_type = the_type.type
+            else:
+                print(someVar, "=>", the_type.type)
+                found_type = the_type.type
+
+            if found_type and is_related(found_type, target_type):
+                some_var_list = depListNoExpS.get(someVar)
+                assert some_var_list != None, "invalid definition for: " + someVar
+                for i in some_var_list:
+                    addAllEdgesIfSourceGroup(dg, i, depListNoExpS, typesS, target_type, addlTypes)
+
+            #if someVar in depListNoExpS:
     #print("Dot graph: ", str(dg))
     return dg
 
@@ -1953,6 +1918,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         print(dg_scheme)
         print("<=== Scheme Graph ===>")
         merged_graph = DotGraph("merged")
+        print("")
         merged_graph += dg_scheme
 
         for (assumpname, assumprecord) in assumptionData.items():
@@ -1971,10 +1937,78 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             # merge
             merged_graph += dg_reduction
 
+        merged_graph.setPairingIds(gpv.getPairingIds())
+        info[mergedGraphKeyword] = merged_graph
         print("<=== Merged Graph ===>")
         print(merged_graph)
         print("<=== Merged Graph ===>")
         #sys.exit(0)
+    elif options.get('graphit') and config.schemeType == PKSIG:
+        pair_graph = gpv.getDepGraph()
+        print("Pairing info: ", pair_graph)
+        if hasattr(config, 'setupFuncName'):
+            dg_setup = generateGraph(config.setupFuncName, (typesS, depListNoExpS))
+            dg_setup.update(pair_graph)
+            has_setup = True
+        else:
+            has_setup = False
+        dg_keygen = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G1, varTypes)
+        dg_keygen.update(pair_graph)
+        dg_sign = generateGraph(config.signFuncName, (typesSi, depListNoExpSi), types.G1, varTypes)
+        dg_sign.update(pair_graph)
+        dg_verify = generateGraph(config.verifyFuncName, (typesV, depListNoExpV), types.G1, varTypes)
+        dg_verify.update(pair_graph)
+        dg_scheme = DotGraph(sdl_name)
+        #if info.get('verbose'):
+        if has_setup:
+            print("<=== Setup Graph ===>")
+            print(dg_setup)
+            print("<=== Setup Graph ===>")
+            dg_scheme += dg_setup
+
+        print("<=== Keygen Graph ===>")
+        print(dg_keygen)
+        print("<=== Keygen Graph ===>")
+
+        print("<=== Sign Graph ===>")
+        print(dg_sign)
+        print("<=== Sign Graph ===>")
+
+        print("<=== Verify Graph ===>")
+        print(dg_verify)
+        print("<=== Verify Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme += dg_keygen + dg_sign + dg_verify
+        print("<=== Scheme Graph ===>")
+        print(dg_scheme)
+        print("<=== Scheme Graph ===>")
+        merged_graph = DotGraph("merged")
+        print("")
+        merged_graph += dg_scheme
+
+        for (assumpname, assumprecord) in assumptionData.items():
+            dg_assumption = assumprecord['assumptionGraph']
+            print("<=== Assumption Graph ===>")
+            print(dg_assumption)
+            print("<=== Assumption Graph ===>")
+            # merge
+            merged_graph += dg_assumption
+
+        for (reducname, reducrecord) in reductionData.items():
+            dg_reduction = reducrecord['reductionGraph']
+            print("<=== Reduction Graph ===>")
+            print(dg_reduction)
+            print("<=== Reduction Graph ===>")
+            # merge
+            merged_graph += dg_reduction
+
+        merged_graph.setPairingIds(gpv.getPairingIds())
+        info[mergedGraphKeyword] = merged_graph
+        print("<=== Merged Graph ===>")
+        print(merged_graph)
+        print("<=== Merged Graph ===>")
+
 
     # constraint list narrows the solutions that
     # we care about
@@ -2034,6 +2068,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
     additionalNewDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
     print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
+
+    # JAA: use this map in split test code
+    info['merged_deps'] = additionalNewDeps
 
     #TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
     #TODO: check where this merge should be located...
@@ -2220,13 +2257,17 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         generators = generators + assumpGens
     generators = set(generators)
     print(generators)
-        
+
+
     #constraints = "[]"
     # given the above formula and the constraint list and options we can
     # run the solver to produce an initial set of solutions
+    info['reductionData'] = reductionData
+    info['assumptionData'] = assumptionData
     fileSuffix, resultDict = searchForSolution(info, short, constraintList, txor, varTypes, config, generators)
     # map of Z3 to SDL pairing variables (so we can map the solution to SDL)
     xorVarMap = txor.getVarMap()
+
 #    if short != SHORT_FORALL:
 #        res, resMap = NaiveEvaluation(resultDict, short)
 #        print("Group Mapping: ", res)
@@ -3189,9 +3230,9 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    #print("Both G1 & G2: ", both)
-    #print("Just G1: ", G1)
-    #print("Just G2: ", G2)
+    print("Both G1 & G2: ", both)
+    print("Just G1: ", G1)
+    print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 
