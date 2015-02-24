@@ -41,3 +41,4 @@ reductionMap = {'g':'g', 'g1':'g1', 'g2':'g2', 'ct1':'C1', 'ct2':'C2', 'ct3':'C3
 
 assumption_reduction_map = { "reductionACDK12Lemma6" : "DLIN-ACDKNO", "reductionACDK12Lemma7" : "DLIN-ACDKNO", "reductionACDK12Lemma8" : "CDH-ACDKNO" }
 
+graphit = True

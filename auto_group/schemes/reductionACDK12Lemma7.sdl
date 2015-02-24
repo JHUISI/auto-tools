@@ -82,13 +82,13 @@ input := list{None}
  R1 := (Gtwo ^ (a1 * v1))
  R2 := (Gtwo ^ (a2 * v2))
 
- U := random(G1)
+# U := random(G1)
  H := (Gtwo ^ chi3) * (Gthree ^ beta)
 
  W1 := Gone ^ (a1 * v1)
  W2 := Gone ^ (a2 * v2)
 
- vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, U, H, X1, X2}
+ vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2} # U
  sk := list{K1, K2}
 
  reducKey := list{ a1, a2, b, alpha, rho, delta, v1, v2, chi1, chi2, chi3 }

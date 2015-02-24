@@ -89,7 +89,7 @@ class GetPairingVariables:
         pass
     
     def visit_pair(self, node, data):
-        #print("visit_pair")
+        #print("visit_pair: ", node)
         #print(self.listLHS, node.left.getRefAttribute())
         #print(self.listRHS, node.right.getRefAttribute())
 
@@ -118,6 +118,8 @@ class GetPairingVariables:
                 the_rhs_var = self.processDepListData(the_rhs_var)
             self.listLHS.append(the_lhs_var)
             self.listRHS.append(the_rhs_var)
+        else:
+            print("Couldn't define the lhs or rhs!")
         # store for latter use
         lhs_var = self.listLHS[-1]
         rhs_var = self.listRHS[-1]
@@ -132,6 +134,10 @@ class GetPairingVariables:
             self.dep_graph[self.name].append( (rhs_var, the_rhs_oid) )
             self.pair_ids = self.pair_ids.union([the_lhs_oid, the_rhs_oid])
             self.pairing_count += 1 # increment since we're done with this pairing
+        else:
+            pass
+            #print("Function Name was not set. Therefore, cannot set pairing IDs. ERROR!")
+
         #print("visit_pair end")
         #print(self.listLHS)
         #print(self.listRHS)
@@ -1084,58 +1090,60 @@ def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_gr
         dg_encrypt1 = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G1, varTypes)
         dg_decrypt1 = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G1, varTypes)
         dg_scheme1 = DotGraph(sdl_name)
-        #if info.get('verbose'):
-        print("<=== Setup Graph ===>")
-        print(dg_setup1)
-        print("<=== Setup Graph ===>")
+        if sdlVerbose:
+            print("<=== Setup Graph ===>")
+            print(dg_setup1)
+            print("<=== Setup Graph ===>")
 
-        print("<=== Keygen Graph ===>")
-        print(dg_keygen1)
-        print("<=== Keygen Graph ===>")
+            print("<=== Keygen Graph ===>")
+            print(dg_keygen1)
+            print("<=== Keygen Graph ===>")
 
-        print("<=== Encrypt Graph ===>")
-        print(dg_encrypt1)
-        print("<=== Encrypt Graph ===>")
+            print("<=== Encrypt Graph ===>")
+            print(dg_encrypt1)
+            print("<=== Encrypt Graph ===>")
 
-        print("<=== Decrypt Graph ===>")
-        print(dg_decrypt1)
-        print("<=== Decrypt Graph ===>")
+            print("<=== Decrypt Graph ===>")
+            print(dg_decrypt1)
+            print("<=== Decrypt Graph ===>")
 
         # merge the different graphs into one big one
         dg_scheme1 += dg_setup1 + dg_keygen1 + dg_encrypt1 + dg_decrypt1
         dg_scheme1.smart_update(pair_graph)
-        print("<=== Scheme Graph ===>")
-        print(dg_scheme1)
-        print("<=== Scheme Graph ===>")
+        if sdlVerbose:
+            print("<=== Scheme Graph ===>")
+            print(dg_scheme1)
+            print("<=== Scheme Graph ===>")
 
         dg_setup2 = generateGraphForward(config.setupFuncName, (stmtS, typesS, infListNoExpS), types.G2)
         dg_keygen2 = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G2, varTypes)
         dg_encrypt2 = generateGraph(config.encryptFuncName, (typesE, depListNoExpE), types.G2, varTypes)
         dg_decrypt2 = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G2, varTypes)
         dg_scheme2 = DotGraph(sdl_name)
-        #if info.get('verbose'):
-        print("<=== Setup Graph ===>")
-        print(dg_setup2)
-        print("<=== Setup Graph ===>")
+        if sdlVerbose:
+            print("<=== Setup Graph ===>")
+            print(dg_setup2)
+            print("<=== Setup Graph ===>")
 
-        print("<=== Keygen Graph ===>")
-        print(dg_keygen2)
-        print("<=== Keygen Graph ===>")
+            print("<=== Keygen Graph ===>")
+            print(dg_keygen2)
+            print("<=== Keygen Graph ===>")
 
-        print("<=== Encrypt Graph ===>")
-        print(dg_encrypt2)
-        print("<=== Encrypt Graph ===>")
+            print("<=== Encrypt Graph ===>")
+            print(dg_encrypt2)
+            print("<=== Encrypt Graph ===>")
 
-        print("<=== Decrypt Graph ===>")
-        print(dg_decrypt2)
-        print("<=== Decrypt Graph ===>")
+            print("<=== Decrypt Graph ===>")
+            print(dg_decrypt2)
+            print("<=== Decrypt Graph ===>")
 
         # merge the different graphs into one big one
         dg_scheme2 += dg_setup2 + dg_keygen2 + dg_encrypt2 + dg_decrypt2
         dg_scheme2.smart_update(pair_graph)
-        print("<=== G2 side of Scheme Graph ===>")
-        print(dg_scheme2)
-        print("<=== G2 side of Scheme Graph ===>")
+        if sdlVerbose:
+            print("<=== G2 side of Scheme Graph ===>")
+            print(dg_scheme2)
+            print("<=== G2 side of Scheme Graph ===>")
     elif config.schemeType == PKSIG:
         pass # TODO: fix this
 
@@ -1789,6 +1797,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         varTypes.update(typesD)
         # TODO: expand search to encrypt and potentially setup
         pairingSearch += [stmtS, stmtE, stmtD] # aka start with decrypt.
+        func_name_for_pairings = None
     # extract statements, etc ... for each algorithm in the SDL scheme.
     elif config.schemeType == PKSIG:
         if hasattr(config, 'setupFuncName'): 
@@ -1802,6 +1811,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         varTypes.update(typesSi)
         varTypes.update(typesV)
         pairingSearch += [stmtV] # aka start with verify
+        func_name_for_pairings = config.verifyFuncName
     else:
         sys.exit("'schemeType' options are 'PKENC' or 'PKSIG'")
             
@@ -1878,7 +1888,11 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
                     # record where we found the pairing (help with constructing dep graph)
-                    gpv.setFunctionName(eachStmt[i].funcName)
+                    if func_name_for_pairings:
+                        func_name = func_name_for_pairings
+                    else:
+                        func_name = eachStmt[i].funcName
+                    gpv.setFunctionName(func_name)
                     sdl.ASTVisitor( gpv ).preorder(eachStmt[i].getAssignNode())
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
@@ -1887,7 +1901,8 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 else:
                     continue # not interested
 
-
+    # record list of hashes for later
+    info['hashVarList'] = hashVarList
     the_lhs = pair_vars_G1_lhs
     the_rhs = pair_vars_G1_rhs
     for i,j in zip(the_lhs, the_rhs):
@@ -1969,17 +1984,19 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             # print("<=== Merged Graph ===>")
 
         else:
-
-            if not hasattr(config, "assumption_reduction_data_map"):
+            # multiple reduction/assumption case
+            if not hasattr(config, "assumption_reduction_map"):
                 sys.exit("configAutoGroup: need to set 'assumption_reduction_map' in config.")
+            else:
+                assumption_reduction_data_map = sorted(config.assumption_reduction_map.items())
 
             merged_graph.setPairingIds(gpv.getPairingIds())
 
             the_merged_graphs = { }
             info['merged_graph_map'] = {}
 
-            for (index, the_map) in config.assumption_reduction_data_map.items():
-                (reducname, assumpname) = the_map
+            for index in range(len(assumption_reduction_data_map)):
+                (reducname, assumpname) = assumption_reduction_data_map[index]
                 new_merged_graph = DotGraph("merged_" + assumpname + "_" + str(index))
                 new_merged_graph += merged_graph
                 dg_assumption = assumptionData.get(assumpname)['assumptionGraph']
@@ -1991,15 +2008,14 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                     print(new_merged_graph)
                     print("<=== Merged Graph %s ===>" % index)
                 the_merged_graphs[ index ] = new_merged_graph
-                info['merged_graph_map'][index] = reducname
+                info['merged_graph_map'][index] = (reducname, assumpname)
 
             merged_graph = the_merged_graphs
             info[mergedGraphKeyword] = merged_graph
 
-
     elif options.get('graphit') and config.schemeType == PKSIG:
         pair_graph = gpv.getDepGraph()
-        print("Pairing info: ", pair_graph)
+        #print("Pairing info: ", pair_graph)
         if hasattr(config, 'setupFuncName'):
             dg_setup = generateGraph(config.setupFuncName, (typesS, depListNoExpS))
             dg_setup.update(pair_graph)
@@ -2015,54 +2031,90 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         dg_scheme = DotGraph(sdl_name)
         #if info.get('verbose'):
         if has_setup:
-            print("<=== Setup Graph ===>")
-            print(dg_setup)
-            print("<=== Setup Graph ===>")
+            if info.get('verbose'):
+                print("<=== Setup Graph ===>")
+                print(dg_setup)
+                print("<=== Setup Graph ===>")
             dg_scheme += dg_setup
 
-        print("<=== Keygen Graph ===>")
-        print(dg_keygen)
-        print("<=== Keygen Graph ===>")
+        if info.get('verbose'):
+            print("<=== Keygen Graph ===>")
+            print(dg_keygen)
+            print("<=== Keygen Graph ===>")
 
-        print("<=== Sign Graph ===>")
-        print(dg_sign)
-        print("<=== Sign Graph ===>")
+            print("<=== Sign Graph ===>")
+            print(dg_sign)
+            print("<=== Sign Graph ===>")
 
-        print("<=== Verify Graph ===>")
-        print(dg_verify)
-        print("<=== Verify Graph ===>")
+            print("<=== Verify Graph ===>")
+            print(dg_verify)
+            print("<=== Verify Graph ===>")
 
         # merge the different graphs into one big one
         dg_scheme += dg_keygen + dg_sign + dg_verify
-        print("<=== Scheme Graph ===>")
-        print(dg_scheme)
-        print("<=== Scheme Graph ===>")
+        if info.get('verbose'):
+            print("<=== Scheme Graph ===>")
+            print(dg_scheme)
+            print("<=== Scheme Graph ===>")
         merged_graph = DotGraph("merged")
         print("")
         merged_graph += dg_scheme
 
-        for (assumpname, assumprecord) in assumptionData.items():
-            dg_assumption = assumprecord['assumptionGraph']
-            print("<=== Assumption Graph ===>")
-            print(dg_assumption)
-            print("<=== Assumption Graph ===>")
-            # merge
-            merged_graph += dg_assumption
+        if config.single_reduction:
+            for (assumpname, assumprecord) in assumptionData.items():
+                dg_assumption = assumprecord['assumptionGraph']
+                if info.get('verbose'):
+                    print("<=== Assumption Graph ===>")
+                    print(dg_assumption)
+                    print("<=== Assumption Graph ===>")
+                # merge
+                merged_graph += dg_assumption
 
-        for (reducname, reducrecord) in reductionData.items():
-            dg_reduction = reducrecord['reductionGraph']
-            print("<=== Reduction Graph ===>")
-            print(dg_reduction)
-            print("<=== Reduction Graph ===>")
-            # merge
-            merged_graph += dg_reduction
+            for (reducname, reducrecord) in reductionData.items():
+                dg_reduction = reducrecord['reductionGraph']
+                if info.get('verbose'):
+                    print("<=== Reduction Graph ===>")
+                    print(dg_reduction)
+                    print("<=== Reduction Graph ===>")
+                # merge
+                merged_graph += dg_reduction
 
-        merged_graph.setPairingIds(gpv.getPairingIds())
-        info[mergedGraphKeyword] = merged_graph
-        print("<=== Merged Graph ===>")
-        print(merged_graph)
-        print("<=== Merged Graph ===>")
+            if info.get('verbose'):
+                print("<=== Merged Graph ===>")
+                print(merged_graph)
+                print("<=== Merged Graph ===>")
 
+            merged_graph.setPairingIds(gpv.getPairingIds())
+            info[mergedGraphKeyword] = merged_graph
+        else:
+            # multiple reduction/assumption case
+            if not hasattr(config, "assumption_reduction_map"):
+                sys.exit("configAutoGroup: need to set 'assumption_reduction_map' in config.")
+            else:
+                assumption_reduction_data_map = sorted(config.assumption_reduction_map.items())
+
+            merged_graph.setPairingIds(gpv.getPairingIds())
+
+            the_merged_graphs = { }
+            info['merged_graph_map'] = {}
+
+            for index in range(len(assumption_reduction_data_map)):
+                (reducname, assumpname) = assumption_reduction_data_map[index]
+                print("Processing '%s' and '%s'" % (reducname, assumpname))
+                new_merged_graph = DotGraph("merged_" + assumpname + "_" + str(index))
+                new_merged_graph += merged_graph
+                dg_assumption = assumptionData.get(assumpname)['assumptionGraph']
+                dg_reduction  = reductionData.get(reducname)['reductionGraph']
+
+                new_merged_graph += dg_assumption + dg_reduction
+                if info.get('verbose'):
+                    print("<=== Merged Graph %s ===>" % index)
+                    print(new_merged_graph)
+                    print("<=== Merged Graph %s ===>" % index)
+                the_merged_graphs[ index ] = new_merged_graph
+                info['merged_graph_map'][index] = (reducname, assumpname)
+
+            info[mergedGraphKeyword] = the_merged_graphs
 
     # constraint list narrows the solutions that
     # we care about

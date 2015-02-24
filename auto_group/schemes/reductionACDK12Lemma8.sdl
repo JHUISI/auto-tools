@@ -36,7 +36,7 @@ input := list{None}
  U2 := random(G1)
  gk := list{G, C, F, U1, U2}
 
- U := random(G1)
+# U := random(G1)
  H := random(G1)
 
  V := random(G1)
@@ -57,7 +57,7 @@ input := list{None}
 # K1 := G ^ alpha
  K2 := K1 ^ a1
 
- vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, U, H, X1, X2}
+ vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2} # U
  sk := list{K1, K2}
 
  reducKey := list{a1, b}

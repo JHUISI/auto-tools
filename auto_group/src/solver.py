@@ -558,7 +558,7 @@ def checkValidSplit(info, optionDict, a_model):
         # build a complete dep map of scheme, reduction and assumption from the model
         group_info = buildCompleteMap(a_model, info, xorMap)
         # generate a split given the group info
-        (graph0, graph1, is_valid_split) = generateSplit(group_info, merged_graph)
+        (graph0, graph1, is_valid_split) = generateSplit(info, group_info, merged_graph)
         if is_valid_split:
             print("SOLUTION IS A VALID SPLIT!!!")
         else:
@@ -567,26 +567,39 @@ def checkValidSplit(info, optionDict, a_model):
     else:
         # get reduction data
         reductionData = info.get('reductionData')
+        assumptionData = info.get('assumptionData')
         for (index, graph) in merged_graph.items():
             #print("<===========================>")
-            reducname = info['merged_graph_map'][index]
+            (reducname, assumpname) = info['merged_graph_map'][index]
             reducDeps = reductionData.get(reducname)['deps'][1]
-            #print(reducDeps)
+            #reducDeps = info.get('merged_deps')
+            assumpVarMap = assumptionData.get(assumpname)['varmap']
+            assumpKey = assumptionData.get(assumpname)['prunedMap']
+            #print(info.get('merged_deps'))
 
             group_info = GenerateSplitSolutionMap(a_model, xorMap, info, reducDeps)
-            group_info['verbose'] = info['verbose']
 
-            #print("Both G1 & G2: ", group_info[_bothPrefix])
-            #print("Just G1: ", group_info[_G1Prefix])
-            #print("Just G2: ", group_info[_G2Prefix])
-            #print("<===========================>")
+            # print("BEFORE ==>")
+            # print("Both G1 & G2: ", group_info[_bothPrefix])
+            # print("Just G1: ", group_info[_G1Prefix])
+            # print("Just G2: ", group_info[_G2Prefix])
+            # print("<===========================>")
 
-            (graph0, graph1, is_valid_split) = generateSplit(group_info, graph)
+            for var in assumpKey.keys():
+                new_key = processVarWithDep(group_info, var, info.get('merged_deps'), assumpVarMap)
+
+            # print("AFTER ==>")
+            # print("Both G1 & G2: ", group_info[_bothPrefix])
+            # print("Just G1: ", group_info[_G1Prefix])
+            # print("Just G2: ", group_info[_G2Prefix])
+            # print("<===========================>")
+
+            (graph0, graph1, is_valid_split) = generateSplit(info, group_info, graph)
             if is_valid_split:
                 print("SOLUTION IS A VALID SPLIT FOR MERGED GRAPH %d!!!" % index)
             else:
                 print("REJECTING SPLIT!!!")
-                #sys.exit(-1)
+                sys.exit(-1)
     return (a_model, sat)
 
 
@@ -811,13 +824,29 @@ class DotGraph:
         for i in self.nodes:
             if self.outgoingEdges.get(i):
                 the_nodes.append(i)
+
+        # root nodes are nodes *without* incoming edges
+        root_nodes = []
         for i in self.edges:
             (a, b) = i
             if a != "" and a not in the_nodes:
                 the_nodes.append(a)
             if b != "" and b not in the_nodes:
                 the_nodes.append(b)
-        return (the_nodes, the_edges, self.outgoingEdges)
+            if a != "" and b == "":
+                root_nodes.append(a)
+
+        child_nodes = set()
+        for i in self.outgoingEdges.values():
+            child_nodes = child_nodes.union(i)
+
+        for k in self.outgoingEdges.keys():
+            if k not in child_nodes:
+                if k not in root_nodes:
+                    root_nodes.append(k)
+
+        #print("ROOT NODES: ", root_nodes)
+        return (the_nodes, the_edges, self.outgoingEdges, root_nodes)
 
     # a -> b
     def addDirectedEdge(self, a, b):
@@ -916,17 +945,20 @@ class DotGraph:
         out_str += "}\n"
         return out_str
 
-def generateSplit(group_info, merged_graph):
+def generateSplit(info, group_info, merged_graph):
     """
     :param group_info: final group assignments from split
-    :param root_node: root node of merged dep graph
     :param nodes: all nodes in merged graph
     :param edges: all edges in merged graph
     :param out_going: outgoing edges for each nodes (will be used w/ BFS to split)
     :return:
     """
     root_node = merged_graph.getRootNode()
-    nodes, edges, out_going = merged_graph.computeOutgoingEdges()
+    nodes, edges, out_going, other_root_node = merged_graph.computeOutgoingEdges()
+    for i in other_root_node:
+        if i not in root_node:
+            root_node.append(i)
+    #print("ROOT NODES: ", root_node)
     pair_ids = merged_graph.pairingIdentifiers
     assert pair_ids != None, "Need pairing identifiers to generate a split!"
     graph0 = DotGraph("graph0")
@@ -943,10 +975,12 @@ def generateSplit(group_info, merged_graph):
     G1List = group_info.get(_G1Prefix)
     G2List = group_info.get(_G2Prefix)
     marked = []
-
+    hash_list = info.get('hashVarList')
     # set the root node for each graph
     # as dictated by the split
     for r in root_node:
+        if hash_list and r in hash_list:
+            continue
         if r in bothList:
             graph0.setRootNode(r)
             graph1.setRootNode(r)
@@ -956,7 +990,7 @@ def generateSplit(group_info, merged_graph):
             graph1.setRootNode(r)
         else:
             print("generateSplit: Root node not in one of the group maps => ", r)
-            #sys.exit(-1)
+            sys.exit(-1)
 
     # now we can begin BFS traversal
     while len(stack) > 0:
@@ -967,6 +1001,7 @@ def generateSplit(group_info, merged_graph):
         out_going_edges = out_going.get(a)
         if out_going_edges:
             for b in out_going_edges:
+                ##print("processing edge: '%s' -> '%s', action:" % (a, b), end=" ")
                 # (a -> b)
                 # check whether 'a' occurs in both, G1 or G2
                 if a in bothList:
@@ -974,37 +1009,44 @@ def generateSplit(group_info, merged_graph):
                         # must be in both
                         graph0.addDirectedEdge(a, b)
                         graph1.addDirectedEdge(a, b)
+                        ##print("added to both")
                     elif b in G1List:
                         graph0.addDirectedEdge(a, b)
+                        ##print("added to graph0")
                     elif b in G2List:
                         graph1.addDirectedEdge(a, b)
+                        ##print("added to graph1")
                     elif b in pair_ids:
                         # have reached edges of the form "'a' -> PX[0|1]"
                         if a in group_info['pairing'][_G1Prefix]:
                             graph0.addDirectedEdge(a, b)
+                            ##print("added to graph0")
                         elif a in group_info['pairing'][_G2Prefix]:
                             graph1.addDirectedEdge(a, b)
+                            ##print("added to graph1")
                         else:
                             pass
-                            #print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
+                            ##print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
                             #sys.exit(-1)
                     else:
                         pass
                         #if a in group_info.get('pairing'):
-                        #print("No mapping for variable: ", b)
+                        ##print("No mapping for variable: ", b)
                         # check pairing here
                 elif a in G1List:
                     if b in G1List or b in bothList or b in pair_ids:
                         graph0.addDirectedEdge(a, b)
+                        ##print("added to graph0")
                     else: # clearly a violation so output error msg
-                        pass #print("Doesn't make sense: G1=", a, '-> !G1=', b)
+                        pass ##print("Doesn't make sense: G1=", a, '-> !G1=', b)
                 elif a in G2List:
                     if b in G2List or b in bothList or b in pair_ids:
                         graph1.addDirectedEdge(a, b)
+                        ##print("added to graph1")
                     else: # clearly a violation so output error msg
-                        pass #print("Doesn't make sense: G2=", a, '-> !G2=', b)
+                        pass ##print("Doesn't make sense: G2=", a, '-> !G2=', b)
                 else:
-                    pass #print("Var doesn't exist in map: ", a)
+                    pass ##print("Var doesn't exist in map: ", a)
 
                 if b not in marked:
                     stack.append(b)
@@ -1022,10 +1064,10 @@ def generateSplit(group_info, merged_graph):
         is_valid_split = False
         for i in merged_graph.edges:
             if i not in new_merged_graph.edges:
-                pass #print("MISSING EDGE: ", i)
+                pass ##print("MISSING EDGE: ", i)
         for i in merged_graph.nodes:
             if i not in new_merged_graph.nodes:
-                pass #print("MISSING NODE: ", i)
+                pass ##print("MISSING NODE: ", i)
 
     return (graph0, graph1, is_valid_split)
 
@@ -1034,7 +1076,6 @@ def buildCompleteMap(resultModel, info, xorMap):
     reductionData = info.get('reductionData')
     assumptionData = info.get('assumptionData')
     #reduceDeps1 = info.get('merged_deps')
-
 
     reducDeps0 = {}
     reducDeps1 = {}
@@ -1097,7 +1138,7 @@ def addToInfo(key, assignVar, info):
     """
     assert key in [_G1Prefix, _G2Prefix, _bothPrefix]
     info[key] = info[key].union([assignVar])
-    print("Added '%s' to '%s' set" % (assignVar, key))
+    ##print("Added '%s' to '%s' set" % (assignVar, key))
     return
 
 def removeFromInfo(keys, assignVar, info):
@@ -1105,7 +1146,7 @@ def removeFromInfo(keys, assignVar, info):
     for key in keys:
         if assignVar in info.get(key):
             info[key].remove(assignVar)
-            print("Removed '%s' from '%s' set" % (assignVar, key))
+            ##print("Removed '%s' from '%s' set" % (assignVar, key))
     return
 
 
@@ -1157,8 +1198,8 @@ def processVarWithDep(info, assignVar, deps, varmap):
                 numBoth+=1
                 #print(i, " : ", depListGroups[i], " => ", info['both'])
 
-        #print("depListGroups => ", depListGroups)
-        #print(numG1, numG2, numBoth)
+        ##print("depListGroups => ", depListGroups)
+        ##print(numG1, numG2, numBoth)
 
         if ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
             if verbose: print(assignVar, ":-> split computation in G1 & G2")
@@ -1177,7 +1218,18 @@ def processVarWithDep(info, assignVar, deps, varmap):
             removeFromInfo(['G1', 'both'], assignVar, info)
             return _G2Prefix
         else:
-            print("Safe to ignore this var: ", assignVar)
+            ##print("Safe to ignore this var: ", assignVar)
+            if deps[assignVar].issubset(info['both']):
+                addToInfo(_G1Prefix, assignVar, info)
+                # need to think about this carefully, verify that we can safely make this assignment
+            elif deps[assignVar].issubset(info['G1']):
+                addToInfo(_G1Prefix, assignVar, info)
+                removeFromInfo(['G2', 'both'], assignVar, info)
+            elif deps[assignVar].issubset(info['G2']):
+                addToInfo(_G2Prefix, assignVar, info)
+                removeFromInfo(['G1', 'both'], assignVar, info)
+
+
     return None
 
 

@@ -65,13 +65,13 @@ input := list{None}
  R1 := (Gthree ^ v) * (Gone ^ v1)
  R2 := (Gthree ^ v) * (Gtwo ^ v2)
 
- U := random(G1)
+# U := random(G1)
  H := random(G1)
 
  W1 := R1 ^ b
  W2 := R2 ^ b
 
- vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, U, H, X1, X2}
+ vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2} # U
  sk := list{K1, K2}
 
 output := list{gk, vk, sk, assumpKey, assumpVar}
