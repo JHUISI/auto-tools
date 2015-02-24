@@ -587,6 +587,13 @@ def checkValidSplit(info, optionDict, a_model):
 
             for var in assumpKey.keys():
                 new_key = processVarWithDep(group_info, var, info.get('merged_deps'), assumpVarMap)
+                if new_key == _bothPrefix: # only conservative case
+                    dep_vars_list = assumpKey.get(var)
+                    for var_dep in dep_vars_list:
+                        addToInfo(new_key, var_dep, group_info)
+                        other_groups = set([_bothPrefix, _G1Prefix, _G2Prefix]).difference([new_key])
+                        # adjust dep map as well
+                        removeFromInfo(other_groups, var_dep, group_info)
 
             # print("AFTER ==>")
             # print("Both G1 & G2: ", group_info[_bothPrefix])
