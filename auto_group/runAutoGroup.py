@@ -33,7 +33,7 @@ sdl_file     = args.sdl
 verbose      = args.verbose
 config_file  = args.config
 library      = args.library
-benchmark    = args.benchmark
+benchmarkOpt = args.benchmark
 estimateSize = args.estimate
 short_option = args.short
 dest_path    = args.path
@@ -51,7 +51,7 @@ if print_options:
     print('SDL INPUT  :', sdl_file)
     print('SDL OUTPUT :', output_file)
     print('PATH:      :', dest_path)
-    print('BENCHMARK  :', benchmark)
+    print('BENCHMARK  :', benchmarkOpt)
     print('ESTIMATES  :', estimateSize)
     print('SHORT OPT  :', short_option)
 
@@ -905,4 +905,4 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             return
 
 # run AutoGroup with the designated options
-configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmark, estimateSize, short_option)
+configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateSize, short_option)

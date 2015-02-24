@@ -1571,7 +1571,7 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
             graph.addDirectedEdge(a, a)   # print("Found a G1 type for: ", a)
         return
     else:
-        print("No record for: ", a)
+        #print("No record for: ", a)
         return
 
     filtered = stripExtraVars(depMap.get(a))
@@ -1584,10 +1584,10 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
             if addlTypes != None:
                 the2 = addlTypes.get(str(b))
             else:
-                print("Need add'l types to verify an edge is possible for: ", b)
+                pass #print("Need add'l types to verify an edge is possible for: ", b)
 
         if the2 == None:
-            print("Could not locate type info: " + str(b))
+            #print("Could not locate type info: " + str(b))
             continue
         if the2.type == target_type:
             # b -> a (we want it backwards)
@@ -1608,16 +1608,16 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1, exclude=
             if source in exclude: # don't process any further
                 continue
             if eachStmt[i].getHasPairings():
-                print("Variable in GT: ", source, "=>", eachStmt[i].getAssignNode())
+                #print("Variable in GT: ", source, "=>", eachStmt[i].getAssignNode())
                 continue
             if eachStmt[i].getHasRandomness():
                 the_type = typesS.get(str(source))
                 if the_type:
-                    print("Random: ", the_type.type)
+                    pass #print("Random: ", the_type.type)
                 elif not the_type and LIST_INDEX_SYMBOL in str(source):
                     new_source = source.split(LIST_INDEX_SYMBOL)[0]
                     the_type = typesS.get(str(new_source))
-                    print("Random type: ", the_type.type)
+                    pass #print("Random type: ", the_type.type)
                 assert the_type != None, "generateGraphForward => invalid type: " + str(source)
                 if the_type.type == target_type:
                     dg.addDirectedEdge(source, source)
@@ -1631,8 +1631,6 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1, exclude=
                 #print("Do some inf parsing here...")
                 depList = eachStmt[i].getVarDepsNoExponents()
                 for t in depList:
-                    if t == 'eggalphaa1b' or source == 'eggalphaa1b':
-                        pass
                     the_type = typesS.get(str(t))
                     # if part of target type, then include as a direct edge
                     if the_type and the_type.type == target_type:
@@ -1668,14 +1666,14 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
                     if addlTypes:
                         i_type = addlTypes.get(str(i))
                     else:
-                        print("What to do in this case?")
+                        pass #print("What to do in this case?")
                 if not i_type and LIST_INDEX_SYMBOL in str(i):
                     i_star = i.split(LIST_INDEX_SYMBOL)[0]
                     i_type = typesS.get(i_star) or addlTypes.get(i_star)
-                    print("i_type :=> ", i_type)
+                    #print("i_type :=> ", i_type)
                 #assert i_type != None, "generateGraph => invalid type: " + str(i)
                 if not i_type:
-                    print("Could not find var type for: " + str(i))
+                    #print("Could not find var type for: " + str(i))
                     continue
                 if i_type.type == target_type: # assuming symmetric
                     # check its dependencies
@@ -1687,21 +1685,21 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
                         # build edges with 'j' as the target
                         j_type = typesS.get(str(j))
                         if j_type and j_type.type != target_type:
-                            print("SKIPPING: ", j, " ... type => ", j_type.type)
+                            #print("SKIPPING: ", j, " ... type => ", j_type.type)
                             continue
                         addAllEdgesIfSourceGroup(dg, j, depListNoExpS, typesS, target_type, addlTypes)
 
         else:
-            print("We have two layers of indirection.. :-> ", someVar)
+            #print("We have two layers of indirection.. :-> ", someVar)
             the_type = typesS.get(someVar)
             found_type = None
             if not the_type and addlTypes:
                 the_type = addlTypes.get(someVar)
                 if the_type:
-                    print(someVar, "=>", the_type.type)
+                    #print(someVar, "=>", the_type.type)
                     found_type = the_type.type
             else:
-                print(someVar, "=>", the_type.type)
+                #print(someVar, "=>", the_type.type)
                 found_type = the_type.type
 
             if found_type and is_related(found_type, target_type):
@@ -1920,28 +1918,29 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         dg_decrypt = generateGraph(config.decryptFuncName, (typesD, depListNoExpD), types.G1, varTypes)
         dg_decrypt.update(pair_graph)
         dg_scheme = DotGraph(sdl_name)
-        #if info.get('verbose'):
-        print("<=== Setup Graph ===>")
-        print(dg_setup)
-        print("<=== Setup Graph ===>")
+        if info.get('verbose'):
+            print("<=== Setup Graph ===>")
+            print(dg_setup)
+            print("<=== Setup Graph ===>")
 
-        print("<=== Keygen Graph ===>")
-        print(dg_keygen)
-        print("<=== Keygen Graph ===>")
+            print("<=== Keygen Graph ===>")
+            print(dg_keygen)
+            print("<=== Keygen Graph ===>")
 
-        print("<=== Encrypt Graph ===>")
-        print(dg_encrypt)
-        print("<=== Encrypt Graph ===>")
+            print("<=== Encrypt Graph ===>")
+            print(dg_encrypt)
+            print("<=== Encrypt Graph ===>")
 
-        print("<=== Decrypt Graph ===>")
-        print(dg_decrypt)
-        print("<=== Decrypt Graph ===>")
+            print("<=== Decrypt Graph ===>")
+            print(dg_decrypt)
+            print("<=== Decrypt Graph ===>")
 
         # merge the different graphs into one big one
         dg_scheme += dg_setup + dg_keygen + dg_encrypt + dg_decrypt
-        print("<=== Scheme Graph ===>")
-        print(dg_scheme)
-        print("<=== Scheme Graph ===>")
+        if info.get('verbose'):
+            print("<=== Scheme Graph ===>")
+            print(dg_scheme)
+            print("<=== Scheme Graph ===>")
         merged_graph = DotGraph("merged")
         print("")
         merged_graph += dg_scheme
@@ -1949,25 +1948,25 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         if config.single_reduction:
             for (assumpname, assumprecord) in assumptionData.items():
                 dg_assumption = assumprecord['assumptionGraph']
-                print("<=== Assumption Graph ===>")
-                print(dg_assumption)
-                print("<=== Assumption Graph ===>")
+                # print("<=== Assumption Graph ===>")
+                # print(dg_assumption)
+                # print("<=== Assumption Graph ===>")
                 # merge
                 merged_graph += dg_assumption
 
             for (reducname, reducrecord) in reductionData.items():
                 dg_reduction = reducrecord['reductionGraph']
-                print("<=== Reduction Graph ===>")
-                print(dg_reduction)
-                print("<=== Reduction Graph ===>")
+                # print("<=== Reduction Graph ===>")
+                # print(dg_reduction)
+                # print("<=== Reduction Graph ===>")
                 # merge
                 merged_graph += dg_reduction
 
             merged_graph.setPairingIds(gpv.getPairingIds())
             info[mergedGraphKeyword] = merged_graph
-            print("<=== Merged Graph ===>")
-            print(merged_graph)
-            print("<=== Merged Graph ===>")
+            # print("<=== Merged Graph ===>")
+            # print(merged_graph)
+            # print("<=== Merged Graph ===>")
 
         else:
 
@@ -1987,10 +1986,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 dg_reduction  = reductionData.get(reducname)['reductionGraph']
 
                 new_merged_graph += dg_assumption + dg_reduction
-
-                print("<=== Merged Graph %s ===>" % index)
-                print(new_merged_graph)
-                print("<=== Merged Graph %s ===>" % index)
+                if info.get('verbose'):
+                    print("<=== Merged Graph %s ===>" % index)
+                    print(new_merged_graph)
+                    print("<=== Merged Graph %s ===>" % index)
                 the_merged_graphs[ index ] = new_merged_graph
                 info['merged_graph_map'][index] = reducname
 
@@ -2073,11 +2072,12 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     for i in hashVarList:
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
-    # JAA: commented out for benchmarking            
-    print("pair vars LHS:", pair_vars_G1_lhs)
-    print("pair vars RHS:", pair_vars_G1_rhs) 
-    print("list of gens :", generators)
-    print("constraintList: ", constraintList)
+    # JAA: commented out for benchmarking
+    if info.get('verbose'):
+        print("pair vars LHS:", pair_vars_G1_lhs)
+        print("pair vars RHS:", pair_vars_G1_rhs)
+        print("list of gens :", generators)
+        print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -3285,9 +3285,9 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    #print("Both G1 & G2: ", both)
+    #print("Just G1: ", G1)
+    #print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 

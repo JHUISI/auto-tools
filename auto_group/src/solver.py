@@ -348,18 +348,18 @@ class ModelEval:
         #pts = {G1:1, G2:2} # simple point system (replace with
         # TODO: move this to another
         for i,j in varMap.items():
-            print(i, "=>", j)
+            #print(i, "=>", j)
             if i in depList:
                 depMap[j] = depMap[j].union([i])
-                print("append this to ", depMap.get(j))
+                #print("append this to ", depMap.get(j))
 
         resultMap = {}
         countMap = {}  # stores intermediate results
-        print("<====================================>")
-        print("VarMap: ", varMap)
-        print("DepMap: ", depMap)
-        print("evaluateSolutionsFromDepMap: ", depList)
-        print("<====================================>")
+        #print("<====================================>")
+        #print("VarMap: ", varMap)
+        #print("DepMap: ", depMap)
+        #print("evaluateSolutionsFromDepMap: ", depList)
+        #print("<====================================>")
         for solIndex in self.indexList:
             counts = initDict(depList)
             if self.verbose:
@@ -386,10 +386,10 @@ class ModelEval:
 
         optimal_split = min(resultMap.items(), key=lambda x: x[1])
         index = optimal_split[0]
-        print("Min splits: ", optimal_split[1][0])
-        print("The sum: ", optimal_split[1][1])
-        print("Found Solution: ", M[index])
-        print("Results: ", countMap[index])
+        #print("Min splits: ", optimal_split[1][0])
+        #print("The sum: ", optimal_split[1][1])
+        #print("Found Solution: ", M[index])
+        #print("Results: ", countMap[index])
         return M[index], countMap[index]
 
 
@@ -564,23 +564,22 @@ def checkValidSplit(info, optionDict, a_model):
         else:
             print("REJECTING SPLIT!!!")
             sys.exit(-1)
-
     else:
         # get reduction data
         reductionData = info.get('reductionData')
         for (index, graph) in merged_graph.items():
-            print("<===========================>")
+            #print("<===========================>")
             reducname = info['merged_graph_map'][index]
             reducDeps = reductionData.get(reducname)['deps'][1]
-            print(reducDeps)
+            #print(reducDeps)
 
             group_info = GenerateSplitSolutionMap(a_model, xorMap, info, reducDeps)
             group_info['verbose'] = info['verbose']
 
-            print("Both G1 & G2: ", group_info[_bothPrefix])
-            print("Just G1: ", group_info[_G1Prefix])
-            print("Just G2: ", group_info[_G2Prefix])
-            print("<===========================>")
+            #print("Both G1 & G2: ", group_info[_bothPrefix])
+            #print("Just G1: ", group_info[_G1Prefix])
+            #print("Just G2: ", group_info[_G2Prefix])
+            #print("<===========================>")
 
             (graph0, graph1, is_valid_split) = generateSplit(group_info, graph)
             if is_valid_split:
@@ -595,7 +594,7 @@ def checkValidSplit(info, optionDict, a_model):
 def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
     verbose     = optionDict.get(verboseKeyword)
     schemeType  = optionDict.get(schemeTypeKeyword)
-    print("Scheme type: ", schemeType)
+    #print("Scheme type: ", schemeType)
     variables   = optionDict.get(variableKeyword)
     clauses     = optionDict.get(clauseKeyword)
     constraints = optionDict.get(constraintKeyword)
@@ -646,7 +645,7 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
     if shortOpt == SHORT_ASSUMPTION: # and schemeType == pkEncType:
         print("Using Solver to minimize the size of the assumption...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
-        if verbose: modEval.enableVerboseMode()
+        #if verbose: modEval.enableVerboseMode()
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list, optionDict)
         return checkValidSplit(info, optionDict, convertToBoolean(modRef))
 
@@ -987,24 +986,26 @@ def generateSplit(group_info, merged_graph):
                         elif a in group_info['pairing'][_G2Prefix]:
                             graph1.addDirectedEdge(a, b)
                         else:
-                            print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
-                            sys.exit(-1)
+                            pass
+                            #print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
+                            #sys.exit(-1)
                     else:
+                        pass
                         #if a in group_info.get('pairing'):
-                        print("No mapping for variable: ", b)
+                        #print("No mapping for variable: ", b)
                         # check pairing here
                 elif a in G1List:
                     if b in G1List or b in bothList or b in pair_ids:
                         graph0.addDirectedEdge(a, b)
                     else: # clearly a violation so output error msg
-                        print("Doesn't make sense: G1=", a, '-> !G1=', b)
+                        pass #print("Doesn't make sense: G1=", a, '-> !G1=', b)
                 elif a in G2List:
                     if b in G2List or b in bothList or b in pair_ids:
                         graph1.addDirectedEdge(a, b)
                     else: # clearly a violation so output error msg
-                        print("Doesn't make sense: G2=", a, '-> !G2=', b)
+                        pass #print("Doesn't make sense: G2=", a, '-> !G2=', b)
                 else:
-                    print("Var doesn't exist in map: ", a)
+                    pass #print("Var doesn't exist in map: ", a)
 
                 if b not in marked:
                     stack.append(b)
@@ -1019,13 +1020,13 @@ def generateSplit(group_info, merged_graph):
     if merged_graph == new_merged_graph:
         is_valid_split = True
     else:
+        is_valid_split = False
         for i in merged_graph.edges:
             if i not in new_merged_graph.edges:
-                print("MISSING EDGE: ", i)
+                pass #print("MISSING EDGE: ", i)
         for i in merged_graph.nodes:
             if i not in new_merged_graph.nodes:
-                print("MISSING NODE: ", i)
-        is_valid_split = False # for now
+                pass #print("MISSING NODE: ", i)
 
     return (graph0, graph1, is_valid_split)
 
@@ -1059,7 +1060,7 @@ def buildCompleteMap(resultModel, info, xorMap):
             varmap = assumprecord['varmap']
             if info['verbose']: print("VarMap => ", varmap)
             assumpKey = assumprecord.get('prunedMap')
-            print("ASSUMP KEY: ", assumpKey)
+            if info['verbose']: print("ASSUMP KEY: ", assumpKey)
             for var in sorted(assumpKey.keys()):
                 if info['verbose']: print("<============>")
                 new_key = processVarWithDep(group_info, var, reducDeps1, varmap)
@@ -1078,9 +1079,9 @@ def buildCompleteMap(resultModel, info, xorMap):
                             removeFromInfo(other_groups, var_dep, group_info)
                 if info['verbose']: print("<============>")
 
-        print("Both G1 & G2: ", group_info[_bothPrefix])
-        print("Just G1: ", group_info[_G1Prefix])
-        print("Just G2: ", group_info[_G2Prefix])
+        #print("Both G1 & G2: ", group_info[_bothPrefix])
+        #print("Just G1: ", group_info[_G1Prefix])
+        #print("Just G2: ", group_info[_G2Prefix])
     else:
         # dealing with multiple assumptions so tread very carefully for now
         return
@@ -1182,7 +1183,7 @@ def processVarWithDep(info, assignVar, deps, varmap):
 
 
 def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
-    print("<===== Deriving Specific Solution from Results =====>")
+    #print("<===== Deriving Specific Solution from Results =====>")
     G1_deps = set()
     G2_deps = set()
     resultMap = {}
@@ -1214,7 +1215,7 @@ def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
 
         deps = list(deps); deps.append(i) # var name to the list
 
-        print(i, ":=>", group, ": deps =>", deps)
+        #print(i, ":=>", group, ": deps =>", deps)
         newSol[ i ] = group
         if group == _G1Prefix:
             G1_deps = G1_deps.union(deps)
@@ -1224,13 +1225,13 @@ def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
             pairingInfo[_G2Prefix].append(i)
         else:
             raise Exception("Invalid assignment: ", group)
-    print("<===== Deriving Specific Solution from Results =====>")
+    #print("<===== Deriving Specific Solution from Results =====>")
     both = G1_deps.intersection(G2_deps)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    #print("Both G1 & G2: ", both)
+    #print("Just G1: ", G1)
+    #print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 def _assignVarOccursInBoth(varName, info):
