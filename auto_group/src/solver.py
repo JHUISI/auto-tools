@@ -587,7 +587,6 @@ def checkValidSplit(info, optionDict, a_model):
             else:
                 print("REJECTING SPLIT!!!")
                 #sys.exit(-1)
-        sys.exit(-1)
     return (a_model, sat)
 
 
