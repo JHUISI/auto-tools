@@ -297,7 +297,7 @@ def get_models(Formula):
 
 def initDict(someList):
     d = {}
-    print("theList: ", someList)
+    #print("theList: ", someList)
     for i in someList:
         d[i] = set()
     return d
@@ -551,18 +551,44 @@ def findMinimalRef(M, data1, data2, skipList=[]):
 def checkValidSplit(info, optionDict, a_model):
     xorMap       = optionDict.get(pairingVarMapKeyword)
     merged_graph = optionDict.get(mergedGraphKeyword)
-    # build a complete dep map of scheme, reduction and assumption from the model
-    group_info = buildCompleteMap(a_model, info, xorMap)
+
     # using group_info map, extract a graph split (basically, apply BFS from root)
     # also check whether the split is valid
-    (graph0, graph1, is_valid_split) = generateSplit(group_info, merged_graph)
-    # TODO: write merged_graph, graph0 and graph1 to disk
-    if is_valid_split:
-        print("SOLUTION IS A VALID SPLIT!!!")
-    else:
-        print("REJECTING SPLIT!!!")
-        sys.exit(-1)
+    if info.get('single_reduction'):
+        # build a complete dep map of scheme, reduction and assumption from the model
+        group_info = buildCompleteMap(a_model, info, xorMap)
+        # generate a split given the group info
+        (graph0, graph1, is_valid_split) = generateSplit(group_info, merged_graph)
+        if is_valid_split:
+            print("SOLUTION IS A VALID SPLIT!!!")
+        else:
+            print("REJECTING SPLIT!!!")
+            sys.exit(-1)
 
+    else:
+        # get reduction data
+        reductionData = info.get('reductionData')
+        for (index, graph) in merged_graph.items():
+            print("<===========================>")
+            reducname = info['merged_graph_map'][index]
+            reducDeps = reductionData.get(reducname)['deps'][1]
+            print(reducDeps)
+
+            group_info = GenerateSplitSolutionMap(a_model, xorMap, info, reducDeps)
+            group_info['verbose'] = info['verbose']
+
+            print("Both G1 & G2: ", group_info[_bothPrefix])
+            print("Just G1: ", group_info[_G1Prefix])
+            print("Just G2: ", group_info[_G2Prefix])
+            print("<===========================>")
+
+            (graph0, graph1, is_valid_split) = generateSplit(group_info, graph)
+            if is_valid_split:
+                print("SOLUTION IS A VALID SPLIT FOR MERGED GRAPH %d!!!" % index)
+            else:
+                print("REJECTING SPLIT!!!")
+                #sys.exit(-1)
+        sys.exit(-1)
     return (a_model, sat)
 
 
@@ -728,7 +754,7 @@ class DotGraph:
         self.rootNode = None
         self.addedEdgeToRoot = False
         self.outgoingEdges = {}
-        self.pairingIdentifiers = None
+        self.pairingIdentifiers = set()
 
 
     def setPairingIds(self, ids):
@@ -932,7 +958,7 @@ def generateSplit(group_info, merged_graph):
             graph1.setRootNode(r)
         else:
             print("generateSplit: Root node not in one of the group maps => ", r)
-            sys.exit(-1)
+            #sys.exit(-1)
 
     # now we can begin BFS traversal
     while len(stack) > 0:
@@ -984,16 +1010,22 @@ def generateSplit(group_info, merged_graph):
                     stack.append(b)
                     marked.append(b)
 
-    print("<====== SHOW SPLIT ======>")
-    print("Graph0: ", graph0)
-    print("Graph1: ", graph1)
-    print("<====== SHOW SPLIT ======>")
+    # print("<====== SHOW SPLIT ======>")
+    # print("Graph0: ", graph0)
+    # print("Graph1: ", graph1)
+    # print("<====== SHOW SPLIT ======>")
 
     new_merged_graph = graph0 + graph1
     if merged_graph == new_merged_graph:
         is_valid_split = True
     else:
-        is_valid_split = False
+        for i in merged_graph.edges:
+            if i not in new_merged_graph.edges:
+                print("MISSING EDGE: ", i)
+        for i in merged_graph.nodes:
+            if i not in new_merged_graph.nodes:
+                print("MISSING NODE: ", i)
+        is_valid_split = False # for now
 
     return (graph0, graph1, is_valid_split)
 
@@ -1001,50 +1033,57 @@ def generateSplit(group_info, merged_graph):
 def buildCompleteMap(resultModel, info, xorMap):
     reductionData = info.get('reductionData')
     assumptionData = info.get('assumptionData')
-    reduceDeps1 = info.get('merged_deps')
+    #reduceDeps1 = info.get('merged_deps')
+
 
     reducDeps0 = {}
     reducDeps1 = {}
-    for (reducname, reducrecord) in reductionData.items():
-        tmp0 = reducrecord['deps'][0]
-        tmp1 = reducrecord['deps'][1]
-        print(tmp0, type(tmp0))
-        print(tmp1, type(tmp1))
-        reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
-        reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
-    reducDeps = (reducDeps0, reducDeps1)
-    print(reducDeps)
+    if info.get('single_reduction'):
+        # adjust if we're dealing with one assumption, otherwise, lay off
+        for (reducname, reducrecord) in reductionData.items():
+            tmp0 = reducrecord['deps'][0]
+            tmp1 = reducrecord['deps'][1]
+            print(tmp0, type(tmp0))
+            print(tmp1, type(tmp1))
+            # concatenating dictionaries
+            reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
+            reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
+        reducDeps = (reducDeps0, reducDeps1)
+        print(reducDeps)
 
-    #1) GenerateSplitSolutionMap
-    group_info = GenerateSplitSolutionMap(resultModel, xorMap, info, reducDeps1)
-    group_info['verbose'] = info['verbose']
+        #1) GenerateSplitSolutionMap
+        group_info = GenerateSplitSolutionMap(resultModel, xorMap, info, reducDeps1)
+        group_info['verbose'] = info['verbose']
 
-    for (assumpname, assumprecord) in assumptionData.items():
-        varmap = assumprecord['varmap']
-        if info['verbose']: print("VarMap => ", varmap)
-        assumpKey = assumprecord.get('prunedMap')
-        for var in assumpKey.keys():
-            if info['verbose']: print("<============>")
-            new_key = processVarWithDep(group_info, var, reducDeps1, varmap)
-            if new_key:
-                # traverse the assumpKey dependencies (top half of the merged graph
-                # to see how things should be assigned
-                dep_vars_list = assumpKey.get(var)
-                for var_dep in dep_vars_list:
-                    if var_dep in group_info[_bothPrefix]:
-                        # no need to change anything (since there's probably a reason for that)
-                        continue
-                    if var_dep not in group_info[new_key]:
-                        addToInfo(new_key, var_dep, group_info)
-                        other_groups = set([_bothPrefix, _G1Prefix, _G2Prefix]).difference([new_key])
-                        # adjust dep map as well
-                        removeFromInfo(other_groups, var_dep, group_info)
-            if info['verbose']: print("<============>")
+        for (assumpname, assumprecord) in assumptionData.items():
+            varmap = assumprecord['varmap']
+            if info['verbose']: print("VarMap => ", varmap)
+            assumpKey = assumprecord.get('prunedMap')
+            print("ASSUMP KEY: ", assumpKey)
+            for var in sorted(assumpKey.keys()):
+                if info['verbose']: print("<============>")
+                new_key = processVarWithDep(group_info, var, reducDeps1, varmap)
+                if new_key:
+                    # traverse the assumpKey dependencies (top half of the merged graph
+                    # to see how things should be assigned
+                    dep_vars_list = assumpKey.get(var)
+                    for var_dep in dep_vars_list:
+                        if var_dep in group_info[_bothPrefix]:
+                            # no need to change anything (since there's probably a reason for that)
+                            continue
+                        if var_dep not in group_info[new_key]:
+                            addToInfo(new_key, var_dep, group_info)
+                            other_groups = set([_bothPrefix, _G1Prefix, _G2Prefix]).difference([new_key])
+                            # adjust dep map as well
+                            removeFromInfo(other_groups, var_dep, group_info)
+                if info['verbose']: print("<============>")
 
-    #print("Final Group Info: ", group_info)
-    print("Both G1 & G2: ", group_info[_bothPrefix])
-    print("Just G1: ", group_info[_G1Prefix])
-    print("Just G2: ", group_info[_G2Prefix])
+        print("Both G1 & G2: ", group_info[_bothPrefix])
+        print("Just G1: ", group_info[_G1Prefix])
+        print("Just G2: ", group_info[_G2Prefix])
+    else:
+        # dealing with multiple assumptions so tread very carefully for now
+        return
 
     return group_info
 
@@ -1058,6 +1097,7 @@ def addToInfo(key, assignVar, info):
     """
     assert key in [_G1Prefix, _G2Prefix, _bothPrefix]
     info[key] = info[key].union([assignVar])
+    print("Added '%s' to '%s' set" % (assignVar, key))
     return
 
 def removeFromInfo(keys, assignVar, info):
@@ -1065,11 +1105,12 @@ def removeFromInfo(keys, assignVar, info):
     for key in keys:
         if assignVar in info.get(key):
             info[key].remove(assignVar)
+            print("Removed '%s' from '%s' set" % (assignVar, key))
     return
 
 
 def processVarWithDep(info, assignVar, deps, varmap):
-    verbose = info['verbose']
+    verbose = True # info['verbose']
     numG1 = 0
     numG2 = 0
     numBoth = 0
@@ -1120,26 +1161,24 @@ def processVarWithDep(info, assignVar, deps, varmap):
         #print(numG1, numG2, numBoth)
 
         if ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
-            if verbose: print(" :-> split computation in G1 & G2")
+            if verbose: print(assignVar, ":-> split computation in G1 & G2")
             addToInfo(_bothPrefix, assignVar, info)
             # make sure it's not in G1 or G2 list
             removeFromInfo(['G1','G2'], assignVar, info)
             return _bothPrefix
         elif (not(numG1 == 0) and (numG2 == 0) and (numBoth == 0)):
-            if verbose: print(" :-> just in G1.")
+            if verbose: print(assignVar, ":-> just in G1.")
             addToInfo(_G1Prefix, assignVar, info)
             removeFromInfo(['G2', 'both'], assignVar, info)
             return _G1Prefix
         elif (not(numG2 == 0) and (numG1 == 0) and (numBoth == 0)):
-            if verbose: print(" :-> just in G2.")
+            if verbose: print(assignVar, ":-> just in G2.")
             addToInfo(_G2Prefix, assignVar, info)
             removeFromInfo(['G1', 'both'], assignVar, info)
             return _G2Prefix
         else:
             print("Safe to ignore this var: ", assignVar)
     return None
-
-
 
 
 def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):

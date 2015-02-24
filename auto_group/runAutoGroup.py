@@ -398,7 +398,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         varTypes.update(typesQ)
         varTypes.update(typesC)
 
-        if hasattr(cm, 'graphit') and cm.graphit:
+        if hasattr(cm, 'graphit') and cm.graphit and cm.single_reduction:
             dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
             dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
             dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
@@ -455,7 +455,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     elif cm.schemeType == PKSIG:
         (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( cm.reducSetupFuncName )
         (stmtQ, typesQ, depListQ, depListNoExpQ, infListQ, infListNoExpQ) = sdl.getVarInfoFuncStmts( cm.reducQueryFuncName )
-        depListData = {cm.reducChallengeFuncName: depListNoExpC, cm.reducQueryFuncName: depListNoExpQ, cm.reducSetupFuncName: depListNoExpS}
+        depListData = { cm.reducQueryFuncName: depListNoExpQ, cm.reducSetupFuncName: depListNoExpS}
 
         varTypes.update(typesS)
         varTypes.update(typesQ)
@@ -481,6 +481,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 print("<=== Reduction Graph ===>")
                 print(dg_reduction)
                 print("<=== Reduction Graph ===>")
+
 
             reductionData['reductionGraph'] = dg_reduction
         #print(stmtS)
@@ -643,6 +644,65 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     reductionData['reductionFile'] = reduction_file
 
+    if cm.schemeType == PKENC and not cm.single_reduction:
+        if hasattr(cm, 'graphit') and cm.graphit:
+            exclude_list = [cm.reducQueriesSecVar] + cm.reducMasterPubVars + cm.reducMasterSecVars
+
+            dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
+            dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
+            # process the query
+            dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes) #, stmts=stmtQ, infListNoExp=infListNoExpQ)
+            dg_reduc_query.adjustByMap(reductionData.get('varmap'))
+
+            try:
+                newVarType = dict(typesS)
+                newVarType.update(typesQ)
+                # special variables that we don't want in the graph
+                dg_reduc_query_forward = generateGraphForward(cm.reducQueryFuncName, (stmtQ, newVarType, infListNoExpQ), exclude=exclude_list)
+                dg_reduc_query_forward.adjustByMap(reductionData.get('varmap'))
+                # combine with backward analysis
+                dg_reduc_query += dg_reduc_query_forward
+            except Exception as e:
+                print("EXCEPTION: ", cm.reducQueryFuncName, " forward tracing failed!")
+                print(e.traceback())
+
+            dg_reduc_chall = generateGraph(cm.reducChallengeFuncName, (typesC, depListNoExpC), types.G1, varTypes)
+            dg_reduc_chall.adjustByMap(reductionData.get('varmap'))
+
+            try:
+                newVarType.update(typesC)
+                dg_reduc_chall_forward = generateGraphForward(cm.reducChallengeFuncName, (stmtC, newVarType, infListNoExpC), exclude=exclude_list)
+                dg_reduc_chall_forward.adjustByMap(reductionData.get('varmap'))
+                # combine with backward analysis
+                dg_reduc_chall += dg_reduc_chall_forward
+            except Exception as e:
+                print("EXCEPTION: ", cm.reducChallengeFuncName, " forward tracing failed!")
+                print(e.traceback())
+
+
+            if verbose:
+                print("<=== Reduction Setup Graph ===>")
+                print(dg_reduc_setup)
+                print("<=== Reduction Setup Graph ===>")
+
+                print("<=== Reduction Query Graph ===>")
+                print(dg_reduc_query)
+                print("<=== Reduction Query Graph ===>")
+
+                print("<=== Reduction Challenge Graph ===>")
+                print(dg_reduc_chall)
+                print("<=== Reduction Challenge Graph ===>")
+
+            dg_reduction = DotGraph("reduction")
+            dg_reduction += dg_reduc_setup + dg_reduc_query + dg_reduc_chall
+            if verbose:
+                print("<=== Reduction Graph ===>")
+                print(dg_reduction)
+                print("<=== Reduction Graph ===>")
+
+            reductionData['reductionGraph'] = dg_reduction
+
+
     #if hasattr(cm, "assumption_reduction_map"):
     #    reductionData['assumption'] = cm.assumption_reduction_map[reduction_name]
     #else:
@@ -765,6 +825,10 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             sys.exit("configAutoGroup: assumption set; need to set 'reduction' in config.") #TODO: add back in when finished and remove else
         else:
             print(cm.reduction)
+            if len(cm.reduction) == 1:
+                cm.single_reduction = True
+            else:
+                cm.single_reduction = False
             #reductionData = []
             reductionData = {}
             for i in cm.reduction:

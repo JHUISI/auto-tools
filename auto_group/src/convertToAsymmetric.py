@@ -1549,13 +1549,14 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
 dotProdPrefix = 'dotProd'
 def stripExtraVars( someList ):
     newList = []
-    for i in someList:
-        if i != 'G1' and dotProdPrefix not in i:
-            newList.append(i)
-        else:
-            pass
-            #print("got one: ", i)
-    return newList
+    if someList:
+        for i in someList:
+            if i != 'G1' and dotProdPrefix not in i:
+                newList.append(i)
+            else:
+                pass
+                #print("got one: ", i)
+        return newList
 
 def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
     the = typeMap.get(a)
@@ -1564,6 +1565,11 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
         if len(the_list) == 0 and the.type == target_type:
             #print("Missing case: ", a) # probably a root?
             graph.addDirectedEdge(a, a)
+    elif addlTypes:
+        the = addlTypes.get(a)
+        if the and the.type == target_type:
+            graph.addDirectedEdge(a, a)   # print("Found a G1 type for: ", a)
+        return
     else:
         print("No record for: ", a)
         return
@@ -1574,7 +1580,12 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
         if not the2 and addlTypes: # not in
             the2 = addlTypes.get(str(b))
         else:
-            print("Need add'l types to verify an edge is possible for: ", b)
+            #assert addlTypes != None, "Can't check add'l types dictionary for: " + b
+            if addlTypes != None:
+                the2 = addlTypes.get(str(b))
+            else:
+                print("Need add'l types to verify an edge is possible for: ", b)
+
         if the2 == None:
             print("Could not locate type info: " + str(b))
             continue
@@ -1583,7 +1594,7 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
             graph.addDirectedEdge(b, a)
     return
 
-def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
+def generateGraphForward(alg_name, alg_structure, target_type=types.G1, exclude=[]):
     dg = DotGraph(alg_name)
     (stmtS, typesS, infListNoExpS) = alg_structure
 
@@ -1594,6 +1605,11 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
             #print("Each: ", eachStmt[i].getAssignNode())
             # assert that the statement contains a pairing computation
             source = eachStmt[i].getAssignVar()
+            if source in exclude: # don't process any further
+                continue
+            if eachStmt[i].getHasPairings():
+                print("Variable in GT: ", source, "=>", eachStmt[i].getAssignNode())
+                continue
             if eachStmt[i].getHasRandomness():
                 the_type = typesS.get(str(source))
                 if the_type:
@@ -1615,6 +1631,8 @@ def generateGraphForward(alg_name, alg_structure, target_type=types.G1):
                 #print("Do some inf parsing here...")
                 depList = eachStmt[i].getVarDepsNoExponents()
                 for t in depList:
+                    if t == 'eggalphaa1b' or source == 'eggalphaa1b':
+                        pass
                     the_type = typesS.get(str(t))
                     # if part of target type, then include as a direct edge
                     if the_type and the_type.type == target_type:
@@ -1630,7 +1648,7 @@ def is_related(found_type, target_type):
     return False
 
 
-def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None):
+def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None): # stmts=None, infListNoExp=None):
     dg = DotGraph(alg_name)
     (typesS, depListNoExpS) = alg_structure
     output = typesS.get('output')
@@ -1663,10 +1681,16 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
                     # check its dependencies
                     if i in depListNoExpS:
                         addAllEdgesIfSourceGroup(dg, i, depListNoExpS, typesS, target_type, addlTypes)
+
                 if i_type.type == types.list: # just a data structure so can ignore
                     for j in depListNoExpS[i]:
                         # build edges with 'j' as the target
+                        j_type = typesS.get(str(j))
+                        if j_type and j_type.type != target_type:
+                            print("SKIPPING: ", j, " ... type => ", j_type.type)
+                            continue
                         addAllEdgesIfSourceGroup(dg, j, depListNoExpS, typesS, target_type, addlTypes)
+
         else:
             print("We have two layers of indirection.. :-> ", someVar)
             the_type = typesS.get(someVar)
@@ -1688,6 +1712,7 @@ def generateGraph(alg_name, alg_structure, target_type=types.G1, addlTypes=None)
 
             #if someVar in depListNoExpS:
     #print("Dot graph: ", str(dg))
+
     return dg
 
 def lookForMoreDeps(i, the_map, dep_map, the_target_list):
@@ -1718,7 +1743,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
     # the block of types in the SDL
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
-    info = {'verbose':sdlVerbose}
+    info = {'verbose':sdlVerbose, 'single_reduction': config.single_reduction}
 
     # we want to ignore user defined functions from our analysis
     # (unless certain variables that we care about are manipulated there)
@@ -1921,28 +1946,58 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         print("")
         merged_graph += dg_scheme
 
-        for (assumpname, assumprecord) in assumptionData.items():
-            dg_assumption = assumprecord['assumptionGraph']
-            print("<=== Assumption Graph ===>")
-            print(dg_assumption)
-            print("<=== Assumption Graph ===>")
-            # merge
-            merged_graph += dg_assumption
+        if config.single_reduction:
+            for (assumpname, assumprecord) in assumptionData.items():
+                dg_assumption = assumprecord['assumptionGraph']
+                print("<=== Assumption Graph ===>")
+                print(dg_assumption)
+                print("<=== Assumption Graph ===>")
+                # merge
+                merged_graph += dg_assumption
 
-        for (reducname, reducrecord) in reductionData.items():
-            dg_reduction = reducrecord['reductionGraph']
-            print("<=== Reduction Graph ===>")
-            print(dg_reduction)
-            print("<=== Reduction Graph ===>")
-            # merge
-            merged_graph += dg_reduction
+            for (reducname, reducrecord) in reductionData.items():
+                dg_reduction = reducrecord['reductionGraph']
+                print("<=== Reduction Graph ===>")
+                print(dg_reduction)
+                print("<=== Reduction Graph ===>")
+                # merge
+                merged_graph += dg_reduction
 
-        merged_graph.setPairingIds(gpv.getPairingIds())
-        info[mergedGraphKeyword] = merged_graph
-        print("<=== Merged Graph ===>")
-        print(merged_graph)
-        print("<=== Merged Graph ===>")
-        #sys.exit(0)
+            merged_graph.setPairingIds(gpv.getPairingIds())
+            info[mergedGraphKeyword] = merged_graph
+            print("<=== Merged Graph ===>")
+            print(merged_graph)
+            print("<=== Merged Graph ===>")
+
+        else:
+
+            if not hasattr(config, "assumption_reduction_data_map"):
+                sys.exit("configAutoGroup: need to set 'assumption_reduction_map' in config.")
+
+            merged_graph.setPairingIds(gpv.getPairingIds())
+
+            the_merged_graphs = { }
+            info['merged_graph_map'] = {}
+
+            for (index, the_map) in config.assumption_reduction_data_map.items():
+                (reducname, assumpname) = the_map
+                new_merged_graph = DotGraph("merged_" + assumpname + "_" + str(index))
+                new_merged_graph += merged_graph
+                dg_assumption = assumptionData.get(assumpname)['assumptionGraph']
+                dg_reduction  = reductionData.get(reducname)['reductionGraph']
+
+                new_merged_graph += dg_assumption + dg_reduction
+
+                print("<=== Merged Graph %s ===>" % index)
+                print(new_merged_graph)
+                print("<=== Merged Graph %s ===>" % index)
+                the_merged_graphs[ index ] = new_merged_graph
+                info['merged_graph_map'][index] = reducname
+
+            merged_graph = the_merged_graphs
+            info[mergedGraphKeyword] = merged_graph
+
+
     elif options.get('graphit') and config.schemeType == PKSIG:
         pair_graph = gpv.getDepGraph()
         print("Pairing info: ", pair_graph)
