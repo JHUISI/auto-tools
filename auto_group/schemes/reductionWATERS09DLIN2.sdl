@@ -119,8 +119,8 @@ BEGIN :: if
     idhash := H(ID, ZR)
 
     D1 := galphaa1 * (v ^ r)
-#    D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
-    D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
+    D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
     D3 := gb ^ -z1
     D4 := (v2 ^ r) * (g ^ z2)
     D5 := gb ^ -z2
@@ -140,10 +140,10 @@ BEGIN :: if
     r := r1 + r2
     idhash := H(ID, ZR)
 
-    D1prime := galphaa1 * (v ^ r)
-#    D1prime := (g ^ (alpha * a1)) * (v ^ r)
-#    D2prime := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
-    D2prime := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
+#    D1prime := galphaa1 * (v ^ r)
+    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+    D2prime := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D2prime := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
     D3prime := gb ^ -z1
     D4prime := (v2 ^ r) * (g ^ z2)
     D5prime := gb ^ -z2
@@ -153,7 +153,7 @@ BEGIN :: if
 
     gamma := random(ZR)
 
-#    D1 := D1prime * (g ^ (-a1 * a2 * gamma))
+#    D1 := D1prime * (ga1 ^ (-a2 * gamma))
     D1 := D1prime * (g ^ (-a1 * a2 * gamma))
 #    D2 := D2prime * (g ^ (a2 * gamma))
     D2 := D2prime * (ga2 ^ gamma)
@@ -176,10 +176,10 @@ BEGIN :: if
     rprime := r1prime + r2prime
     idhash := H(ID, ZR)
 
-    D1prime := galphaa1 * (v ^ rprime)
-#    D1prime := (g ^ (alpha * a1)) * (v ^ r)
-#    D2prime := (g ^ -alpha) * (v1 ^ rprime) * (g ^ z1prime)
-    D2prime := (galpha ^ -1) * (v1 ^ rprime) * (g ^ z1prime)
+#    D1prime := galphaa1 * (v ^ rprime)
+    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+    D2prime := (g ^ -alpha) * (v1 ^ rprime) * (g ^ z1prime)
+#    D2prime := (galpha ^ -1) * (v1 ^ rprime) * (g ^ z1prime)
     D3prime := gb ^ -z1prime
     D4prime := (v2 ^ rprime) * (g ^ z2prime)
     D5prime := gb ^ -z2prime
@@ -231,8 +231,8 @@ C2prime := gba1 ^ s1prime
 #C3prime := g ^ (a1 * s1prime)
 C3prime := ga1 ^ s1prime
 C4prime := gba2 ^ s2prime
-#C5prime := g ^ (a2 * s2prime)
-C5prime := ga2 ^ s2prime
+C5prime := g ^ (a2 * s2prime)
+#C5prime := ga2 ^ s2prime
 C6prime := (tau1 ^ s1prime) * (tau2 ^ s2prime)
 C7prime := (((tau1b ^ s1prime) * (tau2b ^ s2prime)) * (w ^ -t))
 E1prime := (((u ^ idhashstar) * (w ^ tagcstar)) * h) ^ t
@@ -251,12 +251,13 @@ C4 := C4prime * (gba2 ^ x)
 C5 := C5prime * (ga2)
 #C5 := C5prime * (g ^ a2)
 C6 := C6prime * (v2 ^ (a2 * x))
-#C7 := C7prime * (f ^ (yv2 * x * a2)) * (nu ^ (-a1 * x * yw * a2))
+C7 := C7prime * (f ^ (yv2 * x * a2)) * (nu ^ (-a1 * x * yw * a2))
 #C7 := C7prime * ((tau2b ^ x) * (v ^ (yw * x)))
-C7 := C7prime * ((gba2 ^ (yv2 * x)) * (v ^ (yw * x)))
-#E1 := E1prime * (nu ^ (((idhash2 * yu) + (yh) + (tagcstar * yw)) * (a1 * a2 * x)))
-E1 := E1prime * (((v ^ (-idhash2 * yu)) * (v ^ (-yh)) * (v ^ (-tagcstar * yw))) ^ x)
-E2 := E2prime * (v ^ (-1 * x))
+#C7 := C7prime * ((gba2 ^ (yv2 * x)) * (v ^ (yw * x)))
+E1 := E1prime * (nu ^ (((idhash2 * yu) + (yh) + (tagcstar * yw)) * (a1 * a2 * x)))
+#E1 := E1prime * (((v ^ (-idhash2 * yu)) * (v ^ (-yh)) * (v ^ (-tagcstar * yw))) ^ x)
+E2 := E2prime * (nu ^ (a1 * a2 * x))
+#E2 := E2prime * (v ^ (-1 * x))
 
 tagc := tagcstar
 
