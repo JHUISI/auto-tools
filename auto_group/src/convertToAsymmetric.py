@@ -218,9 +218,9 @@ class transformXOR:
         if leftAssignVar in 'G2': create 1 statement in G2
 """
 def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, startLines={}):
-    print("transform function")
-    print(entireSDL)
-    print(blockStmts)
+    #print("transform function")
+    #print(entireSDL)
+    #print(blockStmts)
     parser = sdl.SDLParser()
     funcNode = BinaryNode("func:" + str(funcName))
     begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
@@ -271,10 +271,10 @@ def transformFunction(entireSDL, funcName, blockStmts, info, noChangeList, start
         if leftAssignVar in 'G2': create 1 statement in G2
 """
 def transformFunctionAssump(entireSDL, funcName, blockStmts, info, noChangeList, deps, varmap, startLines={}):
-    print("transform function assumption")
-    print(entireSDL)
-    print(blockStmts)
-    print(deps)
+    #print("transform function assumption")
+    #print(entireSDL)
+    #print(blockStmts)
+    #print(deps)
     parser = sdl.SDLParser()
     funcNode = BinaryNode("func:" + str(funcName))
     begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
@@ -308,7 +308,7 @@ def transformFunctionAssump(entireSDL, funcName, blockStmts, info, noChangeList,
         else:
             assign = blockStmts[i].getAssignNode()
             if info['verbose']: print(i, ":", assign, end="")
-            print("\nentering handleVarInfoAssump ", deps)
+            #print("\nentering handleVarInfoAssump ", deps)
             handleVarInfoAssump(newLines, assign, blockStmts[i], info, noChangeList, deps, varmap, startLines)
 
         if info['verbose']: print("")
@@ -426,17 +426,17 @@ def handleVarInfo(newLines, assign, blockStmt, info, noChangeList, startLines={}
     return False
 
 def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, varmap, startLines={}):
-    print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'])
-    print(deps)
-    print(varmap)
+    #print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'])
+    #print(deps)
+    #print(varmap)
     if Type(assign) == ops.EQ:
         assignVartmp = blockStmt.getAssignVar()
-        print("\nassignVar1 => ", assignVartmp)
+        #print("\nassignVar1 => ", assignVartmp)
         if(assignVartmp in varmap.keys()):
             assignVar = varmap[assignVartmp]
         else:
             assignVar = assignVartmp
-        print("\nassignVar2 => ", assignVar)
+        #print("\nassignVar2 => ", assignVar)
         # store for later
         newLine = None
         varTypeObj = info['varTypes'].get(assignVar)
@@ -474,17 +474,17 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
         numG2 = 0
         numBoth = 0
         if(assignVar in deps.keys()):
-            print("\nassignVar backtrace => ", assignVar)
-            print(deps[assignVar])
-            #print(deps)
-            print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
+            #print("\nassignVar backtrace => ", assignVar)
+            #print(deps[assignVar])
+            ##print(deps)
+            #print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
 
             depList = []
             for (key,val) in deps.items():
-                print(key, val)
+                #print(key, val)
                 if(assignVar in val):
                     depList.append(key)
-            print("depList => ", depList)
+            #print("depList => ", depList)
 
             depListGroups = {}
             numG1 = 0
@@ -494,30 +494,30 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                 if((i in varmap) and (varmap[i] in info['G1'])):
                     depListGroups[i] = types.G1
                     numG1+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
                 elif((i in varmap) and (varmap[i] in info['G2'])):
                     depListGroups[i] = types.G2
                     numG2+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
                 elif((i in varmap) and (varmap[i] in info['both'])):
                     depListGroups[i] = "both"
                     numBoth+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
                 elif(i in info['G1']):
                     depListGroups[i] = types.G1
                     numG1+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G1'])
+                    #print(i, " : ", depListGroups[i], " => ", info['G1'])
                 elif(i in info['G2']):
                     depListGroups[i] = types.G2
                     numG2+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G2'])
+                    #print(i, " : ", depListGroups[i], " => ", info['G2'])
                 elif(i in info['both']):
                     depListGroups[i] = "both"
                     numBoth+=1
-                    print(i, " : ", depListGroups[i], " => ", info['both'])
+                    #print(i, " : ", depListGroups[i], " => ", info['both'])
 
-            print("depListGroups => ", depListGroups)
-            print(numG1, numG2, numBoth)
+            #print("depListGroups => ", depListGroups)
+            #print(numG1, numG2, numBoth)
 
                 
         if assignVarOccursInBoth(assignVar, info) or ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
@@ -537,9 +537,9 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
         elif blockStmt.getHasPairings(): # in GT so don't need to touch assignVar
             if info['verbose']: print(" :-> update pairing.", end=" ")
             noChangeList.append(str(assignVartmp))
-            print(blockStmt)
-            print(info)
-            print(noChangeList)
+            #print(blockStmt)
+            #print(info)
+            #print(noChangeList)
             newLine = updateForPairing(blockStmt, info, noChangeList)
         elif blockStmt.getIsList() or blockStmt.getIsExpandNode():
             if info['verbose']: print(" :-> updating list...", end=" ")
@@ -548,16 +548,16 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
             #TODO: modify here with new code for assumption variables??
             if info['verbose']: print(" :-> update assign iff lhs not a pairing input AND not changed by traceback.", end=" ")
 
-            print("\nassignVar backtrace => ", assignVar)
-            print(deps[assignVar])
-            print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
+            #print("\nassignVar backtrace => ", assignVar)
+            #print(deps[assignVar])
+            #print("\n", info['newSol'], " G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
 
             depList = []
             for (key,val) in deps.items():
-                print(key, val)
+                #print(key, val)
                 if(assignVar in val):
                     depList.append(key)
-            print("depList => ", depList)
+            #print("depList => ", depList)
 
             depListGroups = {}
             numG1 = 0
@@ -567,30 +567,30 @@ def handleVarInfoAssump(newLines, assign, blockStmt, info, noChangeList, deps, v
                 if((i in varmap) and (varmap[i] in info['G1'])):
                     depListGroups[i] = types.G1
                     numG1+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
                 elif((i in varmap) and (varmap[i] in info['G2'])):
                     depListGroups[i] = types.G2
                     numG2+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
                 elif((i in varmap) and (varmap[i] in info['both'])):
                     depListGroups[i] = "both"
                     numBoth+=1
-                    print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
+                    #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
                 elif(i in info['G1']):
                     depListGroups[i] = types.G1
                     numG1+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G1'])
+                    #print(i, " : ", depListGroups[i], " => ", info['G1'])
                 elif(i in info['G2']):
                     depListGroups[i] = types.G2
                     numG2+=1
-                    print(i, " : ", depListGroups[i], " => ", info['G2'])
+                    #print(i, " : ", depListGroups[i], " => ", info['G2'])
                 elif(i in info['both']):
                     depListGroups[i] = "both"
                     numBoth+=1
-                    print(i, " : ", depListGroups[i], " => ", info['both'])
+                    #print(i, " : ", depListGroups[i], " => ", info['both'])
 
-            print("depListGroups => ", depListGroups)
-            print(numG1, numG2, numBoth)
+            #print("depListGroups => ", depListGroups)
+            #print(numG1, numG2, numBoth)
 
             if not(numG1 == 0) and not(numG2 == 0):
                 if info['verbose']: print(" :-> split computation in G1 & G2:", blockStmt.getVarDepsNoExponents(), end=" ")
@@ -810,8 +810,8 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             assumpMapMin = {}
             for i,j in assumpData.items():
                 assumpMapMin[xorVarMap.get(i)] = j
-            print("Assumption map: ", assumpMapMin)
-            print("Assumption list: ", assumpList)
+            #print("Assumption map: ", assumpMapMin)
+            #print("Assumption list: ", assumpList)
         elif shortOpt == SHORT_PUBKEYS and conf.forAutoGroupPlus:
             # create constraints around keys
             assert pkMapData != None, "pkMapData was not set"
@@ -821,8 +821,8 @@ def searchForSolution(info, shortOpt, hardConstraintList, txor, varTypes, conf, 
             pkMapMin = {}
             for i,j in pkMapData.items():
                 pkMapMin[xorVarMap.get(i)] = j
-            print("Updated pk map  : ", pkMapMin)
-            print("Original pk list: ", pkListMin)
+            #print("Updated pk map  : ", pkMapMin)
+            #print("Original pk list: ", pkListMin)
             # here is where we need to encode some stuff in the pairing
         # to remain backwards compatible with AutoGroup
         elif shortOpt == SHORT_PUBKEYS and conf.schemeType == PKSIG and not conf.forAutoGroupPlus:
@@ -1280,7 +1280,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
-    print("Generators extracted: ", generators)
+    #print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
@@ -1326,10 +1326,10 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    print("pair vars LHS:", pair_vars_G1_lhs)
-    print("pair vars RHS:", pair_vars_G1_rhs) 
-    print("list of gens :", generators)
-    print("constraintList: ", constraintList)
+    #print("pair vars LHS:", pair_vars_G1_lhs)
+    #print("pair vars RHS:", pair_vars_G1_rhs) 
+    #print("list of gens :", generators)
+    #print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -1337,8 +1337,8 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
-    print(info[ 'G1_lhs' ])
-    print(info[ 'G1_rhs' ])
+    #print(info[ 'G1_lhs' ])
+    #print(info[ 'G1_rhs' ])
 
 
     ### REFACTORED Public-Key minimization for Encryption
@@ -1416,9 +1416,9 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
     sdl.ASTVisitor(txor).preorder(ANDs[0])
     #print("<===== Generate XOR clauses =====>")
 
-    print("info => ", info)
-    print("constraintList => ", constraintList)
-    print("txor => ", txor)
+    #print("info => ", info)
+    #print("constraintList => ", constraintList)
+    #print("txor => ", txor)
         
     #constraints = "[]"
     # given the above formula and the constraint list and options we can
@@ -1436,7 +1436,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
 
     # narrow the specific solution that user asked for
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-    print("groupInfo => ", groupInfo)
+    #print("groupInfo => ", groupInfo)
     newAssignments = groupInfo['newSol']
     symDataTypePK  = {}
     asymDataTypePK = {}
@@ -1501,9 +1501,9 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
         #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         for i in info['notInAPairing']:
             if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
-                print(i)
+                #print(i)
                 groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
-        print("Update: new G1 deps=>", groupInfo['G1'])    
+        #print("Update: new G1 deps=>", groupInfo['G1'])    
 
     # put all the info together so that we can generate the new Asym SDL
     groupInfo['generators'] = generators 
@@ -1836,7 +1836,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         sys.exit("Assumption failed: setup not defined for this function. Where to extract generators?")
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
-    print("Generators extracted: ", generators)
+    #print("Generators extracted: ", generators)
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
@@ -2137,10 +2137,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     info[ 'G1_lhs' ] = (pair_vars_G1_lhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_lhs, constraintList))
     info[ 'G1_rhs' ] = (pair_vars_G1_rhs, assignTraceback(assignInfo, generators, varTypes, pair_vars_G1_rhs, constraintList))
 
-    for (assumpname, assumprecord) in assumptionData.items():
-        print("processed deps map assump => ", assumprecord['newDeps'])
-    for (reducname, reducrecord) in reductionData.items():
-        print("processed deps map reduc => ", reducrecord['newDeps'])
+    #for (assumpname, assumprecord) in assumptionData.items():
+        #print("processed deps map assump => ", assumprecord['newDeps'])
+    #for (reducname, reducrecord) in reductionData.items():
+        #print("processed deps map reduc => ", reducrecord['newDeps'])
     
     #print(findVarInfo('d1', reductionData['varTypes']))
     #(name, varInf) = getVarNameEntryFromAssignInfo(reductionData['assignInfo'], 'd1')
@@ -2155,7 +2155,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     assumpDeps = {}
     for (key,val) in assumpDepstmp.items():
         assumpDeps[key] = set(val)
-    print("\nassumpDeps => ", assumpDeps)
+    #print("\nassumpDeps => ", assumpDeps)
 
     reducDepstmp = {}
     for (reducname, reducrecord) in reductionData.items():
@@ -2169,36 +2169,36 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     reducDeps = {}
     for (key,val) in reducDepstmp.items():
         reducDeps[key] = set(val)
-    print("\nreducDeps => ", reducDeps)
+    #print("\nreducDeps => ", reducDeps)
 
     #print(assumpDeps)
     #additionalDeps = dict(list(assumptionData['newDeps'].items()) + list(reductionData['newDeps'].items()))
     additionalNewDeps = dict(list(assumpDeps.items()) + list(reducDeps.items()))
-    print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
+    #print("\nadditionalDeps => ", additionalNewDeps, list(additionalNewDeps.keys()))
 
     # JAA: use this map in split test code
     info['merged_deps'] = additionalNewDeps
 
     #TODO: Do we need to include this?  We did include it in the single assumption/reduction case.
     #TODO: check where this merge should be located...
-    print("lhs => ", info['G1_lhs'][1])
+    #print("lhs => ", info['G1_lhs'][1])
     for (key,val) in info['G1_lhs'][1].items():
-        print(key,val)
+        #print(key,val)
         if key in additionalNewDeps:
             #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
             info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
             #print("after => ", info['G1_lhs'][1][key])
 
-    print("rhs => ", info['G1_rhs'][1])
+    #print("rhs => ", info['G1_rhs'][1])
     for (key,val) in info['G1_rhs'][1].items():
-        print(key,val)
+        #print(key,val)
         if key in additionalNewDeps:
             #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
             info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
             #print("after => ", info['G1_rhs'][1][key])
 
-    print(info[ 'G1_lhs' ])
-    print(info[ 'G1_rhs' ])
+    #print(info[ 'G1_lhs' ])
+    #print(info[ 'G1_rhs' ])
 
     #TODO: need to update this for the multi-case
     # if we want to minimize the assumption
@@ -2209,7 +2209,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         for (assumpname, assumprecord) in assumptionData.items():
             # need to build a map of pairing variables to assumptions
             assumpKey = assumprecord.get('prunedMap') # is this the right data structure?
-            print("assumpKey => ", assumpKey)
+            #print("assumpKey => ", assumpKey)
             for i,j in assumpKey.items():
                 assumpDepList += list(j)
             assumpDepList = list(set(assumpDepList))
@@ -2224,20 +2224,20 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 for j in lhs_orig_vars:
                     for k in lhs_var_map[j]:
                         if k in additionalNewDeps and i in additionalNewDeps[k]:
-                            print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
+                            #print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
                             assump_map[j] = assump_map[j].union([i])
 
                 for j in rhs_orig_vars:
                     for k in rhs_var_map[j]:
                         if k in additionalNewDeps and i in additionalNewDeps[k]:
-                            print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
+                            #print("Found: ", i, "=>", j, ":", additionalNewDeps[k])
                             assump_map[j] = assump_map[j].union([i])
 
         # do a top down tracing to
         for i in assumpDepList:
             searchForChildren(i, i, assump_map, info, seen_before=[])
         # might want to check for any deps in additional deps?
-        print("Assumption Map: ", assump_map)
+        #print("Assumption Map: ", assump_map)
         info['assump_map'] = assump_map
         info['assump_list'] = assumpDepList
 
@@ -2335,25 +2335,25 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     #print("info => ", info)
 
 #TODO: Do we need this?  Or is it the same as above?
-    print("lhs => ", info['G1_lhs'][1])
+    #print("lhs => ", info['G1_lhs'][1])
     for (key,val) in info['G1_lhs'][1].items():
-        print(key,val)
+        #print(key,val)
         if key in additionalNewDeps:
             #print("before => ", info['G1_lhs'][1][key], additionalDeps[key])
             info['G1_lhs'][1][key] = set(list(info['G1_lhs'][1][key]) + list(additionalNewDeps[key]))
             #print("after => ", info['G1_lhs'][1][key])
 
-    print("rhs => ", info['G1_rhs'][1])
+    #print("rhs => ", info['G1_rhs'][1])
     for (key,val) in info['G1_rhs'][1].items():
-        print(key,val)
+        #print(key,val)
         if key in additionalNewDeps:
             #print("before => ", info['G1_rhs'][1][key], additionalDeps[key])
             info['G1_rhs'][1][key] = set(list(info['G1_rhs'][1][key]) + list(additionalNewDeps[key]))
             #print("after => ", info['G1_rhs'][1][key])
 
-    print("info => ", info)
+    #print("info => ", info)
 
-    print("constraintList => ", constraintList)
+    #print("constraintList => ", constraintList)
     #constraintList = ['w', 'h', 'u', 'D1', 'D2', 'K', 'C6', 'D4']
     # debug output
     #print("txor => ", txor)
@@ -2363,7 +2363,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         assumpGens = assumprec['gen'].getGens()
         generators = generators + assumpGens
     generators = set(generators)
-    print(generators)
+    #print(generators)
 
 
     #constraints = "[]"
@@ -2385,7 +2385,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
 
     # narrow the specific solution that user asked for
     groupInfo = DeriveSpecificSolution(resultDict, xorVarMap, info)
-    print("groupInfo => ", groupInfo)
+    #print("groupInfo => ", groupInfo)
     newAssignments = groupInfo['newSol']
     symDataTypePK  = {}
     asymDataTypePK = {}
@@ -2453,9 +2453,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
         #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
         for i in info['notInAPairing']:
             if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
-                print(i)
+                #print(i)
                 groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
-        print("Update: new G1 deps=>", groupInfo['G1'])   
+        #print("Update: new G1 deps=>", groupInfo['G1'])   
 
     # put all the info together so that we can generate the new Asym SDL
     groupInfo['generators'] = generators 
@@ -2521,31 +2521,31 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             tmp0 = reducrecord['deps'][0]
             tmp1 = reducrecord['deps'][1]
 
-            print(tmp0, type(tmp0))
-            print(tmp1, type(tmp1))
+            #print(tmp0, type(tmp0))
+            #print(tmp1, type(tmp1))
 
             reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
             reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
         reducDeps = (reducDeps0, reducDeps1)
-        print(reducDeps)
+        #print(reducDeps)
 
         for (assumpname, assumprecord) in assumptionData.items():
             funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
             setattr(assumprecord['config'], functionOrder, funcOrder)
 
-            print("function order: ", assumprecord['config'].functionOrder)
+            #print("function order: ", assumprecord['config'].functionOrder)
 
             sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
             (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
             # generate the relevant SDL lines
             generatorLines = assumprecord['gen'].getGenLines()
 
-            print(generatorLines)
+            #print(generatorLines)
 
             # we still care about group elements that are not used in pairings
             # the rule is that we always assign these elements to G1 (so as long as
             # so as long as it doesn't affect any pairing computations)
-            print(groupInfo)
+            #print(groupInfo)
             #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
             #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
             #    print("Update: new G1 deps=>", groupInfo['G1'])
@@ -2553,9 +2553,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
                 for i in assumprecord['notInAPairing']:
                     if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
-                        print(i)
+                        #print(i)
                         groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
-                print("Update: new G1 deps=>", groupInfo['G1']) 
+                #print("Update: new G1 deps=>", groupInfo['G1']) 
 
             # put all the info together so that we can generate the new Asym SDL
             groupInfo['generators'] = generators 
@@ -2578,19 +2578,19 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             if hasattr(assumprecord['config'], 'assumpFuncName'):
                 transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
 
-            print(transFunc[ assumprecord['config'].assumpFuncName ])
-            print(assumprecord['stmtA'])
+            #print(transFunc[ assumprecord['config'].assumpFuncName ])
+            #print(assumprecord['stmtA'])
 
             if options['computeSize']:
                 options['symPK']  = symDataTypePK
                 options['asymPK'] = asymDataTypePK
 
-            print(assumprecord['options'])
+            #print(assumprecord['options'])
             # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
             newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
-            print(assumprecord['config'].functionOrder)
+            #print(assumprecord['config'].functionOrder)
             newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
-            print(newLinesT)
+            #print(newLinesT)
 
             # debug output of the SDL file
             print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
@@ -2609,7 +2609,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             counter = 0
 
             reducDeps = (reducrecord['deps'][0], reducrecord['deps'][1])
-            print(reducDeps)
+            #print(reducDeps)
 
             #print(reducrecord['assump'])
 
@@ -2623,19 +2623,19 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             funcOrder = [assumprecord['config'].assumpSetupFuncName, assumprecord['config'].assumpFuncName]
             setattr(assumprecord['config'], functionOrder, funcOrder)
 
-            print("function order: ", assumprecord['config'].functionOrder)
+            #print("function order: ", assumprecord['config'].functionOrder)
 
             sdl.parseFile(assumprecord['assumptionFile'], assumprecord['info']['verbose'], ignoreCloudSourcing=True)
             (generatorMapG1, generatorMapG2) = assumprecord['gen'].setupNewGens() #TODO: do we need to setup any generators from the assumption/reduction??
             # generate the relevant SDL lines
             generatorLines = assumprecord['gen'].getGenLines()
 
-            print(generatorLines)
+            #print(generatorLines)
 
             # we still care about group elements that are not used in pairings
             # the rule is that we always assign these elements to G1 (so as long as
             # so as long as it doesn't affect any pairing computations)
-            print(groupInfo)
+            #print(groupInfo)
             #if assumprecord['info'].get('notInAPairing') != None and len(assumprecord['info']['notInAPairing']) > 0:
             #    groupInfo['G1'] = groupInfo['G1'].union( assumprecord['info']['notInAPairing'] )
             #    print("Update: new G1 deps=>", groupInfo['G1'])
@@ -2643,9 +2643,9 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 #groupInfo['G1'] = groupInfo['G1'].union( info['notInAPairing'] )
                 for i in assumprecord['notInAPairing']:
                     if not(i in groupInfo['G2']) and not(i in groupInfo['both']):
-                        print(i)
+                        #print(i)
                         groupInfo['G1'] = set((list(groupInfo['G1']) + [i]))
-                print("Update: new G1 deps=>", groupInfo['G1']) 
+                #print("Update: new G1 deps=>", groupInfo['G1']) 
 
             # put all the info together so that we can generate the new Asym SDL
             groupInfo['generators'] = generators 
@@ -2668,19 +2668,19 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             if hasattr(assumprecord['config'], 'assumpFuncName'):
                 transFunc[ assumprecord['config'].assumpFuncName ] = assumprecord['stmtA']
 
-            print(transFunc[ assumprecord['config'].assumpFuncName ])
-            print(assumprecord['stmtA'])
+            #print(transFunc[ assumprecord['config'].assumpFuncName ])
+            #print(assumprecord['stmtA'])
 
             if options['computeSize']:
                 options['symPK']  = symDataTypePK
                 options['asymPK'] = asymDataTypePK
 
-            print(assumprecord['options'])
+            #print(assumprecord['options'])
             # with the functions and SDL statements defined, can simply run AsymSDL to construct the new SDL
             newSDL_assump = AsymAssumpSDL(assumprecord['options'], assumprecord['assignInfo'], groupInfo, assumprecord['typesH'], generatorLines, transFunc, transFuncGen, reducDeps, assumprecord['varmap'])#TODO: change this!!! we can't guarantee the order of the dictionary....though isn't it a list??
-            print(assumprecord['config'].functionOrder)
+            #print(assumprecord['config'].functionOrder)
             newLinesT, newLinesSe, newLinesS, newLinesA, userFuncLines = newSDL_assump.constructSDL(assumprecord['config'])
-            print(newLinesT)
+            #print(newLinesT)
 
             # debug output of the SDL file
             print_sdl(assumprecord['info']['verbose'], newLinesS, newLinesA)
@@ -2801,7 +2801,7 @@ class AsymSDL:
         for i in noChangeList:
             if i in self.generatorLines.keys():
                 # strip from the data structures
-                print(i, " : ", self.generatorLines[i])
+                #print(i, " : ", self.generatorLines[i])
                 self.generatorLines[ i ] = None
                 self.groupInfo['G1'] = self.groupInfo['G1'].difference( [i] )
                 self.groupInfo['G2'] = self.groupInfo['G2'].difference( [i] )
@@ -2859,8 +2859,8 @@ class AsymSDL:
             if i in self.generatorMap:
                 # actual generator
                 usedGenerators.append(i)
-        print("usedVars :=> ", usedGenerators)
-        print("generators :=> ", self.generatorMap)
+        #print("usedVars :=> ", usedGenerators)
+        #print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
 
         if len(deleteMe) > 0:
@@ -2971,11 +2971,11 @@ class AsymSDL:
                 for i in self.__aPKdict:
                     if i in verifyUsedVars:
                         asymDataTypePK[i] = self.__aPKdict[i]
-                print("verifyUsedVars: ", verifyUsedVars)
-                print("sym PK => ", list(self.__sPKdict.keys()))
-                print("asym PK => ", list(asymDataTypePK.keys()))
-                print("estimated  sym:  ", estimateSize(self.__sPKdict, symmetric_curves['SS1536']))        
-                print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
+                #print("verifyUsedVars: ", verifyUsedVars)
+                #print("sym PK => ", list(self.__sPKdict.keys()))
+                #print("asym PK => ", list(asymDataTypePK.keys()))
+                #print("estimated  sym:  ", estimateSize(self.__sPKdict, symmetric_curves['SS1536']))        
+                #print("estimated asym: ", estimateSize(asymDataTypePK, asymmetric_curves['BN256']))
             
             sPub = "s"+config.keygenPubVar
             vPub = "v"+config.keygenPubVar
@@ -3066,7 +3066,7 @@ class AsymAssumpSDL:
 
     def __getFuncLines(self, funcName):
         usedVars = set()
-        print("func name => ", funcName)
+        #print("func name => ", funcName)
         if funcName != LATEX_HEADER:
             funcConfig = sdl.getVarInfoFuncStmts( funcName )
             Stmts = funcConfig[0]
@@ -3118,10 +3118,10 @@ class AsymAssumpSDL:
         return
     
     def constructSDL(self, config):
-        print("\nconstructSDL groupInfo => ", self.groupInfo)
-        print("\nassignInfo => ", self.assignInfo)
-        print("\ndeps => ", self.deps[0])
-        print("\ndeps => ", self.deps[1])
+        #print("\nconstructSDL groupInfo => ", self.groupInfo)
+        #print("\nassignInfo => ", self.assignInfo)
+        #print("\ndeps => ", self.deps[0])
+        #print("\ndeps => ", self.deps[1])
         noChangeList = []
         # process original TYPES section to see what we should add to noChangeList (str, int or GT types)    
         for i, j in self.typesH.items():
@@ -3129,13 +3129,13 @@ class AsymAssumpSDL:
             if t in [types.ZR, types.listZR, types.Int, types.listInt, types.Str, types.listStr, types.GT]: 
                 noChangeList.append(i)
         # JAA: commented out for benchmarking    
-        print("Initial noChangeList: ", noChangeList)
+        #print("Initial noChangeList: ", noChangeList)
         #(Stmts, Types, depList, depListNoExp, infList, infListNoExp)
         userFuncLines = []
         if len(self.userFuncList) > 0:
             for userFuncs in self.userFuncList:
                 # JAA: commented out for benchmarking                
-                print("processing user defined func: ", userFuncs)
+                #print("processing user defined func: ", userFuncs)
                 userFuncData = self.__getFuncLines(userFuncs)
                 _userFuncLines = userFuncData[0]
                 noChangeList  = list(set(noChangeList).union( userFuncData[1] ))
@@ -3143,11 +3143,11 @@ class AsymAssumpSDL:
         
         # update the generator lists if there's a generator in the list
         for i in noChangeList:
-            print("i => ", i)
-            print(self.generatorLines)
+            #print("i => ", i)
+            #print(self.generatorLines)
             if i in self.generatorLines.keys():
                 # strip from the data structures
-                print(i, " : ", self.generatorLines[i])
+                #print(i, " : ", self.generatorLines[i])
                 self.generatorLines[ i ] = None
                 self.groupInfo['G1'] = self.groupInfo['G1'].difference( [i] )
                 self.groupInfo['G2'] = self.groupInfo['G2'].difference( [i] )
@@ -3156,10 +3156,10 @@ class AsymAssumpSDL:
         newLinesSe = []
         newLinesS = []
         entireSDL = sdl.getLinesOfCode()
-        print("entire SDL => ", entireSDL, "\n")
+        #print("entire SDL => ", entireSDL, "\n")
         transFuncRes = {}
         Input = {}
-        print(config.functionOrder)
+        #print(config.functionOrder)
         for funcName in config.functionOrder:
             if funcName in self.transFuncGen.keys():
                 print("<===== 1 processing %s =====>" % funcName)
@@ -3168,31 +3168,31 @@ class AsymAssumpSDL:
                 print("<===== 1 processing %s =====>" % funcName)
                 
         # obtain results
-        print(self.typesH)
+        #print(self.typesH)
         newLinesT = transformTypes(self.typesH, self.groupInfo)
-        print("newLinesT => ", newLinesT)
+        #print("newLinesT => ", newLinesT)
         if hasattr(config, "extraSetupFuncName"):
             newLinesSe = transFuncRes.get( config.extraSetupFuncName )
         if hasattr(config, 'assumpSetupFuncName'):   
             newLinesS  = transFuncRes.get( config.assumpSetupFuncName )
 
-        print("newLinesS => ", newLinesS, "\n")
+        #print("newLinesS => ", newLinesS, "\n")
         
         # transform body of SDL scheme
         if (config.schemeType == PKENC):
             print("PKENC assumption")
-            print(self.transFunc.keys())
+            #print(self.transFunc.keys())
             for funcName in config.functionOrder:
-                print(funcName)
+                #print(funcName)
                 if funcName in self.transFunc.keys():
                     print("<===== 2 processing PKENC %s =====>" % funcName)
                     self.__currentFunc = funcName
-                    print(self.transFunc[funcName])
-                    print(self.deps[1])
+                    #print(self.transFunc[funcName])
+                    #print(self.deps[1])
                     transFuncRes[ funcName ] = transformFunctionAssump(entireSDL, funcName, self.transFunc[ funcName ], self.groupInfo, noChangeList, self.deps[1], self.varmap)
                     print("<===== 2 processing PKENC %s =====>" % funcName)
             newLinesA = transFuncRes.get( config.assumpFuncName )
-            print(newLinesA)
+            #print(newLinesA)
                 
         elif config.schemeType == PKSIG:
             print("PKSIG assumption")
@@ -3212,8 +3212,8 @@ class AsymAssumpSDL:
             if i in self.generatorMap:
                 # actual generator
                 usedGenerators.append(i)
-        print("usedVars :=> ", usedGenerators)
-        print("generators :=> ", self.generatorMap)
+        #print("usedVars :=> ", usedGenerators)
+        #print("generators :=> ", self.generatorMap)
         deleteMe = list(set(self.generatorMap).difference(usedGenerators))
                 
         if len(deleteMe) > 0:
@@ -3786,7 +3786,7 @@ def updateAllForG2(node, assignVar, varInfo, info, changeLeftVar, noChangeList=[
     return new_node2
 
 def updateForLists(varInfo, assignVar, info):
-    print("updateForLists")
+    #print("updateForLists")
     global oldListTypeRefs, newListTypeRefs
     newList = []
     inBoth = info['both']
@@ -3794,12 +3794,12 @@ def updateForLists(varInfo, assignVar, info):
     oldListTypeRefs[ str(assignVar) ] = list(orig_list) # record the original list
 
     for i in orig_list:
-        print("i => ", i)
+        #print("i => ", i)
         if i in inBoth or assignVarIsGenerator(i, info):
             newList.extend([i + G1Prefix, i + G2Prefix])
         else:
             newList.append(i)
-    print(varInfo.getAssignNode())
+    #print(varInfo.getAssignNode())
     new_node = BinaryNode.copy(varInfo.getAssignNode())
     new_node.right.listNodes = newList
     #print("\n\tnewList: ", new_node)
