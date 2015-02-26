@@ -1858,15 +1858,16 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
                 # add (i,j) combo to pair_list
                 pair_list.append( (i, j) )
 
-    for (reducname, reducrecord) in reductionData.items():
-        the_lhs = reducrecord.get('G1_lhs')[0]
-        the_rhs = reducrecord.get('G1_rhs')[0]
-        for i,j in zip(the_lhs, the_rhs):
-            if (i == j): # skip e(g, g)
-                continue
-            if (i, j) not in pair_list and (j, i) not in pair_list:
-                # add (i,j) combo to pair_list
-                pair_list.append( (i, j) )
+    # THIS DOESN'T SEEM TO BE NECESSARY
+    # for (reducname, reducrecord) in reductionData.items():
+    #     the_lhs = reducrecord.get('G1_lhs')[0]
+    #     the_rhs = reducrecord.get('G1_rhs')[0]
+    #     for i,j in zip(the_lhs, the_rhs):
+    #         if (i == j): # skip e(g, g)
+    #             continue
+    #         if (i, j) not in pair_list and (j, i) not in pair_list:
+    #             # add (i,j) combo to pair_list
+    #             pair_list.append( (i, j) )
 
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     #print(pairingSearch)
