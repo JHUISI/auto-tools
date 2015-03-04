@@ -1282,6 +1282,67 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
     # JAA: commented out for benchmarking    
     #print("Generators extracted: ", generators)
 
+
+    ##### check generators for hashes #####
+    hashgens = []
+
+    if hasattr(config, "extraSetupFuncName"):
+        for i in stmtSe.keys():
+            if(not len(stmtSe[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtSe[i].getAssignVar()
+
+                if typesSe.get(t) == None:
+                    typ = stmtSe[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesSe[t].getType()
+
+                if typ == types.G1:
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in extra Setup.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+
+    if hasattr(config, 'setupFuncName'):
+        for i in stmtS.keys():
+            if(not len(stmtS[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtS[i].getAssignVar()
+
+                if typesS.get(t) == None:
+                    typ = stmtS[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesS[t].getType()
+
+                if typ == types.G1:
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in Setup.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+
+    if hasattr(config, 'keygenFuncName'):
+        for i in stmtK.keys():
+            if(not len(stmtK[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtK[i].getAssignVar()
+
+                if typesK.get(t) == None:
+                    typ = stmtK[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesK[t].getType()
+
+                if typ == types.G1:
+                    t = stmtK[i].getAssignVar()
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in KeyGen.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+    #######################################
+
+
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
     # Visits each pairing computation in the SDL and
@@ -1837,6 +1898,67 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     generators = gen.getGens()
     # JAA: commented out for benchmarking    
     #print("Generators extracted: ", generators)
+
+
+    ##### check generators for hashes #####
+    hashgens = []
+
+    if hasattr(config, "extraSetupFuncName"):
+        for i in stmtSe.keys():
+            if(not len(stmtSe[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtSe[i].getAssignVar()
+
+                if typesSe.get(t) == None:
+                    typ = stmtSe[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesSe[t].getType()
+
+                if typ == types.G1:
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in extra Setup.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+
+    if hasattr(config, 'setupFuncName'):
+        for i in stmtS.keys():
+            if(not len(stmtS[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtS[i].getAssignVar()
+
+                if typesS.get(t) == None:
+                    typ = stmtS[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesS[t].getType()
+
+                if typ == types.G1:
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in Setup.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+
+    if hasattr(config, 'keygenFuncName'):
+        for i in stmtK.keys():
+            if(not len(stmtK[i].getHashArgsInAssignNode()) == 0):
+
+                t = stmtK[i].getAssignVar()
+
+                if typesK.get(t) == None:
+                    typ = stmtK[i].getAssignNode().right.left.attr
+                else:
+                    typ = typesK[t].getType()
+
+                if typ == types.G1:
+                    t = stmtK[i].getAssignVar()
+                    hashgens.append(t)
+
+                    print("\nWARNING!!!!  Hash in KeyGen.  If AutoGroup+ fails later on, this could be the cause!")
+                    print("line ", i, " : ", t, "\n")
+
+    #######################################
+
 
     # need a Visitor class to build these variables  
     # TODO: expand to other parts of algorithm including setup, keygen, encrypt
