@@ -200,12 +200,9 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     for eachStmt in pairingSearch: # loop through each pairing statement
-        #print(pair_vars_G1_lhs)            
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
-            #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
-                #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
                 if HasPairings(eachStmt[i].getAssignNode()):
                     path_applied = []
@@ -216,12 +213,10 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
                     # JAA: commented out for benchmarking                    
                     #if len(path_applied) > 0: print("Split Pairings: ", eachStmt[i].getAssignNode())
                     if info['verbose']: print("Each: ", eachStmt[i].getAssignNode())
-                    #print(eachStmt[i].assignNode)
                     sdl.ASTVisitor( gpv ).preorder( eachStmt[i].getAssignNode() )
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
-                    #print("hash => ", str(eachStmt[i].getAssignVar()))
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
@@ -234,10 +229,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    #print("pair vars LHS:", pair_vars_G1_lhs)
-    #print("pair vars RHS:", pair_vars_G1_rhs) 
-    #print("list of gens :", generators)
-    #print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -248,7 +239,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
     depList = {}
     for i in [depListS, depListA]:
         for (key, val) in i.items():
-            #print(key, val)
             if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key in cm.assumpMasterPubVars) and not(key in cm.assumpMasterSecVars)):
                 depList[key] = val
 
@@ -256,7 +246,6 @@ def parseAssumptionFile(cm, assumption_file, verbose, benchmarkOpt, estimateOpt)
 
     prunedDeps = {}
     for (key, val) in info['deps'][1].items():
-        #print(key, val)
         if(not(len(val) == 0)):
             prunedDeps[key] = val
 
@@ -427,8 +416,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 print("<=== Reduction Graph ===>")
 
             reductionData['reductionGraph'] = dg_reduction
-        #print(stmtS)
-        #print(stmtQ)
 
         # TODO: expand search to encrypt and potentially setup
         pairingSearch += [stmtS, stmtQ, stmtC] # aka start with decrypt.
@@ -484,8 +471,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
 
             reductionData['reductionGraph'] = dg_reduction
-        #print(stmtS)
-        #print(stmtQ)
 
         # TODO: expand search to encrypt and potentially setup
         pairingSearch += [stmtS, stmtQ] # aka start with decrypt.
@@ -520,14 +505,10 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     pair_vars_G1_rhs = []    
     gpv = GetPairingVariables(pair_vars_G1_lhs, pair_vars_G1_rhs)
     gpv.setDepListData( depListData )
-    #print(pairingSearch)
     for eachStmt in pairingSearch: # loop through each pairing statement
-        #print(pair_vars_G1_lhs)
         lines = eachStmt.keys() # for each line, do the following
         for i in lines:
-            #print(pair_vars_G1_lhs)            
             if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
-                #print("Each: ", eachStmt[i].getAssignNode())
                 # assert that the statement contains a pairing computation
                 gpv.setFuncName( eachStmt[i].getFuncName() )
                 if HasPairings(eachStmt[i].getAssignNode()):
@@ -544,7 +525,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 elif eachStmt[i].getHashArgsInAssignNode(): 
                     # in case there's a hashed value...build up list and check later to see if it appears
                     # in pairing variable list
-                    #print("hash => ", str(eachStmt[i].getAssignVar()))
                     hashVarList.append(str(eachStmt[i].getAssignVar()))
                 else:
                     continue # not interested
@@ -557,10 +537,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         if i in pair_vars_G1_lhs or i in pair_vars_G1_rhs:
             constraintList.append(i)
     # JAA: commented out for benchmarking            
-    #print("pair vars LHS:", pair_vars_G1_lhs)
-    #print("pair vars RHS:", pair_vars_G1_rhs) 
-    #print("list of gens :", generators)
-    #print("constraintList: ", constraintList)
     # for each pairing variable, we construct a dependency graph all the way back to
     # the generators used. The input of assignTraceback consists of the list of SDL statements,
     # generators from setup, type info, and the pairing variables.
@@ -574,7 +550,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     if cm.schemeType == PKENC:
         for i in [depListS, depListQ, depListC]:
             for (key, val) in i.items():
-                #print(key, val)
                 if(not(len(val) == 0) and not(key == 'input') and
                    not(key == 'output') and not(key == cm.reducCiphertextVar) and
                    not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and
@@ -588,7 +563,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
     elif cm.schemeType == PKSIG:
         for i in [depListS, depListQ]:
             for (key, val) in i.items():
-                #print(key, val)
                 if(not(len(val) == 0) and not(key == 'input') and not(key == 'output') and not(key == cm.reducCiphertextVar) and not(key == cm.reducQueriesSecVar) and not(key in cm.reducMasterPubVars) and not(key in cm.reducMasterSecVars)):
                     if(key in reductionData['varmap']):
                         depList[reductionData['varmap'][key]] = val
@@ -601,7 +575,6 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     prunedDeps = {}
     for (key, val) in info['deps'][1].items():
-        #print(key, val)
         if(not(len(val) == 0)):
             prunedDeps[key] = val
 
@@ -800,7 +773,6 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
         return
     else:
-        #print(cm.assumption)
         #assumptionData = []
         assumptionData = {}
         for i in cm.assumption:

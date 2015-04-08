@@ -1091,13 +1091,10 @@ def buildCompleteMap(resultModel, info, xorMap):
         for (reducname, reducrecord) in reductionData.items():
             tmp0 = reducrecord['deps'][0]
             tmp1 = reducrecord['deps'][1]
-            print(tmp0, type(tmp0))
-            print(tmp1, type(tmp1))
             # concatenating dictionaries
             reducDeps0 = dict(list(reducDeps0.items()) + list(tmp0.items()))
             reducDeps1 = dict(list(reducDeps1.items()) + list(tmp1.items()))
         reducDeps = (reducDeps0, reducDeps1)
-        print(reducDeps)
 
         #1) GenerateSplitSolutionMap
         group_info = GenerateSplitSolutionMap(resultModel, xorMap, info, reducDeps1)
@@ -1163,17 +1160,12 @@ def processVarWithDep(info, assignVar, deps, varmap):
     numG2 = 0
     numBoth = 0
     if(assignVar in deps.keys()):
-        #print("\nassignVar backtrace => ", assignVar)
-        #print(deps[assignVar])
-        #print(deps)
         #print("G1 => ", info['G1'], " G2 => ", info['G2'], " both => ", info['both'])
 
         depList = []
         for (key,val) in deps.items():
-            #print(key, val)
             if(assignVar in val):
                 depList.append(key)
-        #print("depList => ", depList)
 
         depListGroups = {}
         numG1 = 0
@@ -1183,30 +1175,21 @@ def processVarWithDep(info, assignVar, deps, varmap):
             if((i in varmap) and (varmap[i] in info['G1'])):
                 depListGroups[i] = types.G1
                 numG1+=1
-                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G1'])
             elif((i in varmap) and (varmap[i] in info['G2'])):
                 depListGroups[i] = types.G2
                 numG2+=1
-                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['G2'])
             elif((i in varmap) and (varmap[i] in info['both'])):
                 depListGroups[i] = "both"
                 numBoth+=1
-                #print(i, " : ", varmap[i], " : ", depListGroups[i], " => ", info['both'])
             elif(i in info['G1']):
                 depListGroups[i] = types.G1
                 numG1+=1
-                #print(i, " : ", depListGroups[i], " => ", info['G1'])
             elif(i in info['G2']):
                 depListGroups[i] = types.G2
                 numG2+=1
-                #print(i, " : ", depListGroups[i], " => ", info['G2'])
             elif(i in info['both']):
                 depListGroups[i] = "both"
                 numBoth+=1
-                #print(i, " : ", depListGroups[i], " => ", info['both'])
-
-        ##print("depListGroups => ", depListGroups)
-        ##print(numG1, numG2, numBoth)
 
         if ( not(numBoth == 0) or (not(numG1 == 0) and not(numG2 == 0)) ):
             if verbose: print(assignVar, ":-> split computation in G1 & G2")
@@ -1273,7 +1256,6 @@ def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
 
         deps = list(deps); deps.append(i) # var name to the list
 
-        #print(i, ":=>", group, ": deps =>", deps)
         newSol[ i ] = group
         if group == _G1Prefix:
             G1_deps = G1_deps.union(deps)
@@ -1427,9 +1409,6 @@ def _handleVarInfo(assign, blockStmt, info, noChangeList, startLines={}):
         if leftAssignVar in 'G2': create 1 statement in G2
 """
 def GenerateSchemeSplit(entireSDL, funcName, blockStmts, info, noChangeList, startLines={}):
-    #print("transform function")
-    #print(entireSDL)
-    #print(blockStmts)
     parser = sdl.SDLParser()
     funcNode = BinaryNode("func:" + str(funcName))
     begin = BinaryNode(ops.BEGIN, funcNode, None) # "BEGIN :: func:" + funcName
