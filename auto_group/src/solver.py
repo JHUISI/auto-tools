@@ -551,7 +551,8 @@ def findMinimalRef(M, data1, data2, skipList=[]):
 def checkValidSplit(info, optionDict, a_model):
     xorMap       = optionDict.get(pairingVarMapKeyword)
     merged_graph = optionDict.get(mergedGraphKeyword)
-
+    if merged_graph is None:
+        sys.exit("Merged Graph not set.\nAdd 'graphit = True' to your scheme config.")
     # using group_info map, extract a graph split (basically, apply BFS from root)
     # also check whether the split is valid
     if info.get('single_reduction'):
@@ -957,7 +958,7 @@ def generateSplit(info, group_info, merged_graph):
     :param group_info: final group assignments from split
     :param nodes: all nodes in merged graph
     :param edges: all edges in merged graph
-    :param out_going: outgoing edges for each nodes (will be used w/ BFS to split)
+    :param out_going: outgoing edges for each nodes (will be used w/ BFS algorithm to split)
     :return:
     """
     root_node = merged_graph.getRootNode()
@@ -1063,6 +1064,17 @@ def generateSplit(info, group_info, merged_graph):
     # print("Graph0: ", graph0)
     # print("Graph1: ", graph1)
     # print("<====== SHOW SPLIT ======>")
+
+    dup_nodes = False
+    for i in hash_list:
+        #print("Sanity checking ", i, "...")
+        if i in graph0.nodes and i in graph1.nodes:
+            #s = i + " has been duplicated!!! ERROR!"
+            #print(s)
+            dup_nodes = True
+
+    if not dup_nodes:
+        print("NO hash variable was duplicated in the split. Yay!!!")
 
     new_merged_graph = graph0 + graph1
     if merged_graph == new_merged_graph:

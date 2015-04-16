@@ -2786,7 +2786,7 @@ class AsymSDL:
             newLines2  = self.__prune(newLines2, deleteMe)
             newLines3  = self.__prune(newLines3, deleteMe)
         else:
-            print("No unused geenrators to prune!")
+            print("No unused generators to prune!")
 
         if hasattr(config, 'enablePKprune') and config.enablePKprune and config.schemeType == PKSIG:
             # 1. get new pk list if defined in scheme
