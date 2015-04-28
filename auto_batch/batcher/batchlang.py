@@ -21,7 +21,7 @@ AST simple rules
 * support batch for different messages/signers/public keys.
 '''
 
-from charm.toolbox.enum import *
+from sdlparser.enumtool import *
 import string
 
 types = Enum('G1', 'G2', 'GT', 'ZR', 'str')
