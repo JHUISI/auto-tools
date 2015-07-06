@@ -18,8 +18,8 @@ y := random(ZR)
 X := (gG2^x)
 Y := (gG2^y)
 sk := list{x, y}
-vpk := list{X, Y}
-output := list{sk, vpk}
+pk := list{X, Y}
+output := list{pk, sk}
 END :: func:keygen
 
 BEGIN :: func:sign
@@ -34,9 +34,9 @@ output := sig
 END :: func:sign
 
 BEGIN :: func:verify
-input := list{vpk, gG2, M, sig}
+input := list{pk, gG2, M, sig}
 sig := expand{a, b, c}
-vpk := expand{X, Y}
+pk := expand{X, Y}
 m := H(M,ZR)
 BEGIN :: if
 if {{e(a,Y) == e(b,gG2)} and {e((a * (b^m)),X) == e(c,gG2)}}

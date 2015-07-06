@@ -24,8 +24,9 @@ parser.add_argument('-l', '--library', help="which library to benchmark against:
 parser.add_argument('-b', '--benchmark', default=False, help="benchmark AutoGroup execution time", action="store_true")
 parser.add_argument('-e', '--estimate', default=False, help="estimate bandwidth for keys and ciphertext/signatures", action="store_true")
 parser.add_argument('--short', help="what to minimize: public-keys, secret-keys, assumption, ciphertext, signatures")
-parser.add_argument('--path', help="destination for AutoGroup output files. Default: current dir")
+parser.add_argument('--path', help="destination for AutoGroup+ output files. Default: current dir")
 parser.add_argument('--print', help="print the selected options", default=False, action="store_true")
+parser.add_argument('-a', '--autogroup', help="run AutoGroup only (and not AutoGroup+)", default=False, action="store_true")
 
 args = parser.parse_args()
 output_file  = args.outfile
@@ -38,6 +39,7 @@ estimateSize = args.estimate
 short_option = args.short
 dest_path    = args.path
 print_options  = args.print
+run_auto_group = args.autogroup
 
 if not dest_path:
     dest_path = ""
@@ -450,7 +452,12 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
         if hasattr(cm, 'graphit') and cm.graphit:
             dg_reduc_setup = generateGraphForward(cm.reducSetupFuncName, (stmtS, typesS, infListNoExpS))
             dg_reduc_setup.adjustByMap(reductionData.get('varmap'))
-            dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, depListNoExpQ), types.G1, varTypes)
+
+            #dg_reduc_query = generateGraphForward(cm.reducQueryFuncName, (stmtQ, typesQ, infListNoExpQ))
+            #dg_reduc_query.adjustByMap(reductionData.get('varmap'))
+
+            new_depListNoExpQ = simplifyDepMap(stmtQ, typesQ, infListNoExpQ, depListNoExpQ)
+            dg_reduc_query = generateGraph(cm.reducQueryFuncName, (typesQ, new_depListNoExpQ), types.G1, varTypes)
             dg_reduc_query.adjustByMap(reductionData.get('varmap'))
 
             if verbose:
@@ -458,9 +465,9 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
                 print(dg_reduc_setup)
                 print("<=== Reduction Setup Graph ===>")
 
-                print("<=== Reduction Query Graph ===>")
+                print("<=== Reduction Query Graph (backward) ===>")
                 print(dg_reduc_query)
-                print("<=== Reduction Query Graph ===>")
+                print("<=== Reduction Query Graph (backward) ===>")
 
             dg_reduction = DotGraph("reduction")
             dg_reduction += dg_reduc_setup + dg_reduc_query
@@ -683,7 +690,7 @@ def parseReductionFile(cm, reduction_file, verbose, benchmarkOpt, estimateOpt):
 
     return reductionData
 
-def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt, shortOpt):
+def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateOpt, shortOpt, run_auto_group):
     runningTime = 0
 
     # get full path (assuming not provided)
@@ -709,8 +716,8 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
 
 
     #parse assumption arguments
-    if not hasattr(cm, "assumption"):
-        print("No assumption specified, running old AutoGroup")
+    if not hasattr(cm, "assumption") or run_auto_group:
+        print("No assumption or specifically running the original AutoGroup")
         #sys.exit("configAutoGroup: need to set 'assumption' in config.") #TODO: add back in when finished and remove else
 
         # setup sdl parser configs
@@ -769,8 +776,9 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             print("Codegen Output: ", new_output_sdl)
             print("User defined funcs: ", options['userFuncList'])
         if not benchmarkOpt:
-            codegen_CPP.codegen_CPP_main(new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
-            codegen_PY.codegen_PY_main(new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
+            # generate the source code in the target path
+            codegen_CPP.codegen_CPP_main(dest_path + new_input_sdl, dest_path + new_output_sdl + ".cpp", options['userFuncList'])
+            codegen_PY.codegen_PY_main(dest_path + new_input_sdl, dest_path + new_output_sdl + ".py", new_output_sdl + "User.py")
         return
     else:
         #assumptionData = []
@@ -877,4 +885,4 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
             return
 
 # run AutoGroup with the designated options
-configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateSize, short_option)
+configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benchmarkOpt, estimateSize, short_option, run_auto_group)

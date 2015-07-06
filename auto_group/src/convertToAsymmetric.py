@@ -1129,7 +1129,7 @@ def runAutoGroupOld(sdlFile, config, options, sdlVerbose=False):
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
     # the block of types in the SDL
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
-    info = {'verbose':sdlVerbose}
+    info = {'verbose':sdlVerbose, isAutoGroupKeyword: True}
 
     # we want to ignore user defined functions from our analysis
     # (unless certain variables that we care about are manipulated there)
@@ -1543,8 +1543,24 @@ def addAllEdgesIfSourceGroup(graph, a, depMap, typeMap, target_type, addlTypes):
             graph.addDirectedEdge(b, a)
     return
 
+def simplifyDepMap(stmtS, typesS, infListNoExpS, depListNoExpS):
+    new_dep_map = dict(depListNoExpS)
+
+    eachStmt = stmtS
+    lines = eachStmt.keys() # for each line, do the following
+    for i in lines:
+        if type(eachStmt[i]) == sdl.VarInfo: # make sure we have the Var Object
+            assignVarName = eachStmt[i].getAssignVar()
+            the_stmt = eachStmt[i].getAssignNode()
+            dep_list = eachStmt[i].getVarDepsNoExponents()
+            if new_dep_map.get(assignVarName):
+                new_dep_map[assignVarName] = list(set(new_dep_map[assignVarName]).intersection(dep_list))
+                new_dep_map[assignVarName].sort()
+    return new_dep_map
+
 def generateGraphForward(alg_name, alg_structure, target_type=types.G1, exclude=[]):
     dg = DotGraph(alg_name)
+    assert len(alg_structure) == 3, "expecting (stmtS, typesS, infListNoExpS)"
     (stmtS, typesS, infListNoExpS) = alg_structure
 
     eachStmt = stmtS
@@ -1688,7 +1704,7 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     sdl_name = sdl.assignInfo[sdl.NONE_FUNC_NAME][BV_NAME].getAssignNode().getRight().getAttribute()
     # the block of types in the SDL
     typesBlock = sdl.getFuncStmts( TYPES_HEADER )
-    info = {'verbose':sdlVerbose, 'single_reduction': config.single_reduction}
+    info = {'verbose':sdlVerbose, 'single_reduction': config.single_reduction, isAutoGroupKeyword: False}
 
     # we want to ignore user defined functions from our analysis
     # (unless certain variables that we care about are manipulated there)
@@ -2019,9 +2035,13 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
             has_setup = True
         else:
             has_setup = False
-        dg_keygen = generateGraph(config.keygenFuncName, (typesK, depListNoExpK), types.G1, varTypes)
+
+        new_depListNoExpK = simplifyDepMap(stmtK, typesK, infListNoExpK, depListNoExpK)
+        dg_keygen = generateGraph(config.keygenFuncName, (typesK, new_depListNoExpK), types.G1, varTypes)
         dg_keygen.update(pair_graph)
-        dg_sign = generateGraph(config.signFuncName, (typesSi, depListNoExpSi), types.G1, varTypes)
+
+        new_depListNoExpSi = simplifyDepMap(stmtSi, typesSi, infListNoExpSi, depListNoExpSi)
+        dg_sign = generateGraph(config.signFuncName, (typesSi, new_depListNoExpSi), types.G1, varTypes)
         dg_sign.update(pair_graph)
         dg_verify = generateGraph(config.verifyFuncName, (typesV, depListNoExpV), types.G1, varTypes)
         dg_verify.update(pair_graph)
@@ -3170,38 +3190,39 @@ def NaiveEvaluation(solutionList, preference):
 
     return { G1:'G1', G2:'G2' }, resMap
 
-def DeriveGeneralSolution(groupMap, resultMap, xorMap, info):
-    #print("<===== Deriving Solution from Results =====>")
-    G1_deps = set()
-    G2_deps = set()
-    pairingInfo = {}
-    pairingInfo[G1Prefix] = []
-    pairingInfo[G2Prefix] = []
-    for i in info['G1_lhs'][0] + info['G1_rhs'][0]:
-        # get the z3 var for it
-        z3Var = xorMap.get(i) # gives us an alphabet
-        # look up value in resultMap
-        varValue = resultMap.get(z3Var)
-        # get group
-        group = groupMap.get(varValue)
-        if i in info['G1_lhs'][0]: deps = info['G1_lhs'][1].get(i)
-        else: deps = info['G1_rhs'][1].get(i)
-        deps = list(deps); deps.append(i) # var name to the list
-        if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
-        elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
-    #print("<===== Deriving Solution from Results =====>")    
-    both = G1_deps.intersection(G2_deps)
-    G1 = G1_deps.difference(both)
-    G2 = G2_deps.difference(both)
-    #print("Both G1 & G2: ", both)
-    #print("Just G1: ", G1)
-    #print("Just G2: ", G2)
-    return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo }
+# def DeriveGeneralSolution(groupMap, resultMap, xorMap, info):
+#     #print("<===== Deriving Solution from Results =====>")
+#     G1_deps = set()
+#     G2_deps = set()
+#     pairingInfo = {}
+#     pairingInfo[G1Prefix] = []
+#     pairingInfo[G2Prefix] = []
+#     for i in info['G1_lhs'][0] + info['G1_rhs'][0]:
+#         # get the z3 var for it
+#         z3Var = xorMap.get(i) # gives us an alphabet
+#         # look up value in resultMap
+#         varValue = resultMap.get(z3Var)
+#         # get group
+#         group = groupMap.get(varValue)
+#         if i in info['G1_lhs'][0]: deps = info['G1_lhs'][1].get(i)
+#         else: deps = info['G1_rhs'][1].get(i)
+#         deps = list(deps); deps.append(i) # var name to the list
+#         if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
+#         elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
+#     #print("<===== Deriving Solution from Results =====>")
+#     both = G1_deps.intersection(G2_deps)
+#     G1 = G1_deps.difference(both)
+#     G2 = G2_deps.difference(both)
+#     #print("Both G1 & G2: ", both)
+#     #print("Just G1: ", G1)
+#     #print("Just G2: ", G2)
+#     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo }
 
 def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xorMap, info):
     #print("<===== Deriving Specific Solution from Results =====>")
     G1_deps = set()
     G2_deps = set()
+    both_groups = set()
     resultMap = {}
     newSol = {}
     for tupl in resultDict:
@@ -3213,25 +3234,37 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
     for i in info['G1_lhs'][0] + info['G1_rhs'][0]:
         # get the z3 var for it
         z3Var = xorMap.get(i) # gives us an alphabet
-        # look up value in resultMap
-        varValue = resultMap.get(z3Var)
+        # look up value in resultMap (TODO: change to group directly)
+        group = resultMap.get(z3Var)
         # get group
-        if varValue == True: group = 'G1'
-        else: group = 'G2'
+        #if varValue == True: group = 'G1'
+        #else: group = 'G2'
         
-        if i in info['G1_lhs'][0]: deps = info['G1_lhs'][1].get(i)
-        else: deps = info['G1_rhs'][1].get(i)
-        deps = list(deps); deps.append(i) # var name to the list
-        newSol[ i ] = group
-        if group == 'G1': G1_deps = G1_deps.union(deps); pairingInfo[G1Prefix].append(i)
-        elif group == 'G2': G2_deps = G2_deps.union(deps); pairingInfo[G2Prefix].append(i)
-    #print("<===== Deriving Specific Solution from Results =====>")    
+        if i in info['G1_lhs'][0]:
+            deps = info['G1_lhs'][1].get(i)
+        else:
+            deps = info['G1_rhs'][1].get(i)
+        deps = list(deps) # convert to a list (in case, it was a set)
+        deps.append(i) # var name to the list
+        newSol[i] = group
+        if group == 'G1':
+            G1_deps = G1_deps.union(deps)
+            pairingInfo[G1Prefix].append(i)
+        elif group == 'G2':
+            G2_deps = G2_deps.union(deps)
+            pairingInfo[G2Prefix].append(i)
+        elif group == 'both':
+            both_groups = both_groups.union(deps)
+
+    #print("<===== Deriving Specific Solution from Results =====>")
     both = G1_deps.intersection(G2_deps)
+    if len(both_groups) > 0:
+        both = both.union(both_groups)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    #print("Both G1 & G2: ", both)
-    #print("Just G1: ", G1)
-    #print("Just G2: ", G2)
+    print("Both G1 & G2: ", both)
+    print("Just G1: ", G1)
+    print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 

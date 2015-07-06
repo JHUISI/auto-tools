@@ -1,0 +1,33 @@
+name := LRSW
+setting := symmetric
+
+BEGIN :: types
+x := ZR
+y := ZR
+z := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ x := random(ZR)
+ y := random(ZR)
+
+ g := random(G1)
+
+ assumpKey := list{g, x, y}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{g, x, y}
+ X := g ^ x
+ Y := g ^ y
+
+ assumpVar := list{X, Y}
+
+output := assumpVar
+END :: func:assump

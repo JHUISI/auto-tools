@@ -1,0 +1,40 @@
+name := cl04
+setting := symmetric
+
+BEGIN :: types
+ m := ZR
+END :: types
+
+BEGIN :: func:setup
+input := list{assumpKey, assumpVar}
+#assumpKey := expand{g, x, y}
+#assumpVar := expand{X, Y}
+ x := random(ZR)
+ y := random(ZR)
+ g := random(G1)
+
+ X := g^x
+ Y := g^y
+
+reductionKey := list{x, y}
+reductionParams := list{p, g, X, Y}
+output := list{reductionKey, reductionParams}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{m, reductionParams, reductionKey}
+reductionKey := expand{x, y}
+reductionParams := expand{p, g, X, Y}
+
+ r := random(ZR)
+ a := g^r
+ b := a^y
+ c := a^(x + (m * x * y))
+
+sig := list{a, b, c}
+
+output := sig
+END :: func:queries
+
+

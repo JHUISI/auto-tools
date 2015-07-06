@@ -61,6 +61,7 @@ pkEncType = "PKENC" # encryption
 pkSigType = "PKSIG" # signatures
 pairingVarMapKeyword = "pairingVarMap"
 mergedGraphKeyword = "mergedGraph"
+isAutoGroupKeyword = "oldAutoGroup"
 
 SS512 = { 'ZR':512, 'G1': 512, 'G2': 512, 'GT': 1024 }
 MNT160 = { 'ZR':160, 'G1': 160, 'G2': 960, 'GT': 960 }
@@ -355,11 +356,11 @@ class ModelEval:
 
         resultMap = {}
         countMap = {}  # stores intermediate results
-        #print("<====================================>")
-        #print("VarMap: ", varMap)
-        #print("DepMap: ", depMap)
-        #print("evaluateSolutionsFromDepMap: ", depList)
-        #print("<====================================>")
+        print("<====================================>")
+        print("VarMap: ", varMap)
+        print("DepMap: ", depMap)
+        print("evaluateSolutionsFromDepMap: ", depList)
+        print("<====================================>")
         for solIndex in self.indexList:
             counts = initDict(depList)
             if self.verbose:
@@ -372,12 +373,13 @@ class ModelEval:
                     for j in depMap.get(key):
                         counts[j] = counts[j].union({pts[assign]})
             split_value = self.__countSplits(counts)
-            if split_value > 0:
+            #print("split value: ", split_value)
+            if split_value >= 0:
                 resultMap[solIndex] = (split_value, self.__sumTheSets(counts))
                 countMap[solIndex] = dict(counts)
             if self.verbose:
                 print("Result: ", counts, ", splits:", resultMap[solIndex][0], ", sum:", resultMap[solIndex][1], "\n")
-        #print("Final: ", resultMap)
+        print("Final: ", resultMap)
         # find the minimum by comparing the second element of each tuple
         #if rankSolutions:
         #    sols = sorted(resultMap.items())
@@ -386,10 +388,11 @@ class ModelEval:
 
         optimal_split = min(resultMap.items(), key=lambda x: x[1])
         index = optimal_split[0]
-        #print("Min splits: ", optimal_split[1][0])
-        #print("The sum: ", optimal_split[1][1])
-        #print("Found Solution: ", M[index])
-        #print("Results: ", countMap[index])
+        if self.verbose:
+            print("Min splits: ", optimal_split[1][0])
+            print("The sum: ", optimal_split[1][1])
+            print("Found Solution: ", M[index])
+            print("Results: ", countMap[index])
         return M[index], countMap[index]
 
 
@@ -471,6 +474,28 @@ def convertToBoolean(mod):
         result.append( (str(k), boolVal ) )
     #print("\n")
     return result
+
+"""
+Convert group assignments of (0, 1, and 2) into
+strings. 0 = 'G1', 1 = 'G2' and 2 = 'Both'
+"""
+def convertToGroup(mod):
+    result = []
+    for i in range(len(list(mod))):
+        k = mod[i]
+        intVal = int(mod[k].as_string())
+        StringVal = ""
+        if intVal == 0: StringVal = "G1"
+        elif intVal == 1: StringVal = "G2"
+        elif intVal == 2: StringVal = "both"
+        else:
+            print("convertToGroup: did not get an assignment for variable='%s'" % str(k))
+        # JAA: commented out for benchmarking
+        #print(k, ":=", boolVal)
+        result.append((str(k), StringVal))
+    #print("\n")
+    return result
+
 
 def getWeights(option, specificOp):
     if option in SHORT_OPTIONS:
@@ -611,6 +636,50 @@ def checkValidSplit(info, optionDict, a_model):
     return (a_model, sat)
 
 
+def recordVar(vars, entire_set):
+    new_list = list(entire_set)
+    for a in vars:
+        if str(a) not in new_list:
+            new_list = list(set(new_list).union([str(a)]))
+    new_list.sort()
+    return new_list
+
+def getNewSolver(clauses, Z3vars, hard_constraints, relax_list=[]):
+    mySolver = Solver()
+    Conditions = []
+    Values = []
+    entire_set = []
+    for i in clauses:
+        (x, y) = i # add logic for relaxing the clauses
+        if Z3vars.get(x) and Z3vars.get(y):
+            X = Z3vars.get(x)
+            Y = Z3vars.get(y)
+            Conditions.append(X != Y)
+        # continue
+        entire_set = recordVar([x, y], entire_set)
+
+    for x in entire_set:
+        addl_value_to_x = False
+        # check if (addl_value_to_x
+        X = Z3vars.get(x)
+        if x not in hard_constraints and x in relax_list:
+            addl_value_to_x = True
+
+        # if quota > 0:
+        #     if x not in hard_constraints:
+        #         addl_value_to_x = True
+        #         PossibleDuplNodes.append(str(x))
+        #         quota -= 1
+        if x in hard_constraints:
+            Values.append(X == 0)
+        else:
+            x_values = Or(X == 0, X == 1)
+            if addl_value_to_x:
+                x_values = Or(X == 2)  # signifies both a 0 and 1 assignment
+            Values.extend([x_values])
+
+    return mySolver, Conditions, Values, entire_set
+
 def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
     verbose     = optionDict.get(verboseKeyword)
     schemeType  = optionDict.get(schemeTypeKeyword)
@@ -626,6 +695,7 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
     pk_list      = optionDict.get(pkListKeyword)
     assump_map_vars = optionDict.get(assumpKeyword)
     assump_list  = optionDict.get(assumpListKeyword)
+    old_auto_group = info.get(isAutoGroupKeyword)
     # JAA: commented out for benchmarking
     #print("hardConstraints: ", hard_constraints)
     counts  = {}
@@ -637,28 +707,50 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
         Z3vars[ countVar ] = counts[str(v)]
 
 
-    mySolver = Solver()
-    Conditions = []
-    Values = []
-    for i in clauses:
-        (x, y) = i
-        if Z3vars.get(x) and Z3vars.get(y):
-            X = Z3vars.get(x)
-            Y = Z3vars.get(y)
-            Conditions.append( X != Y )
-            if x in hard_constraints:
-                Values.append( X == 0 )
-            else:
-                Values.extend( [Or(X == 0, X == 1)] )
-            if y in hard_constraints:
-                Values.append( Y == 0 )
-            else:
-                Values.extend( [Or(Y == 0, Y == 1)] )
-            
+    # mySolver = Solver()
+    # Conditions = []
+    # Values = []
+    # for i in clauses:
+    #     (x, y) = i
+    #     if Z3vars.get(x) and Z3vars.get(y):
+    #         X = Z3vars.get(x)
+    #         Y = Z3vars.get(y)
+    #         Conditions.append( X != Y )
+    #         if x in hard_constraints:
+    #             Values.append( X == 0 )
+    #         else:
+    #             Values.extend( [Or(X == 0, X == 1)] )
+    #         if y in hard_constraints:
+    #             Values.append( Y == 0 )
+    #         else:
+    #             Values.extend( [Or(Y == 0, Y == 1)] )
+
+    (mySolver, Conditions, Values, EntireSet) = getNewSolver(clauses, Z3vars, hard_constraints) # add
     M = get_models([And(Conditions), And(Values)])
     if(len(M) == 0):
         print("Failed to find a satisfiable solution given constraints. Try again with different or relaxed constraints.")
-        return unsat
+        print("Hard Constraints: ", hard_constraints)
+        print("Clauses: ", clauses)
+        print("M: ", [And(Conditions), And(Values)])
+
+        #possible_dup_nodes = ['j0'] # ['a0']
+        bigM = []
+        potential_dup_nodes = []
+        for i in EntireSet:
+            possible_dup_nodes = [i]
+            (mySolver, Conditions, Values, EntireSet) = getNewSolver(clauses, Z3vars, hard_constraints, possible_dup_nodes)
+            M = get_models([And(Conditions), And(Values)])
+            if len(M) > 0:
+                bigM.extend(M)
+                potential_dup_nodes.append(i)
+
+        M = bigM
+        print("Unique Solutions (after relaxing logic): ", len(M))
+        #print("M: ", [And(Conditions), And(Values)])
+        print("Possibly Duplicated Nodes: ", potential_dup_nodes)
+        print("Models: ", M)
+        #sys.exit(-1)
+        #return unsat
     print("Unique solutions: ", len(M))
 
     # minimize the assumption, if the option is selected
@@ -667,13 +759,21 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         #if verbose: modEval.enableVerboseMode()
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, assump_map_vars, assump_list, optionDict)
-        return checkValidSplit(info, optionDict, convertToBoolean(modRef))
+        if not old_auto_group:
+            # running AutoGroup+
+            return checkValidSplit(info, optionDict, convertToGroup(modRef))
+        else:
+            return (convertToGroup(modRef), sat)
 
     if shortOpt == SHORT_PUBKEYS: #and schemeType == pkEncType:
         print("Using Solver to minimize the PK constraints...")
         modEval = ModelEval(range(len(M)), variables, Z3vars, None)
         (modRef, countMap) = modEval.evaluateSolutionsFromDepMap(M, pk_map_vars, pk_list, optionDict, rankSolutions=True)
-        return checkValidSplit(info, optionDict, convertToBoolean(modRef))
+        if not old_auto_group:
+            # running AutoGroup+
+            return checkValidSplit(info, optionDict, convertToGroup(modRef))
+        else:
+            return (convertToGroup(modRef), sat)
 
 
     # if only minimizing one aspect: size: SK or CT, PK or SIG OR time: exp or mul
@@ -755,8 +855,11 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
         pass
     
     #return (convertToBoolean(modRef), sat)
-    return checkValidSplit(info, optionDict, convertToBoolean(modRef))
-
+    if not old_auto_group:
+        # running AutoGroup+
+        return checkValidSplit(info, optionDict, convertToGroup(modRef))
+    else:
+        return (convertToGroup(modRef), sat)
 
 
 ### METHODS FOR VERIFYING SOLUTION
