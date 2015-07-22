@@ -43,7 +43,7 @@ input := list{pk, g, M, sig}
  pk := expand{X, Y}
  m := H(M, ZR)
 BEGIN :: if
-if {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
+if {{ e(a, Y) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
    output := True
 else
    output := False
