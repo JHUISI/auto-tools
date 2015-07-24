@@ -340,12 +340,12 @@ class ModelEval:
 
     def evaluateSolutionsFromDepMap(self, M, depMap, depList, optionDict, rankSolutions=None):
         first = self.indexList[0]
-        G1, G2 = 0, 1
+        G1, G2, Both = 0, 1, 2
         varMap = optionDict.get(pairingVarMapKeyword)
         specificOp = optionDict.get(minKeyword)
         curve      = asymmetric_curves.get(specificOp)
         assert curve != None, "Specified an invalid type-III curve: " + specificOp
-        pts = {G1: curve.get('G1'), G2: curve.get('G2')}
+        pts = {G1: curve.get('G1'), G2: curve.get('G2'), Both: set([curve.get('G1'), curve.get('G2')])}
         #pts = {G1:1, G2:2} # simple point system (replace with
         # TODO: move this to another
         for i,j in varMap.items():

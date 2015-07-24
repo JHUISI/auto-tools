@@ -7,12 +7,13 @@ END :: types
 
 BEGIN :: func:setup
 input := list{None}
+gG1 := random(G1)
 gG2 := random(G2)
-output := list{gG2}
+output := list{gG1, gG2}
 END :: func:setup
 
 BEGIN :: func:keygen
-input := list{gG2}
+input := list{gG1, gG2}
 x := random(ZR)
 y := random(ZR)
 X := (gG2^x)
@@ -23,10 +24,11 @@ output := list{pk, sk}
 END :: func:keygen
 
 BEGIN :: func:sign
-input := list{sk, M}
+input := list{gG1, gG2, sk, M}
 sk := expand{x, y}
-a := random(G1)
+r := random(ZR)
 m := H(M,ZR)
+a := (gG1^r)
 b := (a^y)
 c := (a^(x + ((m * x) * y)))
 sig := list{a, b, c}
@@ -34,7 +36,7 @@ output := sig
 END :: func:sign
 
 BEGIN :: func:verify
-input := list{pk, gG2, M, sig}
+input := list{pk, gG1, gG2, M, sig}
 sig := expand{a, b, c}
 pk := expand{X, Y}
 m := H(M,ZR)
