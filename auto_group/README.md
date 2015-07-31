@@ -14,7 +14,7 @@ AutoGroup also requires the [Z3](https://github.com/Z3Prover/z3) Theorem prover 
 
 Here are the install steps for Z3:
 
-    git clone git@github.com:Z3Prover/z3.git
+    git clone https://github.com/Z3Prover/z3.git
     python3 scripts/mk_make.py
     cd build
     make
