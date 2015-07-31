@@ -11,6 +11,7 @@ before_script:
   - python3 scripts/mk_make.py
   - cd build
   - make
+  - make install
 
 script:
   - bin/sh auto_group/unitTestAGPlus-ENC.sh
