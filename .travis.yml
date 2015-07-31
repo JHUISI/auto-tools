@@ -14,4 +14,4 @@ before_script:
   - make install
 
 script:
-  - bin/sh auto_group/unitTestAGPlus-ENC.sh
+  - ./auto_group/unitTestAGPlus-ENC.sh
