@@ -1,0 +1,48 @@
+name := DLIN
+setting := symmetric
+
+
+BEGIN :: types
+c1 := ZR
+c2 := ZR
+r := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ x := random(ZR)
+ y := random(ZR)
+ z := random(ZR)
+
+ Gone := random(G1)
+ Gtwo := random(G1)
+ Gthree := random(G1)
+
+ assumpKey := list{Gone, Gtwo, Gthree, x, y, z}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{Gone, Gtwo, Gthree, x, y, z}
+
+ X := Gone ^ x
+ Y := Gtwo ^ y
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := Gthree ^ (x + y)
+ else
+   Z := Gthree ^ z
+#   Z := random(G1)
+ END :: if
+
+ assumpVar := list{X, Y, Z}
+
+output := assumpVar
+END :: func:assump
+

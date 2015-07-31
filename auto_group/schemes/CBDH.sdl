@@ -1,0 +1,39 @@
+name := CBDH
+setting := symmetric
+
+
+BEGIN :: types
+a := ZR
+b := ZR
+c := ZR
+z := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ a := random(ZR)
+ b := random(ZR)
+ c := random(ZR)
+ g := random(G1)
+
+ assumpKey := list{g, a, b, c}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{g, a, b, c, z}
+ A := g ^ a
+ B := g ^ b
+ C := g ^ c
+
+ W := e(g, g) ^ (a * b * c)
+
+ assumpVar := list{g, A, B, C, W}
+
+output := assumpVar
+END :: func:assump
+

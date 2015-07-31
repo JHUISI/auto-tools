@@ -1018,13 +1018,42 @@ class SubstitutePairings:
             rhs = str(self.retrieveNode(node.right).getRefAttribute())
         if self.verbose: print("\nDEBUG: lhs=", lhs, ", rhs=", rhs)
         if lhs in self.generators and rhs in self.generators: # covers lhs == rhs OR lhs != rhs
-            node.left.setAttribute( self.mapG1.get(lhs) )
-            node.right.setAttribute( self.mapG2.get(rhs) )
-            varL = [self.mapG1.get(lhs), self.mapG2.get(rhs)]
-            self.usedGens = self.usedGens.union(varL)            
-            self.usedVar  = self.usedVar.union(varL)
+            if lhs in self.bothGroups and rhs in self.bothGroups:
+                # most common case
+                node.left.setAttribute( self.mapG1.get(lhs) )
+                node.right.setAttribute( self.mapG2.get(rhs) )
+                varL = [self.mapG1.get(lhs), self.mapG2.get(rhs)]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            elif lhs in self.bothGroups:
+                if rhs in self.pairingInfo[G1Prefix]:
+                    # lhs = G2, rhs = G1
+                    lhs_var, rhs_var = self.mapG2.get(lhs), self.mapG1.get(rhs)
+                else:
+                    # lhs = G1, rhs = G2
+                    lhs_var, rhs_var = self.mapG1.get(lhs), self.mapG2.get(rhs)
+                node.left.setAttribute( lhs_var )
+                node.right.setAttribute( rhs_var )
+                varL = [lhs_var, rhs_var]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            elif rhs in self.bothGroups:
+                if lhs in self.pairingInfo[G1Prefix]:
+                    # lhs = G1, rhs = G2
+                    lhs_var, rhs_var = self.mapG1.get(lhs), self.mapG2.get(rhs)
+                else:
+                    # lhs = G2, rhs = G1
+                    lhs_var, rhs_var = self.mapG2.get(lhs), self.mapG1.get(rhs)
+                node.left.setAttribute( lhs_var )
+                node.right.setAttribute( rhs_var )
+                varL = [lhs_var, rhs_var]
+                self.usedGens = self.usedGens.union(varL)
+                self.usedVar  = self.usedVar.union(varL)
+            else:
+                pass
             return
-        elif lhs == rhs and lhs in self.bothGroups: # e(g, g)
+        elif (lhs == rhs and lhs in self.bothGroups) or (lhs in self.bothGroups and rhs in self.bothGroups):
+            # [case 1: e(g, g)] or [case 2: e(g, h) where g and h are in both groups]
             new_lhs = str(node.left).replace(lhs, lhs + G1Prefix)
             new_rhs = str(node.right).replace(rhs, rhs + G2Prefix)
             node.left.setAttribute( new_lhs )
@@ -1059,22 +1088,28 @@ class SubstitutePairings:
                 return
         # if e(X \in G1, g) => e(X, gG2) and vice versa                
         elif lhs not in self.generators and rhs in self.generators:
+            # check that lhs is in the list of pairing variables assigned
+            # to G1
             if lhs in self.pairingInfo[G1Prefix]:
 #                node.right.setAttribute( self.mapG2.get(rhs) )
                 new_rhs = self.updateNode(node.right, rhs, self.mapG2.get(rhs))
                 self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs # self.mapG2.get(rhs)
                 varL = [new_rhs]
                 self.usedGens = self.usedGens.union(varL)
-                self.usedVar  = self.usedVar.union(varL)                
-                return
+                self.usedVar  = self.usedVar.union(varL)
+                #return
+            # check that lhs is in the list of pairing variables assigned
+            # to G2
             elif lhs in self.pairingInfo[G2Prefix]:
 #                node.right.setAttribute( self.mapG1.get(rhs) )                
                 new_rhs = self.updateNode(node.right, rhs, self.mapG1.get(rhs))
                 self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs # self.mapG1.get(rhs)
                 varL = [new_rhs]
                 self.usedGens = self.usedGens.union(varL)
-                self.usedVar  = self.usedVar.union(varL)                
-                return
+                self.usedVar  = self.usedVar.union(varL)
+                #return
+            # next we process the rhs generator as before below to determine
+            # what the assignment should be given the selection of the lhs assignment
         else:
             pass # we leave other cases untouched
         
@@ -1090,6 +1125,18 @@ class SubstitutePairings:
             new_lhs = self.updateNode(node.left, lhs, lhs + G2Prefix) # node.left.setAttribute( new_lhs )
             self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs
             self.usedVar  = self.usedVar.union([new_lhs])
+        elif lhs in self.bothGroups and lhs not in self.noChangeList:
+            # if lhs belongs to both groups, then choose opposite group of rhs
+            if rhs in self.pairingInfo[G2Prefix]:
+                # lhs -> G1 and rhs -> G2
+                new_lhs = self.updateNode(node.left, lhs, lhs + G1Prefix)
+                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(lhs) ] = new_lhs
+            else:
+                # lhs -> G2 and rhs -> G1
+                new_lhs = self.updateNode(node.left, lhs, lhs + G2Prefix)
+                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(lhs) ] = new_lhs
+            self.usedVar  = self.usedVar.union([new_lhs])
+
         if rhs in self.pairingInfo[G1Prefix] and rhs not in self.noChangeList:
             if self.verbose: print("\nDEBUG: G1 rhs=", rhs)
             new_rhs = self.updateNode(node.right, rhs, rhs + G1Prefix) # node.right.setAttribute( new_rhs )
@@ -1100,6 +1147,20 @@ class SubstitutePairings:
             new_rhs = self.updateNode(node.right, rhs, rhs + G2Prefix) # node.right.setAttribute( new_rhs )
             self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs
             self.usedVar  = self.usedVar.union([new_rhs])
+        elif rhs in self.bothGroups and rhs not in self.noChangeList:
+            # if rhs belongs to both groups, then choose opposite group of lhs
+            if lhs in self.pairingInfo[G1Prefix]:
+                # lhs -> G1, rhs -> G2 (common case)
+                if self.verbose: print("\nDEBUG: G2 rhs=", rhs)
+                new_rhs = self.updateNode(node.right, rhs, rhs + G2Prefix)
+                self.pairingInfo[G2Prefix][ self.pairingInfo[G2Prefix].index(rhs) ] = new_rhs
+            else:
+                # lhs -> G2, rhs -> G1
+                new_rhs = self.updateNode(node.right, rhs, rhs + G1Prefix)
+                self.pairingInfo[G1Prefix][ self.pairingInfo[G1Prefix].index(rhs) ] = new_rhs
+            self.usedVar  = self.usedVar.union([new_rhs])
+
+
         return
         
 techMap = {1:Technique1, 2:Technique2, 3:Technique3, 4:Technique4, 11:Technique11}

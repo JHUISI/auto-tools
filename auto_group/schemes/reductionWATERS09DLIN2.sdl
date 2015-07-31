@@ -1,0 +1,267 @@
+name := WATERS09DLIN2
+setting := symmetric
+l := 32
+
+
+BEGIN :: types
+l := Int
+ID := Str
+M0 := GT
+M1 := GT
+M := list{GT}
+i := Int
+k := Int
+Ared := ZR
+Bred := ZR
+END :: types
+
+
+BEGIN :: func:F
+input := list{ID, Fvar}
+Fvar := expand{Ared, Bred}
+
+idhash := H(ID, ZR)
+Feval := (Ared * idhash) + Bred
+
+output := Feval
+END :: func:F
+
+
+BEGIN :: func:setup
+input := None
+
+#assumption
+ c1 := random(ZR)
+ c2 := random(ZR)
+ r := random(ZR)
+
+ g := random(G1)
+ f := random(G1)
+ nu := random(G1)
+
+ G := g ^ c1
+ F := f ^ c2
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   T := nu ^ (c1 + c2)
+ else
+   T := nu ^ r
+#   T := random(G1)
+ END :: if
+
+ assumpVar := list{G, F, T}
+
+#begin reduction
+ alpha := random(ZR)
+ a1 := random(ZR)
+ a2 := random(ZR)
+ yv1 := random(ZR)
+ yv2 := random(ZR)
+ yw := random(ZR)
+ yu := random(ZR)
+ yh := random(ZR)
+
+ gb := f
+ gba1 := f ^ a1
+ gba2 := f ^ a2
+ v :=  nu ^ (-a1 * a2)
+ v1 := (nu ^ a2) * (g ^ yv1)
+ v2 := (nu ^ a1) * (g ^ yv2)
+ eggalphaa1b := e(f, g) ^ (alpha * a1)
+
+ tau1 := g ^ (yv1 * a1)
+ tau2 := g ^ (yv2 * a2)
+ tau1b := f ^ (yv1 * a1)
+ tau2b := f ^ (yv2 * a2)
+
+ Ared := random(ZR)
+ Bred := random(ZR)
+
+ w := f * (g ^ yw)
+ u := (f ^ (-Ared)) * (g ^ yu)
+ h := (f ^ (-Bred)) * (g ^ yh)
+
+ ga1 := g ^ a1
+ ga2 := g ^ a2
+ galpha := g ^ alpha
+ galphaa1 := g ^ (alpha * a1)
+
+ reducpk := list{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+# reducpk := list{gb, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+ reducmsk := list{g, galpha, galphaa1, v, v1, v2} #should alpha be part of the msk?
+ reducVar := list{{alpha, a1, a2, yv1, yv2, yw, yu, yh}
+ Fvar := list{Ared, Bred}
+
+output := list{assumpVar, reducpk, reducmsk, reducVar, Fvar}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{reducpk, reducmsk, reducVar, assumpVar, ID, i}
+
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducmsk := expand{g, galpha, galphaa1, v, v1, v2}
+reducVar := expand{alpha, a1, a2, yv1, yv2, yw, yu, yh}
+assumpVar := expand{G, F, T}
+
+BEGIN :: if
+# if { i > k }
+ if { i == k }
+    r1 := random(ZR)
+    r2 := random(ZR)
+    z1 := random(ZR) 
+    z2 := random(ZR)
+    tagk := random(ZR)
+
+    r := r1 + r2
+    idhash := H(ID, ZR)
+
+    D1 := galphaa1 * (v ^ r)
+    D2 := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D2 := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
+    D3 := gb ^ -z1
+    D4 := (v2 ^ r) * (g ^ z2)
+    D5 := gb ^ -z2
+    D6 := gb ^ r2
+    D7 := g ^ r1
+    K := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1
+            
+#    reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+# elseif { i < k}
+ elseif { i == k}
+    r1 := random(ZR)
+    r2 := random(ZR)
+    z1 := random(ZR) 
+    z2 := random(ZR)
+    tagk := random(ZR)
+
+    r := r1 + r2
+    idhash := H(ID, ZR)
+
+#    D1prime := galphaa1 * (v ^ r)
+    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+    D2prime := (g ^ -alpha) * (v1 ^ r) * (g ^ z1)
+#    D2prime := (galpha ^ -1) * (v1 ^ r) * (g ^ z1)
+    D3prime := gb ^ -z1
+    D4prime := (v2 ^ r) * (g ^ z2)
+    D5prime := gb ^ -z2
+    D6prime := gb ^ r2
+    D7prime := g ^ r1
+    Kprime := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1
+
+    gamma := random(ZR)
+
+#    D1 := D1prime * (ga1 ^ (-a2 * gamma))
+    D1 := D1prime * (g ^ (-a1 * a2 * gamma))
+#    D2 := D2prime * (g ^ (a2 * gamma))
+    D2 := D2prime * (ga2 ^ gamma)
+    D3 := D3prime
+#    D4 := D4prime * (g ^ (a1 * gamma))
+    D4 := D4prime * (ga1 ^ gamma)
+    D5 := D5prime
+    D6 := D6prime
+    D7 := D7prime
+    K := Kprime
+            
+#    reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+ else
+    r1prime := random(ZR)
+    r2prime := random(ZR)
+    z1prime := random(ZR) 
+    z2prime := random(ZR)
+    tagk := F(ID)
+
+    rprime := r1prime + r2prime
+    idhash := H(ID, ZR)
+
+#    D1prime := galphaa1 * (v ^ rprime)
+    D1prime := (g ^ (alpha * a1)) * (v ^ r)
+    D2prime := (g ^ -alpha) * (v1 ^ rprime) * (g ^ z1prime)
+#    D2prime := (galpha ^ -1) * (v1 ^ rprime) * (g ^ z1prime)
+    D3prime := gb ^ -z1prime
+    D4prime := (v2 ^ rprime) * (g ^ z2prime)
+    D5prime := gb ^ -z2prime
+    D6prime := gb ^ r2prime
+    D7prime := g ^ r1prime
+    Kprime := (((u ^ idhash) * (w ^ tagk)) * h) ^ r1prime
+
+    D1 := D1prime * (T ^ (-a1 * a2))
+    D2 := D2prime * (T ^ a2) * (G ^ yv1)
+    D3 := D3prime * (F ^ yv1)
+    D4 := D4prime * (T ^ a1) * (G ^ yv2)
+    D5 := D5prime * (F ^ yv2)
+    D6 := D6prime * F
+    D7 := D7prime * G
+    K := Kprime * (G ^ ((idhash * yu) + yh + (tagk * yw)))
+
+#    reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+END :: if
+
+reducsk := list{ID, D1, D2, D3, D4, D5, D6, D7, K, tagk}
+        
+output := reducsk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{assumpVar, reducpk, reducVar, M, ID, IDstar, Fvar}
+
+assumpVar := expand{G, F, T}
+reducpk := expand{gb, ga1, ga2, gba1, gba2, tau1, tau2, tau1b, tau2b, w, u, h, eggalphaa1b}
+reducVar := expand{alpha, a1, a2, yv1, yv2, yw, yu, yh}
+Fvar := expand{Ared, Bred}
+
+b := random(bin)
+
+s1prime := random(ZR) 
+s2prime := random(ZR) 
+t := random(ZR)
+#tagc := random(ZR)
+sprime := s1prime + s2prime
+idhash2 := H(ID, ZR)
+
+idhashstar := H(IDstar, ZR)
+tagcstar := (Ared * idhashstar) + Bred
+        
+C0prime := M#b * (eggalphaa1b ^ s2prime)
+C1prime := gb ^ sprime
+C2prime := gba1 ^ s1prime
+#C3prime := g ^ (a1 * s1prime)
+C3prime := ga1 ^ s1prime
+C4prime := gba2 ^ s2prime
+C5prime := g ^ (a2 * s2prime)
+#C5prime := ga2 ^ s2prime
+C6prime := (tau1 ^ s1prime) * (tau2 ^ s2prime)
+C7prime := (((tau1b ^ s1prime) * (tau2b ^ s2prime)) * (w ^ -t))
+E1prime := (((u ^ idhashstar) * (w ^ tagcstar)) * h) ^ t
+E2prime := g ^ t
+
+ctprime := list{C0prime, C1prime, C2prime, C3prime, C4prime, C5prime, C6prime, C7prime, E1prime, E2prime, tagcstar}
+
+x := random(ZR)
+
+#C0 := C0prime * ((e(G, f) * e(g, F)) ^ (b * alpha))
+C0 := C0prime
+C1 := C1prime
+C2 := C2prime
+C3 := C3prime
+C4 := C4prime * (gba2 ^ x)
+C5 := C5prime * (ga2)
+#C5 := C5prime * (g ^ a2)
+C6 := C6prime * (v2 ^ (a2 * x))
+C7 := C7prime * (f ^ (yv2 * x * a2)) * (nu ^ (-a1 * x * yw * a2))
+#C7 := C7prime * ((tau2b ^ x) * (v ^ (yw * x)))
+#C7 := C7prime * ((gba2 ^ (yv2 * x)) * (v ^ (yw * x)))
+E1 := E1prime * (nu ^ (((idhash2 * yu) + (yh) + (tagcstar * yw)) * (a1 * a2 * x)))
+#E1 := E1prime * (((v ^ (-idhash2 * yu)) * (v ^ (-yh)) * (v ^ (-tagcstar * yw))) ^ x)
+E2 := E2prime * (nu ^ (a1 * a2 * x))
+#E2 := E2prime * (v ^ (-1 * x))
+
+tagc := tagcstar
+
+ct := list{C0, C1, C2, C3, C4, C5, C6, C7, E1, E2, tagc}
+
+output := ct
+END :: func:challenge

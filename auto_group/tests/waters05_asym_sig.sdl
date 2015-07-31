@@ -30,14 +30,13 @@ uG1#i := (gG1^y#i)
 uG2#i := (gG2^y#i)
 END :: for
 sk := (g2G1^alpha)
-spk := list{g2G1, gG1, gG2, uG1, utG1}
-vpk := list{g1, g2G2, gG2, uG2, utG2}
-output := list{sk, spk, vpk}
+pk := list{gG1, gG2, g1, g2G1, g2G2, uG1, uG2, utG1, utG2}
+output := list{pk, sk}
 END :: func:keygen
 
 BEGIN :: func:sign
-input := list{spk, sk, M}
-spk := expand{g2G1, gG1, gG2, uG1, utG1}
+input := list{pk, sk, M}
+pk := expand{gG1, gG2, g1, g2G1, g2G2, uG1, uG2, utG1, utG2}
 m := intToBits(M, l)
 r := random(ZR)
 S2 := (gG1^r)
@@ -52,8 +51,8 @@ output := sig
 END :: func:sign
 
 BEGIN :: func:verify
-input := list{vpk, M, sig}
-vpk := expand{g1, g2G2, gG2, uG2, utG2}
+input := list{pk, M, sig}
+pk := expand{gG1, gG2, g1, g2G1, g2G2, uG1, uG2, utG1, utG2}
 sig := expand{S1, S2}
 m := intToBits(M, l)
 dotProd2 := init(G2)
@@ -62,7 +61,7 @@ for{i := 0,l}
 dotProd2 := (dotProd2 * (uG2#i^m#i))
 END :: for
 BEGIN :: if
-if {(e(S1,gG2) * e((S2^-1),(utG2 * dotProd2))) == e(g1,g2G2)}
+if {(e(S1,gG2G2) * e((S2^-1),(utG2G2 * dotProd2))) == e(g1,g2G2G2)}
 output := True
 else 
 output := False

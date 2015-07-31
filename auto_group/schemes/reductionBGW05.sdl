@@ -1,0 +1,97 @@
+name := BGW05
+setting := symmetric
+
+BEGIN :: types
+n := Int
+S := list{Int}
+gl := list{G1}
+s := list{G1}
+i := Int
+K := list{GT}
+END :: types
+
+
+BEGIN :: func:setup
+input := list{n, S}
+
+alpha := random(ZR)
+t := random(ZR)
+
+h := random(G1)
+g := random(G1)
+
+BEGIN :: for
+    for{i := 1, 2*l}
+        BEGIN :: if
+            if {i != l+1}
+                gl#i := g ^ (alpha ^ i)
+        END :: if
+END :: for
+
+coinflip := random(bin)
+BEGIN :: if
+ if { coinflip == 0 }
+    egh := e(g, h) ^ (alpha ^ (l+1))
+ else
+    egh := e(g, h) ^ t
+END :: if
+
+assumpVar := list{h, g, gl, egh}
+
+dotProd1 := init(G1)
+BEGIN :: forall
+ forall{j := S}
+    dotProd1 := (dotProd1 * gl#n+1-j)
+END :: forall
+
+u := random(ZR)
+v := (g ^ u) * (dotProd1 ^ -1)
+
+reductionKey := list{u}
+
+pk := list{g, gl, v}
+
+output := list{pk, n}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{pk}
+pk := expand{g, gl, v}
+
+dotProd2 := init(G1)
+BEGIN :: forall
+ forall{j := S}#should be not in S
+    dotProd2 := (dotProd2 * gl#n+1-j)
+END :: forall
+
+BEGIN :: forall
+ forall{i := S}
+    s#i := (gl#i ^ u) * (dotProd2 ^ -1)
+END :: forall
+
+sk := list{s}
+
+output := sk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{assumpVar, reductionKey}
+assumpVar := expand{h, g, gl, egh}
+reductionKey := expand{u}
+
+b := random(bin)
+
+Hdr1 := h
+Hdr2 := h ^ u
+Hdr := list{Hdr1, Hdr2}
+
+K#b := egh
+K#(1-b) := random(GT)
+
+ct := list{Hdr, K}
+
+output := ct
+END :: func:challenge
+

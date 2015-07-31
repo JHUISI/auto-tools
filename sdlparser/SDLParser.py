@@ -146,7 +146,7 @@ class SDLParser:
         ExpOp = Literal("^")
         AddOp = Literal("+")
         SubOp = Literal("-")        
-        Equality = Literal("==") | Literal("!=") # | Word("<>", max=1)
+        ComparisonOps = Literal("==") | Literal("!=") | Literal("<=") | Literal(">=") | Literal("<") | Literal(">")
         Assignment =  Literal(":=")
         Pairing = Literal("e(") # Pairing token
         Hash = Literal("H(") # TODO: provide a way to specify arbitrary func. calls
@@ -175,7 +175,7 @@ class SDLParser:
         ADDSubOp = AddOp | SubOp
         #BinOp = MultiLine | AndOp | ExpOp | MulOp | DivOp | AddOp | SubOp | Equality
         # captures order of parsing token operators 
-        Operators = Assignment | Equality | BoolOp | ForDo | ProdOf | SumOf | IfCond # | MultiLine  # ExpOp | MulOp | DivOp | AddOp | SubOp
+        Operators = Assignment | ComparisonOps | BoolOp | ForDo | ProdOf | SumOf | IfCond # | MultiLine  # ExpOp | MulOp | DivOp | AddOp | SubOp
 
         # describes an individual leaf node
         leafNode = Word(alphanums + '_-+#\\?').setParseAction( createNode ) # JAA: removed '*'
@@ -232,7 +232,8 @@ class SDLParser:
         op = stack.pop()
         if debug >= levels.some:
             print("op: %s" % op)
-        if op in ["+","-","*", "/","^", ":=", "==", "!=", "e(", "for{", "forinner{", "do","prod{", "on", "sum{", "of", "and", ";"]:
+        if op in ["+","-","*", "/","^", ":=", "==", "!=", "<", ">", "<=", ">=","e(",
+                  "for{", "forinner{", "do","prod{", "on", "sum{", "of", "and", ";"]:
             op2 = self.evalStack(stack, line_number)
             op1 = self.evalStack(stack, line_number)
             return createTree(op, op1, op2)
@@ -893,8 +894,8 @@ def getVarTypeFromVarTypesDict(possibleFuncName, nodeAttrFullName):
         return types.GT
 #    elif typeDef in [types.listStr, types.metalistStr]:
 #        return types.Str
-#    elif typeDef in [types.listInt, types.metalistInt]:
-#        return types.Int
+    elif typeDef in [types.listInt, types.metalistInt]:
+        return types.Int
     
     return typeDef
 
@@ -913,6 +914,8 @@ def getVarTypeInfoForAttr_List(node):
                 return types.GT
             elif firstReturnType in [types.listStr, types.metalistStr]:
                 return types.Str
+            elif firstReturnType in [types.listInt, types.metalistInt]:
+                return types.Int
             secondReturnType_ListNodes = varTypes[funcNameOfVar][varNameInList].getListNodesList()
             if (len(secondReturnType_ListNodes) == 1):
                 if (secondReturnType_ListNodes[0] == "G1"):
@@ -925,6 +928,8 @@ def getVarTypeInfoForAttr_List(node):
                     return types.ZR
                 if (secondReturnType_ListNodes[0] in ["str", "Str"]):
                     return types.Str
+                if (secondReturnType_ListNodes[0] == "Int"):
+                    return types.Int
             return firstReturnType
 
         (outsideFunctionName, retVarInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, varNameInList)
@@ -1952,7 +1957,7 @@ def getLineNoOfInputStatement(funcName):
         sys.exit("getLineNoOfInputStatement in SDLParser.py received as input for function name an invalid parameter.")
 
     if (funcName not in assignInfo):
-        print(funcName)
+        #print(funcName)
         sys.exit("Function name passed in to getLineNoOfInputStatement in SDLParser.py is not in assignInfo.")
 
     if (inputKeyword not in assignInfo[funcName]):
@@ -2056,7 +2061,7 @@ def updatePublicVarNames():
 
         (retFuncName, retVarInfoObj) = getVarNameEntryFromAssignInfo(assignInfo, currentPubVarName)
         if ( (retFuncName == None) or (retVarInfoObj == None) ):
-            print(currentPubVarName)
+            #print(currentPubVarName)
             sys.exit("updatePublicVarNames in SDLParser.py:  at least one None value returned from getVarNameEntryFromAssignInfo called on one of the master public variable names.")
 
         getOutputVarsDictOfFuncRecursive(publicVarNames, retFuncName, retVarInfoObj)

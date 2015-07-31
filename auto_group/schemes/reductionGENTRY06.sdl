@@ -1,0 +1,149 @@
+name := gentry06
+setting := symmetric
+q := 10
+
+BEGIN :: types
+q := Int
+id := Str
+coeff := list{ZR}
+M := list{GT}
+idl := list{Str}
+x := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+t := random(ZR)
+
+g := random(G1)
+gprime := random(G1)
+alpha := random{ZR}
+
+BEGIN :: for
+    for{i := 1, q}
+        BEGIN :: if
+            if {i != q+1}
+                gl#i := g ^ (alpha ^ i)
+        END :: if
+END :: for
+
+coinflip := random(bin)
+BEGIN :: if
+ if { coinflip == 0 }
+    egh := e(g, gprime) ^ (alpha ^ (q+1))
+ else
+    egh := e(g, gprime) ^ t
+END :: if
+
+
+BEGIN :: for
+ for{i := 0,q}
+    coeff#i := random(ZR)
+END :: for
+
+gprimeq2 := gprime ^ (alpha ^ (q+2))
+
+assumpKey := list{coeff}
+assumpVar := list{g, gprime, gprimeq2, gl, egh}
+
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+h := g ^ falphaeval
+
+one := 1
+g1 := gl#one
+
+pk := list{g, g1, h}
+
+output := list{pk, assumpKey, assumpVar}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{pk, msk, id, assumpKey}
+pk := expand{g, g1, h}
+assumpKey := expand{coeff}
+
+ID := H(id, ZR)
+
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+feval := init(ZR)
+BEGIN :: for
+ for{i := 0,q}
+    feval := coeff#i * (ID ^ i)
+END :: for
+
+one := 1
+BEGIN :: if
+if { ID != alpha }
+    rID := f(ID, coeff)
+    hID := (g ^ falphaeval) * (g ^ (-feval)) * (gl#one ^ -1) * (g ^ ID)
+else
+#    output := error
+END :: if
+
+sk := list{rID, hID}
+output := sk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{pk, M, idl, assumpKey, assumpVar}
+pk := expand{g, g1, h}
+assumpKey := expand{coeff}
+assumpVar := list{g, gprime, gprimeq2, gl, egh}
+
+one := 1
+
+bid := random(bin)
+bm := random(bin)
+
+ID := H(id, ZR)
+
+falphaeval := init(G1)
+BEGIN :: for
+ for{i := 0,q}
+    falphaeval := gl#i ^ coeff#i
+END :: for
+
+feval := init(ZR)
+BEGIN :: for
+ for{i := 0,q}
+    feval := coeff#i * (ID ^ i)
+END :: for
+
+BEGIN :: if
+if { ID != alpha }
+    rID := f(ID, coeff)
+    hID := (g ^ falphaeval) * (g ^ (-feval)) * (gl#one ^ -1) * (g ^ ID)
+else
+#    output := error
+END :: if
+
+f2eval := ID ^ (q + 2)
+
+U := gprimeq2 * (g ^ (-feval))
+
+dotProd1 := init(G1)
+BEGIN :: for
+ for{ i := 0,q }
+    dotProd1 := dotProd1 * (gl#i ^ coeff#i)#make sure to use correct coefficients here
+END :: for
+
+V := egh * e(h, dotProd1)
+W := M#bm / (e(U, hID) * (V ^ rID))
+
+ct := list{U, V, W}
+output := ct
+END :: func:challenge
+

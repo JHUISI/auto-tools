@@ -1,0 +1,43 @@
+name := DDH
+setting := symmetric
+
+
+BEGIN :: types
+a := ZR
+b := ZR
+z := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ a := random(ZR)
+ b := random(ZR)
+ z := random(ZR)
+ g := random(G1)
+
+ assumpKey := list{g, a, b, z}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{g, a, b, z}
+ A := g ^ a
+ B := g ^ b
+
+ coinflip := random(bin)
+ BEGIN :: if
+ if { coinflip == 0 }
+   Z := g ^ (a * b)
+ else
+   Z := g ^ z
+ END :: if
+
+ assumpVar := list{g, A, B, Z}
+
+output := assumpVar
+END :: func:assump
+

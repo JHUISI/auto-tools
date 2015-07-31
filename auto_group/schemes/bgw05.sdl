@@ -15,15 +15,18 @@ input := list{n}
 g := random(G1)
 alpha := random(ZR)
 index := ((2 * n) + 1)
+
 BEGIN :: for
-for{i := 1,index}
-gl#i := (g^(alpha^i))
+ for{i := 1,index}
+    gl#i := (g^(alpha^i))
 END :: for
+
 gamma := random(ZR)
 v := (g^gamma)
 
 pk := list{g, gl, v}
 msk := list{gamma}
+
 output := list{pk, msk, n}
 END :: func:setup
 
@@ -32,10 +35,12 @@ BEGIN :: func:keygen
 input := list{pk, msk, n}
 pk := expand{g, gl, v}
 msk := expand{gamma}
+
 BEGIN :: for
-for{i := 1,n+1}
-s#i := (gl#i^gamma)
+ for{i := 1,n+1}
+    s#i := (gl#i^gamma)
 END :: for
+
 sk := list{s}
 output := sk
 END :: func:keygen
@@ -45,17 +50,19 @@ BEGIN :: func:encrypt
 input := list{S, pk, n}
 pk := expand{g, gl, v}
 t := random(ZR)
-K := (e(gl#n,gl#1)^t)
+one := 1
+K := (e(gl#n,gl#one)^t)
 
 dotProd1 := init(G1)
 BEGIN :: forall
-forall{j := S}
-dotProd1 := (dotProd1 * gl#n+1-j?)
+ forall{j := S}
+    dotProd1 := (dotProd1 * gl#n+1-j)
 END :: forall
 
 Hdr2 := ((v * dotProd1)^t)
 Hdr1 := (g^t)
 Hdr := list{Hdr1, Hdr2}
+
 ct := list{Hdr, K}
 output := ct
 END :: func:encrypt
@@ -70,13 +77,14 @@ sk := expand{s}
 numerator := e(gl#i,Hdr2)
 dotProd2 := init(G1)
 lenS := len(S)
+
 BEGIN :: for
-for{k := 0, lenS}
-j := S#k
-BEGIN :: if
-if {j != i}
-dotProd2 := (dotProd2 * gl#n+1-j+i?)
-END :: if
+ for{k := 0, lenS}
+    j := S#k
+    BEGIN :: if
+     if {j != i}
+        dotProd2 := (dotProd2 * gl#n+1-j+i)
+    END :: if
 END :: for
 denominator := e((s#i * dotProd2),Hdr1)
 K := (numerator / denominator)

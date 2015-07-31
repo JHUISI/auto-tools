@@ -1,0 +1,123 @@
+name := BB04IBE
+setting := symmetric
+
+BEGIN :: types
+j := Int
+M := list{GT}
+ID := list{ZR}
+IDstar := list{ZR}
+msk := G1
+END :: types
+
+
+BEGIN :: func:setup
+input := list{IDstar}
+
+a := random(ZR)
+b := random(ZR)
+c := random(ZR)
+z := random(ZR)
+g := random(G1)
+
+A := g ^ a
+B := g ^ b
+C := g ^ c
+
+coinflip := random(bin)
+BEGIN :: if
+ if { coinflip == 0 }
+    Z := e(g, g) ^ (a * b * c)
+ else
+    Z := e(g, g) ^ z
+END :: if
+
+g1 := A
+g2 := B
+g3 := C
+
+alpha1 := random(ZR)
+alpha2 := random(ZR)
+
+one := 1
+two := 2
+
+h1 := (g1 ^ -IDstar#one) * (g ^ alpha1)
+h2 := (g1 ^ -IDstar#two) * (g ^ alpha2)
+
+pk := list{g, g1, g2, h1, h2}
+
+assumpVar := list{A, B, C, Z}
+reductionParams := list{g3, alpha1, alpha2, IDstar}
+
+output := list{msk, pk, reductionParams, assumpVar}
+END :: func:setup
+
+
+#BEGIN :: func:Fone
+#input := list{x, pk, reductionParams}
+#pk := expand{g, g1, g2, h1, h2}
+#reductionParams := expand{g3, alpha1, alpha2, IDstar}
+#
+#Fonejx := (g1 ^ (x - IDstar#1)) * (g ^ alpha1)
+#
+#output := Fonejx
+#END :: func:Fone
+#
+#
+#BEGIN :: func:Ftwo
+#input := list{x, pk, IDstar}
+#pk := expand{g, g1, g2, h1, h2}
+#reductionParams := expand{g3, alpha1, alpha2, IDstar}
+#
+#Ftwojx := (g1 ^ (x - IDstar#2)) * (g ^ alpha2)
+#
+#output := Ftwojx
+#END :: func:Ftwo
+
+
+BEGIN :: func:queries
+input := list{j, pk, ID, reductionParams}
+pk := expand{g, g1, g2, h1, h2}
+reductionParams := expand{g3, alpha1, alpha2, IDstar}
+
+one := 1
+two := 2
+
+r1 := random(ZR)
+r2 := random(ZR)
+
+BEGIN :: if
+ if { j == 1 }
+    d1 := (g2 ^ ((-alpha1) / (ID#one - IDstar#one))) * (((g1 ^ (ID#one - IDstar#one)) * (g ^ alpha1)) ^ r1) * (((g1 ^ (ID#two - IDstar#two)) * (g ^ alpha2)) ^ r2)
+ else
+    d1 := (g2 ^ ((-alpha2) / (ID#two - IDstar#two))) * (((g1 ^ (ID#one - IDstar#one)) * (g ^ alpha1)) ^ r1) * (((g1 ^ (ID#two - IDstar#two)) * (g ^ alpha2)) ^ r2)
+END :: if
+
+d2 := g ^ r1
+d3 := (g2 ^ (-1 / (ID#two - IDstar#two))) * (g ^ r2)
+
+sk := list{d1, d2, d3}
+output := sk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{M, ID, reductionParams, assumpVar}
+pk := expand{g, g1, g2, h1, h2}
+
+assumpVar := expand{A, B, C, Z}
+reductionParams := expand{g3, alpha1, alpha2, IDstar}
+
+b := random(bin)
+
+C1 := M#b * Z
+C2 := g3
+
+C3 := g3 ^ alpha1
+C4 := g3 ^ alpha2
+
+ct := list{C1, C2, C3, C4}
+output := ct
+END :: func:challenge
+
+

@@ -1,0 +1,42 @@
+name := qSDH
+setting := symmetric
+q := 10
+
+BEGIN :: types
+q := Int
+alpha := ZR
+gl = list{G1}
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+alpha := random(ZR)
+
+g1 := random(G1)
+g2 := random(G1)
+
+x := random(ZR)
+
+assumpKey := list{x, g1, g2}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := list{assumpKey}
+assumpKey := expand{x, g1, g2}
+
+BEGIN :: for
+    for{i := 1, q}
+        gl#i := g2 ^ (x ^ i)
+END :: for
+# is this right?
+c := init(ZR)
+C := g1 ^ (1 / (x + c))
+
+assumpVar := list{g1, g2, gl, c, C}
+output := assumpVar
+END :: func:assump
+

@@ -1,0 +1,134 @@
+name := BB04
+setting := symmetric
+l := 2
+k := 2
+
+BEGIN :: types
+l := Int
+j := Int
+k := Int
+M := list{GT}
+ID := list{ZR}
+IDstar := list{ZR}
+alphai := list{ZR}
+h := list{G1}
+r := list{ZR}
+di := list{G1}
+Ci := list{G1}
+END :: types
+
+
+BEGIN :: func:setup
+input := list{IDstar}
+
+a := random(ZR)
+b := random(ZR)
+c := random(ZR)
+z := random(ZR)
+g := random(G1)
+
+A := g ^ a
+B := g ^ b
+C := g ^ c
+
+coinflip := random(bin)
+BEGIN :: if
+ if { coinflip == 0 }
+    Z := e(g, g) ^ (a * b * c)
+ else
+    Z := e(g, g) ^ z
+END :: if
+
+g1 := A
+g2 := B
+g3 := C
+
+BEGIN :: for
+ for{i := 1, l}
+    alphai#i := random(ZR)
+    h#i := (g1 ^ -IDstar#i) * (g ^ alphai#i)
+END :: for
+
+#msk := list{g2alpha}
+pk := list{g, g1, g2, h}
+
+assumpVar := list{A, B, C, Z}
+reductionParams := list{g3, alphai, IDstar}
+
+output := list{msk, pk, reductionParams, assumpVar}
+END :: func:setup
+
+
+#BEGIN :: func:F
+#input := list{j, x, pk, reductionParams}
+#pk := expand{g, g1, g2, h}
+#reductionParams := expand{g3, alphai, IDstar}
+#
+#Fjx := (g1 ^ (x - IDstar#j)) * (g ^ alphai#j)
+#
+#output := Fjx
+#END :: func:F
+
+
+BEGIN :: func:queries
+input := list{j, pk, ID, reductionParams}
+pk := expand{g, g1, g2, h}
+reductionParams := expand{g3, alphai, IDstar}
+
+BEGIN :: for
+ for{i := 1, j}
+    r#i := random(ZR)
+END :: for
+
+dotProd1 := init(G1)
+BEGIN :: for
+ for{v := 1, j}
+    dotProd1 := dotProd1 * (((g1 ^ (ID#v - IDstar#v)) * (g ^ alphai#v)) ^ r#v)
+END :: for
+
+d1 := (g2 ^ ((-alphai#j) / (ID#j - IDstar#j))) * dotProd1
+
+#BEGIN :: for
+# for{i := 1, j-1}
+#    di#i := g ^ r#i
+#END :: for
+#
+#di#j := (g2 ^ (-1 / (ID#j - IDstar#j))) * (g ^ r#j)
+
+BEGIN :: for
+ for{i := 1, j}
+    BEGIN :: if
+        if {i == j }
+            di#j := (g2 ^ (-1 / (ID#j - IDstar#j))) * (g ^ r#j)
+        else
+            di#i := g ^ r#i
+    END :: if
+END :: for
+
+sk := list{d1, di}
+output := sk
+END :: func:queries
+
+
+BEGIN :: func:challenge
+input := list{M, ID, reductionParams, assumpVar}
+pk := expand{g, g1, g2, h}
+
+assumpVar := expand{A, B, C, Z}
+reductionParams := expand{g3, alphai, IDstar}
+
+b := random(bin)
+
+C1 := M#b * Z
+C2 := g3
+
+BEGIN :: for
+ for{i := 1, k}
+    Ci#k := g3 ^ alphai#i
+END :: for
+
+ct := list{C1, C2, Ci}
+output := ct
+END :: func:challenge
+
+

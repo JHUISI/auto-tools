@@ -14,17 +14,17 @@ h := random(G1)
 alpha := random(ZR)
 g1 := g ^ alpha
 
-mk := list{alpha}
+msk := list{alpha}
 pk := list{g, g1, h}
 
-output := list{mk, pk}
+output := list{msk, pk}
 END :: func:setup
 
 
 BEGIN :: func:keygen
-input := list{pk, mk, id}
+input := list{pk, msk, id}
 pk := expand{g, g1, h}
-mk := expand{alpha}
+msk := expand{alpha}
 
 ID := H(id, ZR)
 rID := random(ZR)

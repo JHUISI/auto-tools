@@ -1,0 +1,49 @@
+name := BLS
+setting := symmetric
+
+
+BEGIN :: types
+ M := Str
+END :: types
+
+
+BEGIN :: func:keygen
+input := None
+ g := random(G1)
+ x := random(ZR)
+
+ v := g^x
+
+ sk := list{x}
+ pk := list{g, v}
+output := list{pk, sk}
+END :: func:keygen
+
+
+BEGIN :: func:sign
+input := list{sk, M}
+ sk := expand{x}
+
+ h := H(M, G1)
+ s := (h^x)
+
+ sig := list{s}
+output := sig
+END :: func:sign
+
+
+BEGIN :: func:verify
+ input := list{pk, M, sig}
+ pk := expand{g, v}
+ sig := expand{s}
+
+ h := H(M, G1)
+
+ BEGIN :: if
+  if {e(h, v) == e(s, g)}
+    output := True
+  else
+    output := False
+ END :: if
+END :: func:verify
+

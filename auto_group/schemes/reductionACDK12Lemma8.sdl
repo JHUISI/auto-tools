@@ -1,0 +1,109 @@
+name := acdk12
+setting := symmetric
+
+BEGIN :: types
+ m1 := ZR
+ m2 := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := list{None}
+ x := random(ZR)
+ y := random(ZR)
+ g := random(G1)
+
+ assumpKey := list{g, x, y}
+ 
+ X := g ^ x
+ Y := g ^ y
+
+ Z := g ^ (x * y)
+
+ assumpVar := list{g, X, Y, Z}
+
+ b := random(ZR)
+ a1 := random(ZR)
+
+ v1 := random(ZR)
+ v2 := random(ZR)
+
+ G := g
+
+ C := random(G1)
+ F := random(G1)
+ U1 := random(G1)
+ U2 := random(G1)
+ gk := list{G, C, F, U1, U2}
+
+# U := random(G1)
+ H := random(G1)
+
+ V := random(G1)
+ V1 := G ^ v1
+ V2 := G ^ v2
+
+ B := G ^ b
+ A1 := G ^ a1
+ A2 := Y
+ B1 := (B ^ a1)
+ B2 := Y ^ b
+ R1 := (V * (V1 ^ a1))
+ R2 := V * (Y ^ v2)
+ W1 := R1 ^ b
+ W2 := R2 ^ b
+ X1 := X ^ rho
+ X2 := Y ^ ((a1 * b) / rho)
+# K1 := G ^ alpha
+ K2 := K1 ^ a1
+
+ vk := list{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2} # U
+ sk := list{K1, K2}
+
+ reducKey := list{a1, b}
+
+output := list{gk, vk, sk, assumpKey, assumpVar, reducKey}
+END :: func:setup
+
+
+BEGIN :: func:queries
+input := list{gk, vk, sk, m1, m2, assumpVar, reducKey}
+ gk := expand{G, C, F, U1, U2}
+ vk := expand{B, A1, A2, B1, B2, R1, R2, W1, W2, V, V1, V2, H, X1, X2}
+ sk := expand{K1, K2}
+ assumpVar := expand{g, X, Y, Z}
+ reducKey := expand{a1, b}
+
+ w1 := random(ZR)
+ w2 := random(ZR)
+
+ Ms1 := C ^ w1
+ Ms2 := C ^ w2
+ Ms3 := F ^ w1
+ Ms4 := F ^ w2
+ Ms5 := U1 ^ w1
+ Ms6 := U2 ^ w2
+
+ r1 := random(ZR)
+ r2 := random(ZR)
+ z1 := random(ZR)
+ z2 := random(ZR)
+ s := random(ZR)
+ r := r1 + r2
+
+ gamma := random(bin)
+
+ S0 := (Ms5 * Ms6 * H) ^ r1
+ S1 := (Y ^ (s * a1))
+ S2 := (Y ^ -s) * (V1 ^ r) * (G ^ z1)
+ S3 := B ^ -z1
+ S4 := (V2 ^ r) * (G ^ z2) * (X ^ a1) * (G ^ (-s * a1))
+ S5 := B ^ -z2
+ S6 := B ^ r2
+ S7 := G ^ r1
+
+ M := list{Ms1, Ms2, Ms3, Ms4, Ms5, Ms6}
+ sig := list{S0, S1, S2, S3, S4, S5, S6, S7}
+output := list{M, sig}
+END :: func:queries
+

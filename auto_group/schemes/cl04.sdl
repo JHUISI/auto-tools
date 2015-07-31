@@ -25,10 +25,11 @@ END :: func:keygen
 
 
 BEGIN :: func:sign
-input := list{sk, M}
+input := list{g, sk, M}
  sk := expand{x, y}
- a := random(G1)
+ r := random(ZR)
  m := H(M, ZR)
+ a := g^r
  b := a^y
  c := a^(x + (m * x * y))
  sig := list{a, b, c}
@@ -42,7 +43,7 @@ input := list{pk, g, M, sig}
  pk := expand{X, Y}
  m := H(M, ZR)
 BEGIN :: if
-if {{ e(Y, a) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
+if {{ e(a, Y) == e(g, b) } and { (e(X, a) * (e(X, b)^m)) == e(g, c) }}
    output := True
 else
    output := False

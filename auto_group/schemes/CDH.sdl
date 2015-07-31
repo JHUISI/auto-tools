@@ -1,0 +1,36 @@
+name := CDH
+setting := symmetric
+
+
+BEGIN :: types
+a := ZR
+b := ZR
+z := ZR
+END :: types
+
+
+BEGIN :: func:setup
+input := None
+ a := random(ZR)
+ b := random(ZR)
+ g := random(G1)
+
+ assumpKey := list{g, a, b}
+
+output := assumpKey
+END :: func:setup
+
+
+BEGIN :: func:assump
+input := assumpKey
+ assumpKey := expand{g, a, b, z}
+ A := g ^ a
+ B := g ^ b
+
+ W := g ^ (a * b)
+
+ assumpVar := list{g, A, B, W}
+
+output := assumpVar
+END :: func:assump
+
