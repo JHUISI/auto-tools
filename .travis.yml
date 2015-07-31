@@ -14,4 +14,4 @@ before_script:
   - make install
 
 script:
-  - cd JHUISI/auto-tools/auto_group/ && ./unitTestAGPlus-ENC.sh
+  - cd auto_group/ && ./unitTestAGPlus-ENC.sh
