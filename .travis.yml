@@ -15,4 +15,4 @@ before_script:
 
 script:
   - cd ../.. && ls
-  - cd JHUISI/auto-tools/auto_group/ && ./unitTestAGPlus-ENC.sh
+  - cd auto-tools/auto_group/ && ./unitTestAGPlus-ENC.sh
