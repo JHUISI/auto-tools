@@ -1,6 +1,8 @@
 AutoTools: automated tools
 ==========================
 
+[![Build Status](https://travis-ci.org/JHUISI/auto-tools.png)](https://travis-ci.org/JHUISI/auto-tools)
+
 A collection of Python tools being developed towards automatically transforming cryptographic primitives in different and interesting ways:
 
 * [AutoBatch](https://github.com/JHUISI/auto-tools/tree/master/auto_batch): an automated tool for designing batch verification algorithms.
