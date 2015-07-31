@@ -6,10 +6,10 @@ install:
 
 before_script:
   - cd ..
-  - git clone https://git01.codeplex.com/z3 -b unstable
+  - git clone git clone git@github.com:Z3Prover/z3.git
   - python3 scripts/mk_make.py
   - cd build
   - make
 
 script:
-  - bin/sh auto_group/runTestCases.sh
+  - bin/sh auto_group/unitTestAGPlus-ENC.sh
