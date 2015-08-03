@@ -1,16 +1,17 @@
-AutoGroup
-=========
+AutoGroup+
+==========
 
 Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric groups represent the state-of-the-art in terms of efficiency and converting schemes from symmetric to an asymmetric solution currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
 
-[ACM CCS 2013 publication](http://dl.acm.org/citation.cfm?id=2516718)
+Original work: [ACM CCS 2013 publication](http://dl.acm.org/citation.cfm?id=2516718)
+AutoGroup+ publication: [eprint](http://eprint.iacr.org/2015/290)
 
 Installation
 ============
 
-AutoGroup requires Python 3 or greater and you will need the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated asymmetric scheme in Python and/or C++.
+AutoGroup+ requires Python 3 or greater and you will need the [Charm-Crypto](https://github.com/jhuisi/charm/downloads) framework (v0.43) to execute the automatically generated asymmetric scheme in Python and/or C++.
 
-AutoGroup also requires the [Z3](https://github.com/Z3Prover/z3) Theorem prover (with Python 3 bindings).
+AutoGroup+ also requires the [Z3](https://github.com/Z3Prover/z3) Theorem prover (with Python 3 bindings).
 
 Here are the install steps for Z3:
 
@@ -24,44 +25,45 @@ Running The Tool
 
 For the help menu, execute the following:
 
-	python runAutoGroup.py --help
-	AutoGroup:  sym.-to-asym. conversion for cryptographic schemes in SDL.
-	
-	Arguments:
-	
-		-s, --sdl  [ filename ]
-			: input SDL file description of scheme.
-	
-		-c, --config [ SDL config file ]
-			: configuration parameters needed for AutoGroup.
-	
-		-v, --verbose   [ no-argument ]
-			: enable verbose output to highest level for Batcher.
-	
-		-o, --outfile  [ filename prefix ]
-			: generate code of new scheme in C++/Python for Charm.
-	
-		-b, --benchmark  [ no-arguments ]
-			: benchmark AutoGroup execution time.
-	
-		-e, --estimate [ no-arguments ]
-			: estimate bandwidth for keys and ciphertext/signatures.
+    #: python3 runAutoGroup.py -h
+    usage: runAutoGroup.py [-h] -o OUTFILE -s SDL [-v] -c CONFIG [-l LIBRARY] [-b]
+                           [-e] [--short SHORT] [--path PATH] [--print] [-a]
+    
+    sym.-to-asym. conversion for cryptographic schemes in SDL.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -o OUTFILE, --outfile OUTFILE
+                            generate code of new scheme in C++/Python for Charm
+      -s SDL, --sdl SDL     input SDL file description of scheme
+      -v, --verbose         enable verbose mode
+      -c CONFIG, --config CONFIG
+                            configuration parameters needed for AutoGroup
+      -l LIBRARY, --library LIBRARY
+                            which library to benchmark against: miracl or relic
+      -b, --benchmark       benchmark AutoGroup execution time
+      -e, --estimate        estimate bandwidth for keys and ciphertext/signatures
+      --short SHORT         what to minimize: public-keys, secret-keys,
+                            assumption, ciphertext, signatures
+      --path PATH           destination for AutoGroup+ output files. Default:
+                            current dir
+      --print               print the selected options
+      -a, --autogroup       run AutoGroup only (and not AutoGroup+)
 			
 
 An example for how to execute AutoGroup on the Camenisch-Lysyanskaya (CL) signature scheme with basic options:
 
 	python3 runAutoGroup.py --sdl schemes/cl04.sdl --config schemes/configCL.py -o TestCL -v
 
-Note that AutoGroup was designed to handle both encryption and signature schemes.
+Note that AutoGroup+ was designed to handle both encryption and signature schemes.
 
 Configuration
 =============
 
-AutoGroup provides several configuration parameters to tune conversion to an asymmetric solution. The configuration file is specified in Python with the following options:
+AutoGroup provides several configuration parameters to tune conversion to an asymmetric solution. 
+The configuration file is specified in Python with the following options:
 
 ``schemeType`` : for describing the type of input scheme. For public-key encryption, ``"PKENC"`` and for signature types, ``"PKSIG"``.
-
-``short`` : to find a solution that shortens the representation of the ``"ciphertext"``, ``"secret-keys"`` or ``"both"`` for encryption. For signature schemes, ``"signatures"`` or ``"public-keys"`` or ``"both"``
 
 ``operation`` : to find a solution that reduces the computation time based on cost of ``"exp"``(exponentiation) or ``"mul"``(multiplication). 
 
@@ -86,7 +88,6 @@ We require function names of algorithms described in the SDL specified as ``setu
 We provide a complete configuration file example for the CL signature:
 
 	schemeType = "PKSIG"
-	short = "signature"
 	operation = "exp"
 	
 	setupFuncName 	= "setup"
