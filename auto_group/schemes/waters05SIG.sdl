@@ -64,10 +64,10 @@ BEGIN :: for
 for{i := 0, l}
   dotProd2 := dotProd2 * (u#i ^ m#i)
 END :: for
-C1 := ut * dotProd2
+C := ut * dotProd2
 
 BEGIN :: if
-if { (e(S1, g) / e(S2, C1)) == e(g1, g2) }
+if { (e(S1, g) / e(S2, C)) == e(g1, g2) }
    output := True
 else
    output := False

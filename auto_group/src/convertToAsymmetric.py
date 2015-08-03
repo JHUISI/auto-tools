@@ -3381,9 +3381,9 @@ def DeriveSpecificSolution(resultDict, xorMap, info):  #groupMap, resultMap, xor
         both = both.union(both_groups)
     G1 = G1_deps.difference(both)
     G2 = G2_deps.difference(both)
-    print("Both G1 & G2: ", both)
-    print("Just G1: ", G1)
-    print("Just G2: ", G2)
+    ###print("Both G1 & G2: ", both)
+    ###print("Just G1: ", G1)
+    ###print("Just G2: ", G2)
     return { 'G1':G1, 'G2':G2, 'both':both, 'pairing':pairingInfo, 'newSol':newSol }
 
 
