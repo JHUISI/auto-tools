@@ -379,7 +379,8 @@ class ModelEval:
                 countMap[solIndex] = dict(counts)
             if self.verbose:
                 print("Result: ", counts, ", splits:", resultMap[solIndex][0], ", sum:", resultMap[solIndex][1], "\n")
-        print("Final: ", resultMap)
+        if self.verbose:
+            print("<=== Final Result Map ===>: ", resultMap)
         # find the minimum by comparing the second element of each tuple
         #if rankSolutions:
         #    sols = sorted(resultMap.items())
@@ -583,12 +584,11 @@ def checkValidSplit(info, optionDict, a_model):
     if info.get('single_reduction'):
         # build a complete dep map of scheme, reduction and assumption from the model
         group_info = buildCompleteMap(a_model, info, xorMap)
-        # generate a split given the group info
         (graph0, graph1, is_valid_split) = generateSplit(info, group_info, merged_graph)
         if is_valid_split:
-            print("SOLUTION IS A VALID SPLIT!!!")
+            print("Solution is a Valid Split!")
         else:
-            print("REJECTING SPLIT!!!")
+            print("REJECTING SPLIT!")
             sys.exit(-1)
     else:
         # get reduction data
@@ -629,9 +629,9 @@ def checkValidSplit(info, optionDict, a_model):
 
             (graph0, graph1, is_valid_split) = generateSplit(info, group_info, graph)
             if is_valid_split:
-                print("SOLUTION IS A VALID SPLIT FOR MERGED GRAPH %d!!!" % index)
+                print("Solution is a Valid Split for merged graph: %d!" % index)
             else:
-                print("REJECTING SPLIT!!!")
+                print("REJECTING SPLIT!")
                 sys.exit(-1)
     return (a_model, sat)
 
@@ -1013,6 +1013,14 @@ class DotGraph:
                     self.edges.append(i)
         return
 
+    # useful for updating the (pairing nodes) of a scheme graph
+    def add_pair_edges(self, the_edges):
+        for i in the_edges:
+            (a, b) = i
+            if a in self.nodes:
+                self.edges.append(i)
+        return
+
     def add(self, other):
         # just add to myself
         self.edges += other.edges
@@ -1112,7 +1120,7 @@ def generateSplit(info, group_info, merged_graph):
         out_going_edges = out_going.get(a)
         if out_going_edges:
             for b in out_going_edges:
-                ##print("processing edge: '%s' -> '%s', action:" % (a, b), end=" ")
+                print("processing edge: '%s' -> '%s', action:" % (a, b), end=" ")
                 # (a -> b)
                 # check whether 'a' occurs in both, G1 or G2
                 if a in bothList:
@@ -1120,21 +1128,21 @@ def generateSplit(info, group_info, merged_graph):
                         # must be in both
                         graph0.addDirectedEdge(a, b)
                         graph1.addDirectedEdge(a, b)
-                        ##print("added to both")
+                        print("added to both")
                     elif b in G1List:
                         graph0.addDirectedEdge(a, b)
-                        ##print("added to graph0")
+                        print("added to graph0")
                     elif b in G2List:
                         graph1.addDirectedEdge(a, b)
-                        ##print("added to graph1")
+                        print("added to graph1")
                     elif b in pair_ids:
                         # have reached edges of the form "'a' -> PX[0|1]"
                         if a in group_info['pairing'][_G1Prefix]:
                             graph0.addDirectedEdge(a, b)
-                            ##print("added to graph0")
+                            print("added to graph0")
                         elif a in group_info['pairing'][_G2Prefix]:
                             graph1.addDirectedEdge(a, b)
-                            ##print("added to graph1")
+                            print("added to graph1")
                         else:
                             pass
                             ##print("generateSplit: Dangling node/pairing variable: ", a, "->", b)
@@ -1142,31 +1150,33 @@ def generateSplit(info, group_info, merged_graph):
                     else:
                         pass
                         #if a in group_info.get('pairing'):
-                        ##print("No mapping for variable: ", b)
+                        print("No mapping for variable: ", b)
                         # check pairing here
                 elif a in G1List:
                     if b in G1List or b in bothList or b in pair_ids:
                         graph0.addDirectedEdge(a, b)
-                        ##print("added to graph0")
+                        print("added to graph0")
                     else: # clearly a violation so output error msg
-                        pass ##print("Doesn't make sense: G1=", a, '-> !G1=', b)
+                        pass
+                        print("Doesn't make sense: G1=", a, '-> !G1=', b)
                 elif a in G2List:
                     if b in G2List or b in bothList or b in pair_ids:
                         graph1.addDirectedEdge(a, b)
-                        ##print("added to graph1")
+                        print("added to graph1")
                     else: # clearly a violation so output error msg
-                        pass ##print("Doesn't make sense: G2=", a, '-> !G2=', b)
+                        pass
+                        print("Doesn't make sense: G2=", a, '-> !G2=', b)
                 else:
-                    pass ##print("Var doesn't exist in map: ", a)
+                    pass
+                    print("Var doesn't exist in map: ", a)
 
                 if b not in marked:
                     stack.append(b)
                     marked.append(b)
 
-    # print("<====== SHOW SPLIT ======>")
-    # print("Graph0: ", graph0)
-    # print("Graph1: ", graph1)
-    # print("<====== SHOW SPLIT ======>")
+    # sanity check to make sure graph0 and graph1 nodes not empty
+    if len(graph0.nodes) == 0 or len(graph1.nodes) == 0:
+       sys.exit("Empty set of nodes in either G1 or G2. Bad split!!")
 
     dup_nodes = False
     for i in hash_list:
@@ -1176,8 +1186,29 @@ def generateSplit(info, group_info, merged_graph):
             #print(s)
             dup_nodes = True
 
+    # make sure each pair node id is in either graph0 (G1) or graph1 (G2)
+    pil = list(pair_ids)
+    pil.sort()
+    for i in range(0, len(pil), 2):
+        # make sure that
+        p_l, p_r = (pil[i], pil[i+1])
+        if (p_l in graph0.nodes and p_r in graph1.nodes) or (p_l in graph1.nodes and p_r in graph0.nodes):
+            continue
+        else:
+            print("ERROR: graph0 nodes: ", graph0.nodes)
+            print("ERROR: graph1 nodes: ", graph1.nodes)
+            print("ERROR: (%s, %s)" % (p_l, p_r))
+            print("Found a pair node that wasn't split properly!!")
+
+
     if not dup_nodes:
         print("NO hash variable was duplicated in the split. Yay!!!")
+
+    if info.get('verbose'):
+        print("<====== SHOW SPLIT ======>")
+        print("Graph0:\n", graph0)
+        print("Graph1:\n", graph1)
+        print("<====== SHOW SPLIT ======>")
 
     new_merged_graph = graph0 + graph1
     if merged_graph == new_merged_graph:
@@ -1356,13 +1387,8 @@ def GenerateSplitSolutionMap(resultModel, xorMap, info, deps):
     for i in info['G1_lhs'][0] + info['G1_rhs'][0]:
         # get the z3 var for it
         z3Var = xorMap.get(i) # gives us an alphabet
-        # look up value in resultMap
-        varValue = resultMap.get(z3Var)
-        # get group
-        if varValue == True:
-            group = _G1Prefix
-        else:
-            group = _G2Prefix
+        # look up group value in resultMap
+        group = resultMap.get(z3Var)  # either 'G1' or 'G2'
 
         if i in info['G1_lhs'][0]:
             deps = info['G1_lhs'][1].get(i)

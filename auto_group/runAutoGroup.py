@@ -696,8 +696,11 @@ def configAutoGroup(dest_path, sdl_file, config_file, output_file, verbose, benc
     # get full path (assuming not provided)
     full_config_file = os.path.abspath(config_file)
     pkg_name = os.path.basename(full_config_file)
-    
-    cm = imp.load_source(pkg_name, full_config_file)
+
+    try:
+        cm = imp.load_source(pkg_name, full_config_file)
+    except:
+        sys.exit("Missing config file: %s" % full_config_file)
     #check if gen visual dep graph
     if hasattr(cm, "graphit"):
         graphit = cm.graphit

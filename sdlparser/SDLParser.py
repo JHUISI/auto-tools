@@ -2006,11 +2006,15 @@ def getFuncNameFromLineNo(lineNo):
 
     return None
 
-# OFFICIAL SDL PARSER
+# OFFICIAL SDL PARSER ENTRY POINT
 def parseFile(filename, verbosity, ignoreCloudSourcing=False):
     global linesOfCode
 
-    fd = open(filename, 'r')
+    try:
+        fd = open(filename, 'r')
+    except FileNotFoundError as e:
+        print("ERROR: No such SDL file -> %s" % filename)
+        sys.exit(e.errno)
     linesOfCode = fd.readlines()
     if (ignoreCloudSourcing == False):
         parseLinesOfCode(linesOfCode, verbosity)

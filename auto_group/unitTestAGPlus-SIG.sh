@@ -28,7 +28,7 @@ do
     echo "***************************Min AS********************************"
     python3 runAutoGroup.py --sdl schemes/waters05SIG.sdl --config schemes/configWATERS05SIG.py --short assumption -o TimingWaters05.txt -b || cleanup 1
     echo "***************************Min SIG********************************"
-    python3 runAutoGroup.py --sdl schemes/waters05SIG.sdl --config schemes/configWATERS05SIG.py --short signature -o TimingWaters05.txt -b || cleanup 1
+    #python3 runAutoGroup.py --sdl schemes/waters05SIG.sdl --config schemes/configWATERS05SIG.py --short signature -o TimingWaters05.txt -b || cleanup 1
 done
 
 echo "BLS sigs experiment"
@@ -61,7 +61,7 @@ do
     echo "***************************Min AS********************************"
     python3 runAutoGroup.py --sdl schemes/cl04.sdl --config schemes/configCL.py -o TestCL --short assumption -o TimingCL.txt -b || cleanup 1
     echo "***************************Min SIG********************************"
-    python3 runAutoGroup.py --sdl schemes/cl04.sdl --config schemes/configCL.py -o TestCL --short signature -o TimingCL.txt -b || cleanup 1
+    #python3 runAutoGroup.py --sdl schemes/cl04.sdl --config schemes/configCL.py -o TestCL --short signature -o TimingCL.txt -b || cleanup 1
 done
 
 cleanup 0

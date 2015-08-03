@@ -1005,7 +1005,19 @@ def searchForChildren(key, depValue, data_map, info, seen_before):
 
     return
 
-def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_graph):
+def look_for_map(node, group_info, target_type):
+    (a, b) = node
+    a_pr = a # by default
+    if a in group_info['generatorMapG1'] and target_type == types.G1:
+        a_pr = group_info['generatorMapG1'][a]
+    elif a in group_info['generatorMapG2'] and target_type == types.G2:
+        a_pr = group_info['generatorMapG2'][a]
+    else:
+        pass # keep the same in the defualt case
+    return (a_pr, b)
+
+
+def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_graph, group_info):
     sdl.parseFile(sdl_filename, sdlVerbose, ignoreCloudSourcing=True)
     varTypes = dict(sdl.getVarTypes().get(TYPES_HEADER))
 
@@ -1080,8 +1092,115 @@ def buildSplitGraphForScheme(sdl_filename, sdl_name, config, sdlVerbose, pair_gr
             print(dg_scheme2)
             print("<=== G2 side of Scheme Graph ===>")
     elif config.schemeType == PKSIG:
-        pass # TODO: fix this
+        (stmtS, typesS, depListS, depListNoExpS, infListS, infListNoExpS) = sdl.getVarInfoFuncStmts( config.setupFuncName )
+        (stmtK, typesK, depListK, depListNoExpK, infListK, infListNoExpK) = sdl.getVarInfoFuncStmts( config.keygenFuncName )
+        (stmtSi, typesSi, depListSi, depListNoExpSi, infListSi, infListNoExpSi) = sdl.getVarInfoFuncStmts( config.signFuncName )
+        (stmtV, typesV, depListV, depListNoExpV, infListV, infListNoExpV) = sdl.getVarInfoFuncStmts( config.verifyFuncName )
+        varTypes.update(typesS)
+        varTypes.update(typesK)
+        varTypes.update(typesSi)
+        varTypes.update(typesV)
+        # create the graph0 and graph1 lists from the pairing portion of graph
+        nodes = []
+        for k,v in pair_graph.items():
+            nodes += v
+        graph0 = []
+        graph1 = []
+        for i in range(0, len(nodes), 2):
+            (lhs, a) = nodes[i]
+            # check against original pairing variables in input SDL file
+            if lhs in group_info['pairing']['G1']:
+                graph0.append(look_for_map(nodes[i], group_info, types.G1))
+                graph1.append(look_for_map(nodes[i+1], group_info, types.G2))
+            else:
+                graph0.append(look_for_map(nodes[i+1], group_info, types.G1))
+                graph1.append(look_for_map(nodes[i], group_info, types.G2))
 
+        if sdlVerbose:
+            print("Graph 0: ", graph0)
+            print("Graph 1: ", graph1)
+        assert len(graph0) == len(graph1), "Something wrong with SDL output"
+
+        if hasattr(config, 'setupFuncName'):
+            dg_setup1 = generateGraph(config.setupFuncName, (typesS, depListNoExpS), types.G1)
+            has_setup = True
+        else:
+            has_setup = False
+
+        new_depListNoExpK = simplifyDepMap(stmtK, typesK, infListNoExpK, depListNoExpK)
+        dg_keygen1 = generateGraph(config.keygenFuncName, (typesK, new_depListNoExpK), types.G1, varTypes)
+
+        new_depListNoExpSi = simplifyDepMap(stmtSi, typesSi, infListNoExpSi, depListNoExpSi)
+        dg_sign1 = generateGraph(config.signFuncName, (typesSi, new_depListNoExpSi), types.G1, varTypes)
+        dg_verify1 = generateGraph(config.verifyFuncName, (typesV, depListNoExpV), types.G1, varTypes)
+        dg_scheme1 = DotGraph(sdl_name)
+
+        # if sdlVerbose:
+        #     if has_setup:
+        #         print("<=== Setup Graph ===>")
+        #         print(dg_setup1)
+        #         print("<=== Setup Graph ===>")
+        #
+        #     print("<=== Keygen Graph ===>")
+        #     print(dg_keygen1)
+        #     print("<=== Keygen Graph ===>")
+        #
+        #     print("<=== Sign Graph ===>")
+        #     print(dg_sign1)
+        #     print("<=== Sign Graph ===>")
+        #
+        #     print("<=== Verify Graph ===>")
+        #     print(dg_verify1)
+        #     print("<=== Verify Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme1 += dg_setup1 + dg_keygen1 + dg_sign1 + dg_verify1
+        dg_scheme1.add_pair_edges(graph0)
+        if sdlVerbose:
+             print("<=== G1 side of Scheme Graph ===>")
+             print(dg_scheme1)
+             print("<=== G1 side of Scheme Graph ===>")
+
+        ######### focus on G2 ################
+        if hasattr(config, 'setupFuncName'):
+            dg_setup2 = generateGraph(config.setupFuncName, (typesS, depListNoExpS), types.G2)
+            has_setup = True
+        else:
+            has_setup = False
+
+        new_depListNoExpK = simplifyDepMap(stmtK, typesK, infListNoExpK, depListNoExpK)
+        dg_keygen2 = generateGraph(config.keygenFuncName, (typesK, new_depListNoExpK), types.G2, varTypes)
+
+        new_depListNoExpSi = simplifyDepMap(stmtSi, typesSi, infListNoExpSi, depListNoExpSi)
+        dg_sign2 = generateGraph(config.signFuncName, (typesSi, new_depListNoExpSi), types.G2, varTypes)
+        dg_verify2 = generateGraph(config.verifyFuncName, (typesV, depListNoExpV), types.G2, varTypes)
+        dg_scheme2 = DotGraph(sdl_name)
+        # if sdlVerbose:
+        #     if has_setup:
+        #         print("<=== Setup Graph ===>")
+        #         print(dg_setup2)
+        #         print("<=== Setup Graph ===>")
+        #
+        #     print("<=== Keygen Graph ===>")
+        #     print(dg_keygen2)
+        #     print("<=== Keygen Graph ===>")
+        #
+        #     print("<=== Sign Graph ===>")
+        #     print(dg_sign2)
+        #     print("<=== Sign Graph ===>")
+        #
+        #     print("<=== Verify Graph ===>")
+        #     print(dg_verify2)
+        #     print("<=== Verify Graph ===>")
+
+        # merge the different graphs into one big one
+        dg_scheme2 += dg_setup2 + dg_keygen2 + dg_sign2 + dg_verify2
+        dg_scheme2.add_pair_edges(graph1)
+        if sdlVerbose:
+             print("<=== G2 side of Scheme Graph ===>")
+             print(dg_scheme2)
+             print("<=== G2 side of Scheme Graph ===>")
+    return
 
 def buildSplitGraphForAssumption(sdl_filename, sdl_name, config, sdlVerbose):
     sdl.parseFile(sdl_filename, sdlVerbose, ignoreCloudSourcing=True)
@@ -2470,10 +2589,10 @@ def runAutoGroup(sdlFile, config, options, sdlVerbose=False, assumptionData=None
     outputFile = sdl_name + "_asym_" + fileSuffix + sdlSuffix
     writeConfig(options['path'] + outputFile, newLines0, newLinesT, newLinesSe, newLinesS, newLinesK, newLines2, newLines3, userFuncLines)
 
-    # TODO: clean this up for the scheme
-    #new_pair_graph = dict(pair_graph)
+    # TODO: make this a command line option (build split graph for scheme output file)
+    ## new_pair_graph = dict(pair_graph)
     # need to update variable names wherever necessary
-    #buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph)
+    ## buildSplitGraphForScheme(options['path'] + outputFile, sdl_name, config, sdlVerbose, new_pair_graph, groupInfo)
 
 ###########################
     if(len(reductionData) == 1):
