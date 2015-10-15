@@ -774,6 +774,7 @@ def solveUsingSMT(info, optionDict, shortOpt, timeOpt):
             # running AutoGroup+
             return checkValidSplit(info, optionDict, convertToGroup(modRef))
         else:
+            # this is old auto group so return model w/o checking for a valid split
             return (convertToGroup(modRef), sat)
 
 
