@@ -3,8 +3,9 @@ AutoGroup+
 
 Often, pairing-based cryptographic schemes are described using symmetric groups. While these groups simplify the description of new cryptographic schemes, they are rarely the most efficient setting for implementation. Asymmetric groups represent the state-of-the-art in terms of efficiency and converting schemes from symmetric to an asymmetric solution currently requires manual analysis. We demonstrate with AutoGroup how to automate such conversions using SMT solvers as a core building block.  
 
-Original work: [ACM CCS 2013 publication](http://dl.acm.org/citation.cfm?id=2516718)
-AutoGroup+ publication: [eprint](http://eprint.iacr.org/2015/290)
+AutoGroup: [ACM CCS 2013](http://dl.acm.org/citation.cfm?id=2516718)
+
+AutoGroup+: [ACM CCS 2015](http://dl.acm.org/citation.cfm?doid=2810103.2813601) [eprint](http://eprint.iacr.org/2015/290)
 
 Installation
 ============
