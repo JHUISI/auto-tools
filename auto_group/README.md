@@ -104,4 +104,22 @@ We provide a complete configuration file example for the CL signature:
 	signatureVar = "sig" 
 
 See more examples in the ``schemes`` directory.
+
+New SDL Structures
+==================
  
+AutoGroup+ requires two new SDL inputs for a given scheme: (1) Reduction(s) and (2) Assumption(s). 
+
+For (1), we mean an analysis where there is an efficient algorithm called a reduction that is successful 
+in solving the hard problem (underlying the complexity assumption (2)) given black-box access to an adversary 
+that is able to successfully attack the scheme.
+
+Note that AutoGroup+ assumes that the security reduction is correct, the complexity assumptions are true, and 
+that the SDL was typed correctly. If any of these do not hold, then the output of AutoGroup+ cannot be relied upon. 
+
+Reduction
+=============
+
+For encryption schemes, the security reduction SDL input typically consists of three algorithms: setup, queries, and challenge. For signature schemes, it simply consists of two algorithms: setup and queries.
+
+The assumption SDL input structure is self explanatory and we include several complexity assumptions from the literature. See the ``schemes`` directory.

@@ -9,7 +9,7 @@ A collection of Python tools being developed towards automatically transforming 
 
 * [AutoStrong](https://github.com/JHUISI/auto-tools/tree/master/auto_strong): an automated tool for converting existentially unforgeable signatures into ones that are strongly unforgeable.
 
-* [AutoGroup](https://github.com/JHUISI/auto-tools/tree/master/auto_group): an automated tool for optimizing pairing-based encryption and signature schemes using SMT solver techniques.
+* [AutoGroup+](https://github.com/JHUISI/auto-tools/tree/master/auto_group): an automated tool for optimizing pairing-based encryption and signature schemes using SMT solver techniques.
 
 * [CloudSource](https://github.com/JHUISI/auto-tools/tree/master/auto_outsrc): an automated tool for outsourcing the computation of pairing-based schemes to untrusted cloud proxies. 
 
