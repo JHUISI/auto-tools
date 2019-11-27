@@ -1,0 +1,11 @@
+(*Boneh Boyen Goh HIBE for 8 levels*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [alpha, beta, gamma, h1, h2, h3, h4, h5, h6, h7, h8].
+unfixed_vars [r].
+Zp_vars [id1, id2, id3, id4, id5, id6, id7, id8].
+
+trusted_polys [F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8] in G1. 
+
+untrusted_polys [F12 = alpha*beta + r*(h1*id1 + h2*id2 + h3*id3 + h4*id4 + gamma), F13 = r, F14 = h5*id5, F15 = h6*id6, F16 = h7*id7, F17 = h8*id8] in G1.

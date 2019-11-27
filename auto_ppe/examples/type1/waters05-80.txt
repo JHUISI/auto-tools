@@ -1,0 +1,349 @@
+
+(*Waters05 scheme with n = identity length = 80*)
+
+maps G1 * G1 -> GT.
+
+
+fixed_vars [alpha, beta, u, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23, v24, v25, v26, v27, v28, v29, v30, v31, v32, v33, v34, v35, v36, v37, v38, v39, v40, v41, v42, v43, v44, v45, v46, v47, v48, v49, v50, v51, v52, v53, v54, v55, v56, v57, v58, v59, v60, v61, v62, v63, v64, v65, v66, v67, v68, v69, v70, v71, v72, v73, v74, v75, v76, v77, v78, v79, v80, u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16, u17, u18, u19, u20, u21, u22, u23, u24, u25, u26, u27, u28, u29, u30, u31, u32, u33, u34, u35, u36, u37, u38, u39, u40, u41, u42, u43, u44, u45, u46, u47, u48, u49, u50, u51, u52, u53, u54, u55, u56, u57, u58, u59, u60, u61, u62, u63, u64, u65, u66, u67, u68, u69, u70, u71, u72, u73, u74, u75, u76, u77, u78, u79, u80].
+
+unfixed_vars [r].
+
+trusted_polys [F1 = v1, F2 = v2, F3 = v3, F4 = v4, F5 = v5, F6 = v6, F7 = v7, F8 = v8, F9 = v9, F10 = v10, F11 = v11, F12 = v12, F13 = v13, F14 = v14, F15 = v15, F16 = v16, F17 = v17, F18 = v18, F19 = v19, F20 = v20, F21 = v21, F22 = v22, F23 = v23, F24 = v24, F25 = v25, F26 = v26, F27 = v27, F28 = v28, F29 = v29, F30 = v30, F31 = v31, F32 = v32, F33 = v33, F34 = v34, F35 = v35, F36 = v36, F37 = v37, F38 = v38, F39 = v39, F40 = v40, F41 = v41, F42 = v42, F43 = v43, F44 = v44, F45 = v45, F46 = v46, F47 = v47, F48 = v48, F49 = v49, F50 = v50, F51 = v51, F52 = v52, F53 = v53, F54 = v54, F55 = v55, F56 = v56, F57 = v57, F58 = v58, F59 = v59, F60 = v60, F61 = v61, F62 = v62, F63 = v63, F64 = v64, F65 = v65, F66 = v66, F67 = v67, F68 = v68, F69 = v69, F70 = v70, F71 = v71, F72 = v72, F73 = v73, F74 = v74, F75 = v75, F76 = v76, F77 = v77, F78 = v78, F79 = v79, F80 = v80, 
+F81 = u1, F82 = u2, F83 = u3, F84 = u4, F85 = u5, F86 = u6, F87 = u7, F88 = u8, F89 = u9, F90 = u10, F91 = u11, F92 = u12, F93 = u13, F94 = u14, F95 = u15, F96 = u16, F97 = u17, F98 = u18, F99 = u19, F100 = u20, F101 = u21, F102 = u22, F103 = u23, F104 = u24, F105 = u25, F106 = u26, F107 = u27, F108 = u28, F109 = u29, F110 = u30, F111 = u31, F112 = u32, F113 = u33, F114 = u34, F115 = u35, F116 = u36, F117 = u37, F118 = u38, F119 = u39, F120 = u40, F121 = u41, F122 = u42, F123 = u43, F124 = u44, F125 = u45, F126 = u46, F127 = u47, F128 = u48, F129 = u49, F130 = u50, F131 = u51, F132 = u52, F133 = u53, F134 = u54, F135 = u55, F136 = u56, F137 = u57, F138 = u58, F139 = u59, F140 = u60, F141 = u61, F142 = u62, F143 = u63, F144 = u64, F145 = u65, F146 = u66, F147 = u67, F148 = u68, F149 = u69, F150 = u70, F151 = u71, F152 = u72, F153 = u73, F154 = u74, F155 = u75, F156 = u76, F157 = u77, F158 = u78, F159 = u79, F160 = u80, F161 = u1*v1, F162 = u2*v2, F163 = u3*v3, F164 = u4*v4, F165 = u5*v5, F166 = u6*v6, F167 = u7*v7, F168 = u8*v8, F169 = u9*v9, F170 = u10*v10, F171 = u11*v11, F172 = u12*v12, F173 = u13*v13, F174 = u14*v14, F175 = u15*v15, F176 = u16*v16, F177 = u17*v17, F178 = u18*v18, F179 = u19*v19, F180 = u20*v20, F181 = u21*v21, F182 = u22*v22, F183 = u23*v23, F184 = u24*v24, F185 = u25*v25, F186 = u26*v26, F187 = u27*v27, F188 = u28*v28, F189 = u29*v29, F190 = u30*v30, F191 = u31*v31, F192 = u32*v32, F193 = u33*v33, F194 = u34*v34, F195 = u35*v35, F196 = u36*v36, F197 = u37*v37, F198 = u38*v38, F199 = u39*v39, F200 = u40*v40, F201 = u41*v41, F202 = u42*v42, F203 = u43*v43, F204 = u44*v44, F205 = u45*v45, F206 = u46*v46, F207 = u47*v47, F208 = u48*v48, F209 = u49*v49, F210 = u50*v50, F211 = u51*v51, F212 = u52*v52, F213 = u53*v53, F214 = u54*v54, F215 = u55*v55, F216 = u56*v56, F217 = u57*v57, F218 = u58*v58, F219 = u59*v59, F220 = u60*v60, F221 = u61*v61, F222 = u62*v62, F223 = u63*v63, F224 = u64*v64, F225 = u65*v65, F226 = u66*v66, F227 = u67*v67, F228 = u68*v68, F229 = u69*v69, F230 = u70*v70, F231 = u71*v71, F232 = u72*v72, F233 = u73*v73, F234 = u74*v74, F235 = u75*v75, F236 = u76*v76, F237 = u77*v77, F238 = u78*v78, F239 = u79*v79, F240 = u80*v80] in G1.
+
+trusted_polys[F241 = alpha, F242 = beta, F243 = u] in G1.
+
+untrusted_polys [F244 = r, F245 = alpha*beta + (u + u1*v1 + u2*v2 + u3*v3 + u4*v4 + u5*v5 + u6*v6 + u7*v7 + u8*v8 + u9*v9 + u10*v10 + u11*v11 + u12*v12 + u13*v13 + u14*v14 + u15*v15 + u16*v16 + u17*v17 + u18*v18 + u19*v19 + u20*v20 + u21*v21 + u22*v22 + u23*v23 + u24*v24 + u25*v25 + u26*v26 + u27*v27 + u28*v28 + u29*v29 + u30*v30 + u31*v31 + u32*v32 + u33*v33 + u34*v34 + u35*v35 + u36*v36 + u37*v37 + u38*v38 + u39*v39 + u40*v40 + u41*v41 + u42*v42 + u43*v43 + u44*v44 + u45*v45 + u46*v46 + u47*v47 + u48*v48 + u49*v49 + u50*v50 + u51*v51 + u52*v52 + u53*v53 + u54*v54 + u55*v55 + u56*v56 + u57*v57 + u58*v58 + u59*v59 + u60*v60 + u61*v61 + u62*v62 + u63*v63 + u64*v64 + u65*v65 + u66*v66 + u67*v67 + u68*v68 + u69*v69 + u70*v70 + u71*v71 + u72*v72 + u73*v73 + u74*v74 + u75*v75 + u76*v76 + u77*v77 + u78*v78 + u79*v79 + u80*v80) *r] in G1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+(*******************Output on execution******************)
+(* 
+
+wireless-10-147-200-53:project satya$ ./gga.native examples/type1/waters05-80.txt
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = v1 in G1
+F2 = v2 in G1
+F3 = v3 in G1
+F4 = v4 in G1
+F5 = v5 in G1
+F6 = v6 in G1
+F7 = v7 in G1
+F8 = v8 in G1
+F9 = v9 in G1
+F10 = v10 in G1
+F11 = v11 in G1
+F12 = v12 in G1
+F13 = v13 in G1
+F14 = v14 in G1
+F15 = v15 in G1
+F16 = v16 in G1
+F17 = v17 in G1
+F18 = v18 in G1
+F19 = v19 in G1
+F20 = v20 in G1
+F21 = v21 in G1
+F22 = v22 in G1
+F23 = v23 in G1
+F24 = v24 in G1
+F25 = v25 in G1
+F26 = v26 in G1
+F27 = v27 in G1
+F28 = v28 in G1
+F29 = v29 in G1
+F30 = v30 in G1
+F31 = v31 in G1
+F32 = v32 in G1
+F33 = v33 in G1
+F34 = v34 in G1
+F35 = v35 in G1
+F36 = v36 in G1
+F37 = v37 in G1
+F38 = v38 in G1
+F39 = v39 in G1
+F40 = v40 in G1
+F41 = v41 in G1
+F42 = v42 in G1
+F43 = v43 in G1
+F44 = v44 in G1
+F45 = v45 in G1
+F46 = v46 in G1
+F47 = v47 in G1
+F48 = v48 in G1
+F49 = v49 in G1
+F50 = v50 in G1
+F51 = v51 in G1
+F52 = v52 in G1
+F53 = v53 in G1
+F54 = v54 in G1
+F55 = v55 in G1
+F56 = v56 in G1
+F57 = v57 in G1
+F58 = v58 in G1
+F59 = v59 in G1
+F60 = v60 in G1
+F61 = v61 in G1
+F62 = v62 in G1
+F63 = v63 in G1
+F64 = v64 in G1
+F65 = v65 in G1
+F66 = v66 in G1
+F67 = v67 in G1
+F68 = v68 in G1
+F69 = v69 in G1
+F70 = v70 in G1
+F71 = v71 in G1
+F72 = v72 in G1
+F73 = v73 in G1
+F74 = v74 in G1
+F75 = v75 in G1
+F76 = v76 in G1
+F77 = v77 in G1
+F78 = v78 in G1
+F79 = v79 in G1
+F80 = v80 in G1
+F81 = u1 in G1
+F82 = u2 in G1
+F83 = u3 in G1
+F84 = u4 in G1
+F85 = u5 in G1
+F86 = u6 in G1
+F87 = u7 in G1
+F88 = u8 in G1
+F89 = u9 in G1
+F90 = u10 in G1
+F91 = u11 in G1
+F92 = u12 in G1
+F93 = u13 in G1
+F94 = u14 in G1
+F95 = u15 in G1
+F96 = u16 in G1
+F97 = u17 in G1
+F98 = u18 in G1
+F99 = u19 in G1
+F100 = u20 in G1
+F101 = u21 in G1
+F102 = u22 in G1
+F103 = u23 in G1
+F104 = u24 in G1
+F105 = u25 in G1
+F106 = u26 in G1
+F107 = u27 in G1
+F108 = u28 in G1
+F109 = u29 in G1
+F110 = u30 in G1
+F111 = u31 in G1
+F112 = u32 in G1
+F113 = u33 in G1
+F114 = u34 in G1
+F115 = u35 in G1
+F116 = u36 in G1
+F117 = u37 in G1
+F118 = u38 in G1
+F119 = u39 in G1
+F120 = u40 in G1
+F121 = u41 in G1
+F122 = u42 in G1
+F123 = u43 in G1
+F124 = u44 in G1
+F125 = u45 in G1
+F126 = u46 in G1
+F127 = u47 in G1
+F128 = u48 in G1
+F129 = u49 in G1
+F130 = u50 in G1
+F131 = u51 in G1
+F132 = u52 in G1
+F133 = u53 in G1
+F134 = u54 in G1
+F135 = u55 in G1
+F136 = u56 in G1
+F137 = u57 in G1
+F138 = u58 in G1
+F139 = u59 in G1
+F140 = u60 in G1
+F141 = u61 in G1
+F142 = u62 in G1
+F143 = u63 in G1
+F144 = u64 in G1
+F145 = u65 in G1
+F146 = u66 in G1
+F147 = u67 in G1
+F148 = u68 in G1
+F149 = u69 in G1
+F150 = u70 in G1
+F151 = u71 in G1
+F152 = u72 in G1
+F153 = u73 in G1
+F154 = u74 in G1
+F155 = u75 in G1
+F156 = u76 in G1
+F157 = u77 in G1
+F158 = u78 in G1
+F159 = u79 in G1
+F160 = u80 in G1
+F161 = u1*v1 in G1
+F162 = u2*v2 in G1
+F163 = u3*v3 in G1
+F164 = u4*v4 in G1
+F165 = u5*v5 in G1
+F166 = u6*v6 in G1
+F167 = u7*v7 in G1
+F168 = u8*v8 in G1
+F169 = u9*v9 in G1
+F170 = u10*v10 in G1
+F171 = u11*v11 in G1
+F172 = u12*v12 in G1
+F173 = u13*v13 in G1
+F174 = u14*v14 in G1
+F175 = u15*v15 in G1
+F176 = u16*v16 in G1
+F177 = u17*v17 in G1
+F178 = u18*v18 in G1
+F179 = u19*v19 in G1
+F180 = u20*v20 in G1
+F181 = u21*v21 in G1
+F182 = u22*v22 in G1
+F183 = u23*v23 in G1
+F184 = u24*v24 in G1
+F185 = u25*v25 in G1
+F186 = u26*v26 in G1
+F187 = u27*v27 in G1
+F188 = u28*v28 in G1
+F189 = u29*v29 in G1
+F190 = u30*v30 in G1
+F191 = u31*v31 in G1
+F192 = u32*v32 in G1
+F193 = u33*v33 in G1
+F194 = u34*v34 in G1
+F195 = u35*v35 in G1
+F196 = u36*v36 in G1
+F197 = u37*v37 in G1
+F198 = u38*v38 in G1
+F199 = u39*v39 in G1
+F200 = u40*v40 in G1
+F201 = u41*v41 in G1
+F202 = u42*v42 in G1
+F203 = u43*v43 in G1
+F204 = u44*v44 in G1
+F205 = u45*v45 in G1
+F206 = u46*v46 in G1
+F207 = u47*v47 in G1
+F208 = u48*v48 in G1
+F209 = u49*v49 in G1
+F210 = u50*v50 in G1
+F211 = u51*v51 in G1
+F212 = u52*v52 in G1
+F213 = u53*v53 in G1
+F214 = u54*v54 in G1
+F215 = u55*v55 in G1
+F216 = u56*v56 in G1
+F217 = u57*v57 in G1
+F218 = u58*v58 in G1
+F219 = u59*v59 in G1
+F220 = u60*v60 in G1
+F221 = u61*v61 in G1
+F222 = u62*v62 in G1
+F223 = u63*v63 in G1
+F224 = u64*v64 in G1
+F225 = u65*v65 in G1
+F226 = u66*v66 in G1
+F227 = u67*v67 in G1
+F228 = u68*v68 in G1
+F229 = u69*v69 in G1
+F230 = u70*v70 in G1
+F231 = u71*v71 in G1
+F232 = u72*v72 in G1
+F233 = u73*v73 in G1
+F234 = u74*v74 in G1
+F235 = u75*v75 in G1
+F236 = u76*v76 in G1
+F237 = u77*v77 in G1
+F238 = u78*v78 in G1
+F239 = u79*v79 in G1
+F240 = u80*v80 in G1
+F241 = alpha in G1
+F242 = beta in G1
+F243 = u in G1
+F244 = r in G1
+F245 = alpha*beta + r*u + r*u1*v1 + r*u10*v10 + r*u11*v11 + r*u12*v12 + r*u13*v13 + r*u14*v14 + r*u15*v15 + r*u16*v16 + r*u17*v17 + r*u18*v18 + r*u19*v19 + r*u2*v2 + r*u20*v20 + r*u21*v21 + r*u22*v22 + r*u23*v23 + r*u24*v24 + r*u25*v25 + r*u26*v26 + r*u27*v27 + r*u28*v28 + r*u29*v29 + r*u3*v3 + r*u30*v30 + r*u31*v31 + r*u32*v32 + r*u33*v33 + r*u34*v34 + r*u35*v35 + r*u36*v36 + r*u37*v37 + r*u38*v38 + r*u39*v39 + r*u4*v4 + r*u40*v40 + r*u41*v41 + r*u42*v42 + r*u43*v43 + r*u44*v44 + r*u45*v45 + r*u46*v46 + r*u47*v47 + r*u48*v48 + r*u49*v49 + r*u5*v5 + r*u50*v50 + r*u51*v51 + r*u52*v52 + r*u53*v53 + r*u54*v54 + r*u55*v55 + r*u56*v56 + r*u57*v57 + r*u58*v58 + r*u59*v59 + r*u6*v6 + r*u60*v60 + r*u61*v61 + r*u62*v62 + r*u63*v63 + r*u64*v64 + r*u65*v65 + r*u66*v66 + r*u67*v67 + r*u68*v68 + r*u69*v69 + r*u7*v7 + r*u70*v70 + r*u71*v71 + r*u72*v72 + r*u73*v73 + r*u74*v74 + r*u75*v75 + r*u76*v76 + r*u77*v77 + r*u78*v78 + r*u79*v79 + r*u8*v8 + r*u80*v80 + r*u9*v9 in G1
+
+......................................................................
+
+Processing untrusted polynomial F244 = r by rule2
+F244 moved to trusted set and r moved to fixed set by rule 2
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.065562s seconds to compute completion list of Gt
+
+Took 0.917639s seconds to compute completion list of G1
+Took 1.983248s to compute completion lists.
+Processing untrusted polynomial F245 by rule1
+Took 0.086800s to multiply f with completionG1 . Size of trusted set = 246. Size of f.(completion list of G1) U (completion list of GT) = 30381.
+
+Optimization round 1
+Took 46.553697s time to compute new_polys
+
+Took 0.011697s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 30136 to 82
+       Took 46.632034s seconds.
+Took 0.023992s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 245 to 1
+       Took 3.088141s seconds.
+
+Optimization round 2
+Took 0.000639s time to compute new_polys
+
+Took 0.000429s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 82 to 82
+       Took 0.001230s seconds.
+Took 0.000267s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000493s seconds.
+
+Took 49.742082s to optimize.
+Took 0.001039s to compute basis. Size of trusted set = 246. Size of reduced f.(completion list of G1) U (completion list of GT) = 83. No. of monomials = 82. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 83*82
+Took 4.332087s time to solve
+
+Naive PPE e(F245,F0) = e(F161,F244) * e(F162,F244) * e(F163,F244) * e(F164,F244) * e(F165,F244) * e(F166,F244) * e(F167,F244) * e(F168,F244) * e(F169,F244) * e(F170,F244) * e(F171,F244) * e(F172,F244) * e(F173,F244) * e(F174,F244) * e(F175,F244) * e(F176,F244) * e(F177,F244) * e(F178,F244) * e(F179,F244) * e(F180,F244) * e(F181,F244) * e(F182,F244) * e(F183,F244) * e(F184,F244) * e(F185,F244) * e(F186,F244) * e(F187,F244) * e(F188,F244) * e(F189,F244) * e(F190,F244) * e(F191,F244) * e(F192,F244) * e(F193,F244) * e(F194,F244) * e(F195,F244) * e(F196,F244) * e(F197,F244) * e(F198,F244) * e(F199,F244) * e(F200,F244) * e(F201,F244) * e(F202,F244) * e(F203,F244) * e(F204,F244) * e(F205,F244) * e(F206,F244) * e(F207,F244) * e(F208,F244) * e(F209,F244) * e(F210,F244) * e(F211,F244) * e(F212,F244) * e(F213,F244) * e(F214,F244) * e(F215,F244) * e(F216,F244) * e(F217,F244) * e(F218,F244) * e(F219,F244) * e(F220,F244) * e(F221,F244) * e(F222,F244) * e(F223,F244) * e(F224,F244) * e(F225,F244) * e(F226,F244) * e(F227,F244) * e(F228,F244) * e(F229,F244) * e(F230,F244) * e(F231,F244) * e(F232,F244) * e(F233,F244) * e(F234,F244) * e(F235,F244) * e(F236,F244) * e(F237,F244) * e(F238,F244) * e(F239,F244) * e(F240,F244) * e(F241,F242) * e(F243,F244)
+Optimized PPE e(F245,F0) = e(F241,F242)*e(F161*F162*F163*F164*F165*F166*F167*F168*F169*F170*F171*F172*F173*F174*F175*F176*F177*F178*F179*F180*F181*F182*F183*F184*F185*F186*F187*F188*F189*F190*F191*F192*F193*F194*F195*F196*F197*F198*F199*F200*F201*F202*F203*F204*F205*F206*F207*F208*F209*F210*F211*F212*F213*F214*F215*F216*F217*F218*F219*F220*F221*F222*F223*F224*F225*F226*F227*F228*F229*F230*F231*F232*F233*F234*F235*F236*F237*F238*F239*F240*F243,F244)
+
+F245 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 56.155057s
+
+
+Untrusted set : 
+
+PPEs : e(F245,F0) = e(F241,F242)*e(F161*F162*F163*F164*F165*F166*F167*F168*F169*F170*F171*F172*F173*F174*F175*F176*F177*F178*F179*F180*F181*F182*F183*F184*F185*F186*F187*F188*F189*F190*F191*F192*F193*F194*F195*F196*F197*F198*F199*F200*F201*F202*F203*F204*F205*F206*F207*F208*F209*F210*F211*F212*F213*F214*F215*F216*F217*F218*F219*F220*F221*F222*F223*F224*F225*F226*F227*F228*F229*F230*F231*F232*F233*F234*F235*F236*F237*F238*F239*F240*F243,F244),   
+
+Ouptut : PPE Testable :)
+
+*)

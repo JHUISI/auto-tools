@@ -1,0 +1,8 @@
+
+(*GS02 scheme when number of levels fixed to be 5*)
+
+maps G1 * G1 -> GT.
+fixed_vars [s0, h1, h2, h3, h4, h5]. (*g^h1 = H(ID1), g^h2 = H(ID1 ID2), g^h3 = H(ID1, ID2, ID3).....*)
+unfixed_vars [s0, s1, s2, s3, s4].
+trusted_polys [F1 = s0, F2 = h1, F3 = h2, F4 = h3, F5 = h4, F6 = h5] in G1.
+untrusted_polys [F7 = s0*h1 + s1*h2 + s2*h3 + s3*h4 + s4*h5, F8 = s1, F9 = s2, F10 = s3, F11 = s4] in G1.

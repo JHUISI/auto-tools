@@ -1,0 +1,189 @@
+
+
+(*Rouselakis Waters CP-ABE construction with k = 4*)
+(*https://eprint.iacr.org/2012/583.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [u, h, w, v, alpha].
+unfixed_vars [r, r1, r2, r3, r4].
+
+(*public key*)
+trusted_polys [F1 = u, F2 = h, F3 = w, F4 = v] in G1.
+trusted_polys [F5 = alpha] in GT.
+
+(*attributes*)
+Zp_vars [a1, a2, a3, a4].
+
+(*Secret key for*)
+untrusted_polys [F6 = alpha + w*r, F7 = r] in G1.
+untrusted_polys [F8 = (u*a1 + h)*r1 - v*r, F9 = r1] in G1.
+untrusted_polys [F10 = (u*a2 + h)*r2 - v*r, F11 = r2] in G1.
+untrusted_polys [F12 = (u*a3 + h)*r3 - v*r, F13 = r3] in G1.
+untrusted_polys [F14 = (u*a4 + h)*r4 - v*r, F15 = r4] in G1.
+
+
+
+
+(****************Output on execution***************)
+
+(* 
+
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/RW-4.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a1*u in G1,  a2*u in G1,  a3*u in G1,  a4*u in G1,  a1*h in G1,  a2*h in G1,  a3*h in G1,  a4*h in G1,  a1*w in G1,  a2*w in G1,  a3*w in G1,  a4*w in G1,  a1*v in G1,  a2*v in G1,  a3*v in G1,  a4*v in G1,  a1*alpha in GT,  a2*alpha in GT,  a3*alpha in GT,  a4*alpha in GT, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = u in G1
+F2 = h in G1
+F3 = w in G1
+F4 = v in G1
+F5 = alpha in GT
+F6 = alpha + r*w in G1
+F7 = r in G1
+F8 = h*r1 + a1*r1*u - r*v in G1
+F16 = r1 in G1
+F9 = h*r2 + a2*r2*u - r*v in G1
+F17 = r2 in G1
+F10 = h*r3 + a3*r3*u - r*v in G1
+F18 = r3 in G1
+F11 = h*r4 + a4*r4*u - r*v in G1
+F19 = r4 in G1
+F20 = a1 in G1
+F21 = a2 in G1
+F22 = a3 in G1
+F23 = a4 in G1
+F24 = a1 in GT
+F25 = a2 in GT
+F26 = a3 in GT
+F27 = a4 in GT
+F28 = a1*u in G1
+F29 = a2*u in G1
+F30 = a3*u in G1
+F31 = a4*u in G1
+F32 = a1*h in G1
+F33 = a2*h in G1
+F34 = a3*h in G1
+F35 = a4*h in G1
+F36 = a1*w in G1
+F37 = a2*w in G1
+F38 = a3*w in G1
+F39 = a4*w in G1
+F40 = a1*v in G1
+F41 = a2*v in G1
+F42 = a3*v in G1
+F43 = a4*v in G1
+F44 = a1*alpha in GT
+F45 = a2*alpha in GT
+F46 = a3*alpha in GT
+F47 = a4*alpha in GT
+
+......................................................................
+
+Processing untrusted polynomial F6 = alpha + r*w by rule2
+Rule not applied
+
+Processing untrusted polynomial F7 = r by rule2
+F7 moved to trusted set and r moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F8 = h*r1 + a1*r1*u - r*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F16 = r1 by rule2
+F16 moved to trusted set and r1 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F9 = h*r2 + a2*r2*u - r*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F17 = r2 by rule2
+F17 moved to trusted set and r2 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F10 = h*r3 + a3*r3*u - r*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F18 = r3 by rule2
+F18 moved to trusted set and r3 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F11 = h*r4 + a4*r4*u - r*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F19 = r4 by rule2
+F19 moved to trusted set and r4 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F6 = alpha + r*w by rule1
+
+
+Adding PPE e(F6,F0) = F5 * e(F3,F7)
+F6 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F8 = h*r1 + a1*r1*u - r*v by rule1
+
+
+Adding PPE e(F8,F0) = e(F2,F16) * (e(F4,F7))^-1 * e(F16,F28)
+F8 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F9 = h*r2 + a2*r2*u - r*v by rule1
+
+
+Adding PPE e(F9,F0) = e(F2,F17) * (e(F4,F7))^-1 * e(F17,F29)
+F9 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F10 = h*r3 + a3*r3*u - r*v by rule1
+
+
+Adding PPE e(F10,F0) = e(F2,F18) * (e(F4,F7))^-1 * e(F18,F30)
+F10 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F11 = h*r4 + a4*r4*u - r*v by rule1
+
+
+Adding PPE e(F11,F0) = e(F2,F19) * (e(F4,F7))^-1 * e(F19,F31)
+F11 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 46.868974s
+
+
+Fixed set :  r4,  r3,  r2,  r1,  r,  u,  h,  w,  v,  alpha, 
+
+Trusted set :  h*r4 + a4*r4*u - r*v in G1,  h*r3 + a3*r3*u - r*v in G1,  h*r2 + a2*r2*u - r*v in G1,  h*r1 + a1*r1*u - r*v in G1,  alpha + r*w in G1,  r4 in G1,  r3 in G1,  r2 in G1,  r1 in G1,  r in G1,  1 in G1,  1 in GT,  u in G1,  h in G1,  w in G1,  v in G1,  alpha in GT,  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a1*u in G1,  a2*u in G1,  a3*u in G1,  a4*u in G1,  a1*h in G1,  a2*h in G1,  a3*h in G1,  a4*h in G1,  a1*w in G1,  a2*w in G1,  a3*w in G1,  a4*w in G1,  a1*v in G1,  a2*v in G1,  a3*v in G1,  a4*v in G1,  a1*alpha in GT,  a2*alpha in GT,  a3*alpha in GT,  a4*alpha in GT, 
+
+Untrusted set : 
+
+PPEs : e(F11,F0) = e(F2,F19) * (e(F4,F7))^-1 * e(F19,F31),   e(F10,F0) = e(F2,F18) * (e(F4,F7))^-1 * e(F18,F30),   e(F9,F0) = e(F2,F17) * (e(F4,F7))^-1 * e(F17,F29),   e(F8,F0) = e(F2,F16) * (e(F4,F7))^-1 * e(F16,F28),   e(F6,F0) = F5 * e(F3,F7),   
+
+Ouptut : PPE Testable :)
+
+
+
+*)

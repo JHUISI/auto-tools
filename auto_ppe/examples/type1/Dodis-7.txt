@@ -1,0 +1,30 @@
+
+(*Dodis VRF constrution when L = 7
+https://link.springer.com/content/pdf/10.1007%2F3-540-36288-6_1.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [a1, a2, a3, a4, a5, a6, a7, a9].
+
+(*verification key*)
+trusted_polys [F1 = a1*a9, F2 = a2*a9, F3 = a3*a9, F4 = a4*a9, F5 = a5*a9, F6 = a6*a9, F7 = a7*a9, F9 = a9] in G1.
+
+(*message x*)
+Zp_vars [x1, x2, x3, x4, x5, x6, x7].
+
+(*proof*)
+untrusted_polys [F10 = (a1*x1 + (1-x1))] in G1.
+
+untrusted_polys [F11 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2))] in G1.
+
+untrusted_polys [F12 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3))] in G1.
+
+untrusted_polys [F13 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4))] in G1.
+
+untrusted_polys [F14 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4)) * (a5*x5 + (1-x5))] in G1.
+
+untrusted_polys [F15 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4)) * (a5*x5 + (1-x5)) * (a6*x6 + (1-x6))] in G1.
+
+(*VRF value*)
+untrusted_polys [F17 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4)) * (a5*x5 + (1-x5)) * (a6*x6 + (1-x6)) * (a7*x7 + (1-x7))] in G1.
+

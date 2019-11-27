@@ -1,0 +1,105 @@
+
+(*Waters05 scheme with n = identity length = 4*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [alpha, beta, u, u1, u2, u3, u4].
+unfixed_vars [r].
+
+(*Identity. These variables are actually boolean variables. We upgrade them to variables in Zp*)
+Zp_vars [v1, v2, v3, v4].
+
+trusted_polys [F1 = alpha, F2 = beta, F3 = u, F4 = u1, F5 = u2, F6 = u3, F7 = u4] in G1.
+
+untrusted_polys [F12 = r, F13 = alpha*beta + (u + v1*u1 + v2*u2 + v3*u3 + v4*u4)*r] in G1.
+
+
+
+(***************Output on execution*************)
+
+(*
+
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/waters05-4.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  v1 in G1,  v2 in G1,  v3 in G1,  v4 in G1,  v1 in GT,  v2 in GT,  v3 in GT,  v4 in GT,  alpha*v1 in G1,  alpha*v2 in G1,  alpha*v3 in G1,  alpha*v4 in G1,  beta*v1 in G1,  beta*v2 in G1,  beta*v3 in G1,  beta*v4 in G1,  u*v1 in G1,  u*v2 in G1,  u*v3 in G1,  u*v4 in G1,  u1*v1 in G1,  u1*v2 in G1,  u1*v3 in G1,  u1*v4 in G1,  u2*v1 in G1,  u2*v2 in G1,  u2*v3 in G1,  u2*v4 in G1,  u3*v1 in G1,  u3*v2 in G1,  u3*v3 in G1,  u3*v4 in G1,  u4*v1 in G1,  u4*v2 in G1,  u4*v3 in G1,  u4*v4 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = alpha in G1
+F2 = beta in G1
+F3 = u in G1
+F4 = u1 in G1
+F5 = u2 in G1
+F6 = u3 in G1
+F7 = u4 in G1
+F12 = r in G1
+F13 = alpha*beta + r*u + r*u1*v1 + r*u2*v2 + r*u3*v3 + r*u4*v4 in G1
+F14 = v1 in G1
+F15 = v2 in G1
+F16 = v3 in G1
+F17 = v4 in G1
+F18 = v1 in GT
+F19 = v2 in GT
+F20 = v3 in GT
+F21 = v4 in GT
+F22 = alpha*v1 in G1
+F23 = alpha*v2 in G1
+F24 = alpha*v3 in G1
+F25 = alpha*v4 in G1
+F26 = beta*v1 in G1
+F27 = beta*v2 in G1
+F28 = beta*v3 in G1
+F29 = beta*v4 in G1
+F30 = u*v1 in G1
+F31 = u*v2 in G1
+F32 = u*v3 in G1
+F33 = u*v4 in G1
+F34 = u1*v1 in G1
+F35 = u1*v2 in G1
+F36 = u1*v3 in G1
+F37 = u1*v4 in G1
+F38 = u2*v1 in G1
+F39 = u2*v2 in G1
+F40 = u2*v3 in G1
+F41 = u2*v4 in G1
+F42 = u3*v1 in G1
+F43 = u3*v2 in G1
+F44 = u3*v3 in G1
+F45 = u3*v4 in G1
+F46 = u4*v1 in G1
+F47 = u4*v2 in G1
+F48 = u4*v3 in G1
+F49 = u4*v4 in G1
+
+......................................................................
+
+Processing untrusted polynomial F12 = r by rule2
+F12 moved to trusted set and r moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F13 = alpha*beta + r*u + r*u1*v1 + r*u2*v2 + r*u3*v3 + r*u4*v4 by rule1
+
+
+Adding PPE e(F13,F0) = e(F1,F2) * e(F3,F12) * e(F12,F34) * e(F12,F39) * e(F12,F44) * e(F12,F49)
+F13 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 32.867920s
+
+
+Fixed set :  r,  alpha,  beta,  u,  u1,  u2,  u3,  u4, 
+
+Trusted set :  alpha*beta + r*u + r*u1*v1 + r*u2*v2 + r*u3*v3 + r*u4*v4 in G1,  r in G1,  1 in G1,  1 in GT,  alpha in G1,  beta in G1,  u in G1,  u1 in G1,  u2 in G1,  u3 in G1,  u4 in G1,  v1 in G1,  v2 in G1,  v3 in G1,  v4 in G1,  v1 in GT,  v2 in GT,  v3 in GT,  v4 in GT,  alpha*v1 in G1,  alpha*v2 in G1,  alpha*v3 in G1,  alpha*v4 in G1,  beta*v1 in G1,  beta*v2 in G1,  beta*v3 in G1,  beta*v4 in G1,  u*v1 in G1,  u*v2 in G1,  u*v3 in G1,  u*v4 in G1,  u1*v1 in G1,  u1*v2 in G1,  u1*v3 in G1,  u1*v4 in G1,  u2*v1 in G1,  u2*v2 in G1,  u2*v3 in G1,  u2*v4 in G1,  u3*v1 in G1,  u3*v2 in G1,  u3*v3 in G1,  u3*v4 in G1,  u4*v1 in G1,  u4*v2 in G1,  u4*v3 in G1,  u4*v4 in G1, 
+
+Untrusted set : 
+
+PPEs : e(F13,F0) = e(F1,F2) * e(F3,F12) * e(F12,F34) * e(F12,F39) * e(F12,F44) * e(F12,F49),   
+
+Ouptut : PPE Testable :)
+
+
+*)

@@ -1,0 +1,16 @@
+
+(*Camenisch Lysyanskaya Signature Scheme C for 8 block message. i.e. l = 7*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [x, y, z1, z2, z3, z4, z5, z6, z7].
+unfixed_vars [a].
+Zp_vars [m0, m1, m2, m3, m4, m5, m6, m7].
+
+
+(*verification key*)
+trusted_polys [F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7] in G1.
+
+(*signature*)
+untrusted_polys [F10 = a, F11 = a*z1, F12 = a*z2, F13 = a*z3, F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*z1*y, F20 = a*z2*y, F21 = a*z3*y, F22 = a*z4*y, F23 = a*z5*y, F24 = a*z6*y, F25 = a*z7*y, F26 = a*(x+m0*x*y) + a*x*y*(m1*z1 + m2*z2 + m3*z3 + m4*z4 + m5*z5 + m6*z6 + m7*z7)] in G1.
+

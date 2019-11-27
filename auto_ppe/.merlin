@@ -1,0 +1,13 @@
+S src
+S src/Solver
+S src/Util/
+S src/Poly
+S src/Tool/
+
+B _build/src
+B _build/src/Util/
+B _build/src/Solver/
+B _build/src/Poly/
+B _build/src/Tool/
+
+PKG yojson websocket num unix ctypes cryptokit

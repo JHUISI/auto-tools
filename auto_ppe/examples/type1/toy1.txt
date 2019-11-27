@@ -1,0 +1,240 @@
+
+(*A toy eyample*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15, y16, y17, y18, y19, y20, a, b].
+
+trusted_polys [F1 = x1, F2 = x2, F3 = x3, F4 = x4, F5 = x5, F6 = x6, F7 = x7, F8 = x8, F9 = x9, F10 = x10, F11 = x11, F12 = x12, F13 = x13, F14 = x14, F15 = x15, F16 = x16, F17 = x17, F18 = x18, F19 = x19, F20 = x20, F21 = y1, F22 = y2, F23 = y3, F24 = y4, F25 = y5, F26 = y6, F27 = y7, F28 = y8, F29 = y9, F30 = y10, F31 = y11, F32 = y12, F33 = y13, F34 = y14, F35 = y15, F36 = y16, F37 = y17, F38 = y18, F39 = y19, F40 = y20, F41 = x1*y1, F42 = x2*y2, F43 = x3*y3, F44 = x4*y4, F45 = x5*y5, F46 = x6*y6, F47 = x7*y7, F48 = x8*y8, F49 = x9*y9, F50 = x10*y10, F51 = x11*y11, F52 = x12*y12, F53 = x13*y13, F54 = x14*y14, F55 = x15*y15, F56 = x16*y16, F57 = x17*y17, F58 = x18*y18, F59 = x19*y19, F60 = x20*y20, F61 = a, F62 = b] in G1.
+
+untrusted_polys [F63 = a*b + (x1*y1 + x2*y2 + x3*y3 + x4*y4 + x5*y5 + x6*y6 + x7*y7 + x8*y8 + x9*y9 + x10*y10 + x11*y11 + x12*y12 + x13*y13 + x14*y14 + x15*y15 + x16*y16 + x17*y17 + x18*y18 + x19*y19 + x20*y20)*b] in G1.
+
+
+
+
+
+(****************Output on execution without optimization*****************)
+
+(* 
+
+wireless-10-147-200-53:project satya$ ./gga.native examples/type1/toy1.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x1 in G1
+F2 = x2 in G1
+F3 = x3 in G1
+F4 = x4 in G1
+F5 = x5 in G1
+F6 = x6 in G1
+F7 = x7 in G1
+F8 = x8 in G1
+F9 = x9 in G1
+F10 = x10 in G1
+F11 = x11 in G1
+F12 = x12 in G1
+F13 = x13 in G1
+F14 = x14 in G1
+F15 = x15 in G1
+F16 = x16 in G1
+F17 = x17 in G1
+F18 = x18 in G1
+F19 = x19 in G1
+F20 = x20 in G1
+F21 = y1 in G1
+F22 = y2 in G1
+F23 = y3 in G1
+F24 = y4 in G1
+F25 = y5 in G1
+F26 = y6 in G1
+F27 = y7 in G1
+F28 = y8 in G1
+F29 = y9 in G1
+F30 = y10 in G1
+F31 = y11 in G1
+F32 = y12 in G1
+F33 = y13 in G1
+F34 = y14 in G1
+F35 = y15 in G1
+F36 = y16 in G1
+F37 = y17 in G1
+F38 = y18 in G1
+F39 = y19 in G1
+F40 = y20 in G1
+F41 = x1*y1 in G1
+F42 = x2*y2 in G1
+F43 = x3*y3 in G1
+F44 = x4*y4 in G1
+F45 = x5*y5 in G1
+F46 = x6*y6 in G1
+F47 = x7*y7 in G1
+F48 = x8*y8 in G1
+F49 = x9*y9 in G1
+F50 = x10*y10 in G1
+F51 = x11*y11 in G1
+F52 = x12*y12 in G1
+F53 = x13*y13 in G1
+F54 = x14*y14 in G1
+F55 = x15*y15 in G1
+F56 = x16*y16 in G1
+F57 = x17*y17 in G1
+F58 = x18*y18 in G1
+F59 = x19*y19 in G1
+F60 = x20*y20 in G1
+F61 = a in G1
+F62 = b in G1
+F63 = a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 in G1
+
+......................................................................
+
+Computing completion for by rule1
+
+Processing untrusted polynomial F63 = a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 by rule1
+
+Took 1.686421s to compute completion lists. Size of trusted set = 64. Size of f.(completion list of G1) U (completion list of GT) = 2080. No. of monomials = 3088. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2080*3088
+
+Adding PPE e(F63,F0) = e(F41,F62) * e(F42,F62) * e(F43,F62) * e(F44,F62) * e(F45,F62) * e(F46,F62) * e(F47,F62) * e(F48,F62) * e(F49,F62) * e(F50,F62) * e(F51,F62) * e(F52,F62) * e(F53,F62) * e(F54,F62) * e(F55,F62) * e(F56,F62) * e(F57,F62) * e(F58,F62) * e(F59,F62) * e(F60,F62) * e(F61,F62)
+F63 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 318.277937s
+
+
+Fixed set :  x1,  x2,  x3,  x4,  x5,  x6,  x7,  x8,  x9,  x10,  x11,  x12,  x13,  x14,  x15,  x16,  x17,  x18,  x19,  x20,  y1,  y2,  y3,  y4,  y5,  y6,  y7,  y8,  y9,  y10,  y11,  y12,  y13,  y14,  y15,  y16,  y17,  y18,  y19,  y20,  a,  b, 
+
+Trusted set :  a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 in G1,  1 in G1,  1 in GT,  x1 in G1,  x2 in G1,  x3 in G1,  x4 in G1,  x5 in G1,  x6 in G1,  x7 in G1,  x8 in G1,  x9 in G1,  x10 in G1,  x11 in G1,  x12 in G1,  x13 in G1,  x14 in G1,  x15 in G1,  x16 in G1,  x17 in G1,  x18 in G1,  x19 in G1,  x20 in G1,  y1 in G1,  y2 in G1,  y3 in G1,  y4 in G1,  y5 in G1,  y6 in G1,  y7 in G1,  y8 in G1,  y9 in G1,  y10 in G1,  y11 in G1,  y12 in G1,  y13 in G1,  y14 in G1,  y15 in G1,  y16 in G1,  y17 in G1,  y18 in G1,  y19 in G1,  y20 in G1,  x1*y1 in G1,  x2*y2 in G1,  x3*y3 in G1,  x4*y4 in G1,  x5*y5 in G1,  x6*y6 in G1,  x7*y7 in G1,  x8*y8 in G1,  x9*y9 in G1,  x10*y10 in G1,  x11*y11 in G1,  x12*y12 in G1,  x13*y13 in G1,  x14*y14 in G1,  x15*y15 in G1,  x16*y16 in G1,  x17*y17 in G1,  x18*y18 in G1,  x19*y19 in G1,  x20*y20 in G1,  a in G1,  b in G1, 
+
+Untrusted set : 
+
+PPEs : e(F63,F0) = e(F41,F62) * e(F42,F62) * e(F43,F62) * e(F44,F62) * e(F45,F62) * e(F46,F62) * e(F47,F62) * e(F48,F62) * e(F49,F62) * e(F50,F62) * e(F51,F62) * e(F52,F62) * e(F53,F62) * e(F54,F62) * e(F55,F62) * e(F56,F62) * e(F57,F62) * e(F58,F62) * e(F59,F62) * e(F60,F62) * e(F61,F62),   
+
+Ouptut : PPE Testable :)
+
+
+*)
+
+
+
+
+
+
+
+
+
+
+(**************************Output on execution with optimization****************)
+(* 
+
+wireless-10-147-200-53:project satya$ ./gga.native examples/type1/toy1.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x1 in G1
+F2 = x2 in G1
+F3 = x3 in G1
+F4 = x4 in G1
+F5 = x5 in G1
+F6 = x6 in G1
+F7 = x7 in G1
+F8 = x8 in G1
+F9 = x9 in G1
+F10 = x10 in G1
+F11 = x11 in G1
+F12 = x12 in G1
+F13 = x13 in G1
+F14 = x14 in G1
+F15 = x15 in G1
+F16 = x16 in G1
+F17 = x17 in G1
+F18 = x18 in G1
+F19 = x19 in G1
+F20 = x20 in G1
+F21 = y1 in G1
+F22 = y2 in G1
+F23 = y3 in G1
+F24 = y4 in G1
+F25 = y5 in G1
+F26 = y6 in G1
+F27 = y7 in G1
+F28 = y8 in G1
+F29 = y9 in G1
+F30 = y10 in G1
+F31 = y11 in G1
+F32 = y12 in G1
+F33 = y13 in G1
+F34 = y14 in G1
+F35 = y15 in G1
+F36 = y16 in G1
+F37 = y17 in G1
+F38 = y18 in G1
+F39 = y19 in G1
+F40 = y20 in G1
+F41 = x1*y1 in G1
+F42 = x2*y2 in G1
+F43 = x3*y3 in G1
+F44 = x4*y4 in G1
+F45 = x5*y5 in G1
+F46 = x6*y6 in G1
+F47 = x7*y7 in G1
+F48 = x8*y8 in G1
+F49 = x9*y9 in G1
+F50 = x10*y10 in G1
+F51 = x11*y11 in G1
+F52 = x12*y12 in G1
+F53 = x13*y13 in G1
+F54 = x14*y14 in G1
+F55 = x15*y15 in G1
+F56 = x16*y16 in G1
+F57 = x17*y17 in G1
+F58 = x18*y18 in G1
+F59 = x19*y19 in G1
+F60 = x20*y20 in G1
+F61 = a in G1
+F62 = b in G1
+F63 = a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 in G1
+
+......................................................................
+
+Computing completion for by rule1
+
+Processing untrusted polynomial F63 = a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 by rule1
+Took 1.785789s to compute completion lists. Size of trusted set = 64. Size of f.(completion list of G1) U (completion list of GT) = 2080. No. of monomials = 3088. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2080*3088
+
+Optimization round 1
+Reducing the polynomials in completion of GT from 2017 to 21
+Reduced number of polynomials in f.(completion of G1) from 63 to 1
+Optimization round 2
+Reducing the polynomials in completion of GT from 21 to 21
+Reduced number of polynomials in f.(completion of G1) from 1 to 1Took 0.285555s to optimize. Size of trusted set = 64. Size of reduced f.(completion list of G1) U (completion list of GT) = 22. No. of monomials = 21. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 22*21
+Took 6.412583s time to solve
+
+Adding PPE e(F63,F0) = e(F41,F62) * e(F42,F62) * e(F43,F62) * e(F44,F62) * e(F45,F62) * e(F46,F62) * e(F47,F62) * e(F48,F62) * e(F49,F62) * e(F50,F62) * e(F51,F62) * e(F52,F62) * e(F53,F62) * e(F54,F62) * e(F55,F62) * e(F56,F62) * e(F57,F62) * e(F58,F62) * e(F59,F62) * e(F60,F62) * e(F61,F62)
+F63 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 8.489868s
+
+
+Fixed set :  x1,  x2,  x3,  x4,  x5,  x6,  x7,  x8,  x9,  x10,  x11,  x12,  x13,  x14,  x15,  x16,  x17,  x18,  x19,  x20,  y1,  y2,  y3,  y4,  y5,  y6,  y7,  y8,  y9,  y10,  y11,  y12,  y13,  y14,  y15,  y16,  y17,  y18,  y19,  y20,  a,  b, 
+
+Trusted set :  a*b + b*x1*y1 + b*x10*y10 + b*x11*y11 + b*x12*y12 + b*x13*y13 + b*x14*y14 + b*x15*y15 + b*x16*y16 + b*x17*y17 + b*x18*y18 + b*x19*y19 + b*x2*y2 + b*x20*y20 + b*x3*y3 + b*x4*y4 + b*x5*y5 + b*x6*y6 + b*x7*y7 + b*x8*y8 + b*x9*y9 in G1,  1 in G1,  1 in GT,  x1 in G1,  x2 in G1,  x3 in G1,  x4 in G1,  x5 in G1,  x6 in G1,  x7 in G1,  x8 in G1,  x9 in G1,  x10 in G1,  x11 in G1,  x12 in G1,  x13 in G1,  x14 in G1,  x15 in G1,  x16 in G1,  x17 in G1,  x18 in G1,  x19 in G1,  x20 in G1,  y1 in G1,  y2 in G1,  y3 in G1,  y4 in G1,  y5 in G1,  y6 in G1,  y7 in G1,  y8 in G1,  y9 in G1,  y10 in G1,  y11 in G1,  y12 in G1,  y13 in G1,  y14 in G1,  y15 in G1,  y16 in G1,  y17 in G1,  y18 in G1,  y19 in G1,  y20 in G1,  x1*y1 in G1,  x2*y2 in G1,  x3*y3 in G1,  x4*y4 in G1,  x5*y5 in G1,  x6*y6 in G1,  x7*y7 in G1,  x8*y8 in G1,  x9*y9 in G1,  x10*y10 in G1,  x11*y11 in G1,  x12*y12 in G1,  x13*y13 in G1,  x14*y14 in G1,  x15*y15 in G1,  x16*y16 in G1,  x17*y17 in G1,  x18*y18 in G1,  x19*y19 in G1,  x20*y20 in G1,  a in G1,  b in G1, 
+
+Untrusted set : 
+
+PPEs : e(F63,F0) = e(F41,F62) * e(F42,F62) * e(F43,F62) * e(F44,F62) * e(F45,F62) * e(F46,F62) * e(F47,F62) * e(F48,F62) * e(F49,F62) * e(F50,F62) * e(F51,F62) * e(F52,F62) * e(F53,F62) * e(F54,F62) * e(F55,F62) * e(F56,F62) * e(F57,F62) * e(F58,F62) * e(F59,F62) * e(F60,F62) * e(F61,F62),   
+
+Ouptut : PPE Testable :)
+
+
+*)

@@ -1,0 +1,133 @@
+
+(*Dodis VRF constrution when L = 4
+https://link.springer.com/content/pdf/10.1007%2F3-540-36288-6_1.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [a1, a2, a3, a4, a5].
+
+(*message x*)
+Zp_vars [x1, x2, x3, x4].
+
+(*verification key*)
+trusted_polys [F1 = a1*a5, F2 = a2*a5, F3 = a3*a5, F4 = a4*a5, F5 = a5] in G1.
+
+(*proof*)
+untrusted_polys [F7 = (a1*x1 + (1-x1))] in G1.
+
+untrusted_polys [F8 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2))] in G1.
+
+untrusted_polys [F9 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3))] in G1.
+
+(*VRF value*)
+untrusted_polys [F6 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4))] in G1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+(***************Output on execution*****************)
+(*
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  x1 in G1,  x2 in G1,  x3 in G1,  x4 in G1,  x1 in GT,  x2 in GT,  x3 in GT,  x4 in GT,  a1*a5*x1 in G1,  a1*a5*x2 in G1,  a1*a5*x3 in G1,  a1*a5*x4 in G1,  a2*a5*x1 in G1,  a2*a5*x2 in G1,  a2*a5*x3 in G1,  a2*a5*x4 in G1,  a3*a5*x1 in G1,  a3*a5*x2 in G1,  a3*a5*x3 in G1,  a3*a5*x4 in G1,  a4*a5*x1 in G1,  a4*a5*x2 in G1,  a4*a5*x3 in G1,  a4*a5*x4 in G1,  a5*x1 in G1,  a5*x2 in G1,  a5*x3 in G1,  a5*x4 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = a1*a5 in G1
+F2 = a2*a5 in G1
+F3 = a3*a5 in G1
+F4 = a4*a5 in G1
+F5 = a5 in G1
+F7 = 1 + a1*x1 - x1 in G1
+F8 = 1 + a1*x1 + a2*x2 + x1*x2 + a1*a2*x1*x2 - x1 - x2 - a1*x1*x2 - a2*x1*x2 in G1
+F9 = 1 + a1*x1 + a2*x2 + a3*x3 + x1*x2 + x1*x3 + x2*x3 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*x1*x2*x3 + a2*a3*x2*x3 + a2*x1*x2*x3 + a3*x1*x2*x3 + a1*a2*a3*x1*x2*x3 - x1 - x2 - x3 - a1*x1*x2 - a1*x1*x3 - a2*x1*x2 - a2*x2*x3 - a3*x1*x3 - a3*x2*x3 - x1*x2*x3 - a1*a2*x1*x2*x3 - a1*a3*x1*x2*x3 - a2*a3*x1*x2*x3 in G1
+F6 = 1 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + x1*x2 + x1*x3 + x1*x4 + x2*x3 + x2*x4 + x3*x4 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x3*x4 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x2*x3*x4 + a3*a4*x3*x4 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x2*x3*x4 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x2*x3*x4 + x1*x2*x3*x4 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*x1*x2*x3*x4 + a1*a3*a4*x1*x3*x4 + a1*a3*x1*x2*x3*x4 + a1*a4*x1*x2*x3*x4 + a2*a3*a4*x2*x3*x4 + a2*a3*x1*x2*x3*x4 + a2*a4*x1*x2*x3*x4 + a3*a4*x1*x2*x3*x4 + a1*a2*a3*a4*x1*x2*x3*x4 - x1 - x2 - x3 - x4 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - x1*x2*x3 - x1*x2*x4 - x1*x3*x4 - x2*x3*x4 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*x1*x2*x3*x4 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*x1*x2*x3*x4 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*x1*x2*x3*x4 - a4*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x1*x2*x3*x4 in G1
+F10 = x1 in G1
+F11 = x2 in G1
+F12 = x3 in G1
+F13 = x4 in G1
+F14 = x1 in GT
+F15 = x2 in GT
+F16 = x3 in GT
+F17 = x4 in GT
+F18 = a1*a5*x1 in G1
+F19 = a1*a5*x2 in G1
+F20 = a1*a5*x3 in G1
+F21 = a1*a5*x4 in G1
+F22 = a2*a5*x1 in G1
+F23 = a2*a5*x2 in G1
+F24 = a2*a5*x3 in G1
+F25 = a2*a5*x4 in G1
+F26 = a3*a5*x1 in G1
+F27 = a3*a5*x2 in G1
+F28 = a3*a5*x3 in G1
+F29 = a3*a5*x4 in G1
+F30 = a4*a5*x1 in G1
+F31 = a4*a5*x2 in G1
+F32 = a4*a5*x3 in G1
+F33 = a4*a5*x4 in G1
+F34 = a5*x1 in G1
+F35 = a5*x2 in G1
+F36 = a5*x3 in G1
+F37 = a5*x4 in G1
+
+......................................................................
+
+Processing untrusted polynomial F7 = 1 + a1*x1 - x1 by rule1
+
+
+Adding PPE e(F7,F5) = e(F0,F5) * e(F1,F10) * (e(F5,F10))^-1
+F7 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F8 = 1 + a1*x1 + a2*x2 + x1*x2 + a1*a2*x1*x2 - x1 - x2 - a1*x1*x2 - a2*x1*x2 by rule1
+
+
+Adding PPE e(F8,F5) = e(F5,F7) * e(F7,F23) * (e(F7,F35))^-1
+F8 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F9 = 1 + a1*x1 + a2*x2 + a3*x3 + x1*x2 + x1*x3 + x2*x3 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*x1*x2*x3 + a2*a3*x2*x3 + a2*x1*x2*x3 + a3*x1*x2*x3 + a1*a2*a3*x1*x2*x3 - x1 - x2 - x3 - a1*x1*x2 - a1*x1*x3 - a2*x1*x2 - a2*x2*x3 - a3*x1*x3 - a3*x2*x3 - x1*x2*x3 - a1*a2*x1*x2*x3 - a1*a3*x1*x2*x3 - a2*a3*x1*x2*x3 by rule1
+
+
+Adding PPE e(F9,F5) = e(F5,F8) * e(F8,F28) * (e(F8,F36))^-1
+F9 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F6 = 1 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + x1*x2 + x1*x3 + x1*x4 + x2*x3 + x2*x4 + x3*x4 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x3*x4 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x2*x3*x4 + a3*a4*x3*x4 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x2*x3*x4 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x2*x3*x4 + x1*x2*x3*x4 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*x1*x2*x3*x4 + a1*a3*a4*x1*x3*x4 + a1*a3*x1*x2*x3*x4 + a1*a4*x1*x2*x3*x4 + a2*a3*a4*x2*x3*x4 + a2*a3*x1*x2*x3*x4 + a2*a4*x1*x2*x3*x4 + a3*a4*x1*x2*x3*x4 + a1*a2*a3*a4*x1*x2*x3*x4 - x1 - x2 - x3 - x4 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - x1*x2*x3 - x1*x2*x4 - x1*x3*x4 - x2*x3*x4 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*x1*x2*x3*x4 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*x1*x2*x3*x4 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*x1*x2*x3*x4 - a4*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x1*x2*x3*x4 by rule1
+
+
+Adding PPE e(F6,F5) = e(F5,F9) * e(F9,F33) * (e(F9,F37))^-1
+F6 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 65.519382s
+
+
+Fixed set :  a1,  a2,  a3,  a4,  a5, 
+
+Trusted set :  1 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + x1*x2 + x1*x3 + x1*x4 + x2*x3 + x2*x4 + x3*x4 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x3*x4 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x2*x3*x4 + a3*a4*x3*x4 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x2*x3*x4 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x2*x3*x4 + x1*x2*x3*x4 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*x1*x2*x3*x4 + a1*a3*a4*x1*x3*x4 + a1*a3*x1*x2*x3*x4 + a1*a4*x1*x2*x3*x4 + a2*a3*a4*x2*x3*x4 + a2*a3*x1*x2*x3*x4 + a2*a4*x1*x2*x3*x4 + a3*a4*x1*x2*x3*x4 + a1*a2*a3*a4*x1*x2*x3*x4 - x1 - x2 - x3 - x4 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - x1*x2*x3 - x1*x2*x4 - x1*x3*x4 - x2*x3*x4 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*x1*x2*x3*x4 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*x1*x2*x3*x4 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*x1*x2*x3*x4 - a4*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x1*x2*x3*x4 in G1,  1 + a1*x1 + a2*x2 + a3*x3 + x1*x2 + x1*x3 + x2*x3 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*x1*x2*x3 + a2*a3*x2*x3 + a2*x1*x2*x3 + a3*x1*x2*x3 + a1*a2*a3*x1*x2*x3 - x1 - x2 - x3 - a1*x1*x2 - a1*x1*x3 - a2*x1*x2 - a2*x2*x3 - a3*x1*x3 - a3*x2*x3 - x1*x2*x3 - a1*a2*x1*x2*x3 - a1*a3*x1*x2*x3 - a2*a3*x1*x2*x3 in G1,  1 + a1*x1 + a2*x2 + x1*x2 + a1*a2*x1*x2 - x1 - x2 - a1*x1*x2 - a2*x1*x2 in G1,  1 + a1*x1 - x1 in G1,  1 in G1,  1 in GT,  a1*a5 in G1,  a2*a5 in G1,  a3*a5 in G1,  a4*a5 in G1,  a5 in G1,  x1 in G1,  x2 in G1,  x3 in G1,  x4 in G1,  x1 in GT,  x2 in GT,  x3 in GT,  x4 in GT,  a1*a5*x1 in G1,  a1*a5*x2 in G1,  a1*a5*x3 in G1,  a1*a5*x4 in G1,  a2*a5*x1 in G1,  a2*a5*x2 in G1,  a2*a5*x3 in G1,  a2*a5*x4 in G1,  a3*a5*x1 in G1,  a3*a5*x2 in G1,  a3*a5*x3 in G1,  a3*a5*x4 in G1,  a4*a5*x1 in G1,  a4*a5*x2 in G1,  a4*a5*x3 in G1,  a4*a5*x4 in G1,  a5*x1 in G1,  a5*x2 in G1,  a5*x3 in G1,  a5*x4 in G1, 
+
+Untrusted set : 
+
+PPEs : e(F6,F5) = e(F5,F9) * e(F9,F33) * (e(F9,F37))^-1,   e(F9,F5) = e(F5,F8) * e(F8,F28) * (e(F8,F36))^-1,   e(F8,F5) = e(F5,F7) * e(F7,F23) * (e(F7,F35))^-1,   e(F7,F5) = e(F0,F5) * e(F1,F10) * (e(F5,F10))^-1,   
+
+Ouptut : PPE Testable :)
+
+*)

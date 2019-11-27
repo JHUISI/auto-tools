@@ -1,0 +1,164 @@
+
+(*Camenisch Lysyanskaya Signature Scheme C for 4 block message. i.e. l = 3*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [x, y, z1, z2, z3].
+unfixed_vars [a].
+Zp_vars [m0, m1, m2, m3].
+
+
+(*verification key*)
+trusted_polys [F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3] in G1.
+
+(*signature*)
+untrusted_polys [F10 = a, F11 = a*z1, F12 = a*z2, F13 = a*z3, F18 = a*y, F19 = a*z1*y, F20 = a*z2*y, F21 = a*z3*y, F26 = a*(x+m0*x*y) + a*x*y*(m1*z1 + m2*z2 + m3*z3)] in G1.
+
+
+(*****************Output after execution ******************)
+
+(* 
+
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/CL-C4.txt
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  m0 in G1,  m1 in G1,  m2 in G1,  m3 in G1,  m0 in GT,  m1 in GT,  m2 in GT,  m3 in GT,  m0*x in G1,  m1*x in G1,  m2*x in G1,  m3*x in G1,  m0*y in G1,  m1*y in G1,  m2*y in G1,  m3*y in G1,  m0*z1 in G1,  m1*z1 in G1,  m2*z1 in G1,  m3*z1 in G1,  m0*z2 in G1,  m1*z2 in G1,  m2*z2 in G1,  m3*z2 in G1,  m0*z3 in G1,  m1*z3 in G1,  m2*z3 in G1,  m3*z3 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x in G1
+F2 = y in G1
+F3 = z1 in G1
+F4 = z2 in G1
+F5 = z3 in G1
+F10 = a in G1
+F11 = a*z1 in G1
+F12 = a*z2 in G1
+F13 = a*z3 in G1
+F18 = a*y in G1
+F19 = a*y*z1 in G1
+F20 = a*y*z2 in G1
+F21 = a*y*z3 in G1
+F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 in G1
+F27 = m0 in G1
+F28 = m1 in G1
+F29 = m2 in G1
+F30 = m3 in G1
+F31 = m0 in GT
+F32 = m1 in GT
+F33 = m2 in GT
+F34 = m3 in GT
+F35 = m0*x in G1
+F36 = m1*x in G1
+F37 = m2*x in G1
+F38 = m3*x in G1
+F39 = m0*y in G1
+F40 = m1*y in G1
+F41 = m2*y in G1
+F42 = m3*y in G1
+F43 = m0*z1 in G1
+F44 = m1*z1 in G1
+F45 = m2*z1 in G1
+F46 = m3*z1 in G1
+F47 = m0*z2 in G1
+F48 = m1*z2 in G1
+F49 = m2*z2 in G1
+F50 = m3*z2 in G1
+F51 = m0*z3 in G1
+F52 = m1*z3 in G1
+F53 = m2*z3 in G1
+F54 = m3*z3 in G1
+
+......................................................................
+
+Processing untrusted polynomial F10 = a by rule2
+F10 moved to trusted set and a moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F11 = a*z1 by rule1
+
+
+Adding PPE e(F11,F0) = e(F3,F10)
+F11 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F12 = a*z2 by rule1
+
+
+Adding PPE e(F12,F0) = e(F4,F10)
+F12 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F13 = a*z3 by rule1
+
+
+Adding PPE e(F13,F0) = e(F5,F10)
+F13 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F18 = a*y by rule1
+
+
+Adding PPE e(F18,F0) = e(F2,F10)
+F18 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F19 = a*y*z1 by rule1
+
+
+Adding PPE e(F19,F0) = e(F3,F18)
+F19 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F20 = a*y*z2 by rule1
+
+
+Adding PPE e(F20,F0) = e(F4,F18)
+F20 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F21 = a*y*z3 by rule1
+
+
+Adding PPE e(F21,F0) = e(F5,F18)
+F21 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 by rule1
+
+
+Adding PPE e(F26,F0) = e(F1,F10) * e(F18,F35) * e(F19,F36) * e(F20,F37) * e(F21,F38)
+F26 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 98.965790s
+
+
+Fixed set :  a,  x,  y,  z1,  z2,  z3, 
+
+Trusted set :  a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 in G1,  a*y*z3 in G1,  a*y*z2 in G1,  a*y*z1 in G1,  a*y in G1,  a*z3 in G1,  a*z2 in G1,  a*z1 in G1,  a in G1,  1 in G1,  1 in GT,  x in G1,  y in G1,  z1 in G1,  z2 in G1,  z3 in G1,  m0 in G1,  m1 in G1,  m2 in G1,  m3 in G1,  m0 in GT,  m1 in GT,  m2 in GT,  m3 in GT,  m0*x in G1,  m1*x in G1,  m2*x in G1,  m3*x in G1,  m0*y in G1,  m1*y in G1,  m2*y in G1,  m3*y in G1,  m0*z1 in G1,  m1*z1 in G1,  m2*z1 in G1,  m3*z1 in G1,  m0*z2 in G1,  m1*z2 in G1,  m2*z2 in G1,  m3*z2 in G1,  m0*z3 in G1,  m1*z3 in G1,  m2*z3 in G1,  m3*z3 in G1, 
+
+Untrusted set : 
+
+PPEs : e(F26,F0) = e(F1,F10) * e(F18,F35) * e(F19,F36) * e(F20,F37) * e(F21,F38),   e(F21,F0) = e(F5,F18),   e(F20,F0) = e(F4,F18),   e(F19,F0) = e(F3,F18),   e(F18,F0) = e(F2,F10),   e(F13,F0) = e(F5,F10),   e(F12,F0) = e(F4,F10),   e(F11,F0) = e(F3,F10),   
+
+Ouptut : PPE Testable :)
+
+*)

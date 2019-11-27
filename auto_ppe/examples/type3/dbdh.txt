@@ -1,0 +1,8 @@
+
+maps G1 * G2 -> GT.
+
+fixed_vars [a,b].
+unfixed_vars [c].
+trusted_polys [F1 = a, F2 = b] in G1.
+untrusted_polys [F3 = c] in G2.
+untrusted_polys [F4 = a*b*c] in GT.

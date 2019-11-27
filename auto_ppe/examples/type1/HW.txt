@@ -1,0 +1,67 @@
+
+(*HW VRF scheme with n = 16*)
+maps G1 * G1 -> GT.
+
+fixed_vars [u, u0, u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16, h].
+
+(*These variables correspond to the input message. These variables are actually boolean variables.*)
+Zp_vars [x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16].
+
+(* verification key *)
+trusted_polys [F1 = u, F2 = u0, F3 = u1, F4 = u2, F5 = u3, F6 = u4, F7 = u5, F8 = u6, F9 = u7, F10 = u8, F11 = u9, F12 = u10, F13 = u11, F14 = u12, F15 = u13, F16 = u14, F17 = u15, F18 = u16, F19 = h] in G1.   
+
+(*evaluation key*)
+untrusted_polys [ F20 = u*u0* (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 * u14^x14 * u15^x15 * u16^x16) * h] in GT.
+
+(*proof pi0*)
+untrusted_polys [ F21 = u*u0* (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 * u14^x14 * u15^x15 * u16^x16)] in G1.
+
+(*proof pi1*)
+untrusted_polys [ F22 = u * (u1^x1)] in G1.
+
+(*proof pi2*)
+untrusted_polys [ F23 = u * (u1^x1 * u2^x2 )] in G1.
+
+(*proof pi3*)
+untrusted_polys [ F24 = u * (u1^x1 * u2^x2 * u3^x3 )] in G1.
+
+(*proof pi4*)
+untrusted_polys [ F25 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 )] in G1.
+
+(*proof pi5*)
+untrusted_polys [ F26 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 )] in G1.
+
+(*proof pi6*)
+untrusted_polys [ F27 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 )] in G1.
+
+(*proof pi7*)
+untrusted_polys [ F28 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7)] in G1.
+
+(*proof pi8*)
+untrusted_polys [ F29 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 )] in G1.
+
+(*proof pi9*)
+untrusted_polys [ F30 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 )] in G1.
+
+(*proof pi10*)
+untrusted_polys [ F31 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 )] in G1.
+
+(*proof pi11*)
+untrusted_polys [ F32 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 )] in G1.
+
+(*proof pi12*)
+untrusted_polys [ F33 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 )] in G1.
+
+(*proof pi13*)
+untrusted_polys [ F34 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 )] in G1.
+
+(*proof pi14*)
+untrusted_polys [ F35 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 * u14^x14 )] in G1.
+
+(*proof pi15*)
+untrusted_polys [ F36 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 * u14^x14 * u15^x15 )] in G1.
+
+(*proof pi16*)
+untrusted_polys [ F37 = u * (u1^x1 * u2^x2 * u3^x3 * u4^x4 * u5^x5 * u6^x6 * u7^x7 * u8^x8 * u9^x9 * u10^x10 * u11^x11 * u12^x12 * u13^x13 * u14^x14 * u15^x15 * u16^x16)] in G1.
+
+

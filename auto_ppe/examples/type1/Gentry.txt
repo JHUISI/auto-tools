@@ -1,0 +1,7 @@
+maps G1 * G1 -> GT.
+fixed_vars [].
+unfixed_vars [r].
+trusted_polys [alpha, h, id, alpha*id, h*id] in G1.
+trusted_polys [id] in GT.
+untrusted_polys [r, (h-r)/(alpha-id) ] in G1.
+untrusted_polys [r] in GT. 

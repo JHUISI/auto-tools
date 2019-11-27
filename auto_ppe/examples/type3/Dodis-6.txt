@@ -1,0 +1,819 @@
+
+(*Dodis VRF constrution when L = 6
+https://link.springer.com/content/pdf/10.1007%2F3-540-36288-6_1.pdf*)
+
+maps G1 * G2 -> GT.
+
+fixed_vars [a1, a2, a3, a4, a5, a6, a9].
+
+(*verification key*)
+trusted_polys [F1 = a1*a9, F2 = a2*a9, F3 = a3*a9, F4 = a4*a9, F5 = a5*a9, F6 = a6*a9, F9 = a9] in G2.
+
+(*message x*)
+Zp_vars [x1, x2, x3, x4, x5, x6].
+
+(*proof*)
+untrusted_polys [F10 = (a1*x1 + (1-x1))] in G1.
+
+untrusted_polys [F11 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2))] in G1.
+
+untrusted_polys [F12 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3))] in G1.
+
+untrusted_polys [F13 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4))] in G1.
+
+untrusted_polys [F14 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4)) * (a5*x5 + (1-x5))] in G1.
+
+(*VRF value*)
+untrusted_polys [F17 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3)) * (a4*x4 + (1-x4)) * (a5*x5 + (1-x5)) * (a6*x6 + (1-x6))] in G1.
+
+
+
+
+(*********************Output on execution*****************)
+(*
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/Dodis-6.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  x1 in G1,  x2 in G1,  x3 in G1,  x4 in G1,  x5 in G1,  x6 in G1,  x1 in GT,  x2 in GT,  x3 in GT,  x4 in GT,  x5 in GT,  x6 in GT,  a1*a9*x1 in G1,  a1*a9*x2 in G1,  a1*a9*x3 in G1,  a1*a9*x4 in G1,  a1*a9*x5 in G1,  a1*a9*x6 in G1,  a2*a9*x1 in G1,  a2*a9*x2 in G1,  a2*a9*x3 in G1,  a2*a9*x4 in G1,  a2*a9*x5 in G1,  a2*a9*x6 in G1,  a3*a9*x1 in G1,  a3*a9*x2 in G1,  a3*a9*x3 in G1,  a3*a9*x4 in G1,  a3*a9*x5 in G1,  a3*a9*x6 in G1,  a4*a9*x1 in G1,  a4*a9*x2 in G1,  a4*a9*x3 in G1,  a4*a9*x4 in G1,  a4*a9*x5 in G1,  a4*a9*x6 in G1,  a5*a9*x1 in G1,  a5*a9*x2 in G1,  a5*a9*x3 in G1,  a5*a9*x4 in G1,  a5*a9*x5 in G1,  a5*a9*x6 in G1,  a6*a9*x1 in G1,  a6*a9*x2 in G1,  a6*a9*x3 in G1,  a6*a9*x4 in G1,  a6*a9*x5 in G1,  a6*a9*x6 in G1,  a9*x1 in G1,  a9*x2 in G1,  a9*x3 in G1,  a9*x4 in G1,  a9*x5 in G1,  a9*x6 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = a1*a9 in G1
+F2 = a2*a9 in G1
+F3 = a3*a9 in G1
+F4 = a4*a9 in G1
+F5 = a5*a9 in G1
+F6 = a6*a9 in G1
+F9 = a9 in G1
+F10 = 1 - x1 + a1*x1 in G1
+F11 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2 in G1
+F12 = 1 - x1 - x2 - x3 + a1*x1 + a2*x2 + a3*x3 + x1*x2 + x1*x3 + x2*x3 - a1*x1*x2 - a1*x1*x3 - a2*x1*x2 - a2*x2*x3 - a3*x1*x3 - a3*x2*x3 - x1*x2*x3 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*x1*x2*x3 + a2*a3*x2*x3 + a2*x1*x2*x3 + a3*x1*x2*x3 - a1*a2*x1*x2*x3 - a1*a3*x1*x2*x3 - a2*a3*x1*x2*x3 + a1*a2*a3*x1*x2*x3 in G1
+F13 = 1 - x1 - x2 - x3 - x4 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + x1*x2 + x1*x3 + x1*x4 + x2*x3 + x2*x4 + x3*x4 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - x1*x2*x3 - x1*x2*x4 - x1*x3*x4 - x2*x3*x4 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x3*x4 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x2*x3*x4 + a3*a4*x3*x4 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x2*x3*x4 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x2*x3*x4 + x1*x2*x3*x4 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*x1*x2*x3*x4 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*x1*x2*x3*x4 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*x1*x2*x3*x4 - a4*x1*x2*x3*x4 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*x1*x2*x3*x4 + a1*a3*a4*x1*x3*x4 + a1*a3*x1*x2*x3*x4 + a1*a4*x1*x2*x3*x4 + a2*a3*a4*x2*x3*x4 + a2*a3*x1*x2*x3*x4 + a2*a4*x1*x2*x3*x4 + a3*a4*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x1*x2*x3*x4 + a1*a2*a3*a4*x1*x2*x3*x4 in G1
+F14 = 1 - x1 - x2 - x3 - x4 - x5 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + a5*x5 + x1*x2 + x1*x3 + x1*x4 + x1*x5 + x2*x3 + x2*x4 + x2*x5 + x3*x4 + x3*x5 + x4*x5 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a1*x1*x5 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a2*x2*x5 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a3*x3*x5 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - a4*x4*x5 - a5*x1*x5 - a5*x2*x5 - a5*x3*x5 - a5*x4*x5 - x1*x2*x3 - x1*x2*x4 - x1*x2*x5 - x1*x3*x4 - x1*x3*x5 - x1*x4*x5 - x2*x3*x4 - x2*x3*x5 - x2*x4*x5 - x3*x4*x5 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*a5*x1*x5 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x2*x5 + a1*x1*x3*x4 + a1*x1*x3*x5 + a1*x1*x4*x5 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*a5*x2*x5 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x1*x2*x5 + a2*x2*x3*x4 + a2*x2*x3*x5 + a2*x2*x4*x5 + a3*a4*x3*x4 + a3*a5*x3*x5 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x1*x3*x5 + a3*x2*x3*x4 + a3*x2*x3*x5 + a3*x3*x4*x5 + a4*a5*x4*x5 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x1*x4*x5 + a4*x2*x3*x4 + a4*x2*x4*x5 + a4*x3*x4*x5 + a5*x1*x2*x5 + a5*x1*x3*x5 + a5*x1*x4*x5 + a5*x2*x3*x5 + a5*x2*x4*x5 + a5*x3*x4*x5 + x1*x2*x3*x4 + x1*x2*x3*x5 + x1*x2*x4*x5 + x1*x3*x4*x5 + x2*x3*x4*x5 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a2*x1*x2*x5 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a3*x1*x3*x5 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*a4*x1*x4*x5 - a1*a5*x1*x2*x5 - a1*a5*x1*x3*x5 - a1*a5*x1*x4*x5 - a1*x1*x2*x3*x4 - a1*x1*x2*x3*x5 - a1*x1*x2*x4*x5 - a1*x1*x3*x4*x5 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a3*x2*x3*x5 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*a4*x2*x4*x5 - a2*a5*x1*x2*x5 - a2*a5*x2*x3*x5 - a2*a5*x2*x4*x5 - a2*x1*x2*x3*x4 - a2*x1*x2*x3*x5 - a2*x1*x2*x4*x5 - a2*x2*x3*x4*x5 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*a4*x3*x4*x5 - a3*a5*x1*x3*x5 - a3*a5*x2*x3*x5 - a3*a5*x3*x4*x5 - a3*x1*x2*x3*x4 - a3*x1*x2*x3*x5 - a3*x1*x3*x4*x5 - a3*x2*x3*x4*x5 - a4*a5*x1*x4*x5 - a4*a5*x2*x4*x5 - a4*a5*x3*x4*x5 - a4*x1*x2*x3*x4 - a4*x1*x2*x4*x5 - a4*x1*x3*x4*x5 - a4*x2*x3*x4*x5 - a5*x1*x2*x3*x5 - a5*x1*x2*x4*x5 - a5*x1*x3*x4*x5 - a5*x2*x3*x4*x5 - x1*x2*x3*x4*x5 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*a5*x1*x2*x5 + a1*a2*x1*x2*x3*x4 + a1*a2*x1*x2*x3*x5 + a1*a2*x1*x2*x4*x5 + a1*a3*a4*x1*x3*x4 + a1*a3*a5*x1*x3*x5 + a1*a3*x1*x2*x3*x4 + a1*a3*x1*x2*x3*x5 + a1*a3*x1*x3*x4*x5 + a1*a4*a5*x1*x4*x5 + a1*a4*x1*x2*x3*x4 + a1*a4*x1*x2*x4*x5 + a1*a4*x1*x3*x4*x5 + a1*a5*x1*x2*x3*x5 + a1*a5*x1*x2*x4*x5 + a1*a5*x1*x3*x4*x5 + a1*x1*x2*x3*x4*x5 + a2*a3*a4*x2*x3*x4 + a2*a3*a5*x2*x3*x5 + a2*a3*x1*x2*x3*x4 + a2*a3*x1*x2*x3*x5 + a2*a3*x2*x3*x4*x5 + a2*a4*a5*x2*x4*x5 + a2*a4*x1*x2*x3*x4 + a2*a4*x1*x2*x4*x5 + a2*a4*x2*x3*x4*x5 + a2*a5*x1*x2*x3*x5 + a2*a5*x1*x2*x4*x5 + a2*a5*x2*x3*x4*x5 + a2*x1*x2*x3*x4*x5 + a3*a4*a5*x3*x4*x5 + a3*a4*x1*x2*x3*x4 + a3*a4*x1*x3*x4*x5 + a3*a4*x2*x3*x4*x5 + a3*a5*x1*x2*x3*x5 + a3*a5*x1*x3*x4*x5 + a3*a5*x2*x3*x4*x5 + a3*x1*x2*x3*x4*x5 + a4*a5*x1*x2*x4*x5 + a4*a5*x1*x3*x4*x5 + a4*a5*x2*x3*x4*x5 + a4*x1*x2*x3*x4*x5 + a5*x1*x2*x3*x4*x5 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x5 - a1*a2*a4*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x4*x5 - a1*a2*a5*x1*x2*x3*x5 - a1*a2*a5*x1*x2*x4*x5 - a1*a2*x1*x2*x3*x4*x5 - a1*a3*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x3*x4*x5 - a1*a3*a5*x1*x2*x3*x5 - a1*a3*a5*x1*x3*x4*x5 - a1*a3*x1*x2*x3*x4*x5 - a1*a4*a5*x1*x2*x4*x5 - a1*a4*a5*x1*x3*x4*x5 - a1*a4*x1*x2*x3*x4*x5 - a1*a5*x1*x2*x3*x4*x5 - a2*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x2*x3*x4*x5 - a2*a3*a5*x1*x2*x3*x5 - a2*a3*a5*x2*x3*x4*x5 - a2*a3*x1*x2*x3*x4*x5 - a2*a4*a5*x1*x2*x4*x5 - a2*a4*a5*x2*x3*x4*x5 - a2*a4*x1*x2*x3*x4*x5 - a2*a5*x1*x2*x3*x4*x5 - a3*a4*a5*x1*x3*x4*x5 - a3*a4*a5*x2*x3*x4*x5 - a3*a4*x1*x2*x3*x4*x5 - a3*a5*x1*x2*x3*x4*x5 - a4*a5*x1*x2*x3*x4*x5 + a1*a2*a3*a4*x1*x2*x3*x4 + a1*a2*a3*a5*x1*x2*x3*x5 + a1*a2*a3*x1*x2*x3*x4*x5 + a1*a2*a4*a5*x1*x2*x4*x5 + a1*a2*a4*x1*x2*x3*x4*x5 + a1*a2*a5*x1*x2*x3*x4*x5 + a1*a3*a4*a5*x1*x3*x4*x5 + a1*a3*a4*x1*x2*x3*x4*x5 + a1*a3*a5*x1*x2*x3*x4*x5 + a1*a4*a5*x1*x2*x3*x4*x5 + a2*a3*a4*a5*x2*x3*x4*x5 + a2*a3*a4*x1*x2*x3*x4*x5 + a2*a3*a5*x1*x2*x3*x4*x5 + a2*a4*a5*x1*x2*x3*x4*x5 + a3*a4*a5*x1*x2*x3*x4*x5 - a1*a2*a3*a4*x1*x2*x3*x4*x5 - a1*a2*a3*a5*x1*x2*x3*x4*x5 - a1*a2*a4*a5*x1*x2*x3*x4*x5 - a1*a3*a4*a5*x1*x2*x3*x4*x5 - a2*a3*a4*a5*x1*x2*x3*x4*x5 + a1*a2*a3*a4*a5*x1*x2*x3*x4*x5 in G1
+F17 = 1 - x1 - x2 - x3 - x4 - x5 - x6 + a1*x1 + a2*x2 + a3*x3 + a4*x4 + a5*x5 + a6*x6 + x1*x2 + x1*x3 + x1*x4 + x1*x5 + x1*x6 + x2*x3 + x2*x4 + x2*x5 + x2*x6 + x3*x4 + x3*x5 + x3*x6 + x4*x5 + x4*x6 + x5*x6 - a1*x1*x2 - a1*x1*x3 - a1*x1*x4 - a1*x1*x5 - a1*x1*x6 - a2*x1*x2 - a2*x2*x3 - a2*x2*x4 - a2*x2*x5 - a2*x2*x6 - a3*x1*x3 - a3*x2*x3 - a3*x3*x4 - a3*x3*x5 - a3*x3*x6 - a4*x1*x4 - a4*x2*x4 - a4*x3*x4 - a4*x4*x5 - a4*x4*x6 - a5*x1*x5 - a5*x2*x5 - a5*x3*x5 - a5*x4*x5 - a5*x5*x6 - a6*x1*x6 - a6*x2*x6 - a6*x3*x6 - a6*x4*x6 - a6*x5*x6 - x1*x2*x3 - x1*x2*x4 - x1*x2*x5 - x1*x2*x6 - x1*x3*x4 - x1*x3*x5 - x1*x3*x6 - x1*x4*x5 - x1*x4*x6 - x1*x5*x6 - x2*x3*x4 - x2*x3*x5 - x2*x3*x6 - x2*x4*x5 - x2*x4*x6 - x2*x5*x6 - x3*x4*x5 - x3*x4*x6 - x3*x5*x6 - x4*x5*x6 + a1*a2*x1*x2 + a1*a3*x1*x3 + a1*a4*x1*x4 + a1*a5*x1*x5 + a1*a6*x1*x6 + a1*x1*x2*x3 + a1*x1*x2*x4 + a1*x1*x2*x5 + a1*x1*x2*x6 + a1*x1*x3*x4 + a1*x1*x3*x5 + a1*x1*x3*x6 + a1*x1*x4*x5 + a1*x1*x4*x6 + a1*x1*x5*x6 + a2*a3*x2*x3 + a2*a4*x2*x4 + a2*a5*x2*x5 + a2*a6*x2*x6 + a2*x1*x2*x3 + a2*x1*x2*x4 + a2*x1*x2*x5 + a2*x1*x2*x6 + a2*x2*x3*x4 + a2*x2*x3*x5 + a2*x2*x3*x6 + a2*x2*x4*x5 + a2*x2*x4*x6 + a2*x2*x5*x6 + a3*a4*x3*x4 + a3*a5*x3*x5 + a3*a6*x3*x6 + a3*x1*x2*x3 + a3*x1*x3*x4 + a3*x1*x3*x5 + a3*x1*x3*x6 + a3*x2*x3*x4 + a3*x2*x3*x5 + a3*x2*x3*x6 + a3*x3*x4*x5 + a3*x3*x4*x6 + a3*x3*x5*x6 + a4*a5*x4*x5 + a4*a6*x4*x6 + a4*x1*x2*x4 + a4*x1*x3*x4 + a4*x1*x4*x5 + a4*x1*x4*x6 + a4*x2*x3*x4 + a4*x2*x4*x5 + a4*x2*x4*x6 + a4*x3*x4*x5 + a4*x3*x4*x6 + a4*x4*x5*x6 + a5*a6*x5*x6 + a5*x1*x2*x5 + a5*x1*x3*x5 + a5*x1*x4*x5 + a5*x1*x5*x6 + a5*x2*x3*x5 + a5*x2*x4*x5 + a5*x2*x5*x6 + a5*x3*x4*x5 + a5*x3*x5*x6 + a5*x4*x5*x6 + a6*x1*x2*x6 + a6*x1*x3*x6 + a6*x1*x4*x6 + a6*x1*x5*x6 + a6*x2*x3*x6 + a6*x2*x4*x6 + a6*x2*x5*x6 + a6*x3*x4*x6 + a6*x3*x5*x6 + a6*x4*x5*x6 + x1*x2*x3*x4 + x1*x2*x3*x5 + x1*x2*x3*x6 + x1*x2*x4*x5 + x1*x2*x4*x6 + x1*x2*x5*x6 + x1*x3*x4*x5 + x1*x3*x4*x6 + x1*x3*x5*x6 + x1*x4*x5*x6 + x2*x3*x4*x5 + x2*x3*x4*x6 + x2*x3*x5*x6 + x2*x4*x5*x6 + x3*x4*x5*x6 - a1*a2*x1*x2*x3 - a1*a2*x1*x2*x4 - a1*a2*x1*x2*x5 - a1*a2*x1*x2*x6 - a1*a3*x1*x2*x3 - a1*a3*x1*x3*x4 - a1*a3*x1*x3*x5 - a1*a3*x1*x3*x6 - a1*a4*x1*x2*x4 - a1*a4*x1*x3*x4 - a1*a4*x1*x4*x5 - a1*a4*x1*x4*x6 - a1*a5*x1*x2*x5 - a1*a5*x1*x3*x5 - a1*a5*x1*x4*x5 - a1*a5*x1*x5*x6 - a1*a6*x1*x2*x6 - a1*a6*x1*x3*x6 - a1*a6*x1*x4*x6 - a1*a6*x1*x5*x6 - a1*x1*x2*x3*x4 - a1*x1*x2*x3*x5 - a1*x1*x2*x3*x6 - a1*x1*x2*x4*x5 - a1*x1*x2*x4*x6 - a1*x1*x2*x5*x6 - a1*x1*x3*x4*x5 - a1*x1*x3*x4*x6 - a1*x1*x3*x5*x6 - a1*x1*x4*x5*x6 - a2*a3*x1*x2*x3 - a2*a3*x2*x3*x4 - a2*a3*x2*x3*x5 - a2*a3*x2*x3*x6 - a2*a4*x1*x2*x4 - a2*a4*x2*x3*x4 - a2*a4*x2*x4*x5 - a2*a4*x2*x4*x6 - a2*a5*x1*x2*x5 - a2*a5*x2*x3*x5 - a2*a5*x2*x4*x5 - a2*a5*x2*x5*x6 - a2*a6*x1*x2*x6 - a2*a6*x2*x3*x6 - a2*a6*x2*x4*x6 - a2*a6*x2*x5*x6 - a2*x1*x2*x3*x4 - a2*x1*x2*x3*x5 - a2*x1*x2*x3*x6 - a2*x1*x2*x4*x5 - a2*x1*x2*x4*x6 - a2*x1*x2*x5*x6 - a2*x2*x3*x4*x5 - a2*x2*x3*x4*x6 - a2*x2*x3*x5*x6 - a2*x2*x4*x5*x6 - a3*a4*x1*x3*x4 - a3*a4*x2*x3*x4 - a3*a4*x3*x4*x5 - a3*a4*x3*x4*x6 - a3*a5*x1*x3*x5 - a3*a5*x2*x3*x5 - a3*a5*x3*x4*x5 - a3*a5*x3*x5*x6 - a3*a6*x1*x3*x6 - a3*a6*x2*x3*x6 - a3*a6*x3*x4*x6 - a3*a6*x3*x5*x6 - a3*x1*x2*x3*x4 - a3*x1*x2*x3*x5 - a3*x1*x2*x3*x6 - a3*x1*x3*x4*x5 - a3*x1*x3*x4*x6 - a3*x1*x3*x5*x6 - a3*x2*x3*x4*x5 - a3*x2*x3*x4*x6 - a3*x2*x3*x5*x6 - a3*x3*x4*x5*x6 - a4*a5*x1*x4*x5 - a4*a5*x2*x4*x5 - a4*a5*x3*x4*x5 - a4*a5*x4*x5*x6 - a4*a6*x1*x4*x6 - a4*a6*x2*x4*x6 - a4*a6*x3*x4*x6 - a4*a6*x4*x5*x6 - a4*x1*x2*x3*x4 - a4*x1*x2*x4*x5 - a4*x1*x2*x4*x6 - a4*x1*x3*x4*x5 - a4*x1*x3*x4*x6 - a4*x1*x4*x5*x6 - a4*x2*x3*x4*x5 - a4*x2*x3*x4*x6 - a4*x2*x4*x5*x6 - a4*x3*x4*x5*x6 - a5*a6*x1*x5*x6 - a5*a6*x2*x5*x6 - a5*a6*x3*x5*x6 - a5*a6*x4*x5*x6 - a5*x1*x2*x3*x5 - a5*x1*x2*x4*x5 - a5*x1*x2*x5*x6 - a5*x1*x3*x4*x5 - a5*x1*x3*x5*x6 - a5*x1*x4*x5*x6 - a5*x2*x3*x4*x5 - a5*x2*x3*x5*x6 - a5*x2*x4*x5*x6 - a5*x3*x4*x5*x6 - a6*x1*x2*x3*x6 - a6*x1*x2*x4*x6 - a6*x1*x2*x5*x6 - a6*x1*x3*x4*x6 - a6*x1*x3*x5*x6 - a6*x1*x4*x5*x6 - a6*x2*x3*x4*x6 - a6*x2*x3*x5*x6 - a6*x2*x4*x5*x6 - a6*x3*x4*x5*x6 - x1*x2*x3*x4*x5 - x1*x2*x3*x4*x6 - x1*x2*x3*x5*x6 - x1*x2*x4*x5*x6 - x1*x3*x4*x5*x6 - x2*x3*x4*x5*x6 + a1*a2*a3*x1*x2*x3 + a1*a2*a4*x1*x2*x4 + a1*a2*a5*x1*x2*x5 + a1*a2*a6*x1*x2*x6 + a1*a2*x1*x2*x3*x4 + a1*a2*x1*x2*x3*x5 + a1*a2*x1*x2*x3*x6 + a1*a2*x1*x2*x4*x5 + a1*a2*x1*x2*x4*x6 + a1*a2*x1*x2*x5*x6 + a1*a3*a4*x1*x3*x4 + a1*a3*a5*x1*x3*x5 + a1*a3*a6*x1*x3*x6 + a1*a3*x1*x2*x3*x4 + a1*a3*x1*x2*x3*x5 + a1*a3*x1*x2*x3*x6 + a1*a3*x1*x3*x4*x5 + a1*a3*x1*x3*x4*x6 + a1*a3*x1*x3*x5*x6 + a1*a4*a5*x1*x4*x5 + a1*a4*a6*x1*x4*x6 + a1*a4*x1*x2*x3*x4 + a1*a4*x1*x2*x4*x5 + a1*a4*x1*x2*x4*x6 + a1*a4*x1*x3*x4*x5 + a1*a4*x1*x3*x4*x6 + a1*a4*x1*x4*x5*x6 + a1*a5*a6*x1*x5*x6 + a1*a5*x1*x2*x3*x5 + a1*a5*x1*x2*x4*x5 + a1*a5*x1*x2*x5*x6 + a1*a5*x1*x3*x4*x5 + a1*a5*x1*x3*x5*x6 + a1*a5*x1*x4*x5*x6 + a1*a6*x1*x2*x3*x6 + a1*a6*x1*x2*x4*x6 + a1*a6*x1*x2*x5*x6 + a1*a6*x1*x3*x4*x6 + a1*a6*x1*x3*x5*x6 + a1*a6*x1*x4*x5*x6 + a1*x1*x2*x3*x4*x5 + a1*x1*x2*x3*x4*x6 + a1*x1*x2*x3*x5*x6 + a1*x1*x2*x4*x5*x6 + a1*x1*x3*x4*x5*x6 + a2*a3*a4*x2*x3*x4 + a2*a3*a5*x2*x3*x5 + a2*a3*a6*x2*x3*x6 + a2*a3*x1*x2*x3*x4 + a2*a3*x1*x2*x3*x5 + a2*a3*x1*x2*x3*x6 + a2*a3*x2*x3*x4*x5 + a2*a3*x2*x3*x4*x6 + a2*a3*x2*x3*x5*x6 + a2*a4*a5*x2*x4*x5 + a2*a4*a6*x2*x4*x6 + a2*a4*x1*x2*x3*x4 + a2*a4*x1*x2*x4*x5 + a2*a4*x1*x2*x4*x6 + a2*a4*x2*x3*x4*x5 + a2*a4*x2*x3*x4*x6 + a2*a4*x2*x4*x5*x6 + a2*a5*a6*x2*x5*x6 + a2*a5*x1*x2*x3*x5 + a2*a5*x1*x2*x4*x5 + a2*a5*x1*x2*x5*x6 + a2*a5*x2*x3*x4*x5 + a2*a5*x2*x3*x5*x6 + a2*a5*x2*x4*x5*x6 + a2*a6*x1*x2*x3*x6 + a2*a6*x1*x2*x4*x6 + a2*a6*x1*x2*x5*x6 + a2*a6*x2*x3*x4*x6 + a2*a6*x2*x3*x5*x6 + a2*a6*x2*x4*x5*x6 + a2*x1*x2*x3*x4*x5 + a2*x1*x2*x3*x4*x6 + a2*x1*x2*x3*x5*x6 + a2*x1*x2*x4*x5*x6 + a2*x2*x3*x4*x5*x6 + a3*a4*a5*x3*x4*x5 + a3*a4*a6*x3*x4*x6 + a3*a4*x1*x2*x3*x4 + a3*a4*x1*x3*x4*x5 + a3*a4*x1*x3*x4*x6 + a3*a4*x2*x3*x4*x5 + a3*a4*x2*x3*x4*x6 + a3*a4*x3*x4*x5*x6 + a3*a5*a6*x3*x5*x6 + a3*a5*x1*x2*x3*x5 + a3*a5*x1*x3*x4*x5 + a3*a5*x1*x3*x5*x6 + a3*a5*x2*x3*x4*x5 + a3*a5*x2*x3*x5*x6 + a3*a5*x3*x4*x5*x6 + a3*a6*x1*x2*x3*x6 + a3*a6*x1*x3*x4*x6 + a3*a6*x1*x3*x5*x6 + a3*a6*x2*x3*x4*x6 + a3*a6*x2*x3*x5*x6 + a3*a6*x3*x4*x5*x6 + a3*x1*x2*x3*x4*x5 + a3*x1*x2*x3*x4*x6 + a3*x1*x2*x3*x5*x6 + a3*x1*x3*x4*x5*x6 + a3*x2*x3*x4*x5*x6 + a4*a5*a6*x4*x5*x6 + a4*a5*x1*x2*x4*x5 + a4*a5*x1*x3*x4*x5 + a4*a5*x1*x4*x5*x6 + a4*a5*x2*x3*x4*x5 + a4*a5*x2*x4*x5*x6 + a4*a5*x3*x4*x5*x6 + a4*a6*x1*x2*x4*x6 + a4*a6*x1*x3*x4*x6 + a4*a6*x1*x4*x5*x6 + a4*a6*x2*x3*x4*x6 + a4*a6*x2*x4*x5*x6 + a4*a6*x3*x4*x5*x6 + a4*x1*x2*x3*x4*x5 + a4*x1*x2*x3*x4*x6 + a4*x1*x2*x4*x5*x6 + a4*x1*x3*x4*x5*x6 + a4*x2*x3*x4*x5*x6 + a5*a6*x1*x2*x5*x6 + a5*a6*x1*x3*x5*x6 + a5*a6*x1*x4*x5*x6 + a5*a6*x2*x3*x5*x6 + a5*a6*x2*x4*x5*x6 + a5*a6*x3*x4*x5*x6 + a5*x1*x2*x3*x4*x5 + a5*x1*x2*x3*x5*x6 + a5*x1*x2*x4*x5*x6 + a5*x1*x3*x4*x5*x6 + a5*x2*x3*x4*x5*x6 + a6*x1*x2*x3*x4*x6 + a6*x1*x2*x3*x5*x6 + a6*x1*x2*x4*x5*x6 + a6*x1*x3*x4*x5*x6 + a6*x2*x3*x4*x5*x6 + x1*x2*x3*x4*x5*x6 - a1*a2*a3*x1*x2*x3*x4 - a1*a2*a3*x1*x2*x3*x5 - a1*a2*a3*x1*x2*x3*x6 - a1*a2*a4*x1*x2*x3*x4 - a1*a2*a4*x1*x2*x4*x5 - a1*a2*a4*x1*x2*x4*x6 - a1*a2*a5*x1*x2*x3*x5 - a1*a2*a5*x1*x2*x4*x5 - a1*a2*a5*x1*x2*x5*x6 - a1*a2*a6*x1*x2*x3*x6 - a1*a2*a6*x1*x2*x4*x6 - a1*a2*a6*x1*x2*x5*x6 - a1*a2*x1*x2*x3*x4*x5 - a1*a2*x1*x2*x3*x4*x6 - a1*a2*x1*x2*x3*x5*x6 - a1*a2*x1*x2*x4*x5*x6 - a1*a3*a4*x1*x2*x3*x4 - a1*a3*a4*x1*x3*x4*x5 - a1*a3*a4*x1*x3*x4*x6 - a1*a3*a5*x1*x2*x3*x5 - a1*a3*a5*x1*x3*x4*x5 - a1*a3*a5*x1*x3*x5*x6 - a1*a3*a6*x1*x2*x3*x6 - a1*a3*a6*x1*x3*x4*x6 - a1*a3*a6*x1*x3*x5*x6 - a1*a3*x1*x2*x3*x4*x5 - a1*a3*x1*x2*x3*x4*x6 - a1*a3*x1*x2*x3*x5*x6 - a1*a3*x1*x3*x4*x5*x6 - a1*a4*a5*x1*x2*x4*x5 - a1*a4*a5*x1*x3*x4*x5 - a1*a4*a5*x1*x4*x5*x6 - a1*a4*a6*x1*x2*x4*x6 - a1*a4*a6*x1*x3*x4*x6 - a1*a4*a6*x1*x4*x5*x6 - a1*a4*x1*x2*x3*x4*x5 - a1*a4*x1*x2*x3*x4*x6 - a1*a4*x1*x2*x4*x5*x6 - a1*a4*x1*x3*x4*x5*x6 - a1*a5*a6*x1*x2*x5*x6 - a1*a5*a6*x1*x3*x5*x6 - a1*a5*a6*x1*x4*x5*x6 - a1*a5*x1*x2*x3*x4*x5 - a1*a5*x1*x2*x3*x5*x6 - a1*a5*x1*x2*x4*x5*x6 - a1*a5*x1*x3*x4*x5*x6 - a1*a6*x1*x2*x3*x4*x6 - a1*a6*x1*x2*x3*x5*x6 - a1*a6*x1*x2*x4*x5*x6 - a1*a6*x1*x3*x4*x5*x6 - a1*x1*x2*x3*x4*x5*x6 - a2*a3*a4*x1*x2*x3*x4 - a2*a3*a4*x2*x3*x4*x5 - a2*a3*a4*x2*x3*x4*x6 - a2*a3*a5*x1*x2*x3*x5 - a2*a3*a5*x2*x3*x4*x5 - a2*a3*a5*x2*x3*x5*x6 - a2*a3*a6*x1*x2*x3*x6 - a2*a3*a6*x2*x3*x4*x6 - a2*a3*a6*x2*x3*x5*x6 - a2*a3*x1*x2*x3*x4*x5 - a2*a3*x1*x2*x3*x4*x6 - a2*a3*x1*x2*x3*x5*x6 - a2*a3*x2*x3*x4*x5*x6 - a2*a4*a5*x1*x2*x4*x5 - a2*a4*a5*x2*x3*x4*x5 - a2*a4*a5*x2*x4*x5*x6 - a2*a4*a6*x1*x2*x4*x6 - a2*a4*a6*x2*x3*x4*x6 - a2*a4*a6*x2*x4*x5*x6 - a2*a4*x1*x2*x3*x4*x5 - a2*a4*x1*x2*x3*x4*x6 - a2*a4*x1*x2*x4*x5*x6 - a2*a4*x2*x3*x4*x5*x6 - a2*a5*a6*x1*x2*x5*x6 - a2*a5*a6*x2*x3*x5*x6 - a2*a5*a6*x2*x4*x5*x6 - a2*a5*x1*x2*x3*x4*x5 - a2*a5*x1*x2*x3*x5*x6 - a2*a5*x1*x2*x4*x5*x6 - a2*a5*x2*x3*x4*x5*x6 - a2*a6*x1*x2*x3*x4*x6 - a2*a6*x1*x2*x3*x5*x6 - a2*a6*x1*x2*x4*x5*x6 - a2*a6*x2*x3*x4*x5*x6 - a2*x1*x2*x3*x4*x5*x6 - a3*a4*a5*x1*x3*x4*x5 - a3*a4*a5*x2*x3*x4*x5 - a3*a4*a5*x3*x4*x5*x6 - a3*a4*a6*x1*x3*x4*x6 - a3*a4*a6*x2*x3*x4*x6 - a3*a4*a6*x3*x4*x5*x6 - a3*a4*x1*x2*x3*x4*x5 - a3*a4*x1*x2*x3*x4*x6 - a3*a4*x1*x3*x4*x5*x6 - a3*a4*x2*x3*x4*x5*x6 - a3*a5*a6*x1*x3*x5*x6 - a3*a5*a6*x2*x3*x5*x6 - a3*a5*a6*x3*x4*x5*x6 - a3*a5*x1*x2*x3*x4*x5 - a3*a5*x1*x2*x3*x5*x6 - a3*a5*x1*x3*x4*x5*x6 - a3*a5*x2*x3*x4*x5*x6 - a3*a6*x1*x2*x3*x4*x6 - a3*a6*x1*x2*x3*x5*x6 - a3*a6*x1*x3*x4*x5*x6 - a3*a6*x2*x3*x4*x5*x6 - a3*x1*x2*x3*x4*x5*x6 - a4*a5*a6*x1*x4*x5*x6 - a4*a5*a6*x2*x4*x5*x6 - a4*a5*a6*x3*x4*x5*x6 - a4*a5*x1*x2*x3*x4*x5 - a4*a5*x1*x2*x4*x5*x6 - a4*a5*x1*x3*x4*x5*x6 - a4*a5*x2*x3*x4*x5*x6 - a4*a6*x1*x2*x3*x4*x6 - a4*a6*x1*x2*x4*x5*x6 - a4*a6*x1*x3*x4*x5*x6 - a4*a6*x2*x3*x4*x5*x6 - a4*x1*x2*x3*x4*x5*x6 - a5*a6*x1*x2*x3*x5*x6 - a5*a6*x1*x2*x4*x5*x6 - a5*a6*x1*x3*x4*x5*x6 - a5*a6*x2*x3*x4*x5*x6 - a5*x1*x2*x3*x4*x5*x6 - a6*x1*x2*x3*x4*x5*x6 + a1*a2*a3*a4*x1*x2*x3*x4 + a1*a2*a3*a5*x1*x2*x3*x5 + a1*a2*a3*a6*x1*x2*x3*x6 + a1*a2*a3*x1*x2*x3*x4*x5 + a1*a2*a3*x1*x2*x3*x4*x6 + a1*a2*a3*x1*x2*x3*x5*x6 + a1*a2*a4*a5*x1*x2*x4*x5 + a1*a2*a4*a6*x1*x2*x4*x6 + a1*a2*a4*x1*x2*x3*x4*x5 + a1*a2*a4*x1*x2*x3*x4*x6 + a1*a2*a4*x1*x2*x4*x5*x6 + a1*a2*a5*a6*x1*x2*x5*x6 + a1*a2*a5*x1*x2*x3*x4*x5 + a1*a2*a5*x1*x2*x3*x5*x6 + a1*a2*a5*x1*x2*x4*x5*x6 + a1*a2*a6*x1*x2*x3*x4*x6 + a1*a2*a6*x1*x2*x3*x5*x6 + a1*a2*a6*x1*x2*x4*x5*x6 + a1*a2*x1*x2*x3*x4*x5*x6 + a1*a3*a4*a5*x1*x3*x4*x5 + a1*a3*a4*a6*x1*x3*x4*x6 + a1*a3*a4*x1*x2*x3*x4*x5 + a1*a3*a4*x1*x2*x3*x4*x6 + a1*a3*a4*x1*x3*x4*x5*x6 + a1*a3*a5*a6*x1*x3*x5*x6 + a1*a3*a5*x1*x2*x3*x4*x5 + a1*a3*a5*x1*x2*x3*x5*x6 + a1*a3*a5*x1*x3*x4*x5*x6 + a1*a3*a6*x1*x2*x3*x4*x6 + a1*a3*a6*x1*x2*x3*x5*x6 + a1*a3*a6*x1*x3*x4*x5*x6 + a1*a3*x1*x2*x3*x4*x5*x6 + a1*a4*a5*a6*x1*x4*x5*x6 + a1*a4*a5*x1*x2*x3*x4*x5 + a1*a4*a5*x1*x2*x4*x5*x6 + a1*a4*a5*x1*x3*x4*x5*x6 + a1*a4*a6*x1*x2*x3*x4*x6 + a1*a4*a6*x1*x2*x4*x5*x6 + a1*a4*a6*x1*x3*x4*x5*x6 + a1*a4*x1*x2*x3*x4*x5*x6 + a1*a5*a6*x1*x2*x3*x5*x6 + a1*a5*a6*x1*x2*x4*x5*x6 + a1*a5*a6*x1*x3*x4*x5*x6 + a1*a5*x1*x2*x3*x4*x5*x6 + a1*a6*x1*x2*x3*x4*x5*x6 + a2*a3*a4*a5*x2*x3*x4*x5 + a2*a3*a4*a6*x2*x3*x4*x6 + a2*a3*a4*x1*x2*x3*x4*x5 + a2*a3*a4*x1*x2*x3*x4*x6 + a2*a3*a4*x2*x3*x4*x5*x6 + a2*a3*a5*a6*x2*x3*x5*x6 + a2*a3*a5*x1*x2*x3*x4*x5 + a2*a3*a5*x1*x2*x3*x5*x6 + a2*a3*a5*x2*x3*x4*x5*x6 + a2*a3*a6*x1*x2*x3*x4*x6 + a2*a3*a6*x1*x2*x3*x5*x6 + a2*a3*a6*x2*x3*x4*x5*x6 + a2*a3*x1*x2*x3*x4*x5*x6 + a2*a4*a5*a6*x2*x4*x5*x6 + a2*a4*a5*x1*x2*x3*x4*x5 + a2*a4*a5*x1*x2*x4*x5*x6 + a2*a4*a5*x2*x3*x4*x5*x6 + a2*a4*a6*x1*x2*x3*x4*x6 + a2*a4*a6*x1*x2*x4*x5*x6 + a2*a4*a6*x2*x3*x4*x5*x6 + a2*a4*x1*x2*x3*x4*x5*x6 + a2*a5*a6*x1*x2*x3*x5*x6 + a2*a5*a6*x1*x2*x4*x5*x6 + a2*a5*a6*x2*x3*x4*x5*x6 + a2*a5*x1*x2*x3*x4*x5*x6 + a2*a6*x1*x2*x3*x4*x5*x6 + a3*a4*a5*a6*x3*x4*x5*x6 + a3*a4*a5*x1*x2*x3*x4*x5 + a3*a4*a5*x1*x3*x4*x5*x6 + a3*a4*a5*x2*x3*x4*x5*x6 + a3*a4*a6*x1*x2*x3*x4*x6 + a3*a4*a6*x1*x3*x4*x5*x6 + a3*a4*a6*x2*x3*x4*x5*x6 + a3*a4*x1*x2*x3*x4*x5*x6 + a3*a5*a6*x1*x2*x3*x5*x6 + a3*a5*a6*x1*x3*x4*x5*x6 + a3*a5*a6*x2*x3*x4*x5*x6 + a3*a5*x1*x2*x3*x4*x5*x6 + a3*a6*x1*x2*x3*x4*x5*x6 + a4*a5*a6*x1*x2*x4*x5*x6 + a4*a5*a6*x1*x3*x4*x5*x6 + a4*a5*a6*x2*x3*x4*x5*x6 + a4*a5*x1*x2*x3*x4*x5*x6 + a4*a6*x1*x2*x3*x4*x5*x6 + a5*a6*x1*x2*x3*x4*x5*x6 - a1*a2*a3*a4*x1*x2*x3*x4*x5 - a1*a2*a3*a4*x1*x2*x3*x4*x6 - a1*a2*a3*a5*x1*x2*x3*x4*x5 - a1*a2*a3*a5*x1*x2*x3*x5*x6 - a1*a2*a3*a6*x1*x2*x3*x4*x6 - a1*a2*a3*a6*x1*x2*x3*x5*x6 - a1*a2*a3*x1*x2*x3*x4*x5*x6 - a1*a2*a4*a5*x1*x2*x3*x4*x5 - a1*a2*a4*a5*x1*x2*x4*x5*x6 - a1*a2*a4*a6*x1*x2*x3*x4*x6 - a1*a2*a4*a6*x1*x2*x4*x5*x6 - a1*a2*a4*x1*x2*x3*x4*x5*x6 - a1*a2*a5*a6*x1*x2*x3*x5*x6 - a1*a2*a5*a6*x1*x2*x4*x5*x6 - a1*a2*a5*x1*x2*x3*x4*x5*x6 - a1*a2*a6*x1*x2*x3*x4*x5*x6 - a1*a3*a4*a5*x1*x2*x3*x4*x5 - a1*a3*a4*a5*x1*x3*x4*x5*x6 - a1*a3*a4*a6*x1*x2*x3*x4*x6 - a1*a3*a4*a6*x1*x3*x4*x5*x6 - a1*a3*a4*x1*x2*x3*x4*x5*x6 - a1*a3*a5*a6*x1*x2*x3*x5*x6 - a1*a3*a5*a6*x1*x3*x4*x5*x6 - a1*a3*a5*x1*x2*x3*x4*x5*x6 - a1*a3*a6*x1*x2*x3*x4*x5*x6 - a1*a4*a5*a6*x1*x2*x4*x5*x6 - a1*a4*a5*a6*x1*x3*x4*x5*x6 - a1*a4*a5*x1*x2*x3*x4*x5*x6 - a1*a4*a6*x1*x2*x3*x4*x5*x6 - a1*a5*a6*x1*x2*x3*x4*x5*x6 - a2*a3*a4*a5*x1*x2*x3*x4*x5 - a2*a3*a4*a5*x2*x3*x4*x5*x6 - a2*a3*a4*a6*x1*x2*x3*x4*x6 - a2*a3*a4*a6*x2*x3*x4*x5*x6 - a2*a3*a4*x1*x2*x3*x4*x5*x6 - a2*a3*a5*a6*x1*x2*x3*x5*x6 - a2*a3*a5*a6*x2*x3*x4*x5*x6 - a2*a3*a5*x1*x2*x3*x4*x5*x6 - a2*a3*a6*x1*x2*x3*x4*x5*x6 - a2*a4*a5*a6*x1*x2*x4*x5*x6 - a2*a4*a5*a6*x2*x3*x4*x5*x6 - a2*a4*a5*x1*x2*x3*x4*x5*x6 - a2*a4*a6*x1*x2*x3*x4*x5*x6 - a2*a5*a6*x1*x2*x3*x4*x5*x6 - a3*a4*a5*a6*x1*x3*x4*x5*x6 - a3*a4*a5*a6*x2*x3*x4*x5*x6 - a3*a4*a5*x1*x2*x3*x4*x5*x6 - a3*a4*a6*x1*x2*x3*x4*x5*x6 - a3*a5*a6*x1*x2*x3*x4*x5*x6 - a4*a5*a6*x1*x2*x3*x4*x5*x6 + a1*a2*a3*a4*a5*x1*x2*x3*x4*x5 + a1*a2*a3*a4*a6*x1*x2*x3*x4*x6 + a1*a2*a3*a4*x1*x2*x3*x4*x5*x6 + a1*a2*a3*a5*a6*x1*x2*x3*x5*x6 + a1*a2*a3*a5*x1*x2*x3*x4*x5*x6 + a1*a2*a3*a6*x1*x2*x3*x4*x5*x6 + a1*a2*a4*a5*a6*x1*x2*x4*x5*x6 + a1*a2*a4*a5*x1*x2*x3*x4*x5*x6 + a1*a2*a4*a6*x1*x2*x3*x4*x5*x6 + a1*a2*a5*a6*x1*x2*x3*x4*x5*x6 + a1*a3*a4*a5*a6*x1*x3*x4*x5*x6 + a1*a3*a4*a5*x1*x2*x3*x4*x5*x6 + a1*a3*a4*a6*x1*x2*x3*x4*x5*x6 + a1*a3*a5*a6*x1*x2*x3*x4*x5*x6 + a1*a4*a5*a6*x1*x2*x3*x4*x5*x6 + a2*a3*a4*a5*a6*x2*x3*x4*x5*x6 + a2*a3*a4*a5*x1*x2*x3*x4*x5*x6 + a2*a3*a4*a6*x1*x2*x3*x4*x5*x6 + a2*a3*a5*a6*x1*x2*x3*x4*x5*x6 + a2*a4*a5*a6*x1*x2*x3*x4*x5*x6 + a3*a4*a5*a6*x1*x2*x3*x4*x5*x6 - a1*a2*a3*a4*a5*x1*x2*x3*x4*x5*x6 - a1*a2*a3*a4*a6*x1*x2*x3*x4*x5*x6 - a1*a2*a3*a5*a6*x1*x2*x3*x4*x5*x6 - a1*a2*a4*a5*a6*x1*x2*x3*x4*x5*x6 - a1*a3*a4*a5*a6*x1*x2*x3*x4*x5*x6 - a2*a3*a4*a5*a6*x1*x2*x3*x4*x5*x6 + a1*a2*a3*a4*a5*a6*x1*x2*x3*x4*x5*x6 in G1
+F18 = x1 in G1
+F19 = x2 in G1
+F20 = x3 in G1
+F21 = x4 in G1
+F22 = x5 in G1
+F23 = x6 in G1
+F24 = x1 in GT
+F25 = x2 in GT
+F26 = x3 in GT
+F27 = x4 in GT
+F28 = x5 in GT
+F29 = x6 in GT
+F30 = a1*a9*x1 in G1
+F31 = a1*a9*x2 in G1
+F32 = a1*a9*x3 in G1
+F33 = a1*a9*x4 in G1
+F34 = a1*a9*x5 in G1
+F35 = a1*a9*x6 in G1
+F36 = a2*a9*x1 in G1
+F37 = a2*a9*x2 in G1
+F38 = a2*a9*x3 in G1
+F39 = a2*a9*x4 in G1
+F40 = a2*a9*x5 in G1
+F41 = a2*a9*x6 in G1
+F42 = a3*a9*x1 in G1
+F43 = a3*a9*x2 in G1
+F44 = a3*a9*x3 in G1
+F45 = a3*a9*x4 in G1
+F46 = a3*a9*x5 in G1
+F47 = a3*a9*x6 in G1
+F48 = a4*a9*x1 in G1
+F49 = a4*a9*x2 in G1
+F50 = a4*a9*x3 in G1
+F51 = a4*a9*x4 in G1
+F52 = a4*a9*x5 in G1
+F53 = a4*a9*x6 in G1
+F54 = a5*a9*x1 in G1
+F55 = a5*a9*x2 in G1
+F56 = a5*a9*x3 in G1
+F57 = a5*a9*x4 in G1
+F58 = a5*a9*x5 in G1
+F59 = a5*a9*x6 in G1
+F60 = a6*a9*x1 in G1
+F61 = a6*a9*x2 in G1
+F62 = a6*a9*x3 in G1
+F63 = a6*a9*x4 in G1
+F64 = a6*a9*x5 in G1
+F65 = a6*a9*x6 in G1
+F66 = a9*x1 in G1
+F67 = a9*x2 in G1
+F68 = a9*x3 in G1
+F69 = a9*x4 in G1
+F70 = a9*x5 in G1
+F71 = a9*x6 in G1
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.035690s seconds to compute completion list of Gt
+
+Took 0.033938s seconds to compute completion list of G1
+Took 0.069675s to compute completion lists.
+Processing untrusted polynomial F10 by rule1
+Took 0.000270s to multiply f with completionG1 . Size of trusted set = 63. Size of f.(completion list of G1) U (completion list of GT) = 1659.
+
+Optimization round 1
+Took 0.003053s time to compute 188 new_polys using 168 new_mons
+
+Took 0.001007s time to compute 0 new_mons from 188 new_polys
+
+Reduced the polynomials in completion of GT from 1603 to 188
+       Took 0.026758s seconds.
+Took 0.000347s time to filter 49 mons in lst1
+
+Took 0.001066s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 56 to 7
+       Took 0.002035s seconds.
+
+Optimization round 2
+Took 0.000076s time to compute 37 new_polys using 21 new_mons
+
+Took 0.000023s time to compute 0 new_mons from 37 new_polys
+
+Reduced the polynomials in completion of GT from 188 to 37
+       Took 0.005354s seconds.
+Took 0.000009s time to filter 0 mons in lst1
+
+Took 0.000000s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 7 to 7
+       Took 0.000051s seconds.
+
+Optimization round 3
+Took 0.000022s time to compute 37 new_polys using 21 new_mons
+
+Took 0.000022s time to compute 0 new_mons from 37 new_polys
+
+Reduced the polynomials in completion of GT from 37 to 37
+       Took 0.012501s seconds.
+Took 0.000010s time to filter 0 mons in lst1
+
+Took 0.000000s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 7 to 7
+       Took 0.000052s seconds.
+
+Took 0.047214s to optimize.
+Took 0.000149s to compute basis. Size of trusted set = 63. Size of reduced f.(completion list of G1) U (completion list of GT) = 44. No. of monomials = 20. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 44*20
+Took 3.066921s time to solve
+
+Naive PPE e(F10,F0) = e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1
+Optimized PPE e(F10,F0) = e(F0,F9)*e(F1*(F9)^-1,F18)
+
+F10 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.003382s seconds to compute completion list of Gt
+
+Took 0.035829s seconds to compute completion list of G1
+Took 0.039231s to compute completion lists.
+Processing untrusted polynomial F11 by rule1
+Took 0.001333s to multiply f with completionG1 . Size of trusted set = 64. Size of f.(completion list of G1) U (completion list of GT) = 1717.
+
+Optimization round 1
+Took 0.004177s time to compute 313 new_polys using 522 new_mons
+
+Took 0.001493s time to compute 0 new_mons from 313 new_polys
+
+Reduced the polynomials in completion of GT from 1660 to 313
+       Took 0.019740s seconds.
+Took 0.001085s time to filter 195 mons in lst1
+
+Took 0.001286s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 57 to 3
+       Took 0.003520s seconds.
+
+Optimization round 2
+Took 0.000076s time to compute 34 new_polys using 27 new_mons
+
+Took 0.000028s time to compute 9 new_mons from 34 new_polys
+
+Took 0.000056s time to compute 5 new_polys using 9 new_mons
+
+Took 0.000003s time to compute 0 new_mons from 5 new_polys
+
+Reduced the polynomials in completion of GT from 313 to 39
+       Took 0.004975s seconds.
+Took 0.000015s time to filter 6 mons in lst1
+
+Took 0.000005s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 3 to 1
+       Took 0.000104s seconds.
+
+Optimization round 3
+Took 0.000028s time to compute 22 new_polys using 9 new_mons
+
+Took 0.000070s time to compute 8 new_mons from 22 new_polys
+
+Took 0.000058s time to compute 5 new_polys using 8 new_mons
+
+Took 0.000005s time to compute 0 new_mons from 5 new_polys
+
+Reduced the polynomials in completion of GT from 39 to 27
+       Took 0.004012s seconds.
+Took 0.000006s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000102s seconds.
+
+Optimization round 4
+Took 0.000012s time to compute 22 new_polys using 9 new_mons
+
+Took 0.000020s time to compute 8 new_mons from 22 new_polys
+
+Took 0.000009s time to compute 5 new_polys using 8 new_mons
+
+Took 0.000004s time to compute 0 new_mons from 5 new_polys
+
+Reduced the polynomials in completion of GT from 27 to 27
+       Took 0.011183s seconds.
+Took 0.000006s time to filter 0 mons in lst1
+
+Took 0.000000s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000059s seconds.
+
+Took 0.044030s to optimize.
+Took 0.000116s to compute basis. Size of trusted set = 64. Size of reduced f.(completion list of G1) U (completion list of GT) = 28. No. of monomials = 16. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 28*16
+Took 2.189766s time to solve
+
+Naive PPE e(F11,F0) = e(F10,F37) * e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1 * (e(F9,F19))^-1 * (e(F19,F30))^-1 * e(F19,F66)
+Optimized PPE e(F11,F0) = e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19)
+
+F11 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.005436s seconds to compute completion list of Gt
+
+Took 0.034246s seconds to compute completion list of G1
+Took 0.039705s to compute completion lists.
+Processing untrusted polynomial F12 by rule1
+Took 0.005861s to multiply f with completionG1 . Size of trusted set = 65. Size of f.(completion list of G1) U (completion list of GT) = 1776.
+
+Optimization round 1
+Took 0.012552s time to compute 424 new_polys using 1674 new_mons
+
+Took 0.009089s time to compute 0 new_mons from 424 new_polys
+
+Reduced the polynomials in completion of GT from 1718 to 424
+       Took 0.037575s seconds.
+Took 0.007195s time to filter 572 mons in lst1
+
+Took 0.007183s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 58 to 5
+       Took 0.018756s seconds.
+
+Optimization round 2
+Took 0.000560s time to compute 78 new_polys using 162 new_mons
+
+Took 0.000349s time to compute 86 new_mons from 78 new_polys
+
+Took 0.001429s time to compute 23 new_polys using 86 new_mons
+
+Took 0.000210s time to compute 0 new_mons from 23 new_polys
+
+Reduced the polynomials in completion of GT from 424 to 101
+       Took 0.007322s seconds.
+Took 0.000645s time to filter 18 mons in lst1
+
+Took 0.000041s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 5 to 3
+       Took 0.001650s seconds.
+
+Optimization round 3
+Took 0.000109s time to compute 77 new_polys using 81 new_mons
+
+Took 0.000397s time to compute 105 new_mons from 77 new_polys
+
+Took 0.000132s time to compute 24 new_polys using 105 new_mons
+
+Took 0.000043s time to compute 0 new_mons from 24 new_polys
+
+Reduced the polynomials in completion of GT from 101 to 101
+       Took 0.005289s seconds.
+Took 0.000102s time to filter 18 mons in lst1
+
+Took 0.000016s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 3 to 1
+       Took 0.000522s seconds.
+
+Optimization round 4
+Took 0.000075s time to compute 54 new_polys using 27 new_mons
+
+Took 0.000103s time to compute 74 new_mons from 54 new_polys
+
+Took 0.000166s time to compute 23 new_polys using 74 new_mons
+
+Took 0.000026s time to compute 0 new_mons from 23 new_polys
+
+Reduced the polynomials in completion of GT from 101 to 77
+       Took 0.003969s seconds.
+Took 0.000033s time to filter 0 mons in lst1
+
+Took 0.000000s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000247s seconds.
+
+Optimization round 5
+Took 0.000054s time to compute 54 new_polys using 27 new_mons
+
+Took 0.000101s time to compute 74 new_mons from 54 new_polys
+
+Took 0.000145s time to compute 23 new_polys using 74 new_mons
+
+Took 0.000033s time to compute 0 new_mons from 23 new_polys
+
+Reduced the polynomials in completion of GT from 77 to 77
+       Took 0.005425s seconds.
+Took 0.000034s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000299s seconds.
+
+Took 0.082726s to optimize.
+Took 0.001260s to compute basis. Size of trusted set = 65. Size of reduced f.(completion list of G1) U (completion list of GT) = 78. No. of monomials = 77. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 78*77
+Took 2.604345s time to solve
+
+Naive PPE e(F12,F0) = (e(F11,F68))^-1 * e(F11,F44) * e(F10,F37) * e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1 * (e(F9,F19))^-1 * (e(F19,F30))^-1 * e(F19,F66)
+Optimized PPE e(F12,F0) = e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19)
+
+F12 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.030716s seconds to compute completion list of Gt
+
+Took 0.081359s seconds to compute completion list of G1
+Took 0.112098s to compute completion lists.
+Processing untrusted polynomial F13 by rule1
+Took 0.053163s to multiply f with completionG1 . Size of trusted set = 66. Size of f.(completion list of G1) U (completion list of GT) = 1836.
+
+Optimization round 1
+Took 0.084704s time to compute 521 new_polys using 5670 new_mons
+
+Took 0.175478s time to compute 0 new_mons from 521 new_polys
+
+Reduced the polynomials in completion of GT from 1777 to 521
+       Took 0.295107s seconds.
+Took 0.144909s time to filter 1602 mons in lst1
+
+Took 0.073828s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 59 to 7
+       Took 0.243359s seconds.
+
+Optimization round 2
+Took 0.010595s time to compute 144 new_polys using 891 new_mons
+
+Took 0.008789s time to compute 538 new_mons from 144 new_polys
+
+Took 0.013790s time to compute 63 new_polys using 538 new_mons
+
+Took 0.001081s time to compute 0 new_mons from 63 new_polys
+
+Reduced the polynomials in completion of GT from 521 to 207
+       Took 0.044248s seconds.
+Took 0.003631s time to filter 108 mons in lst1
+
+Took 0.000972s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 7 to 5
+       Took 0.013168s seconds.
+
+Optimization round 3
+Took 0.002838s time to compute 143 new_polys using 486 new_mons
+
+Took 0.008221s time to compute 658 new_mons from 143 new_polys
+
+Took 0.001950s time to compute 64 new_polys using 658 new_mons
+
+Took 0.000825s time to compute 0 new_mons from 64 new_polys
+
+Reduced the polynomials in completion of GT from 207 to 207
+       Took 0.020436s seconds.
+Took 0.003619s time to filter 54 mons in lst1
+
+Took 0.000436s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 5 to 3
+       Took 0.010519s seconds.
+
+Optimization round 4
+Took 0.001310s time to compute 142 new_polys using 243 new_mons
+
+Took 0.008435s time to compute 758 new_mons from 142 new_polys
+
+Took 0.002414s time to compute 65 new_polys using 758 new_mons
+
+Took 0.000658s time to compute 0 new_mons from 65 new_polys
+
+Reduced the polynomials in completion of GT from 207 to 207
+       Took 0.020010s seconds.
+Took 0.002714s time to filter 54 mons in lst1
+
+Took 0.000982s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 3 to 1
+       Took 0.007073s seconds.
+
+Optimization round 5
+Took 0.001124s time to compute 104 new_polys using 81 new_mons
+
+Took 0.001580s time to compute 448 new_mons from 104 new_polys
+
+Took 0.005519s time to compute 63 new_polys using 448 new_mons
+
+Took 0.001332s time to compute 0 new_mons from 63 new_polys
+
+Reduced the polynomials in completion of GT from 207 to 167
+       Took 0.017708s seconds.
+Took 0.001975s time to filter 0 mons in lst1
+
+Took 0.000002s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.004989s seconds.
+
+Optimization round 6
+Took 0.000408s time to compute 104 new_polys using 81 new_mons
+
+Took 0.001264s time to compute 448 new_mons from 104 new_polys
+
+Took 0.004576s time to compute 63 new_polys using 448 new_mons
+
+Took 0.001325s time to compute 0 new_mons from 63 new_polys
+
+Reduced the polynomials in completion of GT from 167 to 167
+       Took 0.014194s seconds.
+Took 0.000608s time to filter 0 mons in lst1
+
+Took 0.000002s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.004501s seconds.
+
+Took 0.700395s to optimize.
+Took 0.030234s to compute basis. Size of trusted set = 66. Size of reduced f.(completion list of G1) U (completion list of GT) = 168. No. of monomials = 342. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 168*342
+Took 3.589693s time to solve
+
+Naive PPE e(F13,F0) = (e(F12,F69))^-1 * e(F12,F51) * (e(F11,F68))^-1 * e(F11,F44) * e(F10,F37) * e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1 * (e(F9,F19))^-1 * (e(F19,F30))^-1 * e(F19,F66)
+Optimized PPE e(F13,F0) = e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19)
+
+F13 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.172649s seconds to compute completion list of Gt
+
+Took 0.033078s seconds to compute completion list of G1
+Took 0.205776s to compute completion lists.
+Processing untrusted polynomial F14 by rule1
+Took 0.313687s to multiply f with completionG1 . Size of trusted set = 67. Size of f.(completion list of G1) U (completion list of GT) = 1897.
+
+Optimization round 1
+Took 0.479355s time to compute 604 new_polys using 20898 new_mons
+
+Took 2.159203s time to compute 0 new_mons from 604 new_polys
+
+Reduced the polynomials in completion of GT from 1837 to 604
+       Took 2.770365s seconds.
+Took 1.659381s time to filter 4736 mons in lst1
+
+Took 0.621078s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 60 to 9
+       Took 2.439283s seconds.
+
+Optimization round 2
+Took 0.098032s time to compute 235 new_polys using 4860 new_mons
+
+Took 0.184757s time to compute 2838 new_mons from 235 new_polys
+
+Took 0.102222s time to compute 134 new_polys using 2838 new_mons
+
+Took 0.012951s time to compute 0 new_mons from 134 new_polys
+
+Reduced the polynomials in completion of GT from 604 to 369
+       Took 0.430296s seconds.
+Took 0.086443s time to filter 648 mons in lst1
+
+Took 0.032140s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 9 to 7
+       Took 0.150791s seconds.
+
+Optimization round 3
+Took 0.022443s time to compute 234 new_polys using 2673 new_mons
+
+Took 0.122903s time to compute 3576 new_mons from 234 new_polys
+
+Took 0.029663s time to compute 135 new_polys using 3576 new_mons
+
+Took 0.019460s time to compute 0 new_mons from 135 new_polys
+
+Reduced the polynomials in completion of GT from 369 to 369
+       Took 0.217933s seconds.
+Took 0.052667s time to filter 324 mons in lst1
+
+Took 0.007736s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 7 to 5
+       Took 0.085738s seconds.
+
+Optimization round 4
+Took 0.015929s time to compute 233 new_polys using 1458 new_mons
+
+Took 0.090505s time to compute 4182 new_mons from 233 new_polys
+
+Took 0.035331s time to compute 136 new_polys using 4182 new_mons
+
+Took 0.017205s time to compute 0 new_mons from 136 new_polys
+
+Reduced the polynomials in completion of GT from 369 to 369
+       Took 0.179924s seconds.
+Took 0.027850s time to filter 162 mons in lst1
+
+Took 0.001834s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 5 to 3
+       Took 0.082812s seconds.
+
+Optimization round 5
+Took 0.013314s time to compute 232 new_polys using 729 new_mons
+
+Took 0.058365s time to compute 4606 new_mons from 232 new_polys
+
+Took 0.037520s time to compute 137 new_polys using 4606 new_mons
+
+Took 0.015013s time to compute 0 new_mons from 137 new_polys
+
+Reduced the polynomials in completion of GT from 369 to 369
+       Took 0.139098s seconds.
+Took 0.039129s time to filter 162 mons in lst1
+
+Took 0.000700s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 3 to 1
+       Took 0.059805s seconds.
+
+Optimization round 6
+Took 0.046637s time to compute 175 new_polys using 243 new_mons
+
+Took 0.011339s time to compute 2244 new_mons from 175 new_polys
+
+Took 0.475827s time to compute 134 new_polys using 2244 new_mons
+
+Took 0.004426s time to compute 0 new_mons from 134 new_polys
+
+Reduced the polynomials in completion of GT from 369 to 309
+       Took 0.547928s seconds.
+Took 0.007643s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.015143s seconds.
+
+Optimization round 7
+Took 0.002729s time to compute 175 new_polys using 243 new_mons
+
+Took 0.011881s time to compute 2244 new_mons from 175 new_polys
+
+Took 0.022392s time to compute 134 new_polys using 2244 new_mons
+
+Took 0.004774s time to compute 0 new_mons from 134 new_polys
+
+Reduced the polynomials in completion of GT from 309 to 309
+       Took 0.052194s seconds.
+Took 0.007822s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.017372s seconds.
+
+Took 7.209530s to optimize.
+Took 0.351708s to compute basis. Size of trusted set = 67. Size of reduced f.(completion list of G1) U (completion list of GT) = 310. No. of monomials = 1431. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 310*1431
+Took 9.625121s time to solve
+
+Naive PPE e(F14,F0) = (e(F13,F70))^-1 * e(F13,F58) * (e(F12,F69))^-1 * e(F12,F51) * (e(F11,F68))^-1 * e(F11,F44) * e(F10,F37) * e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1 * (e(F9,F19))^-1 * (e(F19,F30))^-1 * e(F19,F66)
+Optimized PPE e(F14,F0) = e(F13,(F70)^-1*F58)*e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19)
+
+F14 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.383414s seconds to compute completion list of Gt
+
+Took 0.038828s seconds to compute completion list of G1
+Took 1.422261s to compute completion lists.
+Processing untrusted polynomial F17 by rule1
+Took 3.821675s to multiply f with completionG1 . Size of trusted set = 68. Size of f.(completion list of G1) U (completion list of GT) = 1959.
+
+Optimization round 1
+Took 2.522718s time to compute 673 new_polys using 86022 new_mons
+
+Took 41.410808s time to compute 0 new_mons from 673 new_polys
+
+Reduced the polynomials in completion of GT from 1898 to 673
+       Took 44.649383s seconds.
+Took 25.175152s time to filter 16038 mons in lst1
+
+Took 16.069799s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 61 to 11
+       Took 41.789070s seconds.
+
+Optimization round 2
+Took 1.667839s time to compute 354 new_polys using 26973 new_mons
+
+Took 7.704046s time to compute 13814 new_mons from 354 new_polys
+
+Took 0.751763s time to compute 245 new_polys using 13814 new_mons
+
+Took 0.462825s time to compute 0 new_mons from 245 new_polys
+
+Reduced the polynomials in completion of GT from 673 to 599
+       Took 10.752298s seconds.
+Took 5.764676s time to filter 3888 mons in lst1
+
+Took 1.326766s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 11 to 9
+       Took 7.318105s seconds.
+
+Optimization round 3
+Took 0.616291s time to compute 353 new_polys using 14580 new_mons
+
+Took 3.324942s time to compute 18296 new_mons from 353 new_polys
+
+Took 0.463981s time to compute 246 new_polys using 18296 new_mons
+
+Took 0.380623s time to compute 0 new_mons from 246 new_polys
+
+Reduced the polynomials in completion of GT from 599 to 599
+       Took 4.927191s seconds.
+Took 2.684319s time to filter 1944 mons in lst1
+
+Took 0.308025s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 9 to 7
+       Took 3.262310s seconds.
+
+Optimization round 4
+Took 0.392874s time to compute 352 new_polys using 8019 new_mons
+
+Took 1.840360s time to compute 21950 new_mons from 352 new_polys
+
+Took 0.536460s time to compute 247 new_polys using 21950 new_mons
+
+Took 0.407144s time to compute 0 new_mons from 247 new_polys
+
+Reduced the polynomials in completion of GT from 599 to 599
+       Took 3.277049s seconds.
+Took 1.426886s time to filter 972 mons in lst1
+
+Took 0.076234s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 7 to 5
+       Took 1.634197s seconds.
+
+Optimization round 5
+Took 0.338377s time to compute 351 new_polys using 4374 new_mons
+
+Took 1.169971s time to compute 24500 new_mons from 351 new_polys
+
+Took 0.645617s time to compute 248 new_polys using 24500 new_mons
+
+Took 0.397358s time to compute 0 new_mons from 248 new_polys
+
+Reduced the polynomials in completion of GT from 599 to 599
+       Took 2.722223s seconds.
+Took 0.923335s time to filter 486 mons in lst1
+
+Took 0.015344s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 5 to 3
+       Took 1.073794s seconds.
+
+Optimization round 6
+Took 0.257573s time to compute 350 new_polys using 2187 new_mons
+
+Took 0.855078s time to compute 26139 new_mons from 350 new_polys
+
+Took 0.697129s time to compute 249 new_polys using 26139 new_mons
+
+Took 0.390314s time to compute 0 new_mons from 249 new_polys
+
+Reduced the polynomials in completion of GT from 599 to 599
+       Took 2.290263s seconds.
+Took 1.027429s time to filter 486 mons in lst1
+
+Took 0.004396s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 3 to 1
+       Took 1.157192s seconds.
+
+Optimization round 7
+Took 7.169649s time to compute 270 new_polys using 729 new_mons
+
+Took 0.123182s time to compute 10088 new_mons from 270 new_polys
+
+Took 137.063452s time to compute 245 new_polys using 10088 new_mons
+
+Took 0.105652s time to compute 0 new_mons from 245 new_polys
+
+Reduced the polynomials in completion of GT from 599 to 515
+       Took 144.498184s seconds.
+Took 0.146108s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.191547s seconds.
+
+Optimization round 8
+Took 0.030957s time to compute 270 new_polys using 729 new_mons
+
+Took 0.125292s time to compute 10088 new_mons from 270 new_polys
+
+Took 0.279864s time to compute 245 new_polys using 10088 new_mons
+
+Took 0.109539s time to compute 0 new_mons from 245 new_polys
+
+Reduced the polynomials in completion of GT from 515 to 515
+       Took 0.581472s seconds.
+Took 0.128809s time to filter 0 mons in lst1
+
+Took 0.000001s time to filter corresponding polynomials in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.173206s seconds.
+
+Took 270.439225s to optimize.
+Took 4.988450s to compute basis. Size of trusted set = 68. Size of reduced f.(completion list of G1) U (completion list of GT) = 516. No. of monomials = 5724. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 516*5724
+Took 110.456133s time to solve
+
+Naive PPE e(F17,F0) = (e(F14,F71))^-1 * e(F14,F65) * (e(F13,F70))^-1 * e(F13,F58) * (e(F12,F69))^-1 * e(F12,F51) * (e(F11,F68))^-1 * e(F11,F44) * e(F10,F37) * e(F0,F9) * e(F1,F18) * (e(F9,F18))^-1 * (e(F9,F19))^-1 * (e(F19,F30))^-1 * e(F19,F66)
+Optimized PPE e(F17,F0) = e(F14,(F71)^-1*F65)*e(F13,(F70)^-1*F58)*e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19)
+
+F17 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 421.568661s
+
+
+Untrusted set : 
+
+PPEs : e(F17,F0) = e(F14,(F71)^-1*F65)*e(F13,(F70)^-1*F58)*e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19),   e(F14,F0) = e(F13,(F70)^-1*F58)*e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19),   e(F13,F0) = e(F12,(F69)^-1*F51)*e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19),   e(F12,F0) = e(F11,(F68)^-1*F44)*e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19),   e(F11,F0) = e(F10,F37)*e(F0,F9)*e(F1*(F9)^-1,F18)*e((F9)^-1*(F30)^-1*F66,F19),   e(F10,F0) = e(F0,F9)*e(F1*(F9)^-1,F18),   
+
+Ouptut : PPE Testable :)
+
+*)

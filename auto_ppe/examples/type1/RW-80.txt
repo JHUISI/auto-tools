@@ -1,0 +1,116 @@
+
+
+(*Rouselakis Waters CP-ABE construction with k = 80*)
+(*https://eprint.iacr.org/2012/583.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [u, h, w, v, alpha].
+unfixed_vars [r, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45, r46, r47, r48, r49, r50, r51, r52, r53, r54, r55, r56, r57, r58, r59, r60, r61, r62, r63, r64, r65, r66, r67, r68, r69, r70, r71, r72, r73, r74, r75, r76, r77, r78, r79, r80].
+
+(*public key*)
+trusted_polys [F1 = u, F2 = h, F3 = w, F4 = v] in G1.
+trusted_polys [F5 = alpha] in GT.
+
+(*attributes*)
+Zp_vars [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60, a61, a62, a63, a64, a65, a66, a67, a68, a69, a70, a71, a72, a73, a74, a75, a76, a77, a78, a79, a80].
+
+(*Secret key for*)
+untrusted_polys [F6 = alpha + w*r, F7 = r] in G1.
+untrusted_polys [F8 = (u*a1 + h)*r1 - v*r, F9 = r1] in G1.
+untrusted_polys [F10 = (u*a2 + h)*r2 - v*r, F11 = r2] in G1.
+untrusted_polys [F12 = (u*a3 + h)*r3 - v*r, F13 = r3] in G1.
+untrusted_polys [F14 = (u*a4 + h)*r4 - v*r, F15 = r4] in G1.
+untrusted_polys [F16 = (u*a5 + h)*r5 - v*r, F17 = r5] in G1.
+untrusted_polys [F18 = (u*a6 + h)*r6 - v*r, F19 = r6] in G1.
+untrusted_polys [F20 = (u*a7 + h)*r7 - v*r, F21 = r7] in G1.
+untrusted_polys [F22 = (u*a8 + h)*r8 - v*r, F23 = r8] in G1.
+untrusted_polys [F24 = (u*a9 + h)*r9 - v*r, F25 = r9] in G1.
+untrusted_polys [F26 = (u*a10 + h)*r10 - v*r, F27 = r10] in G1.
+untrusted_polys [F28 = (u*a11 + h)*r11 - v*r, F29 = r11] in G1.
+untrusted_polys [F30 = (u*a12 + h)*r12 - v*r, F31 = r12] in G1.
+untrusted_polys [F32 = (u*a13 + h)*r13 - v*r, F33 = r13] in G1.
+untrusted_polys [F34 = (u*a14 + h)*r14 - v*r, F35 = r14] in G1.
+untrusted_polys [F36 = (u*a15 + h)*r15 - v*r, F37 = r15] in G1.
+untrusted_polys [F38 = (u*a16 + h)*r16 - v*r, F39 = r16] in G1.
+untrusted_polys [F40 = (u*a17 + h)*r17 - v*r, F41 = r17] in G1.
+untrusted_polys [F42 = (u*a18 + h)*r18 - v*r, F43 = r18] in G1.
+untrusted_polys [F44 = (u*a19 + h)*r19 - v*r, F45 = r19] in G1.
+untrusted_polys [F46 = (u*a20 + h)*r20 - v*r, F47 = r20] in G1.
+untrusted_polys [F48 = (u*a21 + h)*r21 - v*r, F49 = r21] in G1.
+untrusted_polys [F50 = (u*a22 + h)*r22 - v*r, F51 = r22] in G1.
+untrusted_polys [F52 = (u*a23 + h)*r23 - v*r, F53 = r23] in G1.
+untrusted_polys [F54 = (u*a24 + h)*r24 - v*r, F55 = r24] in G1.
+untrusted_polys [F56 = (u*a25 + h)*r25 - v*r, F57 = r25] in G1.
+untrusted_polys [F58 = (u*a26 + h)*r26 - v*r, F59 = r26] in G1.
+untrusted_polys [F60 = (u*a27 + h)*r27 - v*r, F61 = r27] in G1.
+untrusted_polys [F62 = (u*a28 + h)*r28 - v*r, F63 = r28] in G1.
+untrusted_polys [F64 = (u*a29 + h)*r29 - v*r, F65 = r29] in G1.
+untrusted_polys [F66 = (u*a30 + h)*r30 - v*r, F67 = r30] in G1.
+untrusted_polys [F68 = (u*a31 + h)*r31 - v*r, F69 = r31] in G1.
+untrusted_polys [F70 = (u*a32 + h)*r32 - v*r, F71 = r32] in G1.
+untrusted_polys [F72 = (u*a33 + h)*r33 - v*r, F73 = r33] in G1.
+untrusted_polys [F74 = (u*a34 + h)*r34 - v*r, F75 = r34] in G1.
+untrusted_polys [F76 = (u*a35 + h)*r35 - v*r, F77 = r35] in G1.
+untrusted_polys [F78 = (u*a36 + h)*r36 - v*r, F79 = r36] in G1.
+untrusted_polys [F80 = (u*a37 + h)*r37 - v*r, F81 = r37] in G1.
+untrusted_polys [F82 = (u*a38 + h)*r38 - v*r, F83 = r38] in G1.
+untrusted_polys [F84 = (u*a39 + h)*r39 - v*r, F85 = r39] in G1.
+untrusted_polys [F86 = (u*a40 + h)*r40 - v*r, F87 = r40] in G1.
+untrusted_polys [F88 = (u*a41 + h)*r41 - v*r, F89 = r41] in G1.
+untrusted_polys [F90 = (u*a42 + h)*r42 - v*r, F91 = r42] in G1.
+untrusted_polys [F92 = (u*a43 + h)*r43 - v*r, F93 = r43] in G1.
+untrusted_polys [F94 = (u*a44 + h)*r44 - v*r, F95 = r44] in G1.
+untrusted_polys [F96 = (u*a45 + h)*r45 - v*r, F97 = r45] in G1.
+untrusted_polys [F98 = (u*a46 + h)*r46 - v*r, F99 = r46] in G1.
+untrusted_polys [F100 = (u*a47 + h)*r47 - v*r, F101 = r47] in G1.
+untrusted_polys [F102 = (u*a48 + h)*r48 - v*r, F103 = r48] in G1.
+untrusted_polys [F104 = (u*a49 + h)*r49 - v*r, F105 = r49] in G1.
+untrusted_polys [F106 = (u*a50 + h)*r50 - v*r, F107 = r50] in G1.
+untrusted_polys [F108 = (u*a51 + h)*r51 - v*r, F109 = r51] in G1.
+untrusted_polys [F110 = (u*a52 + h)*r52 - v*r, F111 = r52] in G1.
+untrusted_polys [F112 = (u*a53 + h)*r53 - v*r, F113 = r53] in G1.
+untrusted_polys [F114 = (u*a54 + h)*r54 - v*r, F115 = r54] in G1.
+untrusted_polys [F116 = (u*a55 + h)*r55 - v*r, F117 = r55] in G1.
+untrusted_polys [F118 = (u*a56 + h)*r56 - v*r, F119 = r56] in G1.
+untrusted_polys [F120 = (u*a57 + h)*r57 - v*r, F121 = r57] in G1.
+untrusted_polys [F122 = (u*a58 + h)*r58 - v*r, F123 = r58] in G1.
+untrusted_polys [F124 = (u*a59 + h)*r59 - v*r, F125 = r59] in G1.
+untrusted_polys [F126 = (u*a60 + h)*r60 - v*r, F127 = r60] in G1.
+untrusted_polys [F128 = (u*a61 + h)*r61 - v*r, F129 = r61] in G1.
+untrusted_polys [F130 = (u*a62 + h)*r62 - v*r, F131 = r62] in G1.
+untrusted_polys [F132 = (u*a63 + h)*r63 - v*r, F133 = r63] in G1.
+untrusted_polys [F134 = (u*a64 + h)*r64 - v*r, F135 = r64] in G1.
+untrusted_polys [F136 = (u*a65 + h)*r65 - v*r, F137 = r65] in G1.
+untrusted_polys [F138 = (u*a66 + h)*r66 - v*r, F139 = r66] in G1.
+untrusted_polys [F140 = (u*a67 + h)*r67 - v*r, F141 = r67] in G1.
+untrusted_polys [F142 = (u*a68 + h)*r68 - v*r, F143 = r68] in G1.
+untrusted_polys [F144 = (u*a69 + h)*r69 - v*r, F145 = r69] in G1.
+untrusted_polys [F146 = (u*a70 + h)*r70 - v*r, F147 = r70] in G1.
+untrusted_polys [F148 = (u*a71 + h)*r71 - v*r, F149 = r71] in G1.
+untrusted_polys [F150 = (u*a72 + h)*r72 - v*r, F151 = r72] in G1.
+untrusted_polys [F152 = (u*a73 + h)*r73 - v*r, F153 = r73] in G1.
+untrusted_polys [F154 = (u*a74 + h)*r74 - v*r, F155 = r74] in G1.
+untrusted_polys [F156 = (u*a75 + h)*r75 - v*r, F157 = r75] in G1.
+untrusted_polys [F158 = (u*a76 + h)*r76 - v*r, F159 = r76] in G1.
+untrusted_polys [F160 = (u*a77 + h)*r77 - v*r, F161 = r77] in G1.
+untrusted_polys [F162 = (u*a78 + h)*r78 - v*r, F163 = r78] in G1.
+untrusted_polys [F164 = (u*a79 + h)*r79 - v*r, F165 = r79] in G1.
+untrusted_polys [F166 = (u*a80 + h)*r80 - v*r, F167 = r80] in G1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

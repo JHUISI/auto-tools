@@ -1,0 +1,604 @@
+
+maps G1 * G1 -> GT.
+
+
+fixed_vars [alpha, beta, u, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, x21, x22, x23, x24, x25, x26, x27, x28, x29, x30, x31, x32, x33, x34, x35, x36, x37, x38, x39, x40, x41, x42, x43, x44, x45, x46, x47, x48, x49, x50, x51, x52, x53, x54, x55, x56, x57, x58, x59, x60, x61, x62, x63, x64, x65, x66, x67, x68, x69, x70, x71, x72, x73, x74, x75, x76, x77, x78, x79, x80,
+x81, x82, x83, x84, x85, x86, x87, x88, x89, x90, x91, x92, x93, x94, x95, x96, x97, x98, x99, x100, x101, x102, x103, x104, x105, x106, x107, x108, x109, x110, x111, x112, x113, x114, x115, x116, x117, x118, x119, x120, x121, x122, x123, x124, x125, x126, x127, x128, x129, x130, x131, x132, x133, x134, x135, x136, x137, x138, x139, x140, x141, x142, x143, x144, x145, x146, x147, x148, x149, x150, x151, x152, x153, x154, x155, x156, x157, x158, x159, x160,
+y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11, y12, y13, y14, y15, y16, y17, y18, y19, y20, y21, y22, y23, y24, y25, y26, y27, y28, y29, y30, y31, y32, y33, y34, y35, y36, y37, y38, y39, y40, y41, y42, y43, y44, y45, y46, y47, y48, y49, y50, y51, y52, y53, y54, y55, y56, y57, y58, y59, y60, y61, y62, y63, y64, y65, y66, y67, y68, y69, y70, y71, y72, y73, y74, y75, y76, y77, y78, y79, y80,
+y81, y82, y83, y84, y85, y86, y87, y88, y89, y90, y91, y92, y93, y94, y95, y96, y97, y98, y99, y100, y101, y102, y103, y104, y105, y106, y107, y108, y109, y110, y111, y112, y113, y114, y115, y116, y117, y118, y119, y120, y121, y122, y123, y124, y125, y126, y127, y128, y129, y130, y131, y132, y133, y134, y135, y136, y137, y138, y139, y140, y141, y142, y143, y144, y145, y146, y147, y148, y149, y150, y151, y152, y153, y154, y155, y156, y157, y158, y159, y160]. 
+
+unfixed_vars [r].
+
+trusted_polys [F1 = x1, F2 = x2, F3 = x3, F4 = x4, F5 = x5, F6 = x6, F7 = x7, F8 = x8, F9 = x9, F10 = x10, F11 = x11, F12 = x12, F13 = x13, F14 = x14, F15 = x15, F16 = x16, F17 = x17, F18 = x18, F19 = x19, F20 = x20, F21 = x21, F22 = x22, F23 = x23, F24 = x24, F25 = x25, F26 = x26, F27 = x27, F28 = x28, F29 = x29, F30 = x30, F31 = x31, F32 = x32, F33 = x33, F34 = x34, F35 = x35, F36 = x36, F37 = x37, F38 = x38, F39 = x39, F40 = x40, F41 = x41, F42 = x42, F43 = x43, F44 = x44, F45 = x45, F46 = x46, F47 = x47, F48 = x48, F49 = x49, F50 = x50, F51 = x51, F52 = x52, F53 = x53, F54 = x54, F55 = x55, F56 = x56, F57 = x57, F58 = x58, F59 = x59, F60 = x60, F61 = x61, F62 = x62, F63 = x63, F64 = x64, F65 = x65, F66 = x66, F67 = x67, F68 = x68, F69 = x69, F70 = x70, F71 = x71, F72 = x72, F73 = x73, F74 = x74, F75 = x75, F76 = x76, F77 = x77, F78 = x78, F79 = x79, F80 = x80,
+ F81 = x81, F82 = x82, F83 = x83, F84 = x84, F85 = x85, F86 = x86, F87 = x87, F88 = x88, F89 = x89, F90 = x90, F91 = x91, F92 = x92, F93 = x93, F94 = x94, F95 = x95, F96 = x96, F97 = x97, F98 = x98, F99 = x99, F100 = x100, F101 = x101, F102 = x102, F103 = x103, F104 = x104, F105 = x105, F106 = x106, F107 = x107, F108 = x108, F109 = x109, F110 = x110, F111 = x111, F112 = x112, F113 = x113, F114 = x114, F115 = x115, F116 = x116, F117 = x117, F118 = x118, F119 = x119, F120 = x120,
+  F121 = x121, F122 = x122, F123 = x123, F124 = x124, F125 = x125, F126 = x126, F127 = x127, F128 = x128, F129 = x129, F130 = x130, F131 = x131, F132 = x132, F133 = x133, F134 = x134, F135 = x135, F136 = x136, F137 = x137, F138 = x138, F139 = x139, F140 = x140, F141 = x141, F142 = x142, F143 = x143, F144 = x144, F145 = x145, F146 = x146, F147 = x147, F148 = x148, F149 = x149, F150 = x150,
+ F151 = x151, F152 = x152, F153 = x153, F154 = x154, F155 = x155, F156 = x156, F157 = x157, F158 = x158, F159 = x159, F160 = x160, 
+F161 = y1, F162 = y2, F163 = y3, F164 = y4, F165 = y5, F166 = y6, F167 = y7, F168 = y8, F169 = y9, F170 = y10, F171 = y11, F172 = y12, F173 = y13, F174 = y14, F175 = y15, F176 = y16, F177 = y17, F178 = y18, F179 = y19, F180 = y20, F181 = y21, F182 = y22, F183 = y23, F184 = y24, F185 = y25, F186 = y26, F187 = y27, F188 = y28, F189 = y29, F190 = y30, F191 = y31, F192 = y32, F193 = y33, F194 = y34, F195 = y35, F196 = y36, F197 = y37, F198 = y38, F199 = y39, F200 = y40,
+ F201 = y41, F202 = y42, F203 = y43, F204 = y44, F205 = y45, F206 = y46, F207 = y47, F208 = y48, F209 = y49, F210 = y50, F211 = y51, F212 = y52, F213 = y53, F214 = y54, F215 = y55, F216 = y56, F217 = y57, F218 = y58, F219 = y59, F220 = y60, F221 = y61, F222 = y62, F223 = y63, F224 = y64, F225 = y65, F226 = y66, F227 = y67, F228 = y68, F229 = y69, F230 = y70, F231 = y71, F232 = y72, F233 = y73, F234 = y74, F235 = y75, F236 = y76, F237 = y77, F238 = y78, F239 = y79, F240 = y80,
+  F241 = y81, F242 = y82, F243 = y83, F244 = y84, F245 = y85, F246 = y86, F247 = y87, F248 = y88, F249 = y89, F250 = y90, F251 = y91, F252 = y92, F253 = y93, F254 = y94, F255 = y95, F256 = y96, F257 = y97, F258 = y98, F259 = y99, F260 = y100, F261 = y101, F262 = y102, F263 = y103, F264 = y104, F265 = y105, F266 = y106, F267 = y107, F268 = y108, F269 = y109, F270 = y110, F271 = y111, F272 = y112, F273 = y113, F274 = y114, F275 = y115, F276 = y116, F277 = y117, F278 = y118, F279 = y119,
+   F280 = y120, F281 = y121, F282 = y122, F283 = y123, F284 = y124, F285 = y125, F286 = y126, F287 = y127, F288 = y128, F289 = y129, F290 = y130, F291 = y131, F292 = y132, F293 = y133, F294 = y134, F295 = y135, F296 = y136, F297 = y137, F298 = y138, F299 = y139, F300 = y140, F301 = y141, F302 = y142, F303 = y143, F304 = y144, F305 = y145, F306 = y146, F307 = y147, F308 = y148, F309 = y149, F310 = y150, F311 = y151, F312 = y152, F313 = y153, F314 = y154, F315 = y155, F316 = y156, F317 = y157, F318 = y158, F319 = y159, F320 = y160, 
+F321 = x1*y1, F322 = x2*y2, F323 = x3*y3, F324 = x4*y4, F325 = x5*y5, F326 = x6*y6, F327 = x7*y7, F328 = x8*y8, F329 = x9*y9, F330 = x10*y10, F331 = x11*y11, F332 = x12*y12, F333 = x13*y13, F334 = x14*y14, F335 = x15*y15, F336 = x16*y16, F337 = x17*y17, F338 = x18*y18, F339 = x19*y19, F340 = x20*y20, F341 = x21*y21, F342 = x22*y22, F343 = x23*y23, F344 = x24*y24, F345 = x25*y25, F346 = x26*y26, F347 = x27*y27, F348 = x28*y28, F349 = x29*y29, F350 = x30*y30, F351 = x31*y31, F352 = x32*y32, F353 = x33*y33, F354 = x34*y34,
+ F355 = x35*y35, F356 = x36*y36, F357 = x37*y37, F358 = x38*y38, F359 = x39*y39, F360 = x40*y40, F361 = x41*y41, F362 = x42*y42, F363 = x43*y43, F364 = x44*y44, F365 = x45*y45, F366 = x46*y46, F367 = x47*y47, F368 = x48*y48, F369 = x49*y49, F370 = x50*y50, F371 = x51*y51, F372 = x52*y52, F373 = x53*y53, F374 = x54*y54, F375 = x55*y55, F376 = x56*y56, F377 = x57*y57, F378 = x58*y58, F379 = x59*y59, F380 = x60*y60, F381 = x61*y61, F382 = x62*y62, F383 = x63*y63, F384 = x64*y64, F385 = x65*y65, F386 = x66*y66, F387 = x67*y67,
+  F388 = x68*y68, F389 = x69*y69, F390 = x70*y70, F391 = x71*y71, F392 = x72*y72, F393 = x73*y73, F394 = x74*y74, F395 = x75*y75, F396 = x76*y76, F397 = x77*y77, F398 = x78*y78, F399 = x79*y79, F400 = x80*y80, F401 = x81*y81, F402 = x82*y82, F403 = x83*y83, F404 = x84*y84, F405 = x85*y85, F406 = x86*y86, F407 = x87*y87, F408 = x88*y88, F409 = x89*y89, F410 = x90*y90, F411 = x91*y91, F412 = x92*y92, F413 = x93*y93, F414 = x94*y94, F415 = x95*y95, F416 = x96*y96, F417 = x97*y97, F418 = x98*y98, F419 = x99*y99, F420 = x100*y100,
+ F421 = x101*y101, F422 = x102*y102, F423 = x103*y103, F424 = x104*y104, F425 = x105*y105, F426 = x106*y106, F427 = x107*y107, F428 = x108*y108, F429 = x109*y109, F430 = x110*y110, F431 = x111*y111, F432 = x112*y112, F433 = x113*y113, F434 = x114*y114, F435 = x115*y115, F436 = x116*y116, F437 = x117*y117, F438 = x118*y118, F439 = x119*y119, F440 = x120*y120, F441 = x121*y121, F442 = x122*y122, F443 = x123*y123, F444 = x124*y124, F445 = x125*y125, F446 = x126*y126, F447 = x127*y127, F448 = x128*y128, F449 = x129*y129, F450 = x130*y130,
+    F451 = x131*y131, F452 = x132*y132, F453 = x133*y133, F454 = x134*y134, F455 = x135*y135, F456 = x136*y136, F457 = x137*y137, F458 = x138*y138, F459 = x139*y139, F460 = x140*y140, F461 = x141*y141, F462 = x142*y142, F463 = x143*y143, F464 = x144*y144, F465 = x145*y145, F466 = x146*y146, F467 = x147*y147, F468 = x148*y148, F469 = x149*y149, F470 = x150*y150, F471 = x151*y151, F472 = x152*y152, F473 = x153*y153, F474 = x154*y154, F475 = x155*y155, F476 = x156*y156, F477 = x157*y157, F478 = x158*y158, F479 = x159*y159, F480 = x160*y160] in G1.
+
+
+trusted_polys [F481 = alpha, F482 = beta, F483 = u] in G1.
+
+untrusted_polys [F484 = r, F485 = alpha*beta + (u + x1*y1 + x2*y2 + x3*y3 + x4*y4 + x5*y5 + x6*y6 + x7*y7 + x8*y8 + x9*y9 + x10*y10 + x11*y11 + x12*y12 + x13*y13 + x14*y14 + x15*y15 + x16*y16 + x17*y17 + x18*y18 + x19*y19 + x20*y20 + x21*y21 + x22*y22 + x23*y23 + x24*y24 + x25*y25 + x26*y26 + x27*y27 + x28*y28 + x29*y29 + x30*y30 + x31*y31 + x32*y32 + x33*y33 + x34*y34 + x35*y35 + x36*y36 + x37*y37 + x38*y38 + x39*y39 + x40*y40 + x41*y41 + x42*y42 + x43*y43 + x44*y44 + x45*y45 + x46*y46 + x47*y47 + x48*y48 + x49*y49 + x50*y50 + x51*y51 + x52*y52 + x53*y53 + x54*y54 + x55*y55 + x56*y56 + x57*y57 + x58*y58 + x59*y59 + x60*y60 + x61*y61 + x62*y62 + x63*y63 + x64*y64 + x65*y65 + x66*y66 + x67*y67 + x68*y68 + x69*y69 + x70*y70 + x71*y71 + x72*y72 + x73*y73 + x74*y74 + x75*y75 + x76*y76 + x77*y77 + x78*y78 + x79*y79 + x80*y80 + x81*y81 + x82*y82 + x83*y83 + x84*y84 + x85*y85 + x86*y86 + x87*y87 + x88*y88 + x89*y89 + x90*y90 + x91*y91 + x92*y92 + x93*y93 + x94*y94 + x95*y95 + x96*y96 + x97*y97 + x98*y98 + x99*y99 + x100*y100 + x101*y101 + x102*y102 + x103*y103 + x104*y104 + x105*y105 + x106*y106 + x107*y107 + x108*y108 + x109*y109 + x110*y110 + x111*y111 + x112*y112 + x113*y113 + x114*y114 + x115*y115 + x116*y116 + x117*y117 + x118*y118 + x119*y119 + x120*y120 + x121*y121 + x122*y122 + x123*y123 + x124*y124 + x125*y125 + x126*y126 + x127*y127 + x128*y128 + x129*y129 + x130*y130 + x131*y131 + x132*y132 + x133*y133 + x134*y134 + x135*y135 + x136*y136 + x137*y137 + x138*y138 + x139*y139 + x140*y140 + x141*y141 + x142*y142 + x143*y143 + x144*y144 + x145*y145 + x146*y146 + x147*y147 + x148*y148 + x149*y149 + x150*y150 + x151*y151 + x152*y152 + x153*y153 + x154*y154 + x155*y155 + x156*y156 + x157*y157 + x158*y158 + x159*y159 + x160*y160)*r] in G1.
+
+
+
+
+
+
+
+
+
+
+(***************************Output on execution**********************)
+
+(*
+
+wireless-10-147-200-53:project satya$ ./gga.native examples/type1/waters05-160.txt
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x1 in G1
+F2 = x2 in G1
+F3 = x3 in G1
+F4 = x4 in G1
+F5 = x5 in G1
+F6 = x6 in G1
+F7 = x7 in G1
+F8 = x8 in G1
+F9 = x9 in G1
+F10 = x10 in G1
+F11 = x11 in G1
+F12 = x12 in G1
+F13 = x13 in G1
+F14 = x14 in G1
+F15 = x15 in G1
+F16 = x16 in G1
+F17 = x17 in G1
+F18 = x18 in G1
+F19 = x19 in G1
+F20 = x20 in G1
+F21 = x21 in G1
+F22 = x22 in G1
+F23 = x23 in G1
+F24 = x24 in G1
+F25 = x25 in G1
+F26 = x26 in G1
+F27 = x27 in G1
+F28 = x28 in G1
+F29 = x29 in G1
+F30 = x30 in G1
+F31 = x31 in G1
+F32 = x32 in G1
+F33 = x33 in G1
+F34 = x34 in G1
+F35 = x35 in G1
+F36 = x36 in G1
+F37 = x37 in G1
+F38 = x38 in G1
+F39 = x39 in G1
+F40 = x40 in G1
+F41 = x41 in G1
+F42 = x42 in G1
+F43 = x43 in G1
+F44 = x44 in G1
+F45 = x45 in G1
+F46 = x46 in G1
+F47 = x47 in G1
+F48 = x48 in G1
+F49 = x49 in G1
+F50 = x50 in G1
+F51 = x51 in G1
+F52 = x52 in G1
+F53 = x53 in G1
+F54 = x54 in G1
+F55 = x55 in G1
+F56 = x56 in G1
+F57 = x57 in G1
+F58 = x58 in G1
+F59 = x59 in G1
+F60 = x60 in G1
+F61 = x61 in G1
+F62 = x62 in G1
+F63 = x63 in G1
+F64 = x64 in G1
+F65 = x65 in G1
+F66 = x66 in G1
+F67 = x67 in G1
+F68 = x68 in G1
+F69 = x69 in G1
+F70 = x70 in G1
+F71 = x71 in G1
+F72 = x72 in G1
+F73 = x73 in G1
+F74 = x74 in G1
+F75 = x75 in G1
+F76 = x76 in G1
+F77 = x77 in G1
+F78 = x78 in G1
+F79 = x79 in G1
+F80 = x80 in G1
+F81 = x81 in G1
+F82 = x82 in G1
+F83 = x83 in G1
+F84 = x84 in G1
+F85 = x85 in G1
+F86 = x86 in G1
+F87 = x87 in G1
+F88 = x88 in G1
+F89 = x89 in G1
+F90 = x90 in G1
+F91 = x91 in G1
+F92 = x92 in G1
+F93 = x93 in G1
+F94 = x94 in G1
+F95 = x95 in G1
+F96 = x96 in G1
+F97 = x97 in G1
+F98 = x98 in G1
+F99 = x99 in G1
+F100 = x100 in G1
+F101 = x101 in G1
+F102 = x102 in G1
+F103 = x103 in G1
+F104 = x104 in G1
+F105 = x105 in G1
+F106 = x106 in G1
+F107 = x107 in G1
+F108 = x108 in G1
+F109 = x109 in G1
+F110 = x110 in G1
+F111 = x111 in G1
+F112 = x112 in G1
+F113 = x113 in G1
+F114 = x114 in G1
+F115 = x115 in G1
+F116 = x116 in G1
+F117 = x117 in G1
+F118 = x118 in G1
+F119 = x119 in G1
+F120 = x120 in G1
+F121 = x121 in G1
+F122 = x122 in G1
+F123 = x123 in G1
+F124 = x124 in G1
+F125 = x125 in G1
+F126 = x126 in G1
+F127 = x127 in G1
+F128 = x128 in G1
+F129 = x129 in G1
+F130 = x130 in G1
+F131 = x131 in G1
+F132 = x132 in G1
+F133 = x133 in G1
+F134 = x134 in G1
+F135 = x135 in G1
+F136 = x136 in G1
+F137 = x137 in G1
+F138 = x138 in G1
+F139 = x139 in G1
+F140 = x140 in G1
+F141 = x141 in G1
+F142 = x142 in G1
+F143 = x143 in G1
+F144 = x144 in G1
+F145 = x145 in G1
+F146 = x146 in G1
+F147 = x147 in G1
+F148 = x148 in G1
+F149 = x149 in G1
+F150 = x150 in G1
+F151 = x151 in G1
+F152 = x152 in G1
+F153 = x153 in G1
+F154 = x154 in G1
+F155 = x155 in G1
+F156 = x156 in G1
+F157 = x157 in G1
+F158 = x158 in G1
+F159 = x159 in G1
+F160 = x160 in G1
+F161 = y1 in G1
+F162 = y2 in G1
+F163 = y3 in G1
+F164 = y4 in G1
+F165 = y5 in G1
+F166 = y6 in G1
+F167 = y7 in G1
+F168 = y8 in G1
+F169 = y9 in G1
+F170 = y10 in G1
+F171 = y11 in G1
+F172 = y12 in G1
+F173 = y13 in G1
+F174 = y14 in G1
+F175 = y15 in G1
+F176 = y16 in G1
+F177 = y17 in G1
+F178 = y18 in G1
+F179 = y19 in G1
+F180 = y20 in G1
+F181 = y21 in G1
+F182 = y22 in G1
+F183 = y23 in G1
+F184 = y24 in G1
+F185 = y25 in G1
+F186 = y26 in G1
+F187 = y27 in G1
+F188 = y28 in G1
+F189 = y29 in G1
+F190 = y30 in G1
+F191 = y31 in G1
+F192 = y32 in G1
+F193 = y33 in G1
+F194 = y34 in G1
+F195 = y35 in G1
+F196 = y36 in G1
+F197 = y37 in G1
+F198 = y38 in G1
+F199 = y39 in G1
+F200 = y40 in G1
+F201 = y41 in G1
+F202 = y42 in G1
+F203 = y43 in G1
+F204 = y44 in G1
+F205 = y45 in G1
+F206 = y46 in G1
+F207 = y47 in G1
+F208 = y48 in G1
+F209 = y49 in G1
+F210 = y50 in G1
+F211 = y51 in G1
+F212 = y52 in G1
+F213 = y53 in G1
+F214 = y54 in G1
+F215 = y55 in G1
+F216 = y56 in G1
+F217 = y57 in G1
+F218 = y58 in G1
+F219 = y59 in G1
+F220 = y60 in G1
+F221 = y61 in G1
+F222 = y62 in G1
+F223 = y63 in G1
+F224 = y64 in G1
+F225 = y65 in G1
+F226 = y66 in G1
+F227 = y67 in G1
+F228 = y68 in G1
+F229 = y69 in G1
+F230 = y70 in G1
+F231 = y71 in G1
+F232 = y72 in G1
+F233 = y73 in G1
+F234 = y74 in G1
+F235 = y75 in G1
+F236 = y76 in G1
+F237 = y77 in G1
+F238 = y78 in G1
+F239 = y79 in G1
+F240 = y80 in G1
+F241 = y81 in G1
+F242 = y82 in G1
+F243 = y83 in G1
+F244 = y84 in G1
+F245 = y85 in G1
+F246 = y86 in G1
+F247 = y87 in G1
+F248 = y88 in G1
+F249 = y89 in G1
+F250 = y90 in G1
+F251 = y91 in G1
+F252 = y92 in G1
+F253 = y93 in G1
+F254 = y94 in G1
+F255 = y95 in G1
+F256 = y96 in G1
+F257 = y97 in G1
+F258 = y98 in G1
+F259 = y99 in G1
+F260 = y100 in G1
+F261 = y101 in G1
+F262 = y102 in G1
+F263 = y103 in G1
+F264 = y104 in G1
+F265 = y105 in G1
+F266 = y106 in G1
+F267 = y107 in G1
+F268 = y108 in G1
+F269 = y109 in G1
+F270 = y110 in G1
+F271 = y111 in G1
+F272 = y112 in G1
+F273 = y113 in G1
+F274 = y114 in G1
+F275 = y115 in G1
+F276 = y116 in G1
+F277 = y117 in G1
+F278 = y118 in G1
+F279 = y119 in G1
+F280 = y120 in G1
+F281 = y121 in G1
+F282 = y122 in G1
+F283 = y123 in G1
+F284 = y124 in G1
+F285 = y125 in G1
+F286 = y126 in G1
+F287 = y127 in G1
+F288 = y128 in G1
+F289 = y129 in G1
+F290 = y130 in G1
+F291 = y131 in G1
+F292 = y132 in G1
+F293 = y133 in G1
+F294 = y134 in G1
+F295 = y135 in G1
+F296 = y136 in G1
+F297 = y137 in G1
+F298 = y138 in G1
+F299 = y139 in G1
+F300 = y140 in G1
+F301 = y141 in G1
+F302 = y142 in G1
+F303 = y143 in G1
+F304 = y144 in G1
+F305 = y145 in G1
+F306 = y146 in G1
+F307 = y147 in G1
+F308 = y148 in G1
+F309 = y149 in G1
+F310 = y150 in G1
+F311 = y151 in G1
+F312 = y152 in G1
+F313 = y153 in G1
+F314 = y154 in G1
+F315 = y155 in G1
+F316 = y156 in G1
+F317 = y157 in G1
+F318 = y158 in G1
+F319 = y159 in G1
+F320 = y160 in G1
+F321 = x1*y1 in G1
+F322 = x2*y2 in G1
+F323 = x3*y3 in G1
+F324 = x4*y4 in G1
+F325 = x5*y5 in G1
+F326 = x6*y6 in G1
+F327 = x7*y7 in G1
+F328 = x8*y8 in G1
+F329 = x9*y9 in G1
+F330 = x10*y10 in G1
+F331 = x11*y11 in G1
+F332 = x12*y12 in G1
+F333 = x13*y13 in G1
+F334 = x14*y14 in G1
+F335 = x15*y15 in G1
+F336 = x16*y16 in G1
+F337 = x17*y17 in G1
+F338 = x18*y18 in G1
+F339 = x19*y19 in G1
+F340 = x20*y20 in G1
+F341 = x21*y21 in G1
+F342 = x22*y22 in G1
+F343 = x23*y23 in G1
+F344 = x24*y24 in G1
+F345 = x25*y25 in G1
+F346 = x26*y26 in G1
+F347 = x27*y27 in G1
+F348 = x28*y28 in G1
+F349 = x29*y29 in G1
+F350 = x30*y30 in G1
+F351 = x31*y31 in G1
+F352 = x32*y32 in G1
+F353 = x33*y33 in G1
+F354 = x34*y34 in G1
+F355 = x35*y35 in G1
+F356 = x36*y36 in G1
+F357 = x37*y37 in G1
+F358 = x38*y38 in G1
+F359 = x39*y39 in G1
+F360 = x40*y40 in G1
+F361 = x41*y41 in G1
+F362 = x42*y42 in G1
+F363 = x43*y43 in G1
+F364 = x44*y44 in G1
+F365 = x45*y45 in G1
+F366 = x46*y46 in G1
+F367 = x47*y47 in G1
+F368 = x48*y48 in G1
+F369 = x49*y49 in G1
+F370 = x50*y50 in G1
+F371 = x51*y51 in G1
+F372 = x52*y52 in G1
+F373 = x53*y53 in G1
+F374 = x54*y54 in G1
+F375 = x55*y55 in G1
+F376 = x56*y56 in G1
+F377 = x57*y57 in G1
+F378 = x58*y58 in G1
+F379 = x59*y59 in G1
+F380 = x60*y60 in G1
+F381 = x61*y61 in G1
+F382 = x62*y62 in G1
+F383 = x63*y63 in G1
+F384 = x64*y64 in G1
+F385 = x65*y65 in G1
+F386 = x66*y66 in G1
+F387 = x67*y67 in G1
+F388 = x68*y68 in G1
+F389 = x69*y69 in G1
+F390 = x70*y70 in G1
+F391 = x71*y71 in G1
+F392 = x72*y72 in G1
+F393 = x73*y73 in G1
+F394 = x74*y74 in G1
+F395 = x75*y75 in G1
+F396 = x76*y76 in G1
+F397 = x77*y77 in G1
+F398 = x78*y78 in G1
+F399 = x79*y79 in G1
+F400 = x80*y80 in G1
+F401 = x81*y81 in G1
+F402 = x82*y82 in G1
+F403 = x83*y83 in G1
+F404 = x84*y84 in G1
+F405 = x85*y85 in G1
+F406 = x86*y86 in G1
+F407 = x87*y87 in G1
+F408 = x88*y88 in G1
+F409 = x89*y89 in G1
+F410 = x90*y90 in G1
+F411 = x91*y91 in G1
+F412 = x92*y92 in G1
+F413 = x93*y93 in G1
+F414 = x94*y94 in G1
+F415 = x95*y95 in G1
+F416 = x96*y96 in G1
+F417 = x97*y97 in G1
+F418 = x98*y98 in G1
+F419 = x99*y99 in G1
+F420 = x100*y100 in G1
+F421 = x101*y101 in G1
+F422 = x102*y102 in G1
+F423 = x103*y103 in G1
+F424 = x104*y104 in G1
+F425 = x105*y105 in G1
+F426 = x106*y106 in G1
+F427 = x107*y107 in G1
+F428 = x108*y108 in G1
+F429 = x109*y109 in G1
+F430 = x110*y110 in G1
+F431 = x111*y111 in G1
+F432 = x112*y112 in G1
+F433 = x113*y113 in G1
+F434 = x114*y114 in G1
+F435 = x115*y115 in G1
+F436 = x116*y116 in G1
+F437 = x117*y117 in G1
+F438 = x118*y118 in G1
+F439 = x119*y119 in G1
+F440 = x120*y120 in G1
+F441 = x121*y121 in G1
+F442 = x122*y122 in G1
+F443 = x123*y123 in G1
+F444 = x124*y124 in G1
+F445 = x125*y125 in G1
+F446 = x126*y126 in G1
+F447 = x127*y127 in G1
+F448 = x128*y128 in G1
+F449 = x129*y129 in G1
+F450 = x130*y130 in G1
+F451 = x131*y131 in G1
+F452 = x132*y132 in G1
+F453 = x133*y133 in G1
+F454 = x134*y134 in G1
+F455 = x135*y135 in G1
+F456 = x136*y136 in G1
+F457 = x137*y137 in G1
+F458 = x138*y138 in G1
+F459 = x139*y139 in G1
+F460 = x140*y140 in G1
+F461 = x141*y141 in G1
+F462 = x142*y142 in G1
+F463 = x143*y143 in G1
+F464 = x144*y144 in G1
+F465 = x145*y145 in G1
+F466 = x146*y146 in G1
+F467 = x147*y147 in G1
+F468 = x148*y148 in G1
+F469 = x149*y149 in G1
+F470 = x150*y150 in G1
+F471 = x151*y151 in G1
+F472 = x152*y152 in G1
+F473 = x153*y153 in G1
+F474 = x154*y154 in G1
+F475 = x155*y155 in G1
+F476 = x156*y156 in G1
+F477 = x157*y157 in G1
+F478 = x158*y158 in G1
+F479 = x159*y159 in G1
+F480 = x160*y160 in G1
+F481 = alpha in G1
+F482 = beta in G1
+F483 = u in G1
+F484 = r in G1
+F485 = alpha*beta + r*u + r*x1*y1 + r*x10*y10 + r*x100*y100 + r*x101*y101 + r*x102*y102 + r*x103*y103 + r*x104*y104 + r*x105*y105 + r*x106*y106 + r*x107*y107 + r*x108*y108 + r*x109*y109 + r*x11*y11 + r*x110*y110 + r*x111*y111 + r*x112*y112 + r*x113*y113 + r*x114*y114 + r*x115*y115 + r*x116*y116 + r*x117*y117 + r*x118*y118 + r*x119*y119 + r*x12*y12 + r*x120*y120 + r*x121*y121 + r*x122*y122 + r*x123*y123 + r*x124*y124 + r*x125*y125 + r*x126*y126 + r*x127*y127 + r*x128*y128 + r*x129*y129 + r*x13*y13 + r*x130*y130 + r*x131*y131 + r*x132*y132 + r*x133*y133 + r*x134*y134 + r*x135*y135 + r*x136*y136 + r*x137*y137 + r*x138*y138 + r*x139*y139 + r*x14*y14 + r*x140*y140 + r*x141*y141 + r*x142*y142 + r*x143*y143 + r*x144*y144 + r*x145*y145 + r*x146*y146 + r*x147*y147 + r*x148*y148 + r*x149*y149 + r*x15*y15 + r*x150*y150 + r*x151*y151 + r*x152*y152 + r*x153*y153 + r*x154*y154 + r*x155*y155 + r*x156*y156 + r*x157*y157 + r*x158*y158 + r*x159*y159 + r*x16*y16 + r*x160*y160 + r*x17*y17 + r*x18*y18 + r*x19*y19 + r*x2*y2 + r*x20*y20 + r*x21*y21 + r*x22*y22 + r*x23*y23 + r*x24*y24 + r*x25*y25 + r*x26*y26 + r*x27*y27 + r*x28*y28 + r*x29*y29 + r*x3*y3 + r*x30*y30 + r*x31*y31 + r*x32*y32 + r*x33*y33 + r*x34*y34 + r*x35*y35 + r*x36*y36 + r*x37*y37 + r*x38*y38 + r*x39*y39 + r*x4*y4 + r*x40*y40 + r*x41*y41 + r*x42*y42 + r*x43*y43 + r*x44*y44 + r*x45*y45 + r*x46*y46 + r*x47*y47 + r*x48*y48 + r*x49*y49 + r*x5*y5 + r*x50*y50 + r*x51*y51 + r*x52*y52 + r*x53*y53 + r*x54*y54 + r*x55*y55 + r*x56*y56 + r*x57*y57 + r*x58*y58 + r*x59*y59 + r*x6*y6 + r*x60*y60 + r*x61*y61 + r*x62*y62 + r*x63*y63 + r*x64*y64 + r*x65*y65 + r*x66*y66 + r*x67*y67 + r*x68*y68 + r*x69*y69 + r*x7*y7 + r*x70*y70 + r*x71*y71 + r*x72*y72 + r*x73*y73 + r*x74*y74 + r*x75*y75 + r*x76*y76 + r*x77*y77 + r*x78*y78 + r*x79*y79 + r*x8*y8 + r*x80*y80 + r*x81*y81 + r*x82*y82 + r*x83*y83 + r*x84*y84 + r*x85*y85 + r*x86*y86 + r*x87*y87 + r*x88*y88 + r*x89*y89 + r*x9*y9 + r*x90*y90 + r*x91*y91 + r*x92*y92 + r*x93*y93 + r*x94*y94 + r*x95*y95 + r*x96*y96 + r*x97*y97 + r*x98*y98 + r*x99*y99 in G1
+
+......................................................................
+
+Processing untrusted polynomial F484 = r by rule2
+F484 moved to trusted set and r moved to fixed set by rule 2
+
+
+......................................................................
+
+Computing completion for by rule1
+
+Took 3.791814s time to compute recipes
+
+Took 0.628114s time to compute completion list polynomials from recipes
+Took 4.420141s seconds to compute completion list of Gt
+Took 3.468886s time to compute recipes
+
+Took 0.000078s time to compute completion list polynomials from recipes
+Took 3.469087s seconds to compute completion list of G1
+Took 7.889231s to compute completion lists.
+Processing untrusted polynomial F485 by rule1
+Took 0.279723s to multiply f with completionG1 . Size of trusted set = 486. Size of f.(completion list of G1) U (completion list of GT) = 118341.
+
+Optimization round 1
+Took 714.016015s time to compute new_polys
+
+Took 0.033146s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 117856 to 162
+       Took 714.307234s seconds.
+Took 0.160080s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 485 to 1
+       Took 39.171146s seconds.
+
+Optimization round 2
+Took 0.001551s time to compute new_polys
+
+Took 0.001165s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 162 to 162
+       Took 0.002954s seconds.
+Took 0.001233s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001694s seconds.
+
+Took 753.574745s to optimize.
+Took 0.004554s to compute basis. Size of trusted set = 486. Size of reduced f.(completion list of G1) U (completion list of GT) = 163. No. of monomials = 162. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 163*162
+Took 3.665309s time to solve
+
+Naive PPE e(F485,F0) = e(F321,F484) * e(F322,F484) * e(F323,F484) * e(F324,F484) * e(F325,F484) * e(F326,F484) * e(F327,F484) * e(F328,F484) * e(F329,F484) * e(F330,F484) * e(F331,F484) * e(F332,F484) * e(F333,F484) * e(F334,F484) * e(F335,F484) * e(F336,F484) * e(F337,F484) * e(F338,F484) * e(F339,F484) * e(F340,F484) * e(F341,F484) * e(F342,F484) * e(F343,F484) * e(F344,F484) * e(F345,F484) * e(F346,F484) * e(F347,F484) * e(F348,F484) * e(F349,F484) * e(F350,F484) * e(F351,F484) * e(F352,F484) * e(F353,F484) * e(F354,F484) * e(F355,F484) * e(F356,F484) * e(F357,F484) * e(F358,F484) * e(F359,F484) * e(F360,F484) * e(F361,F484) * e(F362,F484) * e(F363,F484) * e(F364,F484) * e(F365,F484) * e(F366,F484) * e(F367,F484) * e(F368,F484) * e(F369,F484) * e(F370,F484) * e(F371,F484) * e(F372,F484) * e(F373,F484) * e(F374,F484) * e(F375,F484) * e(F376,F484) * e(F377,F484) * e(F378,F484) * e(F379,F484) * e(F380,F484) * e(F381,F484) * e(F382,F484) * e(F383,F484) * e(F384,F484) * e(F385,F484) * e(F386,F484) * e(F387,F484) * e(F388,F484) * e(F389,F484) * e(F390,F484) * e(F391,F484) * e(F392,F484) * e(F393,F484) * e(F394,F484) * e(F395,F484) * e(F396,F484) * e(F397,F484) * e(F398,F484) * e(F399,F484) * e(F400,F484) * e(F401,F484) * e(F402,F484) * e(F403,F484) * e(F404,F484) * e(F405,F484) * e(F406,F484) * e(F407,F484) * e(F408,F484) * e(F409,F484) * e(F410,F484) * e(F411,F484) * e(F412,F484) * e(F413,F484) * e(F414,F484) * e(F415,F484) * e(F416,F484) * e(F417,F484) * e(F418,F484) * e(F419,F484) * e(F420,F484) * e(F421,F484) * e(F422,F484) * e(F423,F484) * e(F424,F484) * e(F425,F484) * e(F426,F484) * e(F427,F484) * e(F428,F484) * e(F429,F484) * e(F430,F484) * e(F431,F484) * e(F432,F484) * e(F433,F484) * e(F434,F484) * e(F435,F484) * e(F436,F484) * e(F437,F484) * e(F438,F484) * e(F439,F484) * e(F440,F484) * e(F441,F484) * e(F442,F484) * e(F443,F484) * e(F444,F484) * e(F445,F484) * e(F446,F484) * e(F447,F484) * e(F448,F484) * e(F449,F484) * e(F450,F484) * e(F451,F484) * e(F452,F484) * e(F453,F484) * e(F454,F484) * e(F455,F484) * e(F456,F484) * e(F457,F484) * e(F458,F484) * e(F459,F484) * e(F460,F484) * e(F461,F484) * e(F462,F484) * e(F463,F484) * e(F464,F484) * e(F465,F484) * e(F466,F484) * e(F467,F484) * e(F468,F484) * e(F469,F484) * e(F470,F484) * e(F471,F484) * e(F472,F484) * e(F473,F484) * e(F474,F484) * e(F475,F484) * e(F476,F484) * e(F477,F484) * e(F478,F484) * e(F479,F484) * e(F480,F484) * e(F481,F482) * e(F483,F484)
+Optimized PPE e(F485,F0) = e(F481,F482)*e(F321*F322*F323*F324*F325*F326*F327*F328*F329*F330*F331*F332*F333*F334*F335*F336*F337*F338*F339*F340*F341*F342*F343*F344*F345*F346*F347*F348*F349*F350*F351*F352*F353*F354*F355*F356*F357*F358*F359*F360*F361*F362*F363*F364*F365*F366*F367*F368*F369*F370*F371*F372*F373*F374*F375*F376*F377*F378*F379*F380*F381*F382*F383*F384*F385*F386*F387*F388*F389*F390*F391*F392*F393*F394*F395*F396*F397*F398*F399*F400*F401*F402*F403*F404*F405*F406*F407*F408*F409*F410*F411*F412*F413*F414*F415*F416*F417*F418*F419*F420*F421*F422*F423*F424*F425*F426*F427*F428*F429*F430*F431*F432*F433*F434*F435*F436*F437*F438*F439*F440*F441*F442*F443*F444*F445*F446*F447*F448*F449*F450*F451*F452*F453*F454*F455*F456*F457*F458*F459*F460*F461*F462*F463*F464*F465*F466*F467*F468*F469*F470*F471*F472*F473*F474*F475*F476*F477*F478*F479*F480*F483,F484)
+
+F485 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 765.444205s
+
+
+Untrusted set : 
+
+PPEs : e(F485,F0) = e(F481,F482)*e(F321*F322*F323*F324*F325*F326*F327*F328*F329*F330*F331*F332*F333*F334*F335*F336*F337*F338*F339*F340*F341*F342*F343*F344*F345*F346*F347*F348*F349*F350*F351*F352*F353*F354*F355*F356*F357*F358*F359*F360*F361*F362*F363*F364*F365*F366*F367*F368*F369*F370*F371*F372*F373*F374*F375*F376*F377*F378*F379*F380*F381*F382*F383*F384*F385*F386*F387*F388*F389*F390*F391*F392*F393*F394*F395*F396*F397*F398*F399*F400*F401*F402*F403*F404*F405*F406*F407*F408*F409*F410*F411*F412*F413*F414*F415*F416*F417*F418*F419*F420*F421*F422*F423*F424*F425*F426*F427*F428*F429*F430*F431*F432*F433*F434*F435*F436*F437*F438*F439*F440*F441*F442*F443*F444*F445*F446*F447*F448*F449*F450*F451*F452*F453*F454*F455*F456*F457*F458*F459*F460*F461*F462*F463*F464*F465*F466*F467*F468*F469*F470*F471*F472*F473*F474*F475*F476*F477*F478*F479*F480*F483,F484),   
+
+Ouptut : PPE Testable :)
+
+*)

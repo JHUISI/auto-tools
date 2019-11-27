@@ -1,0 +1,27 @@
+
+(*Hohenberger Waters KP-ABE scheme with |U| = 4
+https://eprint.iacr.org/2013/265.pdf
+*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [alpha, h1, h2, h3, h4, m].
+unfixed_vars [s].
+
+(*Public key*)
+trusted_polys [F1 = h1, F2 = h2, F3 = h3, F4 = h4] in G1.
+trusted_polys [F5 = alpha] in GT.
+
+(*message*)
+trusted_polys [F6 = m] in GT.
+
+(*attributes*)
+Zp_vars [x1, x2, x3, x4].
+
+(*ciphertext*)
+untrusted_polys [F7 = m + alpha*s] in GT.
+untrusted_polys [F8 = s] in G1.
+untrusted_polys [F9 = s*(h1*x1 + 1-x1)] in G1.
+untrusted_polys [F10 = s*(h2*x2 + 1-x2)] in G1.
+untrusted_polys [F11 = s*(h3*x3 + 1-x3)] in G1.
+untrusted_polys [F12 = s*(h4*x4 + 1-x4)] in G1.

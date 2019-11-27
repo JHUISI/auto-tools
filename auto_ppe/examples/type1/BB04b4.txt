@@ -1,0 +1,144 @@
+
+(*BB04b scheme when length of hash of identity (n) = 4 *)
+
+maps G1 * G1 -> GT. 
+
+fixed_vars [alpha, beta, u10, u11, u20, u21, u30, u31, u40, u41].
+unfixed_vars [r1, r2, r3, r4].
+
+(*hash of identity*)
+Zp_vars [a1, a2, a3, a4].
+
+trusted_polys [F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41] in G1.
+
+untrusted_polys [F19 = alpha*beta + r1*(a1*u11 + (1-a1)*u10) + r2*(a2*u21 + (1-a2)*u20) + r3*(a3*u31 + (1-a3)*u30) + r4*(a4*u41 + (1-a4)*u40), F20 = r1, F21 = r2, F22 = r3, F23 = r4] in G1.
+
+
+
+
+(*****************Output after execution *****************)
+
+(*
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/BB04b4.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a1*alpha in G1,  a2*alpha in G1,  a3*alpha in G1,  a4*alpha in G1,  a1*beta in G1,  a2*beta in G1,  a3*beta in G1,  a4*beta in G1,  a1*u10 in G1,  a2*u10 in G1,  a3*u10 in G1,  a4*u10 in G1,  a1*u11 in G1,  a2*u11 in G1,  a3*u11 in G1,  a4*u11 in G1,  a1*u20 in G1,  a2*u20 in G1,  a3*u20 in G1,  a4*u20 in G1,  a1*u21 in G1,  a2*u21 in G1,  a3*u21 in G1,  a4*u21 in G1,  a1*u30 in G1,  a2*u30 in G1,  a3*u30 in G1,  a4*u30 in G1,  a1*u31 in G1,  a2*u31 in G1,  a3*u31 in G1,  a4*u31 in G1,  a1*u40 in G1,  a2*u40 in G1,  a3*u40 in G1,  a4*u40 in G1,  a1*u41 in G1,  a2*u41 in G1,  a3*u41 in G1,  a4*u41 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = alpha in G1
+F2 = beta in G1
+F3 = u10 in G1
+F4 = u11 in G1
+F5 = u20 in G1
+F6 = u21 in G1
+F7 = u30 in G1
+F8 = u31 in G1
+F9 = u40 in G1
+F10 = u41 in G1
+F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 + a1*r1*u11 + a2*r2*u21 + a3*r3*u31 + a4*r4*u41 - a1*r1*u10 - a2*r2*u20 - a3*r3*u30 - a4*r4*u40 in G1
+F20 = r1 in G1
+F21 = r2 in G1
+F22 = r3 in G1
+F23 = r4 in G1
+F24 = a1 in G1
+F25 = a2 in G1
+F26 = a3 in G1
+F27 = a4 in G1
+F28 = a1 in GT
+F29 = a2 in GT
+F30 = a3 in GT
+F31 = a4 in GT
+F32 = a1*alpha in G1
+F33 = a2*alpha in G1
+F34 = a3*alpha in G1
+F35 = a4*alpha in G1
+F36 = a1*beta in G1
+F37 = a2*beta in G1
+F38 = a3*beta in G1
+F39 = a4*beta in G1
+F40 = a1*u10 in G1
+F41 = a2*u10 in G1
+F42 = a3*u10 in G1
+F43 = a4*u10 in G1
+F44 = a1*u11 in G1
+F45 = a2*u11 in G1
+F46 = a3*u11 in G1
+F47 = a4*u11 in G1
+F48 = a1*u20 in G1
+F49 = a2*u20 in G1
+F50 = a3*u20 in G1
+F51 = a4*u20 in G1
+F52 = a1*u21 in G1
+F53 = a2*u21 in G1
+F54 = a3*u21 in G1
+F55 = a4*u21 in G1
+F56 = a1*u30 in G1
+F57 = a2*u30 in G1
+F58 = a3*u30 in G1
+F59 = a4*u30 in G1
+F60 = a1*u31 in G1
+F61 = a2*u31 in G1
+F62 = a3*u31 in G1
+F63 = a4*u31 in G1
+F64 = a1*u40 in G1
+F65 = a2*u40 in G1
+F66 = a3*u40 in G1
+F67 = a4*u40 in G1
+F68 = a1*u41 in G1
+F69 = a2*u41 in G1
+F70 = a3*u41 in G1
+F71 = a4*u41 in G1
+
+......................................................................
+
+Processing untrusted polynomial F20 = r1 by rule2
+F20 moved to trusted set and r1 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F21 = r2 by rule2
+F21 moved to trusted set and r2 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F22 = r3 by rule2
+F22 moved to trusted set and r3 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 + a1*r1*u11 + a2*r2*u21 + a3*r3*u31 + a4*r4*u41 - a1*r1*u10 - a2*r2*u20 - a3*r3*u30 - a4*r4*u40 by rule2
+Rule not applied
+
+Processing untrusted polynomial F23 = r4 by rule2
+F23 moved to trusted set and r4 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 + a1*r1*u11 + a2*r2*u21 + a3*r3*u31 + a4*r4*u41 - a1*r1*u10 - a2*r2*u20 - a3*r3*u30 - a4*r4*u40 by rule1
+
+
+Adding PPE e(F19,F0) = e(F1,F2) * e(F3,F20) * e(F5,F21) * e(F7,F22) * e(F9,F23) * (e(F20,F40))^-1 * e(F20,F44) * (e(F21,F49))^-1 * e(F21,F53) * (e(F22,F58))^-1 * e(F22,F62) * (e(F23,F67))^-1 * e(F23,F71)
+F19 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 405.981567s
+
+
+Fixed set :  r4,  r3,  r2,  r1,  alpha,  beta,  u10,  u11,  u20,  u21,  u30,  u31,  u40,  u41, 
+
+Trusted set :  alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 + a1*r1*u11 + a2*r2*u21 + a3*r3*u31 + a4*r4*u41 - a1*r1*u10 - a2*r2*u20 - a3*r3*u30 - a4*r4*u40 in G1,  r4 in G1,  r3 in G1,  r2 in G1,  r1 in G1,  1 in G1,  1 in GT,  alpha in G1,  beta in G1,  u10 in G1,  u11 in G1,  u20 in G1,  u21 in G1,  u30 in G1,  u31 in G1,  u40 in G1,  u41 in G1,  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a1*alpha in G1,  a2*alpha in G1,  a3*alpha in G1,  a4*alpha in G1,  a1*beta in G1,  a2*beta in G1,  a3*beta in G1,  a4*beta in G1,  a1*u10 in G1,  a2*u10 in G1,  a3*u10 in G1,  a4*u10 in G1,  a1*u11 in G1,  a2*u11 in G1,  a3*u11 in G1,  a4*u11 in G1,  a1*u20 in G1,  a2*u20 in G1,  a3*u20 in G1,  a4*u20 in G1,  a1*u21 in G1,  a2*u21 in G1,  a3*u21 in G1,  a4*u21 in G1,  a1*u30 in G1,  a2*u30 in G1,  a3*u30 in G1,  a4*u30 in G1,  a1*u31 in G1,  a2*u31 in G1,  a3*u31 in G1,  a4*u31 in G1,  a1*u40 in G1,  a2*u40 in G1,  a3*u40 in G1,  a4*u40 in G1,  a1*u41 in G1,  a2*u41 in G1,  a3*u41 in G1,  a4*u41 in G1, 
+
+Untrusted set : 
+
+PPEs : e(F19,F0) = e(F1,F2) * e(F3,F20) * e(F5,F21) * e(F7,F22) * e(F9,F23) * (e(F20,F40))^-1 * e(F20,F44) * (e(F21,F49))^-1 * e(F21,F53) * (e(F22,F58))^-1 * e(F22,F62) * (e(F23,F67))^-1 * e(F23,F71),   
+
+Ouptut : PPE Testable :)
+
+
+*)

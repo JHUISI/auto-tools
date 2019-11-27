@@ -1,0 +1,141 @@
+
+(*Lysyanskya VRF construction when n = 4.
+This construction same as their construction for Unified signatures 
+ https://link.springer.com/content/pdf/10.1007%2F3-540-45708-9_38.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [a10, a11, a20, a21, a30, a31, a40, a41].
+
+(*verification key*)
+trusted_polys [F1 = a10, F2 = a11, F3 = a20, F4 = a21, F5 = a30, F6 = a31, F7 = a40, F8 = a41] in G1.
+
+(*message*)
+Zp_vars [m1, m2, m3, m4].
+
+(*Signature/VRF*)
+untrusted_polys [F9 = (a10 * (1-m1) + a11*m1) ] in G1.
+
+untrusted_polys [F10 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) ] in G1.
+
+untrusted_polys [F11 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) * (a30 * (1-m3) + a31*m3) ] in G1.
+
+untrusted_polys [F12 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) * (a30 * (1-m3) + a31*m3) * (a40 * (1-m4) + a41*m4)] in G1.
+
+
+
+
+(*************Output after execution **************)
+(*
+
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/Lys.txt
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  m1 in G1,  m2 in G1,  m3 in G1,  m4 in G1,  m1 in GT,  m2 in GT,  m3 in GT,  m4 in GT,  a10*m1 in G1,  a10*m2 in G1,  a10*m3 in G1,  a10*m4 in G1,  a11*m1 in G1,  a11*m2 in G1,  a11*m3 in G1,  a11*m4 in G1,  a20*m1 in G1,  a20*m2 in G1,  a20*m3 in G1,  a20*m4 in G1,  a21*m1 in G1,  a21*m2 in G1,  a21*m3 in G1,  a21*m4 in G1,  a30*m1 in G1,  a30*m2 in G1,  a30*m3 in G1,  a30*m4 in G1,  a31*m1 in G1,  a31*m2 in G1,  a31*m3 in G1,  a31*m4 in G1,  a40*m1 in G1,  a40*m2 in G1,  a40*m3 in G1,  a40*m4 in G1,  a41*m1 in G1,  a41*m2 in G1,  a41*m3 in G1,  a41*m4 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = a10 in G1
+F2 = a11 in G1
+F3 = a20 in G1
+F4 = a21 in G1
+F5 = a30 in G1
+F6 = a31 in G1
+F7 = a40 in G1
+F8 = a41 in G1
+F9 = a10 + a11*m1 - a10*m1 in G1
+F10 = a10*a20 + a10*a21*m2 + a11*a20*m1 + a10*a20*m1*m2 + a11*a21*m1*m2 - a10*a20*m1 - a10*a20*m2 - a10*a21*m1*m2 - a11*a20*m1*m2 in G1
+F11 = a10*a20*a30 + a10*a20*a31*m3 + a10*a21*a30*m2 + a11*a20*a30*m1 + a10*a20*a30*m1*m2 + a10*a20*a30*m1*m3 + a10*a20*a30*m2*m3 + a10*a21*a31*m2*m3 + a11*a20*a31*m1*m3 + a11*a21*a30*m1*m2 + a10*a20*a31*m1*m2*m3 + a10*a21*a30*m1*m2*m3 + a11*a20*a30*m1*m2*m3 + a11*a21*a31*m1*m2*m3 - a10*a20*a30*m1 - a10*a20*a30*m2 - a10*a20*a30*m3 - a10*a20*a31*m1*m3 - a10*a20*a31*m2*m3 - a10*a21*a30*m1*m2 - a10*a21*a30*m2*m3 - a11*a20*a30*m1*m2 - a11*a20*a30*m1*m3 - a10*a20*a30*m1*m2*m3 - a10*a21*a31*m1*m2*m3 - a11*a20*a31*m1*m2*m3 - a11*a21*a30*m1*m2*m3 in G1
+F12 = a10*a20*a30*a40 + a10*a20*a30*a41*m4 + a10*a20*a31*a40*m3 + a10*a21*a30*a40*m2 + a11*a20*a30*a40*m1 + a10*a20*a30*a40*m1*m2 + a10*a20*a30*a40*m1*m3 + a10*a20*a30*a40*m1*m4 + a10*a20*a30*a40*m2*m3 + a10*a20*a30*a40*m2*m4 + a10*a20*a30*a40*m3*m4 + a10*a20*a31*a41*m3*m4 + a10*a21*a30*a41*m2*m4 + a10*a21*a31*a40*m2*m3 + a11*a20*a30*a41*m1*m4 + a11*a20*a31*a40*m1*m3 + a11*a21*a30*a40*m1*m2 + a10*a20*a30*a41*m1*m2*m4 + a10*a20*a30*a41*m1*m3*m4 + a10*a20*a30*a41*m2*m3*m4 + a10*a20*a31*a40*m1*m2*m3 + a10*a20*a31*a40*m1*m3*m4 + a10*a20*a31*a40*m2*m3*m4 + a10*a21*a30*a40*m1*m2*m3 + a10*a21*a30*a40*m1*m2*m4 + a10*a21*a30*a40*m2*m3*m4 + a10*a21*a31*a41*m2*m3*m4 + a11*a20*a30*a40*m1*m2*m3 + a11*a20*a30*a40*m1*m2*m4 + a11*a20*a30*a40*m1*m3*m4 + a11*a20*a31*a41*m1*m3*m4 + a11*a21*a30*a41*m1*m2*m4 + a11*a21*a31*a40*m1*m2*m3 + a10*a20*a30*a40*m1*m2*m3*m4 + a10*a20*a31*a41*m1*m2*m3*m4 + a10*a21*a30*a41*m1*m2*m3*m4 + a10*a21*a31*a40*m1*m2*m3*m4 + a11*a20*a30*a41*m1*m2*m3*m4 + a11*a20*a31*a40*m1*m2*m3*m4 + a11*a21*a30*a40*m1*m2*m3*m4 + a11*a21*a31*a41*m1*m2*m3*m4 - a10*a20*a30*a40*m1 - a10*a20*a30*a40*m2 - a10*a20*a30*a40*m3 - a10*a20*a30*a40*m4 - a10*a20*a30*a41*m1*m4 - a10*a20*a30*a41*m2*m4 - a10*a20*a30*a41*m3*m4 - a10*a20*a31*a40*m1*m3 - a10*a20*a31*a40*m2*m3 - a10*a20*a31*a40*m3*m4 - a10*a21*a30*a40*m1*m2 - a10*a21*a30*a40*m2*m3 - a10*a21*a30*a40*m2*m4 - a11*a20*a30*a40*m1*m2 - a11*a20*a30*a40*m1*m3 - a11*a20*a30*a40*m1*m4 - a10*a20*a30*a40*m1*m2*m3 - a10*a20*a30*a40*m1*m2*m4 - a10*a20*a30*a40*m1*m3*m4 - a10*a20*a30*a40*m2*m3*m4 - a10*a20*a31*a41*m1*m3*m4 - a10*a20*a31*a41*m2*m3*m4 - a10*a21*a30*a41*m1*m2*m4 - a10*a21*a30*a41*m2*m3*m4 - a10*a21*a31*a40*m1*m2*m3 - a10*a21*a31*a40*m2*m3*m4 - a11*a20*a30*a41*m1*m2*m4 - a11*a20*a30*a41*m1*m3*m4 - a11*a20*a31*a40*m1*m2*m3 - a11*a20*a31*a40*m1*m3*m4 - a11*a21*a30*a40*m1*m2*m3 - a11*a21*a30*a40*m1*m2*m4 - a10*a20*a30*a41*m1*m2*m3*m4 - a10*a20*a31*a40*m1*m2*m3*m4 - a10*a21*a30*a40*m1*m2*m3*m4 - a10*a21*a31*a41*m1*m2*m3*m4 - a11*a20*a30*a40*m1*m2*m3*m4 - a11*a20*a31*a41*m1*m2*m3*m4 - a11*a21*a30*a41*m1*m2*m3*m4 - a11*a21*a31*a40*m1*m2*m3*m4 in G1
+F13 = m1 in G1
+F14 = m2 in G1
+F15 = m3 in G1
+F16 = m4 in G1
+F17 = m1 in GT
+F18 = m2 in GT
+F19 = m3 in GT
+F20 = m4 in GT
+F21 = a10*m1 in G1
+F22 = a10*m2 in G1
+F23 = a10*m3 in G1
+F24 = a10*m4 in G1
+F25 = a11*m1 in G1
+F26 = a11*m2 in G1
+F27 = a11*m3 in G1
+F28 = a11*m4 in G1
+F29 = a20*m1 in G1
+F30 = a20*m2 in G1
+F31 = a20*m3 in G1
+F32 = a20*m4 in G1
+F33 = a21*m1 in G1
+F34 = a21*m2 in G1
+F35 = a21*m3 in G1
+F36 = a21*m4 in G1
+F37 = a30*m1 in G1
+F38 = a30*m2 in G1
+F39 = a30*m3 in G1
+F40 = a30*m4 in G1
+F41 = a31*m1 in G1
+F42 = a31*m2 in G1
+F43 = a31*m3 in G1
+F44 = a31*m4 in G1
+F45 = a40*m1 in G1
+F46 = a40*m2 in G1
+F47 = a40*m3 in G1
+F48 = a40*m4 in G1
+F49 = a41*m1 in G1
+F50 = a41*m2 in G1
+F51 = a41*m3 in G1
+F52 = a41*m4 in G1
+
+......................................................................
+
+Processing untrusted polynomial F9 = a10 + a11*m1 - a10*m1 by rule1
+
+
+Adding PPE e(F9,F0) = e(F0,F1) * (e(F1,F13))^-1 * e(F2,F13)
+F9 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F10 = a10*a20 + a10*a21*m2 + a11*a20*m1 + a10*a20*m1*m2 + a11*a21*m1*m2 - a10*a20*m1 - a10*a20*m2 - a10*a21*m1*m2 - a11*a20*m1*m2 by rule1
+
+
+Adding PPE e(F10,F0) = e(F3,F9) * (e(F9,F30))^-1 * e(F9,F34)
+F10 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F11 = a10*a20*a30 + a10*a20*a31*m3 + a10*a21*a30*m2 + a11*a20*a30*m1 + a10*a20*a30*m1*m2 + a10*a20*a30*m1*m3 + a10*a20*a30*m2*m3 + a10*a21*a31*m2*m3 + a11*a20*a31*m1*m3 + a11*a21*a30*m1*m2 + a10*a20*a31*m1*m2*m3 + a10*a21*a30*m1*m2*m3 + a11*a20*a30*m1*m2*m3 + a11*a21*a31*m1*m2*m3 - a10*a20*a30*m1 - a10*a20*a30*m2 - a10*a20*a30*m3 - a10*a20*a31*m1*m3 - a10*a20*a31*m2*m3 - a10*a21*a30*m1*m2 - a10*a21*a30*m2*m3 - a11*a20*a30*m1*m2 - a11*a20*a30*m1*m3 - a10*a20*a30*m1*m2*m3 - a10*a21*a31*m1*m2*m3 - a11*a20*a31*m1*m2*m3 - a11*a21*a30*m1*m2*m3 by rule1
+
+
+Adding PPE e(F11,F0) = e(F5,F10) * (e(F10,F39))^-1 * e(F10,F43)
+F11 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F12 = a10*a20*a30*a40 + a10*a20*a30*a41*m4 + a10*a20*a31*a40*m3 + a10*a21*a30*a40*m2 + a11*a20*a30*a40*m1 + a10*a20*a30*a40*m1*m2 + a10*a20*a30*a40*m1*m3 + a10*a20*a30*a40*m1*m4 + a10*a20*a30*a40*m2*m3 + a10*a20*a30*a40*m2*m4 + a10*a20*a30*a40*m3*m4 + a10*a20*a31*a41*m3*m4 + a10*a21*a30*a41*m2*m4 + a10*a21*a31*a40*m2*m3 + a11*a20*a30*a41*m1*m4 + a11*a20*a31*a40*m1*m3 + a11*a21*a30*a40*m1*m2 + a10*a20*a30*a41*m1*m2*m4 + a10*a20*a30*a41*m1*m3*m4 + a10*a20*a30*a41*m2*m3*m4 + a10*a20*a31*a40*m1*m2*m3 + a10*a20*a31*a40*m1*m3*m4 + a10*a20*a31*a40*m2*m3*m4 + a10*a21*a30*a40*m1*m2*m3 + a10*a21*a30*a40*m1*m2*m4 + a10*a21*a30*a40*m2*m3*m4 + a10*a21*a31*a41*m2*m3*m4 + a11*a20*a30*a40*m1*m2*m3 + a11*a20*a30*a40*m1*m2*m4 + a11*a20*a30*a40*m1*m3*m4 + a11*a20*a31*a41*m1*m3*m4 + a11*a21*a30*a41*m1*m2*m4 + a11*a21*a31*a40*m1*m2*m3 + a10*a20*a30*a40*m1*m2*m3*m4 + a10*a20*a31*a41*m1*m2*m3*m4 + a10*a21*a30*a41*m1*m2*m3*m4 + a10*a21*a31*a40*m1*m2*m3*m4 + a11*a20*a30*a41*m1*m2*m3*m4 + a11*a20*a31*a40*m1*m2*m3*m4 + a11*a21*a30*a40*m1*m2*m3*m4 + a11*a21*a31*a41*m1*m2*m3*m4 - a10*a20*a30*a40*m1 - a10*a20*a30*a40*m2 - a10*a20*a30*a40*m3 - a10*a20*a30*a40*m4 - a10*a20*a30*a41*m1*m4 - a10*a20*a30*a41*m2*m4 - a10*a20*a30*a41*m3*m4 - a10*a20*a31*a40*m1*m3 - a10*a20*a31*a40*m2*m3 - a10*a20*a31*a40*m3*m4 - a10*a21*a30*a40*m1*m2 - a10*a21*a30*a40*m2*m3 - a10*a21*a30*a40*m2*m4 - a11*a20*a30*a40*m1*m2 - a11*a20*a30*a40*m1*m3 - a11*a20*a30*a40*m1*m4 - a10*a20*a30*a40*m1*m2*m3 - a10*a20*a30*a40*m1*m2*m4 - a10*a20*a30*a40*m1*m3*m4 - a10*a20*a30*a40*m2*m3*m4 - a10*a20*a31*a41*m1*m3*m4 - a10*a20*a31*a41*m2*m3*m4 - a10*a21*a30*a41*m1*m2*m4 - a10*a21*a30*a41*m2*m3*m4 - a10*a21*a31*a40*m1*m2*m3 - a10*a21*a31*a40*m2*m3*m4 - a11*a20*a30*a41*m1*m2*m4 - a11*a20*a30*a41*m1*m3*m4 - a11*a20*a31*a40*m1*m2*m3 - a11*a20*a31*a40*m1*m3*m4 - a11*a21*a30*a40*m1*m2*m3 - a11*a21*a30*a40*m1*m2*m4 - a10*a20*a30*a41*m1*m2*m3*m4 - a10*a20*a31*a40*m1*m2*m3*m4 - a10*a21*a30*a40*m1*m2*m3*m4 - a10*a21*a31*a41*m1*m2*m3*m4 - a11*a20*a30*a40*m1*m2*m3*m4 - a11*a20*a31*a41*m1*m2*m3*m4 - a11*a21*a30*a41*m1*m2*m3*m4 - a11*a21*a31*a40*m1*m2*m3*m4 by rule1
+
+
+Adding PPE e(F12,F0) = e(F7,F11) * (e(F11,F48))^-1 * e(F11,F52)
+F12 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 667.920023s
+
+
+Fixed set :  a10,  a11,  a20,  a21,  a30,  a31,  a40,  a41, 
+
+Trusted set :  a10*a20*a30*a40 + a10*a20*a30*a41*m4 + a10*a20*a31*a40*m3 + a10*a21*a30*a40*m2 + a11*a20*a30*a40*m1 + a10*a20*a30*a40*m1*m2 + a10*a20*a30*a40*m1*m3 + a10*a20*a30*a40*m1*m4 + a10*a20*a30*a40*m2*m3 + a10*a20*a30*a40*m2*m4 + a10*a20*a30*a40*m3*m4 + a10*a20*a31*a41*m3*m4 + a10*a21*a30*a41*m2*m4 + a10*a21*a31*a40*m2*m3 + a11*a20*a30*a41*m1*m4 + a11*a20*a31*a40*m1*m3 + a11*a21*a30*a40*m1*m2 + a10*a20*a30*a41*m1*m2*m4 + a10*a20*a30*a41*m1*m3*m4 + a10*a20*a30*a41*m2*m3*m4 + a10*a20*a31*a40*m1*m2*m3 + a10*a20*a31*a40*m1*m3*m4 + a10*a20*a31*a40*m2*m3*m4 + a10*a21*a30*a40*m1*m2*m3 + a10*a21*a30*a40*m1*m2*m4 + a10*a21*a30*a40*m2*m3*m4 + a10*a21*a31*a41*m2*m3*m4 + a11*a20*a30*a40*m1*m2*m3 + a11*a20*a30*a40*m1*m2*m4 + a11*a20*a30*a40*m1*m3*m4 + a11*a20*a31*a41*m1*m3*m4 + a11*a21*a30*a41*m1*m2*m4 + a11*a21*a31*a40*m1*m2*m3 + a10*a20*a30*a40*m1*m2*m3*m4 + a10*a20*a31*a41*m1*m2*m3*m4 + a10*a21*a30*a41*m1*m2*m3*m4 + a10*a21*a31*a40*m1*m2*m3*m4 + a11*a20*a30*a41*m1*m2*m3*m4 + a11*a20*a31*a40*m1*m2*m3*m4 + a11*a21*a30*a40*m1*m2*m3*m4 + a11*a21*a31*a41*m1*m2*m3*m4 - a10*a20*a30*a40*m1 - a10*a20*a30*a40*m2 - a10*a20*a30*a40*m3 - a10*a20*a30*a40*m4 - a10*a20*a30*a41*m1*m4 - a10*a20*a30*a41*m2*m4 - a10*a20*a30*a41*m3*m4 - a10*a20*a31*a40*m1*m3 - a10*a20*a31*a40*m2*m3 - a10*a20*a31*a40*m3*m4 - a10*a21*a30*a40*m1*m2 - a10*a21*a30*a40*m2*m3 - a10*a21*a30*a40*m2*m4 - a11*a20*a30*a40*m1*m2 - a11*a20*a30*a40*m1*m3 - a11*a20*a30*a40*m1*m4 - a10*a20*a30*a40*m1*m2*m3 - a10*a20*a30*a40*m1*m2*m4 - a10*a20*a30*a40*m1*m3*m4 - a10*a20*a30*a40*m2*m3*m4 - a10*a20*a31*a41*m1*m3*m4 - a10*a20*a31*a41*m2*m3*m4 - a10*a21*a30*a41*m1*m2*m4 - a10*a21*a30*a41*m2*m3*m4 - a10*a21*a31*a40*m1*m2*m3 - a10*a21*a31*a40*m2*m3*m4 - a11*a20*a30*a41*m1*m2*m4 - a11*a20*a30*a41*m1*m3*m4 - a11*a20*a31*a40*m1*m2*m3 - a11*a20*a31*a40*m1*m3*m4 - a11*a21*a30*a40*m1*m2*m3 - a11*a21*a30*a40*m1*m2*m4 - a10*a20*a30*a41*m1*m2*m3*m4 - a10*a20*a31*a40*m1*m2*m3*m4 - a10*a21*a30*a40*m1*m2*m3*m4 - a10*a21*a31*a41*m1*m2*m3*m4 - a11*a20*a30*a40*m1*m2*m3*m4 - a11*a20*a31*a41*m1*m2*m3*m4 - a11*a21*a30*a41*m1*m2*m3*m4 - a11*a21*a31*a40*m1*m2*m3*m4 in G1,  a10*a20*a30 + a10*a20*a31*m3 + a10*a21*a30*m2 + a11*a20*a30*m1 + a10*a20*a30*m1*m2 + a10*a20*a30*m1*m3 + a10*a20*a30*m2*m3 + a10*a21*a31*m2*m3 + a11*a20*a31*m1*m3 + a11*a21*a30*m1*m2 + a10*a20*a31*m1*m2*m3 + a10*a21*a30*m1*m2*m3 + a11*a20*a30*m1*m2*m3 + a11*a21*a31*m1*m2*m3 - a10*a20*a30*m1 - a10*a20*a30*m2 - a10*a20*a30*m3 - a10*a20*a31*m1*m3 - a10*a20*a31*m2*m3 - a10*a21*a30*m1*m2 - a10*a21*a30*m2*m3 - a11*a20*a30*m1*m2 - a11*a20*a30*m1*m3 - a10*a20*a30*m1*m2*m3 - a10*a21*a31*m1*m2*m3 - a11*a20*a31*m1*m2*m3 - a11*a21*a30*m1*m2*m3 in G1,  a10*a20 + a10*a21*m2 + a11*a20*m1 + a10*a20*m1*m2 + a11*a21*m1*m2 - a10*a20*m1 - a10*a20*m2 - a10*a21*m1*m2 - a11*a20*m1*m2 in G1,  a10 + a11*m1 - a10*m1 in G1,  1 in G1,  1 in GT,  a10 in G1,  a11 in G1,  a20 in G1,  a21 in G1,  a30 in G1,  a31 in G1,  a40 in G1,  a41 in G1,  m1 in G1,  m2 in G1,  m3 in G1,  m4 in G1,  m1 in GT,  m2 in GT,  m3 in GT,  m4 in GT,  a10*m1 in G1,  a10*m2 in G1,  a10*m3 in G1,  a10*m4 in G1,  a11*m1 in G1,  a11*m2 in G1,  a11*m3 in G1,  a11*m4 in G1,  a20*m1 in G1,  a20*m2 in G1,  a20*m3 in G1,  a20*m4 in G1,  a21*m1 in G1,  a21*m2 in G1,  a21*m3 in G1,  a21*m4 in G1,  a30*m1 in G1,  a30*m2 in G1,  a30*m3 in G1,  a30*m4 in G1,  a31*m1 in G1,  a31*m2 in G1,  a31*m3 in G1,  a31*m4 in G1,  a40*m1 in G1,  a40*m2 in G1,  a40*m3 in G1,  a40*m4 in G1,  a41*m1 in G1,  a41*m2 in G1,  a41*m3 in G1,  a41*m4 in G1, 
+
+Untrusted set : 
+
+PPEs : e(F12,F0) = e(F7,F11) * (e(F11,F48))^-1 * e(F11,F52),   e(F11,F0) = e(F5,F10) * (e(F10,F39))^-1 * e(F10,F43),   e(F10,F0) = e(F3,F9) * (e(F9,F30))^-1 * e(F9,F34),   e(F9,F0) = e(F0,F1) * (e(F1,F13))^-1 * e(F2,F13),   
+
+Ouptut : PPE Testable :)
+
+*)

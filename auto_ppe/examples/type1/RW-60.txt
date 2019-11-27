@@ -1,0 +1,5555 @@
+
+
+(*Rouselakis Waters CP-ABE construction with k = 60*)
+(*https://eprint.iacr.org/2012/583.pdf*)
+
+maps G1 * G1 -> GT.
+
+fixed_vars [u, h, w, v, alpha].
+unfixed_vars [r, r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45, r46, r47, r48, r49, r50, r51, r52, r53, r54, r55, r56, r57, r58, r59, r60].
+
+(*public key*)
+trusted_polys [F1 = u, F2 = h, F3 = w, F4 = v] in G1.
+trusted_polys [F5 = alpha] in GT.
+
+(*attributes*)
+Zp_vars [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23, a24, a25, a26, a27, a28, a29, a30, a31, a32, a33, a34, a35, a36, a37, a38, a39, a40, a41, a42, a43, a44, a45, a46, a47, a48, a49, a50, a51, a52, a53, a54, a55, a56, a57, a58, a59, a60].
+
+untrusted_polys [F6 = alpha + w*r, F7 = r] in G1.
+untrusted_polys [F8 = (u*a1 + h)*r1 - v*r, F9 = r1] in G1.
+untrusted_polys [F10 = (u*a2 + h)*r2 - v*r, F11 = r2] in G1.
+untrusted_polys [F12 = (u*a3 + h)*r3 - v*r, F13 = r3] in G1.
+untrusted_polys [F14 = (u*a4 + h)*r4 - v*r, F15 = r4] in G1.
+untrusted_polys [F16 = (u*a5 + h)*r5 - v*r, F17 = r5] in G1.
+untrusted_polys [F18 = (u*a6 + h)*r6 - v*r, F19 = r6] in G1.
+untrusted_polys [F20 = (u*a7 + h)*r7 - v*r, F21 = r7] in G1.
+untrusted_polys [F22 = (u*a8 + h)*r8 - v*r, F23 = r8] in G1.
+untrusted_polys [F24 = (u*a9 + h)*r9 - v*r, F25 = r9] in G1.
+untrusted_polys [F26 = (u*a10 + h)*r10 - v*r, F27 = r10] in G1.
+untrusted_polys [F28 = (u*a11 + h)*r11 - v*r, F29 = r11] in G1.
+untrusted_polys [F30 = (u*a12 + h)*r12 - v*r, F31 = r12] in G1.
+untrusted_polys [F32 = (u*a13 + h)*r13 - v*r, F33 = r13] in G1.
+untrusted_polys [F34 = (u*a14 + h)*r14 - v*r, F35 = r14] in G1.
+untrusted_polys [F36 = (u*a15 + h)*r15 - v*r, F37 = r15] in G1.
+untrusted_polys [F38 = (u*a16 + h)*r16 - v*r, F39 = r16] in G1.
+untrusted_polys [F40 = (u*a17 + h)*r17 - v*r, F41 = r17] in G1.
+untrusted_polys [F42 = (u*a18 + h)*r18 - v*r, F43 = r18] in G1.
+untrusted_polys [F44 = (u*a19 + h)*r19 - v*r, F45 = r19] in G1.
+untrusted_polys [F46 = (u*a20 + h)*r20 - v*r, F47 = r20] in G1.
+untrusted_polys [F48 = (u*a21 + h)*r21 - v*r, F49 = r21] in G1.
+untrusted_polys [F50 = (u*a22 + h)*r22 - v*r, F51 = r22] in G1.
+untrusted_polys [F52 = (u*a23 + h)*r23 - v*r, F53 = r23] in G1.
+untrusted_polys [F54 = (u*a24 + h)*r24 - v*r, F55 = r24] in G1.
+untrusted_polys [F56 = (u*a25 + h)*r25 - v*r, F57 = r25] in G1.
+untrusted_polys [F58 = (u*a26 + h)*r26 - v*r, F59 = r26] in G1.
+untrusted_polys [F60 = (u*a27 + h)*r27 - v*r, F61 = r27] in G1.
+untrusted_polys [F62 = (u*a28 + h)*r28 - v*r, F63 = r28] in G1.
+untrusted_polys [F64 = (u*a29 + h)*r29 - v*r, F65 = r29] in G1.
+untrusted_polys [F66 = (u*a30 + h)*r30 - v*r, F67 = r30] in G1.
+untrusted_polys [F68 = (u*a31 + h)*r31 - v*r, F69 = r31] in G1.
+untrusted_polys [F70 = (u*a32 + h)*r32 - v*r, F71 = r32] in G1.
+untrusted_polys [F72 = (u*a33 + h)*r33 - v*r, F73 = r33] in G1.
+untrusted_polys [F74 = (u*a34 + h)*r34 - v*r, F75 = r34] in G1.
+untrusted_polys [F76 = (u*a35 + h)*r35 - v*r, F77 = r35] in G1.
+untrusted_polys [F78 = (u*a36 + h)*r36 - v*r, F79 = r36] in G1.
+untrusted_polys [F80 = (u*a37 + h)*r37 - v*r, F81 = r37] in G1.
+untrusted_polys [F82 = (u*a38 + h)*r38 - v*r, F83 = r38] in G1.
+untrusted_polys [F84 = (u*a39 + h)*r39 - v*r, F85 = r39] in G1.
+untrusted_polys [F86 = (u*a40 + h)*r40 - v*r, F87 = r40] in G1.
+untrusted_polys [F88 = (u*a41 + h)*r41 - v*r, F89 = r41] in G1.
+untrusted_polys [F90 = (u*a42 + h)*r42 - v*r, F91 = r42] in G1.
+untrusted_polys [F92 = (u*a43 + h)*r43 - v*r, F93 = r43] in G1.
+untrusted_polys [F94 = (u*a44 + h)*r44 - v*r, F95 = r44] in G1.
+untrusted_polys [F96 = (u*a45 + h)*r45 - v*r, F97 = r45] in G1.
+untrusted_polys [F98 = (u*a46 + h)*r46 - v*r, F99 = r46] in G1.
+untrusted_polys [F100 = (u*a47 + h)*r47 - v*r, F101 = r47] in G1.
+untrusted_polys [F102 = (u*a48 + h)*r48 - v*r, F103 = r48] in G1.
+untrusted_polys [F104 = (u*a49 + h)*r49 - v*r, F105 = r49] in G1.
+untrusted_polys [F106 = (u*a50 + h)*r50 - v*r, F107 = r50] in G1.
+untrusted_polys [F108 = (u*a51 + h)*r51 - v*r, F109 = r51] in G1.
+untrusted_polys [F110 = (u*a52 + h)*r52 - v*r, F111 = r52] in G1.
+untrusted_polys [F112 = (u*a53 + h)*r53 - v*r, F113 = r53] in G1.
+untrusted_polys [F114 = (u*a54 + h)*r54 - v*r, F115 = r54] in G1.
+untrusted_polys [F116 = (u*a55 + h)*r55 - v*r, F117 = r55] in G1.
+untrusted_polys [F118 = (u*a56 + h)*r56 - v*r, F119 = r56] in G1.
+untrusted_polys [F120 = (u*a57 + h)*r57 - v*r, F121 = r57] in G1.
+untrusted_polys [F122 = (u*a58 + h)*r58 - v*r, F123 = r58] in G1.
+untrusted_polys [F124 = (u*a59 + h)*r59 - v*r, F125 = r59] in G1.
+untrusted_polys [F126 = (u*a60 + h)*r60 - v*r, F127 = r60] in G1.
+
+
+
+
+
+
+
+
+
+
+
+
+(*********************Output on execution****************)
+(*
+
+wireless-10-147-200-53:project satya$ clear
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+wireless-10-147-200-53:project satya$ ./gga.native examples/type1/RW-60.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a5 in G1,  a6 in G1,  a7 in G1,  a8 in G1,  a9 in G1,  a10 in G1,  a11 in G1,  a12 in G1,  a13 in G1,  a14 in G1,  a15 in G1,  a16 in G1,  a17 in G1,  a18 in G1,  a19 in G1,  a20 in G1,  a21 in G1,  a22 in G1,  a23 in G1,  a24 in G1,  a25 in G1,  a26 in G1,  a27 in G1,  a28 in G1,  a29 in G1,  a30 in G1,  a31 in G1,  a32 in G1,  a33 in G1,  a34 in G1,  a35 in G1,  a36 in G1,  a37 in G1,  a38 in G1,  a39 in G1,  a40 in G1,  a41 in G1,  a42 in G1,  a43 in G1,  a44 in G1,  a45 in G1,  a46 in G1,  a47 in G1,  a48 in G1,  a49 in G1,  a50 in G1,  a51 in G1,  a52 in G1,  a53 in G1,  a54 in G1,  a55 in G1,  a56 in G1,  a57 in G1,  a58 in G1,  a59 in G1,  a60 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a5 in GT,  a6 in GT,  a7 in GT,  a8 in GT,  a9 in GT,  a10 in GT,  a11 in GT,  a12 in GT,  a13 in GT,  a14 in GT,  a15 in GT,  a16 in GT,  a17 in GT,  a18 in GT,  a19 in GT,  a20 in GT,  a21 in GT,  a22 in GT,  a23 in GT,  a24 in GT,  a25 in GT,  a26 in GT,  a27 in GT,  a28 in GT,  a29 in GT,  a30 in GT,  a31 in GT,  a32 in GT,  a33 in GT,  a34 in GT,  a35 in GT,  a36 in GT,  a37 in GT,  a38 in GT,  a39 in GT,  a40 in GT,  a41 in GT,  a42 in GT,  a43 in GT,  a44 in GT,  a45 in GT,  a46 in GT,  a47 in GT,  a48 in GT,  a49 in GT,  a50 in GT,  a51 in GT,  a52 in GT,  a53 in GT,  a54 in GT,  a55 in GT,  a56 in GT,  a57 in GT,  a58 in GT,  a59 in GT,  a60 in GT,  a1*u in G1,  a2*u in G1,  a3*u in G1,  a4*u in G1,  a5*u in G1,  a6*u in G1,  a7*u in G1,  a8*u in G1,  a9*u in G1,  a10*u in G1,  a11*u in G1,  a12*u in G1,  a13*u in G1,  a14*u in G1,  a15*u in G1,  a16*u in G1,  a17*u in G1,  a18*u in G1,  a19*u in G1,  a20*u in G1,  a21*u in G1,  a22*u in G1,  a23*u in G1,  a24*u in G1,  a25*u in G1,  a26*u in G1,  a27*u in G1,  a28*u in G1,  a29*u in G1,  a30*u in G1,  a31*u in G1,  a32*u in G1,  a33*u in G1,  a34*u in G1,  a35*u in G1,  a36*u in G1,  a37*u in G1,  a38*u in G1,  a39*u in G1,  a40*u in G1,  a41*u in G1,  a42*u in G1,  a43*u in G1,  a44*u in G1,  a45*u in G1,  a46*u in G1,  a47*u in G1,  a48*u in G1,  a49*u in G1,  a50*u in G1,  a51*u in G1,  a52*u in G1,  a53*u in G1,  a54*u in G1,  a55*u in G1,  a56*u in G1,  a57*u in G1,  a58*u in G1,  a59*u in G1,  a60*u in G1,  a1*h in G1,  a2*h in G1,  a3*h in G1,  a4*h in G1,  a5*h in G1,  a6*h in G1,  a7*h in G1,  a8*h in G1,  a9*h in G1,  a10*h in G1,  a11*h in G1,  a12*h in G1,  a13*h in G1,  a14*h in G1,  a15*h in G1,  a16*h in G1,  a17*h in G1,  a18*h in G1,  a19*h in G1,  a20*h in G1,  a21*h in G1,  a22*h in G1,  a23*h in G1,  a24*h in G1,  a25*h in G1,  a26*h in G1,  a27*h in G1,  a28*h in G1,  a29*h in G1,  a30*h in G1,  a31*h in G1,  a32*h in G1,  a33*h in G1,  a34*h in G1,  a35*h in G1,  a36*h in G1,  a37*h in G1,  a38*h in G1,  a39*h in G1,  a40*h in G1,  a41*h in G1,  a42*h in G1,  a43*h in G1,  a44*h in G1,  a45*h in G1,  a46*h in G1,  a47*h in G1,  a48*h in G1,  a49*h in G1,  a50*h in G1,  a51*h in G1,  a52*h in G1,  a53*h in G1,  a54*h in G1,  a55*h in G1,  a56*h in G1,  a57*h in G1,  a58*h in G1,  a59*h in G1,  a60*h in G1,  a1*w in G1,  a2*w in G1,  a3*w in G1,  a4*w in G1,  a5*w in G1,  a6*w in G1,  a7*w in G1,  a8*w in G1,  a9*w in G1,  a10*w in G1,  a11*w in G1,  a12*w in G1,  a13*w in G1,  a14*w in G1,  a15*w in G1,  a16*w in G1,  a17*w in G1,  a18*w in G1,  a19*w in G1,  a20*w in G1,  a21*w in G1,  a22*w in G1,  a23*w in G1,  a24*w in G1,  a25*w in G1,  a26*w in G1,  a27*w in G1,  a28*w in G1,  a29*w in G1,  a30*w in G1,  a31*w in G1,  a32*w in G1,  a33*w in G1,  a34*w in G1,  a35*w in G1,  a36*w in G1,  a37*w in G1,  a38*w in G1,  a39*w in G1,  a40*w in G1,  a41*w in G1,  a42*w in G1,  a43*w in G1,  a44*w in G1,  a45*w in G1,  a46*w in G1,  a47*w in G1,  a48*w in G1,  a49*w in G1,  a50*w in G1,  a51*w in G1,  a52*w in G1,  a53*w in G1,  a54*w in G1,  a55*w in G1,  a56*w in G1,  a57*w in G1,  a58*w in G1,  a59*w in G1,  a60*w in G1,  a1*v in G1,  a2*v in G1,  a3*v in G1,  a4*v in G1,  a5*v in G1,  a6*v in G1,  a7*v in G1,  a8*v in G1,  a9*v in G1,  a10*v in G1,  a11*v in G1,  a12*v in G1,  a13*v in G1,  a14*v in G1,  a15*v in G1,  a16*v in G1,  a17*v in G1,  a18*v in G1,  a19*v in G1,  a20*v in G1,  a21*v in G1,  a22*v in G1,  a23*v in G1,  a24*v in G1,  a25*v in G1,  a26*v in G1,  a27*v in G1,  a28*v in G1,  a29*v in G1,  a30*v in G1,  a31*v in G1,  a32*v in G1,  a33*v in G1,  a34*v in G1,  a35*v in G1,  a36*v in G1,  a37*v in G1,  a38*v in G1,  a39*v in G1,  a40*v in G1,  a41*v in G1,  a42*v in G1,  a43*v in G1,  a44*v in G1,  a45*v in G1,  a46*v in G1,  a47*v in G1,  a48*v in G1,  a49*v in G1,  a50*v in G1,  a51*v in G1,  a52*v in G1,  a53*v in G1,  a54*v in G1,  a55*v in G1,  a56*v in G1,  a57*v in G1,  a58*v in G1,  a59*v in G1,  a60*v in G1,  a1*alpha in GT,  a2*alpha in GT,  a3*alpha in GT,  a4*alpha in GT,  a5*alpha in GT,  a6*alpha in GT,  a7*alpha in GT,  a8*alpha in GT,  a9*alpha in GT,  a10*alpha in GT,  a11*alpha in GT,  a12*alpha in GT,  a13*alpha in GT,  a14*alpha in GT,  a15*alpha in GT,  a16*alpha in GT,  a17*alpha in GT,  a18*alpha in GT,  a19*alpha in GT,  a20*alpha in GT,  a21*alpha in GT,  a22*alpha in GT,  a23*alpha in GT,  a24*alpha in GT,  a25*alpha in GT,  a26*alpha in GT,  a27*alpha in GT,  a28*alpha in GT,  a29*alpha in GT,  a30*alpha in GT,  a31*alpha in GT,  a32*alpha in GT,  a33*alpha in GT,  a34*alpha in GT,  a35*alpha in GT,  a36*alpha in GT,  a37*alpha in GT,  a38*alpha in GT,  a39*alpha in GT,  a40*alpha in GT,  a41*alpha in GT,  a42*alpha in GT,  a43*alpha in GT,  a44*alpha in GT,  a45*alpha in GT,  a46*alpha in GT,  a47*alpha in GT,  a48*alpha in GT,  a49*alpha in GT,  a50*alpha in GT,  a51*alpha in GT,  a52*alpha in GT,  a53*alpha in GT,  a54*alpha in GT,  a55*alpha in GT,  a56*alpha in GT,  a57*alpha in GT,  a58*alpha in GT,  a59*alpha in GT,  a60*alpha in GT, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = u in G1
+F2 = h in G1
+F3 = w in G1
+F4 = v in G1
+F5 = alpha in GT
+F6 = alpha + r*w in G1
+F7 = r in G1
+F8 = h*r1 - r*v + a1*r1*u in G1
+F9 = r1 in G1
+F10 = h*r2 - r*v + a2*r2*u in G1
+F11 = r2 in G1
+F12 = h*r3 - r*v + a3*r3*u in G1
+F13 = r3 in G1
+F14 = h*r4 - r*v + a4*r4*u in G1
+F15 = r4 in G1
+F16 = h*r5 - r*v + a5*r5*u in G1
+F17 = r5 in G1
+F18 = h*r6 - r*v + a6*r6*u in G1
+F19 = r6 in G1
+F20 = h*r7 - r*v + a7*r7*u in G1
+F21 = r7 in G1
+F22 = h*r8 - r*v + a8*r8*u in G1
+F23 = r8 in G1
+F24 = h*r9 - r*v + a9*r9*u in G1
+F25 = r9 in G1
+F26 = h*r10 - r*v + a10*r10*u in G1
+F27 = r10 in G1
+F28 = h*r11 - r*v + a11*r11*u in G1
+F29 = r11 in G1
+F30 = h*r12 - r*v + a12*r12*u in G1
+F31 = r12 in G1
+F32 = h*r13 - r*v + a13*r13*u in G1
+F33 = r13 in G1
+F34 = h*r14 - r*v + a14*r14*u in G1
+F35 = r14 in G1
+F36 = h*r15 - r*v + a15*r15*u in G1
+F37 = r15 in G1
+F38 = h*r16 - r*v + a16*r16*u in G1
+F39 = r16 in G1
+F40 = h*r17 - r*v + a17*r17*u in G1
+F41 = r17 in G1
+F42 = h*r18 - r*v + a18*r18*u in G1
+F43 = r18 in G1
+F44 = h*r19 - r*v + a19*r19*u in G1
+F45 = r19 in G1
+F46 = h*r20 - r*v + a20*r20*u in G1
+F47 = r20 in G1
+F48 = h*r21 - r*v + a21*r21*u in G1
+F49 = r21 in G1
+F50 = h*r22 - r*v + a22*r22*u in G1
+F51 = r22 in G1
+F52 = h*r23 - r*v + a23*r23*u in G1
+F53 = r23 in G1
+F54 = h*r24 - r*v + a24*r24*u in G1
+F55 = r24 in G1
+F56 = h*r25 - r*v + a25*r25*u in G1
+F57 = r25 in G1
+F58 = h*r26 - r*v + a26*r26*u in G1
+F59 = r26 in G1
+F60 = h*r27 - r*v + a27*r27*u in G1
+F61 = r27 in G1
+F62 = h*r28 - r*v + a28*r28*u in G1
+F63 = r28 in G1
+F64 = h*r29 - r*v + a29*r29*u in G1
+F65 = r29 in G1
+F66 = h*r30 - r*v + a30*r30*u in G1
+F67 = r30 in G1
+F68 = h*r31 - r*v + a31*r31*u in G1
+F69 = r31 in G1
+F70 = h*r32 - r*v + a32*r32*u in G1
+F71 = r32 in G1
+F72 = h*r33 - r*v + a33*r33*u in G1
+F73 = r33 in G1
+F74 = h*r34 - r*v + a34*r34*u in G1
+F75 = r34 in G1
+F76 = h*r35 - r*v + a35*r35*u in G1
+F77 = r35 in G1
+F78 = h*r36 - r*v + a36*r36*u in G1
+F79 = r36 in G1
+F80 = h*r37 - r*v + a37*r37*u in G1
+F81 = r37 in G1
+F82 = h*r38 - r*v + a38*r38*u in G1
+F83 = r38 in G1
+F84 = h*r39 - r*v + a39*r39*u in G1
+F85 = r39 in G1
+F86 = h*r40 - r*v + a40*r40*u in G1
+F87 = r40 in G1
+F88 = h*r41 - r*v + a41*r41*u in G1
+F89 = r41 in G1
+F90 = h*r42 - r*v + a42*r42*u in G1
+F91 = r42 in G1
+F92 = h*r43 - r*v + a43*r43*u in G1
+F93 = r43 in G1
+F94 = h*r44 - r*v + a44*r44*u in G1
+F95 = r44 in G1
+F96 = h*r45 - r*v + a45*r45*u in G1
+F97 = r45 in G1
+F98 = h*r46 - r*v + a46*r46*u in G1
+F99 = r46 in G1
+F100 = h*r47 - r*v + a47*r47*u in G1
+F101 = r47 in G1
+F102 = h*r48 - r*v + a48*r48*u in G1
+F103 = r48 in G1
+F104 = h*r49 - r*v + a49*r49*u in G1
+F105 = r49 in G1
+F106 = h*r50 - r*v + a50*r50*u in G1
+F107 = r50 in G1
+F108 = h*r51 - r*v + a51*r51*u in G1
+F109 = r51 in G1
+F110 = h*r52 - r*v + a52*r52*u in G1
+F111 = r52 in G1
+F112 = h*r53 - r*v + a53*r53*u in G1
+F113 = r53 in G1
+F114 = h*r54 - r*v + a54*r54*u in G1
+F115 = r54 in G1
+F116 = h*r55 - r*v + a55*r55*u in G1
+F117 = r55 in G1
+F118 = h*r56 - r*v + a56*r56*u in G1
+F119 = r56 in G1
+F120 = h*r57 - r*v + a57*r57*u in G1
+F121 = r57 in G1
+F122 = h*r58 - r*v + a58*r58*u in G1
+F123 = r58 in G1
+F124 = h*r59 - r*v + a59*r59*u in G1
+F125 = r59 in G1
+F126 = h*r60 - r*v + a60*r60*u in G1
+F127 = r60 in G1
+F128 = a1 in G1
+F129 = a2 in G1
+F130 = a3 in G1
+F131 = a4 in G1
+F132 = a5 in G1
+F133 = a6 in G1
+F134 = a7 in G1
+F135 = a8 in G1
+F136 = a9 in G1
+F137 = a10 in G1
+F138 = a11 in G1
+F139 = a12 in G1
+F140 = a13 in G1
+F141 = a14 in G1
+F142 = a15 in G1
+F143 = a16 in G1
+F144 = a17 in G1
+F145 = a18 in G1
+F146 = a19 in G1
+F147 = a20 in G1
+F148 = a21 in G1
+F149 = a22 in G1
+F150 = a23 in G1
+F151 = a24 in G1
+F152 = a25 in G1
+F153 = a26 in G1
+F154 = a27 in G1
+F155 = a28 in G1
+F156 = a29 in G1
+F157 = a30 in G1
+F158 = a31 in G1
+F159 = a32 in G1
+F160 = a33 in G1
+F161 = a34 in G1
+F162 = a35 in G1
+F163 = a36 in G1
+F164 = a37 in G1
+F165 = a38 in G1
+F166 = a39 in G1
+F167 = a40 in G1
+F168 = a41 in G1
+F169 = a42 in G1
+F170 = a43 in G1
+F171 = a44 in G1
+F172 = a45 in G1
+F173 = a46 in G1
+F174 = a47 in G1
+F175 = a48 in G1
+F176 = a49 in G1
+F177 = a50 in G1
+F178 = a51 in G1
+F179 = a52 in G1
+F180 = a53 in G1
+F181 = a54 in G1
+F182 = a55 in G1
+F183 = a56 in G1
+F184 = a57 in G1
+F185 = a58 in G1
+F186 = a59 in G1
+F187 = a60 in G1
+F188 = a1 in GT
+F189 = a2 in GT
+F190 = a3 in GT
+F191 = a4 in GT
+F192 = a5 in GT
+F193 = a6 in GT
+F194 = a7 in GT
+F195 = a8 in GT
+F196 = a9 in GT
+F197 = a10 in GT
+F198 = a11 in GT
+F199 = a12 in GT
+F200 = a13 in GT
+F201 = a14 in GT
+F202 = a15 in GT
+F203 = a16 in GT
+F204 = a17 in GT
+F205 = a18 in GT
+F206 = a19 in GT
+F207 = a20 in GT
+F208 = a21 in GT
+F209 = a22 in GT
+F210 = a23 in GT
+F211 = a24 in GT
+F212 = a25 in GT
+F213 = a26 in GT
+F214 = a27 in GT
+F215 = a28 in GT
+F216 = a29 in GT
+F217 = a30 in GT
+F218 = a31 in GT
+F219 = a32 in GT
+F220 = a33 in GT
+F221 = a34 in GT
+F222 = a35 in GT
+F223 = a36 in GT
+F224 = a37 in GT
+F225 = a38 in GT
+F226 = a39 in GT
+F227 = a40 in GT
+F228 = a41 in GT
+F229 = a42 in GT
+F230 = a43 in GT
+F231 = a44 in GT
+F232 = a45 in GT
+F233 = a46 in GT
+F234 = a47 in GT
+F235 = a48 in GT
+F236 = a49 in GT
+F237 = a50 in GT
+F238 = a51 in GT
+F239 = a52 in GT
+F240 = a53 in GT
+F241 = a54 in GT
+F242 = a55 in GT
+F243 = a56 in GT
+F244 = a57 in GT
+F245 = a58 in GT
+F246 = a59 in GT
+F247 = a60 in GT
+F248 = a1*u in G1
+F249 = a2*u in G1
+F250 = a3*u in G1
+F251 = a4*u in G1
+F252 = a5*u in G1
+F253 = a6*u in G1
+F254 = a7*u in G1
+F255 = a8*u in G1
+F256 = a9*u in G1
+F257 = a10*u in G1
+F258 = a11*u in G1
+F259 = a12*u in G1
+F260 = a13*u in G1
+F261 = a14*u in G1
+F262 = a15*u in G1
+F263 = a16*u in G1
+F264 = a17*u in G1
+F265 = a18*u in G1
+F266 = a19*u in G1
+F267 = a20*u in G1
+F268 = a21*u in G1
+F269 = a22*u in G1
+F270 = a23*u in G1
+F271 = a24*u in G1
+F272 = a25*u in G1
+F273 = a26*u in G1
+F274 = a27*u in G1
+F275 = a28*u in G1
+F276 = a29*u in G1
+F277 = a30*u in G1
+F278 = a31*u in G1
+F279 = a32*u in G1
+F280 = a33*u in G1
+F281 = a34*u in G1
+F282 = a35*u in G1
+F283 = a36*u in G1
+F284 = a37*u in G1
+F285 = a38*u in G1
+F286 = a39*u in G1
+F287 = a40*u in G1
+F288 = a41*u in G1
+F289 = a42*u in G1
+F290 = a43*u in G1
+F291 = a44*u in G1
+F292 = a45*u in G1
+F293 = a46*u in G1
+F294 = a47*u in G1
+F295 = a48*u in G1
+F296 = a49*u in G1
+F297 = a50*u in G1
+F298 = a51*u in G1
+F299 = a52*u in G1
+F300 = a53*u in G1
+F301 = a54*u in G1
+F302 = a55*u in G1
+F303 = a56*u in G1
+F304 = a57*u in G1
+F305 = a58*u in G1
+F306 = a59*u in G1
+F307 = a60*u in G1
+F308 = a1*h in G1
+F309 = a2*h in G1
+F310 = a3*h in G1
+F311 = a4*h in G1
+F312 = a5*h in G1
+F313 = a6*h in G1
+F314 = a7*h in G1
+F315 = a8*h in G1
+F316 = a9*h in G1
+F317 = a10*h in G1
+F318 = a11*h in G1
+F319 = a12*h in G1
+F320 = a13*h in G1
+F321 = a14*h in G1
+F322 = a15*h in G1
+F323 = a16*h in G1
+F324 = a17*h in G1
+F325 = a18*h in G1
+F326 = a19*h in G1
+F327 = a20*h in G1
+F328 = a21*h in G1
+F329 = a22*h in G1
+F330 = a23*h in G1
+F331 = a24*h in G1
+F332 = a25*h in G1
+F333 = a26*h in G1
+F334 = a27*h in G1
+F335 = a28*h in G1
+F336 = a29*h in G1
+F337 = a30*h in G1
+F338 = a31*h in G1
+F339 = a32*h in G1
+F340 = a33*h in G1
+F341 = a34*h in G1
+F342 = a35*h in G1
+F343 = a36*h in G1
+F344 = a37*h in G1
+F345 = a38*h in G1
+F346 = a39*h in G1
+F347 = a40*h in G1
+F348 = a41*h in G1
+F349 = a42*h in G1
+F350 = a43*h in G1
+F351 = a44*h in G1
+F352 = a45*h in G1
+F353 = a46*h in G1
+F354 = a47*h in G1
+F355 = a48*h in G1
+F356 = a49*h in G1
+F357 = a50*h in G1
+F358 = a51*h in G1
+F359 = a52*h in G1
+F360 = a53*h in G1
+F361 = a54*h in G1
+F362 = a55*h in G1
+F363 = a56*h in G1
+F364 = a57*h in G1
+F365 = a58*h in G1
+F366 = a59*h in G1
+F367 = a60*h in G1
+F368 = a1*w in G1
+F369 = a2*w in G1
+F370 = a3*w in G1
+F371 = a4*w in G1
+F372 = a5*w in G1
+F373 = a6*w in G1
+F374 = a7*w in G1
+F375 = a8*w in G1
+F376 = a9*w in G1
+F377 = a10*w in G1
+F378 = a11*w in G1
+F379 = a12*w in G1
+F380 = a13*w in G1
+F381 = a14*w in G1
+F382 = a15*w in G1
+F383 = a16*w in G1
+F384 = a17*w in G1
+F385 = a18*w in G1
+F386 = a19*w in G1
+F387 = a20*w in G1
+F388 = a21*w in G1
+F389 = a22*w in G1
+F390 = a23*w in G1
+F391 = a24*w in G1
+F392 = a25*w in G1
+F393 = a26*w in G1
+F394 = a27*w in G1
+F395 = a28*w in G1
+F396 = a29*w in G1
+F397 = a30*w in G1
+F398 = a31*w in G1
+F399 = a32*w in G1
+F400 = a33*w in G1
+F401 = a34*w in G1
+F402 = a35*w in G1
+F403 = a36*w in G1
+F404 = a37*w in G1
+F405 = a38*w in G1
+F406 = a39*w in G1
+F407 = a40*w in G1
+F408 = a41*w in G1
+F409 = a42*w in G1
+F410 = a43*w in G1
+F411 = a44*w in G1
+F412 = a45*w in G1
+F413 = a46*w in G1
+F414 = a47*w in G1
+F415 = a48*w in G1
+F416 = a49*w in G1
+F417 = a50*w in G1
+F418 = a51*w in G1
+F419 = a52*w in G1
+F420 = a53*w in G1
+F421 = a54*w in G1
+F422 = a55*w in G1
+F423 = a56*w in G1
+F424 = a57*w in G1
+F425 = a58*w in G1
+F426 = a59*w in G1
+F427 = a60*w in G1
+F428 = a1*v in G1
+F429 = a2*v in G1
+F430 = a3*v in G1
+F431 = a4*v in G1
+F432 = a5*v in G1
+F433 = a6*v in G1
+F434 = a7*v in G1
+F435 = a8*v in G1
+F436 = a9*v in G1
+F437 = a10*v in G1
+F438 = a11*v in G1
+F439 = a12*v in G1
+F440 = a13*v in G1
+F441 = a14*v in G1
+F442 = a15*v in G1
+F443 = a16*v in G1
+F444 = a17*v in G1
+F445 = a18*v in G1
+F446 = a19*v in G1
+F447 = a20*v in G1
+F448 = a21*v in G1
+F449 = a22*v in G1
+F450 = a23*v in G1
+F451 = a24*v in G1
+F452 = a25*v in G1
+F453 = a26*v in G1
+F454 = a27*v in G1
+F455 = a28*v in G1
+F456 = a29*v in G1
+F457 = a30*v in G1
+F458 = a31*v in G1
+F459 = a32*v in G1
+F460 = a33*v in G1
+F461 = a34*v in G1
+F462 = a35*v in G1
+F463 = a36*v in G1
+F464 = a37*v in G1
+F465 = a38*v in G1
+F466 = a39*v in G1
+F467 = a40*v in G1
+F468 = a41*v in G1
+F469 = a42*v in G1
+F470 = a43*v in G1
+F471 = a44*v in G1
+F472 = a45*v in G1
+F473 = a46*v in G1
+F474 = a47*v in G1
+F475 = a48*v in G1
+F476 = a49*v in G1
+F477 = a50*v in G1
+F478 = a51*v in G1
+F479 = a52*v in G1
+F480 = a53*v in G1
+F481 = a54*v in G1
+F482 = a55*v in G1
+F483 = a56*v in G1
+F484 = a57*v in G1
+F485 = a58*v in G1
+F486 = a59*v in G1
+F487 = a60*v in G1
+F488 = a1*alpha in GT
+F489 = a2*alpha in GT
+F490 = a3*alpha in GT
+F491 = a4*alpha in GT
+F492 = a5*alpha in GT
+F493 = a6*alpha in GT
+F494 = a7*alpha in GT
+F495 = a8*alpha in GT
+F496 = a9*alpha in GT
+F497 = a10*alpha in GT
+F498 = a11*alpha in GT
+F499 = a12*alpha in GT
+F500 = a13*alpha in GT
+F501 = a14*alpha in GT
+F502 = a15*alpha in GT
+F503 = a16*alpha in GT
+F504 = a17*alpha in GT
+F505 = a18*alpha in GT
+F506 = a19*alpha in GT
+F507 = a20*alpha in GT
+F508 = a21*alpha in GT
+F509 = a22*alpha in GT
+F510 = a23*alpha in GT
+F511 = a24*alpha in GT
+F512 = a25*alpha in GT
+F513 = a26*alpha in GT
+F514 = a27*alpha in GT
+F515 = a28*alpha in GT
+F516 = a29*alpha in GT
+F517 = a30*alpha in GT
+F518 = a31*alpha in GT
+F519 = a32*alpha in GT
+F520 = a33*alpha in GT
+F521 = a34*alpha in GT
+F522 = a35*alpha in GT
+F523 = a36*alpha in GT
+F524 = a37*alpha in GT
+F525 = a38*alpha in GT
+F526 = a39*alpha in GT
+F527 = a40*alpha in GT
+F528 = a41*alpha in GT
+F529 = a42*alpha in GT
+F530 = a43*alpha in GT
+F531 = a44*alpha in GT
+F532 = a45*alpha in GT
+F533 = a46*alpha in GT
+F534 = a47*alpha in GT
+F535 = a48*alpha in GT
+F536 = a49*alpha in GT
+F537 = a50*alpha in GT
+F538 = a51*alpha in GT
+F539 = a52*alpha in GT
+F540 = a53*alpha in GT
+F541 = a54*alpha in GT
+F542 = a55*alpha in GT
+F543 = a56*alpha in GT
+F544 = a57*alpha in GT
+F545 = a58*alpha in GT
+F546 = a59*alpha in GT
+F547 = a60*alpha in GT
+
+......................................................................
+
+Processing untrusted polynomial F6 = alpha + r*w by rule2
+Rule not applied
+
+Processing untrusted polynomial F7 = r by rule2
+F7 moved to trusted set and r moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F8 = h*r1 - r*v + a1*r1*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F9 = r1 by rule2
+F9 moved to trusted set and r1 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F10 = h*r2 - r*v + a2*r2*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F11 = r2 by rule2
+F11 moved to trusted set and r2 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F12 = h*r3 - r*v + a3*r3*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F13 = r3 by rule2
+F13 moved to trusted set and r3 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F14 = h*r4 - r*v + a4*r4*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F15 = r4 by rule2
+F15 moved to trusted set and r4 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F16 = h*r5 - r*v + a5*r5*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F17 = r5 by rule2
+F17 moved to trusted set and r5 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F18 = h*r6 - r*v + a6*r6*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F19 = r6 by rule2
+F19 moved to trusted set and r6 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F20 = h*r7 - r*v + a7*r7*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F21 = r7 by rule2
+F21 moved to trusted set and r7 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F22 = h*r8 - r*v + a8*r8*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F23 = r8 by rule2
+F23 moved to trusted set and r8 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F24 = h*r9 - r*v + a9*r9*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F25 = r9 by rule2
+F25 moved to trusted set and r9 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F26 = h*r10 - r*v + a10*r10*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F27 = r10 by rule2
+F27 moved to trusted set and r10 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F28 = h*r11 - r*v + a11*r11*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F29 = r11 by rule2
+F29 moved to trusted set and r11 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F30 = h*r12 - r*v + a12*r12*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F31 = r12 by rule2
+F31 moved to trusted set and r12 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F32 = h*r13 - r*v + a13*r13*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F33 = r13 by rule2
+F33 moved to trusted set and r13 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F34 = h*r14 - r*v + a14*r14*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F35 = r14 by rule2
+F35 moved to trusted set and r14 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F36 = h*r15 - r*v + a15*r15*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F37 = r15 by rule2
+F37 moved to trusted set and r15 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F38 = h*r16 - r*v + a16*r16*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F39 = r16 by rule2
+F39 moved to trusted set and r16 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F40 = h*r17 - r*v + a17*r17*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F41 = r17 by rule2
+F41 moved to trusted set and r17 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F42 = h*r18 - r*v + a18*r18*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F43 = r18 by rule2
+F43 moved to trusted set and r18 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F44 = h*r19 - r*v + a19*r19*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F45 = r19 by rule2
+F45 moved to trusted set and r19 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F46 = h*r20 - r*v + a20*r20*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F47 = r20 by rule2
+F47 moved to trusted set and r20 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F48 = h*r21 - r*v + a21*r21*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F49 = r21 by rule2
+F49 moved to trusted set and r21 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F50 = h*r22 - r*v + a22*r22*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F51 = r22 by rule2
+F51 moved to trusted set and r22 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F52 = h*r23 - r*v + a23*r23*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F53 = r23 by rule2
+F53 moved to trusted set and r23 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F54 = h*r24 - r*v + a24*r24*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F55 = r24 by rule2
+F55 moved to trusted set and r24 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F56 = h*r25 - r*v + a25*r25*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F57 = r25 by rule2
+F57 moved to trusted set and r25 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F58 = h*r26 - r*v + a26*r26*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F59 = r26 by rule2
+F59 moved to trusted set and r26 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F60 = h*r27 - r*v + a27*r27*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F61 = r27 by rule2
+F61 moved to trusted set and r27 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F62 = h*r28 - r*v + a28*r28*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F63 = r28 by rule2
+F63 moved to trusted set and r28 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F64 = h*r29 - r*v + a29*r29*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F65 = r29 by rule2
+F65 moved to trusted set and r29 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F66 = h*r30 - r*v + a30*r30*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F67 = r30 by rule2
+F67 moved to trusted set and r30 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F68 = h*r31 - r*v + a31*r31*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F69 = r31 by rule2
+F69 moved to trusted set and r31 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F70 = h*r32 - r*v + a32*r32*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F71 = r32 by rule2
+F71 moved to trusted set and r32 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F72 = h*r33 - r*v + a33*r33*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F73 = r33 by rule2
+F73 moved to trusted set and r33 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F74 = h*r34 - r*v + a34*r34*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F75 = r34 by rule2
+F75 moved to trusted set and r34 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F76 = h*r35 - r*v + a35*r35*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F77 = r35 by rule2
+F77 moved to trusted set and r35 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F78 = h*r36 - r*v + a36*r36*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F79 = r36 by rule2
+F79 moved to trusted set and r36 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F80 = h*r37 - r*v + a37*r37*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F81 = r37 by rule2
+F81 moved to trusted set and r37 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F82 = h*r38 - r*v + a38*r38*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F83 = r38 by rule2
+F83 moved to trusted set and r38 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F84 = h*r39 - r*v + a39*r39*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F85 = r39 by rule2
+F85 moved to trusted set and r39 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F86 = h*r40 - r*v + a40*r40*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F87 = r40 by rule2
+F87 moved to trusted set and r40 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F88 = h*r41 - r*v + a41*r41*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F89 = r41 by rule2
+F89 moved to trusted set and r41 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F90 = h*r42 - r*v + a42*r42*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F91 = r42 by rule2
+F91 moved to trusted set and r42 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F92 = h*r43 - r*v + a43*r43*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F93 = r43 by rule2
+F93 moved to trusted set and r43 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F94 = h*r44 - r*v + a44*r44*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F95 = r44 by rule2
+F95 moved to trusted set and r44 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F96 = h*r45 - r*v + a45*r45*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F97 = r45 by rule2
+F97 moved to trusted set and r45 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F98 = h*r46 - r*v + a46*r46*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F99 = r46 by rule2
+F99 moved to trusted set and r46 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F100 = h*r47 - r*v + a47*r47*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F101 = r47 by rule2
+F101 moved to trusted set and r47 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F102 = h*r48 - r*v + a48*r48*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F103 = r48 by rule2
+F103 moved to trusted set and r48 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F104 = h*r49 - r*v + a49*r49*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F105 = r49 by rule2
+F105 moved to trusted set and r49 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F106 = h*r50 - r*v + a50*r50*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F107 = r50 by rule2
+F107 moved to trusted set and r50 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F108 = h*r51 - r*v + a51*r51*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F109 = r51 by rule2
+F109 moved to trusted set and r51 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F110 = h*r52 - r*v + a52*r52*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F111 = r52 by rule2
+F111 moved to trusted set and r52 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F112 = h*r53 - r*v + a53*r53*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F113 = r53 by rule2
+F113 moved to trusted set and r53 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F114 = h*r54 - r*v + a54*r54*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F115 = r54 by rule2
+F115 moved to trusted set and r54 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F116 = h*r55 - r*v + a55*r55*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F117 = r55 by rule2
+F117 moved to trusted set and r55 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F118 = h*r56 - r*v + a56*r56*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F119 = r56 by rule2
+F119 moved to trusted set and r56 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F120 = h*r57 - r*v + a57*r57*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F121 = r57 by rule2
+F121 moved to trusted set and r57 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F122 = h*r58 - r*v + a58*r58*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F123 = r58 by rule2
+F123 moved to trusted set and r58 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F124 = h*r59 - r*v + a59*r59*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F125 = r59 by rule2
+F125 moved to trusted set and r59 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F126 = h*r60 - r*v + a60*r60*u by rule2
+Rule not applied
+
+Processing untrusted polynomial F127 = r60 by rule2
+F127 moved to trusted set and r60 moved to fixed set by rule 2
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.285238s seconds to compute completion list of Gt
+
+Took 1.909853s seconds to compute completion list of G1
+Took 4.195127s to compute completion lists.
+Processing untrusted polynomial F6 by rule1
+Took 0.002189s to multiply f with completionG1 . Size of trusted set = 488. Size of f.(completion list of G1) U (completion list of GT) = 67649.
+
+Optimization round 1
+Took 3.096652s time to compute new_polys
+
+Took 0.007109s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 67283 to 122
+       Took 3.114483s seconds.
+Took 0.001860s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 366 to 61
+       Took 0.010047s seconds.
+
+Optimization round 2
+Took 0.000460s time to compute new_polys
+
+Took 0.000249s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 122 to 122
+       Took 0.000787s seconds.
+Took 0.000199s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 61 to 61
+       Took 0.000406s seconds.
+
+Took 3.157344s to optimize.
+Took 0.001834s to compute basis. Size of trusted set = 488. Size of reduced f.(completion list of G1) U (completion list of GT) = 183. No. of monomials = 122. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 183*122
+Took 4.142591s time to solve
+
+Naive PPE e(F6,F0) = F5 * e(F3,F7)
+Optimized PPE e(F6,F0) = F5*e(F3,F7)
+
+F6 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.036320s seconds to compute completion list of Gt
+
+Took 2.039913s seconds to compute completion list of G1
+Took 3.076255s to compute completion lists.
+Processing untrusted polynomial F8 by rule1
+Took 0.002768s to multiply f with completionG1 . Size of trusted set = 489. Size of f.(completion list of G1) U (completion list of GT) = 68017.
+
+Optimization round 1
+Took 4.787852s time to compute new_polys
+
+Took 0.004205s time to compute new_mons
+
+Took 0.294309s time to compute new_polys
+
+Took 0.000001s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 67650 to 184
+       Took 5.097560s seconds.
+Took 0.004986s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 367 to 1
+       Took 0.020567s seconds.
+
+Optimization round 2
+Took 0.000061s time to compute new_polys
+
+Took 0.000002s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 184 to 3
+       Took 0.000079s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000008s seconds.
+
+Optimization round 3
+Took 0.000001s time to compute new_polys
+
+Took 0.000002s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 3 to 3
+       Took 0.000059s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000006s seconds.
+
+Took 5.145321s to optimize.
+Took 0.000026s to compute basis. Size of trusted set = 489. Size of reduced f.(completion list of G1) U (completion list of GT) = 4. No. of monomials = 3. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 4*3
+Took 2.153710s time to solve
+
+Naive PPE e(F8,F0) = e(F2,F9) * (e(F4,F7))^-1 * e(F9,F248)
+Optimized PPE e(F8,F0) = e(F2,F9)*(e(F4,F7))^-1*e(F9,F248)
+
+F8 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.978937s seconds to compute completion list of Gt
+
+Took 2.094003s seconds to compute completion list of G1
+Took 3.072962s to compute completion lists.
+Processing untrusted polynomial F10 by rule1
+Took 0.002576s to multiply f with completionG1 . Size of trusted set = 490. Size of f.(completion list of G1) U (completion list of GT) = 68386.
+
+Optimization round 1
+Took 4.798566s time to compute new_polys
+
+Took 0.018888s time to compute new_mons
+
+Took 3.475966s time to compute new_polys
+
+Took 0.001130s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 68018 to 614
+       Took 8.304733s seconds.
+Took 0.022817s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 368 to 1
+       Took 0.039560s seconds.
+
+Optimization round 2
+Took 0.000226s time to compute new_polys
+
+Took 0.000007s time to compute new_mons
+
+Took 0.000379s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 614 to 6
+       Took 0.000706s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000027s seconds.
+
+Optimization round 3
+Took 0.000006s time to compute new_polys
+
+Took 0.000004s time to compute new_mons
+
+Took 0.000002s time to compute new_polys
+
+Took 0.000001s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 6 to 6
+       Took 0.000053s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000012s seconds.
+
+Took 8.367871s to optimize.
+Took 0.000025s to compute basis. Size of trusted set = 490. Size of reduced f.(completion list of G1) U (completion list of GT) = 7. No. of monomials = 5. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 7*5
+Took 2.103010s time to solve
+
+Naive PPE e(F10,F0) = e(F2,F11) * (e(F4,F7))^-1 * e(F11,F249)
+Optimized PPE e(F10,F0) = e(F2,F11)*(e(F4,F7))^-1*e(F11,F249)
+
+F10 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.898298s seconds to compute completion list of Gt
+
+Took 1.960589s seconds to compute completion list of G1
+Took 2.858907s to compute completion lists.
+Processing untrusted polynomial F12 by rule1
+Took 0.003188s to multiply f with completionG1 . Size of trusted set = 491. Size of f.(completion list of G1) U (completion list of GT) = 68756.
+
+Optimization round 1
+Took 5.204365s time to compute new_polys
+
+Took 0.035067s time to compute new_mons
+
+Took 7.130301s time to compute new_polys
+
+Took 0.002930s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 68387 to 1045
+       Took 12.397549s seconds.
+Took 0.040601s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 369 to 1
+       Took 0.054342s seconds.
+
+Optimization round 2
+Took 0.000341s time to compute new_polys
+
+Took 0.000004s time to compute new_mons
+
+Took 0.000397s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 1045 to 9
+       Took 0.000815s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000022s seconds.
+
+Optimization round 3
+Took 0.000005s time to compute new_polys
+
+Took 0.000003s time to compute new_mons
+
+Took 0.000003s time to compute new_polys
+
+Took 0.000002s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 9 to 9
+       Took 0.000036s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000017s seconds.
+
+Took 12.478945s to optimize.
+Took 0.000033s to compute basis. Size of trusted set = 491. Size of reduced f.(completion list of G1) U (completion list of GT) = 10. No. of monomials = 7. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 10*7
+Took 2.130493s time to solve
+
+Naive PPE e(F12,F0) = e(F2,F13) * (e(F4,F7))^-1 * e(F13,F250)
+Optimized PPE e(F12,F0) = e(F2,F13)*(e(F4,F7))^-1*e(F13,F250)
+
+F12 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.927759s seconds to compute completion list of Gt
+
+Took 2.048701s seconds to compute completion list of G1
+Took 2.976481s to compute completion lists.
+Processing untrusted polynomial F14 by rule1
+Took 0.003041s to multiply f with completionG1 . Size of trusted set = 492. Size of f.(completion list of G1) U (completion list of GT) = 69127.
+
+Optimization round 1
+Took 5.065940s time to compute new_polys
+
+Took 0.050908s time to compute new_mons
+
+Took 15.707996s time to compute new_polys
+
+Took 0.005535s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 68757 to 1477
+       Took 20.847791s seconds.
+Took 0.063456s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 370 to 1
+       Took 0.078614s seconds.
+
+Optimization round 2
+Took 0.000498s time to compute new_polys
+
+Took 0.000008s time to compute new_mons
+
+Took 0.001011s time to compute new_polys
+
+Took 0.000004s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 1477 to 12
+       Took 0.001606s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000020s seconds.
+
+Optimization round 3
+Took 0.000005s time to compute new_polys
+
+Took 0.000003s time to compute new_mons
+
+Took 0.000003s time to compute new_polys
+
+Took 0.000002s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 12 to 12
+       Took 0.000028s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000023s seconds.
+
+Took 20.953461s to optimize.
+Took 0.000033s to compute basis. Size of trusted set = 492. Size of reduced f.(completion list of G1) U (completion list of GT) = 13. No. of monomials = 9. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 13*9
+Took 5.245934s time to solve
+
+Naive PPE e(F14,F0) = e(F2,F15) * (e(F4,F7))^-1 * e(F15,F251)
+Optimized PPE e(F14,F0) = e(F2,F15)*(e(F4,F7))^-1*e(F15,F251)
+
+F14 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.981644s seconds to compute completion list of Gt
+
+Took 2.149651s seconds to compute completion list of G1
+Took 3.131316s to compute completion lists.
+Processing untrusted polynomial F16 by rule1
+Took 0.003167s to multiply f with completionG1 . Size of trusted set = 493. Size of f.(completion list of G1) U (completion list of GT) = 69499.
+
+Optimization round 1
+Took 5.677291s time to compute new_polys
+
+Took 0.071835s time to compute new_mons
+
+Took 18.622841s time to compute new_polys
+
+Took 0.006292s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 69128 to 1910
+       Took 24.401206s seconds.
+Took 0.080857s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 371 to 1
+       Took 0.098896s seconds.
+
+Optimization round 2
+Took 0.000641s time to compute new_polys
+
+Took 0.000006s time to compute new_mons
+
+Took 0.001122s time to compute new_polys
+
+Took 0.000008s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 1910 to 15
+       Took 0.001881s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000031s seconds.
+
+Optimization round 3
+Took 0.000008s time to compute new_polys
+
+Took 0.000006s time to compute new_mons
+
+Took 0.000006s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 15 to 15
+       Took 0.000050s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000017s seconds.
+
+Took 24.533492s to optimize.
+Took 0.000049s to compute basis. Size of trusted set = 493. Size of reduced f.(completion list of G1) U (completion list of GT) = 16. No. of monomials = 11. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 16*11
+Took 2.477918s time to solve
+
+Naive PPE e(F16,F0) = e(F2,F17) * (e(F4,F7))^-1 * e(F17,F252)
+Optimized PPE e(F16,F0) = e(F2,F17)*(e(F4,F7))^-1*e(F17,F252)
+
+F16 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.014357s seconds to compute completion list of Gt
+
+Took 2.276794s seconds to compute completion list of G1
+Took 3.291173s to compute completion lists.
+Processing untrusted polynomial F18 by rule1
+Took 0.005308s to multiply f with completionG1 . Size of trusted set = 494. Size of f.(completion list of G1) U (completion list of GT) = 69872.
+
+Optimization round 1
+Took 5.349333s time to compute new_polys
+
+Took 0.090497s time to compute new_mons
+
+Took 19.863234s time to compute new_polys
+
+Took 0.009335s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 69500 to 2344
+       Took 25.329769s seconds.
+Took 0.090193s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 372 to 1
+       Took 0.108775s seconds.
+
+Optimization round 2
+Took 0.000860s time to compute new_polys
+
+Took 0.000012s time to compute new_mons
+
+Took 0.001966s time to compute new_polys
+
+Took 0.000011s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 2344 to 18
+       Took 0.002981s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000038s seconds.
+
+Optimization round 3
+Took 0.000010s time to compute new_polys
+
+Took 0.000018s time to compute new_mons
+
+Took 0.000010s time to compute new_polys
+
+Took 0.000007s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 18 to 18
+       Took 0.000077s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000029s seconds.
+
+Took 25.482378s to optimize.
+Took 0.000076s to compute basis. Size of trusted set = 494. Size of reduced f.(completion list of G1) U (completion list of GT) = 19. No. of monomials = 13. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 19*13
+Took 2.590619s time to solve
+
+Naive PPE e(F18,F0) = e(F2,F19) * (e(F4,F7))^-1 * e(F19,F253)
+Optimized PPE e(F18,F0) = e(F2,F19)*(e(F4,F7))^-1*e(F19,F253)
+
+F18 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.028223s seconds to compute completion list of Gt
+
+Took 2.569801s seconds to compute completion list of G1
+Took 3.598047s to compute completion lists.
+Processing untrusted polynomial F20 by rule1
+Took 0.002770s to multiply f with completionG1 . Size of trusted set = 495. Size of f.(completion list of G1) U (completion list of GT) = 70246.
+
+Optimization round 1
+Took 5.570345s time to compute new_polys
+
+Took 0.108871s time to compute new_mons
+
+Took 32.956538s time to compute new_polys
+
+Took 0.014431s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 69873 to 2779
+       Took 38.669604s seconds.
+Took 0.139390s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 373 to 1
+       Took 0.162776s seconds.
+
+Optimization round 2
+Took 0.001249s time to compute new_polys
+
+Took 0.000007s time to compute new_mons
+
+Took 0.003026s time to compute new_polys
+
+Took 0.000009s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 2779 to 21
+       Took 0.004388s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000029s seconds.
+
+Optimization round 3
+Took 0.000007s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Took 0.000007s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 21 to 21
+       Took 0.000041s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000020s seconds.
+
+Took 38.859619s to optimize.
+Took 0.000062s to compute basis. Size of trusted set = 495. Size of reduced f.(completion list of G1) U (completion list of GT) = 22. No. of monomials = 15. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 22*15
+Took 2.853799s time to solve
+
+Naive PPE e(F20,F0) = e(F2,F21) * (e(F4,F7))^-1 * e(F21,F254)
+Optimized PPE e(F20,F0) = e(F2,F21)*(e(F4,F7))^-1*e(F21,F254)
+
+F20 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.159674s seconds to compute completion list of Gt
+
+Took 2.001532s seconds to compute completion list of G1
+Took 3.161228s to compute completion lists.
+Processing untrusted polynomial F22 by rule1
+Took 0.002827s to multiply f with completionG1 . Size of trusted set = 496. Size of f.(completion list of G1) U (completion list of GT) = 70621.
+
+Optimization round 1
+Took 5.306037s time to compute new_polys
+
+Took 0.127228s time to compute new_mons
+
+Took 28.483744s time to compute new_polys
+
+Took 0.013324s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 70247 to 3215
+       Took 33.952913s seconds.
+Took 0.142639s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 374 to 1
+       Took 0.165695s seconds.
+
+Optimization round 2
+Took 0.000992s time to compute new_polys
+
+Took 0.000009s time to compute new_mons
+
+Took 0.003850s time to compute new_polys
+
+Took 0.000009s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 3215 to 24
+       Took 0.004980s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000032s seconds.
+
+Optimization round 3
+Took 0.000008s time to compute new_polys
+
+Took 0.000005s time to compute new_mons
+
+Took 0.000010s time to compute new_polys
+
+Took 0.000011s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 24 to 24
+       Took 0.000057s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000037s seconds.
+
+Took 34.162426s to optimize.
+Took 0.000073s to compute basis. Size of trusted set = 496. Size of reduced f.(completion list of G1) U (completion list of GT) = 25. No. of monomials = 17. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 25*17
+Took 2.243542s time to solve
+
+Naive PPE e(F22,F0) = e(F2,F23) * (e(F4,F7))^-1 * e(F23,F255)
+Optimized PPE e(F22,F0) = e(F2,F23)*(e(F4,F7))^-1*e(F23,F255)
+
+F22 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.123618s seconds to compute completion list of Gt
+
+Took 2.096851s seconds to compute completion list of G1
+Took 3.220496s to compute completion lists.
+Processing untrusted polynomial F24 by rule1
+Took 0.004090s to multiply f with completionG1 . Size of trusted set = 497. Size of f.(completion list of G1) U (completion list of GT) = 70997.
+
+Optimization round 1
+Took 5.768983s time to compute new_polys
+
+Took 0.185246s time to compute new_mons
+
+Took 38.492783s time to compute new_polys
+
+Took 0.017809s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 70622 to 3652
+       Took 44.494563s seconds.
+Took 0.172581s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 375 to 1
+       Took 0.199499s seconds.
+
+Optimization round 2
+Took 0.001207s time to compute new_polys
+
+Took 0.000012s time to compute new_mons
+
+Took 0.004569s time to compute new_polys
+
+Took 0.000013s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 3652 to 27
+       Took 0.005938s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000040s seconds.
+
+Optimization round 3
+Took 0.000012s time to compute new_polys
+
+Took 0.000006s time to compute new_mons
+
+Took 0.000021s time to compute new_polys
+
+Took 0.000011s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 27 to 27
+       Took 0.000102s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000613s seconds.
+
+Took 44.733727s to optimize.
+Took 0.000090s to compute basis. Size of trusted set = 497. Size of reduced f.(completion list of G1) U (completion list of GT) = 28. No. of monomials = 19. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 28*19
+Took 2.356761s time to solve
+
+Naive PPE e(F24,F0) = e(F2,F25) * (e(F4,F7))^-1 * e(F25,F256)
+Optimized PPE e(F24,F0) = e(F2,F25)*(e(F4,F7))^-1*e(F25,F256)
+
+F24 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.129767s seconds to compute completion list of Gt
+
+Took 2.468188s seconds to compute completion list of G1
+Took 3.597982s to compute completion lists.
+Processing untrusted polynomial F26 by rule1
+Took 0.003007s to multiply f with completionG1 . Size of trusted set = 498. Size of f.(completion list of G1) U (completion list of GT) = 71374.
+
+Optimization round 1
+Took 6.689311s time to compute new_polys
+
+Took 0.390281s time to compute new_mons
+
+Took 50.789234s time to compute new_polys
+
+Took 0.029573s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 70998 to 4090
+       Took 57.935574s seconds.
+Took 0.176301s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 376 to 1
+       Took 0.214256s seconds.
+
+Optimization round 2
+Took 0.001155s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Took 0.005944s time to compute new_polys
+
+Took 0.000014s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 4090 to 30
+       Took 0.007266s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000037s seconds.
+
+Optimization round 3
+Took 0.000009s time to compute new_polys
+
+Took 0.000007s time to compute new_mons
+
+Took 0.000014s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 30 to 30
+       Took 0.000072s seconds.
+Took 0.000001s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000037s seconds.
+
+Took 58.197250s to optimize.
+Took 0.000100s to compute basis. Size of trusted set = 498. Size of reduced f.(completion list of G1) U (completion list of GT) = 31. No. of monomials = 21. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 31*21
+Took 3.391932s time to solve
+
+Naive PPE e(F26,F0) = e(F2,F27) * (e(F4,F7))^-1 * e(F27,F257)
+Optimized PPE e(F26,F0) = e(F2,F27)*(e(F4,F7))^-1*e(F27,F257)
+
+F26 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.023051s seconds to compute completion list of Gt
+
+Took 1.836599s seconds to compute completion list of G1
+Took 2.859671s to compute completion lists.
+Processing untrusted polynomial F28 by rule1
+Took 0.002887s to multiply f with completionG1 . Size of trusted set = 499. Size of f.(completion list of G1) U (completion list of GT) = 71752.
+
+Optimization round 1
+Took 5.452815s time to compute new_polys
+
+Took 0.222047s time to compute new_mons
+
+Took 52.493228s time to compute new_polys
+
+Took 0.037077s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 71375 to 4529
+       Took 58.241955s seconds.
+Took 0.235426s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 377 to 1
+       Took 0.269968s seconds.
+
+Optimization round 2
+Took 0.001897s time to compute new_polys
+
+Took 0.000025s time to compute new_mons
+
+Took 0.008028s time to compute new_polys
+
+Took 0.000029s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 4529 to 33
+       Took 0.010179s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000077s seconds.
+
+Optimization round 3
+Took 0.000023s time to compute new_polys
+
+Took 0.000011s time to compute new_mons
+
+Took 0.000019s time to compute new_polys
+
+Took 0.000013s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 33 to 33
+       Took 0.000098s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000035s seconds.
+
+Took 58.549713s to optimize.
+Took 0.000148s to compute basis. Size of trusted set = 499. Size of reduced f.(completion list of G1) U (completion list of GT) = 34. No. of monomials = 23. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 34*23
+Took 2.170129s time to solve
+
+Naive PPE e(F28,F0) = e(F2,F29) * (e(F4,F7))^-1 * e(F29,F258)
+Optimized PPE e(F28,F0) = e(F2,F29)*(e(F4,F7))^-1*e(F29,F258)
+
+F28 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.103301s seconds to compute completion list of Gt
+
+Took 2.102348s seconds to compute completion list of G1
+Took 3.205669s to compute completion lists.
+Processing untrusted polynomial F30 by rule1
+Took 0.003226s to multiply f with completionG1 . Size of trusted set = 500. Size of f.(completion list of G1) U (completion list of GT) = 72131.
+
+Optimization round 1
+Took 6.066273s time to compute new_polys
+
+Took 0.238661s time to compute new_mons
+
+Took 62.923021s time to compute new_polys
+
+Took 0.034369s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 71753 to 4969
+       Took 69.295129s seconds.
+Took 0.277679s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 378 to 1
+       Took 0.316127s seconds.
+
+Optimization round 2
+Took 0.001632s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Took 0.007898s time to compute new_polys
+
+Took 0.000023s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 4969 to 36
+       Took 0.009722s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000053s seconds.
+
+Optimization round 3
+Took 0.000015s time to compute new_polys
+
+Took 0.000009s time to compute new_mons
+
+Took 0.000023s time to compute new_polys
+
+Took 0.000015s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 36 to 36
+       Took 0.000090s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000038s seconds.
+
+Took 69.649976s to optimize.
+Took 0.000141s to compute basis. Size of trusted set = 500. Size of reduced f.(completion list of G1) U (completion list of GT) = 37. No. of monomials = 25. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 37*25
+Took 2.330843s time to solve
+
+Naive PPE e(F30,F0) = e(F2,F31) * (e(F4,F7))^-1 * e(F31,F259)
+Optimized PPE e(F30,F0) = e(F2,F31)*(e(F4,F7))^-1*e(F31,F259)
+
+F30 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.200643s seconds to compute completion list of Gt
+
+Took 2.242762s seconds to compute completion list of G1
+Took 3.443425s to compute completion lists.
+Processing untrusted polynomial F32 by rule1
+Took 0.003154s to multiply f with completionG1 . Size of trusted set = 501. Size of f.(completion list of G1) U (completion list of GT) = 72511.
+
+Optimization round 1
+Took 5.838653s time to compute new_polys
+
+Took 0.251446s time to compute new_mons
+
+Took 69.478296s time to compute new_polys
+
+Took 0.037719s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 72132 to 5410
+       Took 75.629401s seconds.
+Took 0.330843s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 379 to 1
+       Took 0.371402s seconds.
+
+Optimization round 2
+Took 0.002281s time to compute new_polys
+
+Took 0.000014s time to compute new_mons
+
+Took 0.009676s time to compute new_polys
+
+Took 0.000026s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 5410 to 39
+       Took 0.012173s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000058s seconds.
+
+Optimization round 3
+Took 0.000016s time to compute new_polys
+
+Took 0.000011s time to compute new_mons
+
+Took 0.000027s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 39 to 39
+       Took 0.000098s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000043s seconds.
+
+Took 76.043482s to optimize.
+Took 0.000160s to compute basis. Size of trusted set = 501. Size of reduced f.(completion list of G1) U (completion list of GT) = 40. No. of monomials = 27. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 40*27
+Took 2.147952s time to solve
+
+Naive PPE e(F32,F0) = e(F2,F33) * (e(F4,F7))^-1 * e(F33,F260)
+Optimized PPE e(F32,F0) = e(F2,F33)*(e(F4,F7))^-1*e(F33,F260)
+
+F32 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.229045s seconds to compute completion list of Gt
+
+Took 2.590105s seconds to compute completion list of G1
+Took 3.819171s to compute completion lists.
+Processing untrusted polynomial F34 by rule1
+Took 0.002949s to multiply f with completionG1 . Size of trusted set = 502. Size of f.(completion list of G1) U (completion list of GT) = 72892.
+
+Optimization round 1
+Took 5.855792s time to compute new_polys
+
+Took 0.272237s time to compute new_mons
+
+Took 74.860964s time to compute new_polys
+
+Took 0.050106s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 72512 to 5852
+       Took 81.084852s seconds.
+Took 0.398995s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 380 to 1
+       Took 0.440262s seconds.
+
+Optimization round 2
+Took 0.002641s time to compute new_polys
+
+Took 0.000021s time to compute new_mons
+
+Took 0.010167s time to compute new_polys
+
+Took 0.000027s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 5852 to 42
+       Took 0.013066s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000086s seconds.
+
+Optimization round 3
+Took 0.000028s time to compute new_polys
+
+Took 0.000018s time to compute new_mons
+
+Took 0.000047s time to compute new_polys
+
+Took 0.000032s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 42 to 42
+       Took 0.000178s seconds.
+Took 0.000002s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000053s seconds.
+
+Took 81.579247s to optimize.
+Took 0.000183s to compute basis. Size of trusted set = 502. Size of reduced f.(completion list of G1) U (completion list of GT) = 43. No. of monomials = 29. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 43*29
+Took 2.254764s time to solve
+
+Naive PPE e(F34,F0) = e(F2,F35) * (e(F4,F7))^-1 * e(F35,F261)
+Optimized PPE e(F34,F0) = e(F2,F35)*(e(F4,F7))^-1*e(F35,F261)
+
+F34 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.302461s seconds to compute completion list of Gt
+
+Took 2.248328s seconds to compute completion list of G1
+Took 3.550810s to compute completion lists.
+Processing untrusted polynomial F36 by rule1
+Took 0.003244s to multiply f with completionG1 . Size of trusted set = 503. Size of f.(completion list of G1) U (completion list of GT) = 73274.
+
+Optimization round 1
+Took 6.300708s time to compute new_polys
+
+Took 0.311169s time to compute new_mons
+
+Took 81.272000s time to compute new_polys
+
+Took 0.055883s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 72893 to 6295
+       Took 87.970959s seconds.
+Took 0.565212s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 381 to 1
+       Took 0.613081s seconds.
+
+Optimization round 2
+Took 0.001887s time to compute new_polys
+
+Took 0.000026s time to compute new_mons
+
+Took 0.014077s time to compute new_polys
+
+Took 0.000029s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 6295 to 45
+       Took 0.016223s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001324s seconds.
+
+Optimization round 3
+Took 0.000061s time to compute new_polys
+
+Took 0.000042s time to compute new_mons
+
+Took 0.000073s time to compute new_polys
+
+Took 0.000037s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 45 to 45
+       Took 0.000279s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000090s seconds.
+
+Took 88.631963s to optimize.
+Took 0.000377s to compute basis. Size of trusted set = 503. Size of reduced f.(completion list of G1) U (completion list of GT) = 46. No. of monomials = 31. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 46*31
+Took 2.267157s time to solve
+
+Naive PPE e(F36,F0) = e(F2,F37) * (e(F4,F7))^-1 * e(F37,F262)
+Optimized PPE e(F36,F0) = e(F2,F37)*(e(F4,F7))^-1*e(F37,F262)
+
+F36 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.417929s seconds to compute completion list of Gt
+
+Took 2.787445s seconds to compute completion list of G1
+Took 4.205401s to compute completion lists.
+Processing untrusted polynomial F38 by rule1
+Took 0.003131s to multiply f with completionG1 . Size of trusted set = 504. Size of f.(completion list of G1) U (completion list of GT) = 73657.
+
+Optimization round 1
+Took 5.902400s time to compute new_polys
+
+Took 0.324674s time to compute new_mons
+
+Took 103.512797s time to compute new_polys
+
+Took 0.066877s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 73275 to 6739
+       Took 109.843769s seconds.
+Took 0.666530s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 382 to 1
+       Took 0.718385s seconds.
+
+Optimization round 2
+Took 0.003266s time to compute new_polys
+
+Took 0.000029s time to compute new_mons
+
+Took 0.014924s time to compute new_polys
+
+Took 0.000041s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 6739 to 48
+       Took 0.018542s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000063s seconds.
+
+Optimization round 3
+Took 0.000018s time to compute new_polys
+
+Took 0.000016s time to compute new_mons
+
+Took 0.000038s time to compute new_polys
+
+Took 0.000038s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 48 to 48
+       Took 0.000814s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000078s seconds.
+
+Took 110.609909s to optimize.
+Took 0.000278s to compute basis. Size of trusted set = 504. Size of reduced f.(completion list of G1) U (completion list of GT) = 49. No. of monomials = 33. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 49*33
+Took 2.280116s time to solve
+
+Naive PPE e(F38,F0) = e(F2,F39) * (e(F4,F7))^-1 * e(F39,F263)
+Optimized PPE e(F38,F0) = e(F2,F39)*(e(F4,F7))^-1*e(F39,F263)
+
+F38 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.251540s seconds to compute completion list of Gt
+
+Took 2.515793s seconds to compute completion list of G1
+Took 3.767359s to compute completion lists.
+Processing untrusted polynomial F40 by rule1
+Took 0.003203s to multiply f with completionG1 . Size of trusted set = 505. Size of f.(completion list of G1) U (completion list of GT) = 74041.
+
+Optimization round 1
+Took 6.499638s time to compute new_polys
+
+Took 0.338520s time to compute new_mons
+
+Took 102.173773s time to compute new_polys
+
+Took 0.072770s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 73658 to 7184
+       Took 109.127421s seconds.
+Took 0.593626s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 383 to 1
+       Took 0.645083s seconds.
+
+Optimization round 2
+Took 0.003345s time to compute new_polys
+
+Took 0.000042s time to compute new_mons
+
+Took 0.015497s time to compute new_polys
+
+Took 0.000034s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 7184 to 51
+       Took 0.019173s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000092s seconds.
+
+Optimization round 3
+Took 0.000037s time to compute new_polys
+
+Took 0.000023s time to compute new_mons
+
+Took 0.000066s time to compute new_polys
+
+Took 0.000042s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 51 to 51
+       Took 0.000226s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000089s seconds.
+
+Took 109.843120s to optimize.
+Took 0.000342s to compute basis. Size of trusted set = 505. Size of reduced f.(completion list of G1) U (completion list of GT) = 52. No. of monomials = 35. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 52*35
+Took 4.198319s time to solve
+
+Naive PPE e(F40,F0) = e(F2,F41) * (e(F4,F7))^-1 * e(F41,F264)
+Optimized PPE e(F40,F0) = e(F2,F41)*(e(F4,F7))^-1*e(F41,F264)
+
+F40 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.623505s seconds to compute completion list of Gt
+
+Took 2.172023s seconds to compute completion list of G1
+Took 3.795550s to compute completion lists.
+Processing untrusted polynomial F42 by rule1
+Took 0.003808s to multiply f with completionG1 . Size of trusted set = 506. Size of f.(completion list of G1) U (completion list of GT) = 74426.
+
+Optimization round 1
+Took 6.407071s time to compute new_polys
+
+Took 0.375892s time to compute new_mons
+
+Took 105.981867s time to compute new_polys
+
+Took 0.109251s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 74042 to 7630
+       Took 112.919834s seconds.
+Took 0.790968s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 384 to 1
+       Took 0.859851s seconds.
+
+Optimization round 2
+Took 0.006355s time to compute new_polys
+
+Took 0.000035s time to compute new_mons
+
+Took 0.019779s time to compute new_polys
+
+Took 0.000047s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 7630 to 54
+       Took 0.026487s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000085s seconds.
+
+Optimization round 3
+Took 0.000025s time to compute new_polys
+
+Took 0.000013s time to compute new_mons
+
+Took 0.000047s time to compute new_polys
+
+Took 0.000029s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 54 to 54
+       Took 0.000151s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000055s seconds.
+
+Took 113.839509s to optimize.
+Took 0.000268s to compute basis. Size of trusted set = 506. Size of reduced f.(completion list of G1) U (completion list of GT) = 55. No. of monomials = 37. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 55*37
+Took 2.330764s time to solve
+
+Naive PPE e(F42,F0) = e(F2,F43) * (e(F4,F7))^-1 * e(F43,F265)
+Optimized PPE e(F42,F0) = e(F2,F43)*(e(F4,F7))^-1*e(F43,F265)
+
+F42 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.467620s seconds to compute completion list of Gt
+
+Took 2.409352s seconds to compute completion list of G1
+Took 3.876992s to compute completion lists.
+Processing untrusted polynomial F44 by rule1
+Took 0.005315s to multiply f with completionG1 . Size of trusted set = 507. Size of f.(completion list of G1) U (completion list of GT) = 74812.
+
+Optimization round 1
+Took 6.310577s time to compute new_polys
+
+Took 0.458063s time to compute new_mons
+
+Took 113.764495s time to compute new_polys
+
+Took 0.100914s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 74427 to 8077
+       Took 120.682431s seconds.
+Took 0.748352s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 385 to 1
+       Took 0.817852s seconds.
+
+Optimization round 2
+Took 0.005396s time to compute new_polys
+
+Took 0.000027s time to compute new_mons
+
+Took 0.022146s time to compute new_polys
+
+Took 0.000053s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 8077 to 57
+       Took 0.027884s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000088s seconds.
+
+Optimization round 3
+Took 0.000026s time to compute new_polys
+
+Took 0.000015s time to compute new_mons
+
+Took 0.000052s time to compute new_polys
+
+Took 0.000032s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 57 to 57
+       Took 0.000162s seconds.
+Took 0.000003s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000062s seconds.
+
+Took 121.575537s to optimize.
+Took 0.000296s to compute basis. Size of trusted set = 507. Size of reduced f.(completion list of G1) U (completion list of GT) = 58. No. of monomials = 39. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 58*39
+Took 2.176425s time to solve
+
+Naive PPE e(F44,F0) = e(F2,F45) * (e(F4,F7))^-1 * e(F45,F266)
+Optimized PPE e(F44,F0) = e(F2,F45)*(e(F4,F7))^-1*e(F45,F266)
+
+F44 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.393859s seconds to compute completion list of Gt
+
+Took 2.106324s seconds to compute completion list of G1
+Took 3.500204s to compute completion lists.
+Processing untrusted polynomial F46 by rule1
+Took 0.003543s to multiply f with completionG1 . Size of trusted set = 508. Size of f.(completion list of G1) U (completion list of GT) = 75199.
+
+Optimization round 1
+Took 6.420685s time to compute new_polys
+
+Took 0.413099s time to compute new_mons
+
+Took 117.050073s time to compute new_polys
+
+Took 0.091617s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 74813 to 8525
+       Took 124.012346s seconds.
+Took 0.881381s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 386 to 1
+       Took 0.938801s seconds.
+
+Optimization round 2
+Took 0.004800s time to compute new_polys
+
+Took 0.000029s time to compute new_mons
+
+Took 0.020611s time to compute new_polys
+
+Took 0.000054s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 8525 to 60
+       Took 0.025908s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000131s seconds.
+
+Optimization round 3
+Took 0.000040s time to compute new_polys
+
+Took 0.000024s time to compute new_mons
+
+Took 0.000065s time to compute new_polys
+
+Took 0.000055s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 60 to 60
+       Took 0.000243s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000106s seconds.
+
+Took 125.015012s to optimize.
+Took 0.000478s to compute basis. Size of trusted set = 508. Size of reduced f.(completion list of G1) U (completion list of GT) = 61. No. of monomials = 41. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 61*41
+Took 2.159098s time to solve
+
+Naive PPE e(F46,F0) = e(F2,F47) * (e(F4,F7))^-1 * e(F47,F267)
+Optimized PPE e(F46,F0) = e(F2,F47)*(e(F4,F7))^-1*e(F47,F267)
+
+F46 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.396452s seconds to compute completion list of Gt
+
+Took 2.290625s seconds to compute completion list of G1
+Took 3.687099s to compute completion lists.
+Processing untrusted polynomial F48 by rule1
+Took 0.002895s to multiply f with completionG1 . Size of trusted set = 509. Size of f.(completion list of G1) U (completion list of GT) = 75587.
+
+Optimization round 1
+Took 6.430571s time to compute new_polys
+
+Took 0.438761s time to compute new_mons
+
+Took 124.950907s time to compute new_polys
+
+Took 0.112775s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 75200 to 8974
+       Took 131.978019s seconds.
+Took 0.924761s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 387 to 1
+       Took 0.993887s seconds.
+
+Optimization round 2
+Took 0.004491s time to compute new_polys
+
+Took 0.000035s time to compute new_mons
+
+Took 0.022397s time to compute new_polys
+
+Took 0.000613s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 8974 to 63
+       Took 0.028288s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000112s seconds.
+
+Optimization round 3
+Took 0.000035s time to compute new_polys
+
+Took 0.000021s time to compute new_mons
+
+Took 0.000068s time to compute new_polys
+
+Took 0.000039s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 63 to 63
+       Took 0.000206s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000075s seconds.
+
+Took 133.038882s to optimize.
+Took 0.000361s to compute basis. Size of trusted set = 509. Size of reduced f.(completion list of G1) U (completion list of GT) = 64. No. of monomials = 43. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 64*43
+Took 2.148441s time to solve
+
+Naive PPE e(F48,F0) = e(F2,F49) * (e(F4,F7))^-1 * e(F49,F268)
+Optimized PPE e(F48,F0) = e(F2,F49)*(e(F4,F7))^-1*e(F49,F268)
+
+F48 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.368010s seconds to compute completion list of Gt
+
+Took 2.067568s seconds to compute completion list of G1
+Took 3.435601s to compute completion lists.
+Processing untrusted polynomial F50 by rule1
+Took 0.003269s to multiply f with completionG1 . Size of trusted set = 510. Size of f.(completion list of G1) U (completion list of GT) = 75976.
+
+Optimization round 1
+Took 6.502088s time to compute new_polys
+
+Took 0.431989s time to compute new_mons
+
+Took 128.058786s time to compute new_polys
+
+Took 0.124332s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 75588 to 9424
+       Took 135.162142s seconds.
+Took 1.043826s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 388 to 1
+       Took 1.119736s seconds.
+
+Optimization round 2
+Took 0.007194s time to compute new_polys
+
+Took 0.000042s time to compute new_mons
+
+Took 0.028327s time to compute new_polys
+
+Took 0.000058s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 9424 to 66
+       Took 0.035917s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000127s seconds.
+
+Optimization round 3
+Took 0.000035s time to compute new_polys
+
+Took 0.000018s time to compute new_mons
+
+Took 0.000088s time to compute new_polys
+
+Took 0.000065s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 66 to 66
+       Took 0.000255s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000085s seconds.
+
+Took 136.350140s to optimize.
+Took 0.000425s to compute basis. Size of trusted set = 510. Size of reduced f.(completion list of G1) U (completion list of GT) = 67. No. of monomials = 45. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 67*45
+Took 2.763772s time to solve
+
+Naive PPE e(F50,F0) = e(F2,F51) * (e(F4,F7))^-1 * e(F51,F269)
+Optimized PPE e(F50,F0) = e(F2,F51)*(e(F4,F7))^-1*e(F51,F269)
+
+F50 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.415497s seconds to compute completion list of Gt
+
+Took 2.045917s seconds to compute completion list of G1
+Took 3.461437s to compute completion lists.
+Processing untrusted polynomial F52 by rule1
+Took 0.004091s to multiply f with completionG1 . Size of trusted set = 511. Size of f.(completion list of G1) U (completion list of GT) = 76366.
+
+Optimization round 1
+Took 9.377136s time to compute new_polys
+
+Took 0.937821s time to compute new_mons
+
+Took 142.317274s time to compute new_polys
+
+Took 0.128852s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 75977 to 9875
+       Took 152.823048s seconds.
+Took 1.148958s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 389 to 1
+       Took 1.231672s seconds.
+
+Optimization round 2
+Took 0.004133s time to compute new_polys
+
+Took 0.000040s time to compute new_mons
+
+Took 0.031064s time to compute new_polys
+
+Took 0.000059s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 9875 to 69
+       Took 0.035673s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000106s seconds.
+
+Optimization round 3
+Took 0.000027s time to compute new_polys
+
+Took 0.000014s time to compute new_mons
+
+Took 0.000079s time to compute new_polys
+
+Took 0.000066s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 69 to 69
+       Took 0.000229s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000106s seconds.
+
+Took 154.125426s to optimize.
+Took 0.000434s to compute basis. Size of trusted set = 511. Size of reduced f.(completion list of G1) U (completion list of GT) = 70. No. of monomials = 47. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 70*47
+Took 3.917001s time to solve
+
+Naive PPE e(F52,F0) = e(F2,F53) * (e(F4,F7))^-1 * e(F53,F270)
+Optimized PPE e(F52,F0) = e(F2,F53)*(e(F4,F7))^-1*e(F53,F270)
+
+F52 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.533497s seconds to compute completion list of Gt
+
+Took 2.309835s seconds to compute completion list of G1
+Took 3.843398s to compute completion lists.
+Processing untrusted polynomial F54 by rule1
+Took 0.004649s to multiply f with completionG1 . Size of trusted set = 512. Size of f.(completion list of G1) U (completion list of GT) = 76757.
+
+Optimization round 1
+Took 6.704358s time to compute new_polys
+
+Took 0.493751s time to compute new_mons
+
+Took 141.276401s time to compute new_polys
+
+Took 0.148032s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 76367 to 10327
+       Took 148.672281s seconds.
+Took 1.200461s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 390 to 1
+       Took 1.280051s seconds.
+
+Optimization round 2
+Took 0.004342s time to compute new_polys
+
+Took 0.000088s time to compute new_mons
+
+Took 0.032601s time to compute new_polys
+
+Took 0.000105s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 10327 to 72
+       Took 0.038337s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000105s seconds.
+
+Optimization round 3
+Took 0.000033s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Took 0.000083s time to compute new_polys
+
+Took 0.000049s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 72 to 72
+       Took 0.000227s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000078s seconds.
+
+Took 150.027260s to optimize.
+Took 0.000508s to compute basis. Size of trusted set = 512. Size of reduced f.(completion list of G1) U (completion list of GT) = 73. No. of monomials = 49. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 73*49
+Took 2.169125s time to solve
+
+Naive PPE e(F54,F0) = e(F2,F55) * (e(F4,F7))^-1 * e(F55,F271)
+Optimized PPE e(F54,F0) = e(F2,F55)*(e(F4,F7))^-1*e(F55,F271)
+
+F54 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.619152s seconds to compute completion list of Gt
+
+Took 2.050375s seconds to compute completion list of G1
+Took 3.669547s to compute completion lists.
+Processing untrusted polynomial F56 by rule1
+Took 0.002879s to multiply f with completionG1 . Size of trusted set = 513. Size of f.(completion list of G1) U (completion list of GT) = 77149.
+
+Optimization round 1
+Took 6.470734s time to compute new_polys
+
+Took 0.515453s time to compute new_mons
+
+Took 143.380082s time to compute new_polys
+
+Took 0.187063s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 76758 to 10780
+       Took 150.608213s seconds.
+Took 1.321142s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 391 to 1
+       Took 1.411229s seconds.
+
+Optimization round 2
+Took 0.005937s time to compute new_polys
+
+Took 0.000045s time to compute new_mons
+
+Took 0.036498s time to compute new_polys
+
+Took 0.000101s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 10780 to 75
+       Took 0.043122s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000172s seconds.
+
+Optimization round 3
+Took 0.000038s time to compute new_polys
+
+Took 0.000027s time to compute new_mons
+
+Took 0.000134s time to compute new_polys
+
+Took 0.000069s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 75 to 75
+       Took 0.000330s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000120s seconds.
+
+Took 152.090878s to optimize.
+Took 0.000511s to compute basis. Size of trusted set = 513. Size of reduced f.(completion list of G1) U (completion list of GT) = 76. No. of monomials = 51. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 76*51
+Took 2.167642s time to solve
+
+Naive PPE e(F56,F0) = e(F2,F57) * (e(F4,F7))^-1 * e(F57,F272)
+Optimized PPE e(F56,F0) = e(F2,F57)*(e(F4,F7))^-1*e(F57,F272)
+
+F56 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.493974s seconds to compute completion list of Gt
+
+Took 2.231383s seconds to compute completion list of G1
+Took 3.725382s to compute completion lists.
+Processing untrusted polynomial F58 by rule1
+Took 0.003456s to multiply f with completionG1 . Size of trusted set = 514. Size of f.(completion list of G1) U (completion list of GT) = 77542.
+
+Optimization round 1
+Took 6.542101s time to compute new_polys
+
+Took 0.514801s time to compute new_mons
+
+Took 149.088564s time to compute new_polys
+
+Took 0.173991s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 77150 to 11234
+       Took 156.371315s seconds.
+Took 1.367753s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 392 to 1
+       Took 1.455440s seconds.
+
+Optimization round 2
+Took 0.006449s time to compute new_polys
+
+Took 0.000041s time to compute new_mons
+
+Took 0.037745s time to compute new_polys
+
+Took 0.000066s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 11234 to 78
+       Took 0.044675s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000116s seconds.
+
+Optimization round 3
+Took 0.000063s time to compute new_polys
+
+Took 0.000026s time to compute new_mons
+
+Took 0.000134s time to compute new_polys
+
+Took 0.000098s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 78 to 78
+       Took 0.000386s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000764s seconds.
+
+Took 157.905396s to optimize.
+Took 0.000563s to compute basis. Size of trusted set = 514. Size of reduced f.(completion list of G1) U (completion list of GT) = 79. No. of monomials = 53. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 79*53
+Took 2.191249s time to solve
+
+Naive PPE e(F58,F0) = e(F2,F59) * (e(F4,F7))^-1 * e(F59,F273)
+Optimized PPE e(F58,F0) = e(F2,F59)*(e(F4,F7))^-1*e(F59,F273)
+
+F58 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.525878s seconds to compute completion list of Gt
+
+Took 2.260588s seconds to compute completion list of G1
+Took 3.786487s to compute completion lists.
+Processing untrusted polynomial F60 by rule1
+Took 0.003651s to multiply f with completionG1 . Size of trusted set = 515. Size of f.(completion list of G1) U (completion list of GT) = 77936.
+
+Optimization round 1
+Took 6.685343s time to compute new_polys
+
+Took 0.549271s time to compute new_mons
+
+Took 166.410190s time to compute new_polys
+
+Took 0.176605s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 77543 to 11689
+       Took 173.878902s seconds.
+Took 1.454114s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 393 to 1
+       Took 1.534547s seconds.
+
+Optimization round 2
+Took 0.005207s time to compute new_polys
+
+Took 0.000040s time to compute new_mons
+
+Took 0.041596s time to compute new_polys
+
+Took 0.000074s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 11689 to 81
+       Took 0.047343s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000608s seconds.
+
+Optimization round 3
+Took 0.000027s time to compute new_polys
+
+Took 0.000018s time to compute new_mons
+
+Took 0.000099s time to compute new_polys
+
+Took 0.000058s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 81 to 81
+       Took 0.000244s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000091s seconds.
+
+Took 175.498595s to optimize.
+Took 0.000542s to compute basis. Size of trusted set = 515. Size of reduced f.(completion list of G1) U (completion list of GT) = 82. No. of monomials = 55. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 82*55
+Took 2.750647s time to solve
+
+Naive PPE e(F60,F0) = e(F2,F61) * (e(F4,F7))^-1 * e(F61,F274)
+Optimized PPE e(F60,F0) = e(F2,F61)*(e(F4,F7))^-1*e(F61,F274)
+
+F60 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.586048s seconds to compute completion list of Gt
+
+Took 2.347119s seconds to compute completion list of G1
+Took 3.933193s to compute completion lists.
+Processing untrusted polynomial F62 by rule1
+Took 0.003196s to multiply f with completionG1 . Size of trusted set = 516. Size of f.(completion list of G1) U (completion list of GT) = 78331.
+
+Optimization round 1
+Took 9.383884s time to compute new_polys
+
+Took 0.729711s time to compute new_mons
+
+Took 186.417183s time to compute new_polys
+
+Took 0.289553s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 77937 to 12145
+       Took 196.879804s seconds.
+Took 1.671549s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 394 to 1
+       Took 1.769151s seconds.
+
+Optimization round 2
+Took 0.006071s time to compute new_polys
+
+Took 0.000038s time to compute new_mons
+
+Took 0.045863s time to compute new_polys
+
+Took 0.000085s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 12145 to 84
+       Took 0.052456s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000103s seconds.
+
+Optimization round 3
+Took 0.000026s time to compute new_polys
+
+Took 0.000017s time to compute new_mons
+
+Took 0.000106s time to compute new_polys
+
+Took 0.000061s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 84 to 84
+       Took 0.000252s seconds.
+Took 0.000004s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000085s seconds.
+
+Took 198.737472s to optimize.
+Took 0.000597s to compute basis. Size of trusted set = 516. Size of reduced f.(completion list of G1) U (completion list of GT) = 85. No. of monomials = 57. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 85*57
+Took 3.977627s time to solve
+
+Naive PPE e(F62,F0) = e(F2,F63) * (e(F4,F7))^-1 * e(F63,F275)
+Optimized PPE e(F62,F0) = e(F2,F63)*(e(F4,F7))^-1*e(F63,F275)
+
+F62 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.613109s seconds to compute completion list of Gt
+
+Took 2.259248s seconds to compute completion list of G1
+Took 3.872379s to compute completion lists.
+Processing untrusted polynomial F64 by rule1
+Took 0.004730s to multiply f with completionG1 . Size of trusted set = 517. Size of f.(completion list of G1) U (completion list of GT) = 78727.
+
+Optimization round 1
+Took 7.089489s time to compute new_polys
+
+Took 0.616388s time to compute new_mons
+
+Took 187.442040s time to compute new_polys
+
+Took 0.253535s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 78332 to 12602
+       Took 195.476452s seconds.
+Took 1.738224s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 395 to 1
+       Took 1.835281s seconds.
+
+Optimization round 2
+Took 0.005885s time to compute new_polys
+
+Took 0.000050s time to compute new_mons
+
+Took 0.046490s time to compute new_polys
+
+Took 0.000094s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 12602 to 87
+       Took 0.052871s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000137s seconds.
+
+Optimization round 3
+Took 0.000040s time to compute new_polys
+
+Took 0.000021s time to compute new_mons
+
+Took 0.000119s time to compute new_polys
+
+Took 0.000069s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 87 to 87
+       Took 0.000298s seconds.
+Took 0.000005s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000097s seconds.
+
+Took 197.395641s to optimize.
+Took 0.000623s to compute basis. Size of trusted set = 517. Size of reduced f.(completion list of G1) U (completion list of GT) = 88. No. of monomials = 59. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 88*59
+Took 2.218107s time to solve
+
+Naive PPE e(F64,F0) = e(F2,F65) * (e(F4,F7))^-1 * e(F65,F276)
+Optimized PPE e(F64,F0) = e(F2,F65)*(e(F4,F7))^-1*e(F65,F276)
+
+F64 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.852842s seconds to compute completion list of Gt
+
+Took 2.437870s seconds to compute completion list of G1
+Took 4.290736s to compute completion lists.
+Processing untrusted polynomial F66 by rule1
+Took 0.003006s to multiply f with completionG1 . Size of trusted set = 518. Size of f.(completion list of G1) U (completion list of GT) = 79124.
+
+Optimization round 1
+Took 7.145770s time to compute new_polys
+
+Took 0.628922s time to compute new_mons
+
+Took 206.577740s time to compute new_polys
+
+Took 0.253739s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 78728 to 13060
+       Took 214.679283s seconds.
+Took 1.780143s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 396 to 1
+       Took 1.878482s seconds.
+
+Optimization round 2
+Took 0.005763s time to compute new_polys
+
+Took 0.000037s time to compute new_mons
+
+Took 0.051529s time to compute new_polys
+
+Took 0.000085s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 13060 to 90
+       Took 0.057765s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000155s seconds.
+
+Optimization round 3
+Took 0.000045s time to compute new_polys
+
+Took 0.000882s time to compute new_mons
+
+Took 0.000189s time to compute new_polys
+
+Took 0.000075s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 90 to 90
+       Took 0.001270s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000104s seconds.
+
+Took 216.647125s to optimize.
+Took 0.000657s to compute basis. Size of trusted set = 518. Size of reduced f.(completion list of G1) U (completion list of GT) = 91. No. of monomials = 61. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 91*61
+Took 2.269955s time to solve
+
+Naive PPE e(F66,F0) = e(F2,F67) * (e(F4,F7))^-1 * e(F67,F277)
+Optimized PPE e(F66,F0) = e(F2,F67)*(e(F4,F7))^-1*e(F67,F277)
+
+F66 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.744887s seconds to compute completion list of Gt
+
+Took 2.398878s seconds to compute completion list of G1
+Took 4.143786s to compute completion lists.
+Processing untrusted polynomial F68 by rule1
+Took 0.005622s to multiply f with completionG1 . Size of trusted set = 519. Size of f.(completion list of G1) U (completion list of GT) = 79522.
+
+Optimization round 1
+Took 7.539166s time to compute new_polys
+
+Took 0.655122s time to compute new_mons
+
+Took 201.324905s time to compute new_polys
+
+Took 0.322459s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 79125 to 13519
+       Took 209.909929s seconds.
+Took 1.945575s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 397 to 1
+       Took 2.061325s seconds.
+
+Optimization round 2
+Took 0.006922s time to compute new_polys
+
+Took 0.000059s time to compute new_mons
+
+Took 0.057814s time to compute new_polys
+
+Took 0.000126s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 13519 to 93
+       Took 0.065370s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000137s seconds.
+
+Optimization round 3
+Took 0.000049s time to compute new_polys
+
+Took 0.000022s time to compute new_mons
+
+Took 0.000175s time to compute new_polys
+
+Took 0.000100s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 93 to 93
+       Took 0.000422s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000161s seconds.
+
+Took 212.072731s to optimize.
+Took 0.000885s to compute basis. Size of trusted set = 519. Size of reduced f.(completion list of G1) U (completion list of GT) = 94. No. of monomials = 63. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 94*63
+Took 3.034018s time to solve
+
+Naive PPE e(F68,F0) = e(F2,F69) * (e(F4,F7))^-1 * e(F69,F278)
+Optimized PPE e(F68,F0) = e(F2,F69)*(e(F4,F7))^-1*e(F69,F278)
+
+F68 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.858826s seconds to compute completion list of Gt
+
+Took 2.491373s seconds to compute completion list of G1
+Took 4.350221s to compute completion lists.
+Processing untrusted polynomial F70 by rule1
+Took 0.005188s to multiply f with completionG1 . Size of trusted set = 520. Size of f.(completion list of G1) U (completion list of GT) = 79921.
+
+Optimization round 1
+Took 7.307250s time to compute new_polys
+
+Took 0.778513s time to compute new_mons
+
+Took 198.947898s time to compute new_polys
+
+Took 0.277263s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 79523 to 13979
+       Took 207.380216s seconds.
+Took 1.810336s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 398 to 1
+       Took 1.912365s seconds.
+
+Optimization round 2
+Took 0.005940s time to compute new_polys
+
+Took 0.000044s time to compute new_mons
+
+Took 0.054830s time to compute new_polys
+
+Took 0.000114s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 13979 to 96
+       Took 0.061735s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000143s seconds.
+
+Optimization round 3
+Took 0.000045s time to compute new_polys
+
+Took 0.000026s time to compute new_mons
+
+Took 0.000161s time to compute new_polys
+
+Took 0.000132s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 96 to 96
+       Took 0.000428s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000175s seconds.
+
+Took 209.400922s to optimize.
+Took 0.001595s to compute basis. Size of trusted set = 520. Size of reduced f.(completion list of G1) U (completion list of GT) = 97. No. of monomials = 65. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 97*65
+Took 3.802740s time to solve
+
+Naive PPE e(F70,F0) = e(F2,F71) * (e(F4,F7))^-1 * e(F71,F279)
+Optimized PPE e(F70,F0) = e(F2,F71)*(e(F4,F7))^-1*e(F71,F279)
+
+F70 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 1.639362s seconds to compute completion list of Gt
+
+Took 2.081336s seconds to compute completion list of G1
+Took 3.720720s to compute completion lists.
+Processing untrusted polynomial F72 by rule1
+Took 0.003079s to multiply f with completionG1 . Size of trusted set = 521. Size of f.(completion list of G1) U (completion list of GT) = 80321.
+
+Optimization round 1
+Took 7.047783s time to compute new_polys
+
+Took 0.664474s time to compute new_mons
+
+Took 1603.897562s time to compute new_polys
+
+Took 0.826277s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 79922 to 14440
+       Took 1612.515791s seconds.
+Took 3.659990s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 399 to 1
+       Took 4.044324s seconds.
+
+Optimization round 2
+Took 0.027153s time to compute new_polys
+
+Took 0.000109s time to compute new_mons
+
+Took 0.087051s time to compute new_polys
+
+Took 0.000109s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 14440 to 99
+       Took 0.115066s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000155s seconds.
+
+Optimization round 3
+Took 0.000053s time to compute new_polys
+
+Took 0.000031s time to compute new_mons
+
+Took 0.000295s time to compute new_polys
+
+Took 0.000154s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 99 to 99
+       Took 0.000608s seconds.
+Took 0.000011s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000209s seconds.
+
+Took 1616.706078s to optimize.
+Took 0.001899s to compute basis. Size of trusted set = 521. Size of reduced f.(completion list of G1) U (completion list of GT) = 100. No. of monomials = 67. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 100*67
+Took 6.876224s time to solve
+
+Naive PPE e(F72,F0) = e(F2,F73) * (e(F4,F7))^-1 * e(F73,F280)
+Optimized PPE e(F72,F0) = e(F2,F73)*(e(F4,F7))^-1*e(F73,F280)
+
+F72 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.525270s seconds to compute completion list of Gt
+
+Took 3.092773s seconds to compute completion list of G1
+Took 5.618065s to compute completion lists.
+Processing untrusted polynomial F74 by rule1
+Took 0.003548s to multiply f with completionG1 . Size of trusted set = 522. Size of f.(completion list of G1) U (completion list of GT) = 80722.
+
+Optimization round 1
+Took 8.852178s time to compute new_polys
+
+Took 0.908513s time to compute new_mons
+
+Took 288.454187s time to compute new_polys
+
+Took 0.510578s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 80322 to 14902
+       Took 298.823896s seconds.
+Took 2.790147s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 400 to 1
+       Took 2.940937s seconds.
+
+Optimization round 2
+Took 0.012387s time to compute new_polys
+
+Took 0.000060s time to compute new_mons
+
+Took 0.072332s time to compute new_polys
+
+Took 0.000522s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 14902 to 102
+       Took 0.087500s seconds.
+Took 0.000011s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000329s seconds.
+
+Optimization round 3
+Took 0.000073s time to compute new_polys
+
+Took 0.000060s time to compute new_mons
+
+Took 0.000197s time to compute new_polys
+
+Took 0.000154s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 102 to 102
+       Took 0.000583s seconds.
+Took 0.000020s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000397s seconds.
+
+Took 301.899525s to optimize.
+Took 0.002325s to compute basis. Size of trusted set = 522. Size of reduced f.(completion list of G1) U (completion list of GT) = 103. No. of monomials = 69. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 103*69
+Took 4.348040s time to solve
+
+Naive PPE e(F74,F0) = e(F2,F75) * (e(F4,F7))^-1 * e(F75,F281)
+Optimized PPE e(F74,F0) = e(F2,F75)*(e(F4,F7))^-1*e(F75,F281)
+
+F74 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.760057s seconds to compute completion list of Gt
+
+Took 4.038857s seconds to compute completion list of G1
+Took 6.798934s to compute completion lists.
+Processing untrusted polynomial F76 by rule1
+Took 0.003624s to multiply f with completionG1 . Size of trusted set = 523. Size of f.(completion list of G1) U (completion list of GT) = 81124.
+
+Optimization round 1
+Took 9.444065s time to compute new_polys
+
+Took 0.933418s time to compute new_mons
+
+Took 294.051665s time to compute new_polys
+
+Took 0.677956s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 80723 to 15365
+       Took 305.209372s seconds.
+Took 3.076157s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 401 to 1
+       Took 3.423629s seconds.
+
+Optimization round 2
+Took 0.014279s time to compute new_polys
+
+Took 0.000117s time to compute new_mons
+
+Took 0.080367s time to compute new_polys
+
+Took 0.000142s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 15365 to 105
+       Took 0.095484s seconds.
+Took 0.000013s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000325s seconds.
+
+Optimization round 3
+Took 0.000115s time to compute new_polys
+
+Took 0.000072s time to compute new_mons
+
+Took 0.000261s time to compute new_polys
+
+Took 0.000437s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 105 to 105
+       Took 0.001062s seconds.
+Took 0.000013s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000485s seconds.
+
+Took 308.806284s to optimize.
+Took 0.001292s to compute basis. Size of trusted set = 523. Size of reduced f.(completion list of G1) U (completion list of GT) = 106. No. of monomials = 71. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 106*71
+Took 3.714495s time to solve
+
+Naive PPE e(F76,F0) = e(F2,F77) * (e(F4,F7))^-1 * e(F77,F282)
+Optimized PPE e(F76,F0) = e(F2,F77)*(e(F4,F7))^-1*e(F77,F282)
+
+F76 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.514243s seconds to compute completion list of Gt
+
+Took 2.829480s seconds to compute completion list of G1
+Took 5.343744s to compute completion lists.
+Processing untrusted polynomial F78 by rule1
+Took 0.008404s to multiply f with completionG1 . Size of trusted set = 524. Size of f.(completion list of G1) U (completion list of GT) = 81527.
+
+Optimization round 1
+Took 8.839875s time to compute new_polys
+
+Took 0.959210s time to compute new_mons
+
+Took 303.093262s time to compute new_polys
+
+Took 0.996311s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 81125 to 15829
+       Took 314.005906s seconds.
+Took 3.893473s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 402 to 1
+       Took 4.106926s seconds.
+
+Optimization round 2
+Took 0.023243s time to compute new_polys
+
+Took 0.000069s time to compute new_mons
+
+Took 0.094153s time to compute new_polys
+
+Took 0.000429s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 15829 to 108
+       Took 0.118582s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000185s seconds.
+
+Optimization round 3
+Took 0.000050s time to compute new_polys
+
+Took 0.000028s time to compute new_mons
+
+Took 0.000190s time to compute new_polys
+
+Took 0.000108s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 108 to 108
+       Took 0.000435s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000122s seconds.
+
+Took 318.275200s to optimize.
+Took 0.002679s to compute basis. Size of trusted set = 524. Size of reduced f.(completion list of G1) U (completion list of GT) = 109. No. of monomials = 73. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 109*73
+Took 4.420940s time to solve
+
+Naive PPE e(F78,F0) = e(F2,F79) * (e(F4,F7))^-1 * e(F79,F283)
+Optimized PPE e(F78,F0) = e(F2,F79)*(e(F4,F7))^-1*e(F79,F283)
+
+F78 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.505691s seconds to compute completion list of Gt
+
+Took 2.863421s seconds to compute completion list of G1
+Took 5.369148s to compute completion lists.
+Processing untrusted polynomial F80 by rule1
+Took 0.003990s to multiply f with completionG1 . Size of trusted set = 525. Size of f.(completion list of G1) U (completion list of GT) = 81931.
+
+Optimization round 1
+Took 9.332652s time to compute new_polys
+
+Took 0.986004s time to compute new_mons
+
+Took 357.628572s time to compute new_polys
+
+Took 0.885813s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 81528 to 16294
+       Took 368.933479s seconds.
+Took 3.731979s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 403 to 1
+       Took 3.918301s seconds.
+
+Optimization round 2
+Took 0.017670s time to compute new_polys
+
+Took 0.000082s time to compute new_mons
+
+Took 0.092606s time to compute new_polys
+
+Took 0.000567s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 16294 to 111
+       Took 0.111694s seconds.
+Took 0.000016s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000658s seconds.
+
+Optimization round 3
+Took 0.000131s time to compute new_polys
+
+Took 0.000074s time to compute new_mons
+
+Took 0.000340s time to compute new_polys
+
+Took 0.000161s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 111 to 111
+       Took 0.000857s seconds.
+Took 0.000015s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000236s seconds.
+
+Took 373.024649s to optimize.
+Took 0.001247s to compute basis. Size of trusted set = 525. Size of reduced f.(completion list of G1) U (completion list of GT) = 112. No. of monomials = 75. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 112*75
+Took 4.460557s time to solve
+
+Naive PPE e(F80,F0) = e(F2,F81) * (e(F4,F7))^-1 * e(F81,F284)
+Optimized PPE e(F80,F0) = e(F2,F81)*(e(F4,F7))^-1*e(F81,F284)
+
+F80 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.894093s seconds to compute completion list of Gt
+
+Took 3.434363s seconds to compute completion list of G1
+Took 6.328479s to compute completion lists.
+Processing untrusted polynomial F82 by rule1
+Took 0.008826s to multiply f with completionG1 . Size of trusted set = 526. Size of f.(completion list of G1) U (completion list of GT) = 82336.
+
+Optimization round 1
+Took 9.834758s time to compute new_polys
+
+Took 1.186673s time to compute new_mons
+
+Took 360.124975s time to compute new_polys
+
+Took 1.183634s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 81932 to 16760
+       Took 372.449908s seconds.
+Took 6.641977s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 404 to 1
+       Took 6.914289s seconds.
+
+Optimization round 2
+Took 0.092525s time to compute new_polys
+
+Took 0.000283s time to compute new_mons
+
+Took 0.226793s time to compute new_polys
+
+Took 0.000221s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 16760 to 114
+       Took 0.324853s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000352s seconds.
+
+Optimization round 3
+Took 0.000103s time to compute new_polys
+
+Took 0.000042s time to compute new_mons
+
+Took 0.000393s time to compute new_polys
+
+Took 0.000214s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 114 to 114
+       Took 0.000897s seconds.
+Took 0.000014s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000237s seconds.
+
+Took 379.766929s to optimize.
+Took 0.002416s to compute basis. Size of trusted set = 526. Size of reduced f.(completion list of G1) U (completion list of GT) = 115. No. of monomials = 77. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 115*77
+Took 5.827412s time to solve
+
+Naive PPE e(F82,F0) = e(F2,F83) * (e(F4,F7))^-1 * e(F83,F285)
+Optimized PPE e(F82,F0) = e(F2,F83)*(e(F4,F7))^-1*e(F83,F285)
+
+F82 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 4.618988s seconds to compute completion list of Gt
+
+Took 5.147001s seconds to compute completion list of G1
+Took 9.766048s to compute completion lists.
+Processing untrusted polynomial F84 by rule1
+Took 0.039482s to multiply f with completionG1 . Size of trusted set = 527. Size of f.(completion list of G1) U (completion list of GT) = 82742.
+
+Optimization round 1
+Took 12.539803s time to compute new_polys
+
+Took 1.431637s time to compute new_mons
+
+Took 417.716461s time to compute new_polys
+
+Took 0.864674s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 82337 to 17227
+       Took 432.718779s seconds.
+Took 3.838154s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 405 to 1
+       Took 4.027178s seconds.
+
+Optimization round 2
+Took 0.010566s time to compute new_polys
+
+Took 0.000046s time to compute new_mons
+
+Took 0.098992s time to compute new_polys
+
+Took 0.001962s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 17227 to 117
+       Took 0.112274s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000159s seconds.
+
+Optimization round 3
+Took 0.000048s time to compute new_polys
+
+Took 0.000027s time to compute new_mons
+
+Took 0.000207s time to compute new_polys
+
+Took 0.000115s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 117 to 117
+       Took 0.000450s seconds.
+Took 0.000006s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000120s seconds.
+
+Took 437.023895s to optimize.
+Took 0.002130s to compute basis. Size of trusted set = 527. Size of reduced f.(completion list of G1) U (completion list of GT) = 118. No. of monomials = 79. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 118*79
+Took 6.637510s time to solve
+
+Naive PPE e(F84,F0) = e(F2,F85) * (e(F4,F7))^-1 * e(F85,F286)
+Optimized PPE e(F84,F0) = e(F2,F85)*(e(F4,F7))^-1*e(F85,F286)
+
+F84 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 4.687019s seconds to compute completion list of Gt
+
+Took 4.656514s seconds to compute completion list of G1
+Took 9.343599s to compute completion lists.
+Processing untrusted polynomial F86 by rule1
+Took 0.009688s to multiply f with completionG1 . Size of trusted set = 528. Size of f.(completion list of G1) U (completion list of GT) = 83149.
+
+Optimization round 1
+Took 9.845791s time to compute new_polys
+
+Took 0.971106s time to compute new_mons
+
+Took 286.859781s time to compute new_polys
+
+Took 0.766232s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 82743 to 17695
+       Took 298.566813s seconds.
+Took 3.228384s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 406 to 1
+       Took 3.385873s seconds.
+
+Optimization round 2
+Took 0.008952s time to compute new_polys
+
+Took 0.000071s time to compute new_mons
+
+Took 0.095859s time to compute new_polys
+
+Took 0.000231s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 17695 to 120
+       Took 0.106043s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000233s seconds.
+
+Optimization round 3
+Took 0.000076s time to compute new_polys
+
+Took 0.000054s time to compute new_mons
+
+Took 0.000667s time to compute new_polys
+
+Took 0.000907s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 120 to 120
+       Took 0.001921s seconds.
+Took 0.000051s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000628s seconds.
+
+Took 302.123794s to optimize.
+Took 0.002995s to compute basis. Size of trusted set = 528. Size of reduced f.(completion list of G1) U (completion list of GT) = 121. No. of monomials = 81. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 121*81
+Took 3.402695s time to solve
+
+Naive PPE e(F86,F0) = e(F2,F87) * (e(F4,F7))^-1 * e(F87,F287)
+Optimized PPE e(F86,F0) = e(F2,F87)*(e(F4,F7))^-1*e(F87,F287)
+
+F86 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.237288s seconds to compute completion list of Gt
+
+Took 2.678554s seconds to compute completion list of G1
+Took 4.915864s to compute completion lists.
+Processing untrusted polynomial F88 by rule1
+Took 0.003608s to multiply f with completionG1 . Size of trusted set = 529. Size of f.(completion list of G1) U (completion list of GT) = 83557.
+
+Optimization round 1
+Took 8.943239s time to compute new_polys
+
+Took 1.049915s time to compute new_mons
+
+Took 299.234758s time to compute new_polys
+
+Took 0.863977s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 83150 to 18164
+       Took 310.202591s seconds.
+Took 3.941572s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 407 to 1
+       Took 4.126090s seconds.
+
+Optimization round 2
+Took 0.018777s time to compute new_polys
+
+Took 0.000144s time to compute new_mons
+
+Took 0.201512s time to compute new_polys
+
+Took 0.000245s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 18164 to 123
+       Took 0.221716s seconds.
+Took 0.000016s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000354s seconds.
+
+Optimization round 3
+Took 0.000100s time to compute new_polys
+
+Took 0.000069s time to compute new_mons
+
+Took 0.001360s time to compute new_polys
+
+Took 0.000149s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 123 to 123
+       Took 0.001795s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000180s seconds.
+
+Took 314.594586s to optimize.
+Took 0.001205s to compute basis. Size of trusted set = 529. Size of reduced f.(completion list of G1) U (completion list of GT) = 124. No. of monomials = 83. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 124*83
+Took 5.450507s time to solve
+
+Naive PPE e(F88,F0) = e(F2,F89) * (e(F4,F7))^-1 * e(F89,F288)
+Optimized PPE e(F88,F0) = e(F2,F89)*(e(F4,F7))^-1*e(F89,F288)
+
+F88 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.566392s seconds to compute completion list of Gt
+
+Took 3.142988s seconds to compute completion list of G1
+Took 5.709418s to compute completion lists.
+Processing untrusted polynomial F90 by rule1
+Took 0.008533s to multiply f with completionG1 . Size of trusted set = 530. Size of f.(completion list of G1) U (completion list of GT) = 83966.
+
+Optimization round 1
+Took 8.995213s time to compute new_polys
+
+Took 1.058338s time to compute new_mons
+
+Took 356.962249s time to compute new_polys
+
+Took 1.469731s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 83558 to 18634
+       Took 368.602976s seconds.
+Took 5.624254s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 408 to 1
+       Took 5.834226s seconds.
+
+Optimization round 2
+Took 0.011342s time to compute new_polys
+
+Took 0.000088s time to compute new_mons
+
+Took 0.120037s time to compute new_polys
+
+Took 0.000587s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 18634 to 126
+       Took 0.133600s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000162s seconds.
+
+Optimization round 3
+Took 0.000049s time to compute new_polys
+
+Took 0.000028s time to compute new_mons
+
+Took 0.000240s time to compute new_polys
+
+Took 0.000131s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 126 to 126
+       Took 0.000503s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000133s seconds.
+
+Took 374.625457s to optimize.
+Took 0.001476s to compute basis. Size of trusted set = 530. Size of reduced f.(completion list of G1) U (completion list of GT) = 127. No. of monomials = 85. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 127*85
+Took 5.462347s time to solve
+
+Naive PPE e(F90,F0) = e(F2,F91) * (e(F4,F7))^-1 * e(F91,F289)
+Optimized PPE e(F90,F0) = e(F2,F91)*(e(F4,F7))^-1*e(F91,F289)
+
+F90 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 4.160238s seconds to compute completion list of Gt
+
+Took 4.272224s seconds to compute completion list of G1
+Took 8.432518s to compute completion lists.
+Processing untrusted polynomial F92 by rule1
+Took 0.007163s to multiply f with completionG1 . Size of trusted set = 531. Size of f.(completion list of G1) U (completion list of GT) = 84376.
+
+Optimization round 1
+Took 10.260640s time to compute new_polys
+
+Took 1.259715s time to compute new_mons
+
+Took 424.308582s time to compute new_polys
+
+Took 1.148892s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 83967 to 19105
+       Took 437.110864s seconds.
+Took 4.196875s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 409 to 1
+       Took 4.603723s seconds.
+
+Optimization round 2
+Took 0.017293s time to compute new_polys
+
+Took 0.000073s time to compute new_mons
+
+Took 0.123235s time to compute new_polys
+
+Took 0.000162s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 19105 to 129
+       Took 0.141241s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001004s seconds.
+
+Optimization round 3
+Took 0.000056s time to compute new_polys
+
+Took 0.000031s time to compute new_mons
+
+Took 0.000259s time to compute new_polys
+
+Took 0.000141s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 129 to 129
+       Took 0.000547s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000140s seconds.
+
+Took 441.925865s to optimize.
+Took 0.001324s to compute basis. Size of trusted set = 531. Size of reduced f.(completion list of G1) U (completion list of GT) = 130. No. of monomials = 87. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 130*87
+Took 4.619435s time to solve
+
+Naive PPE e(F92,F0) = e(F2,F93) * (e(F4,F7))^-1 * e(F93,F290)
+Optimized PPE e(F92,F0) = e(F2,F93)*(e(F4,F7))^-1*e(F93,F290)
+
+F92 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.680891s seconds to compute completion list of Gt
+
+Took 3.098864s seconds to compute completion list of G1
+Took 5.779784s to compute completion lists.
+Processing untrusted polynomial F94 by rule1
+Took 0.003836s to multiply f with completionG1 . Size of trusted set = 532. Size of f.(completion list of G1) U (completion list of GT) = 84787.
+
+Optimization round 1
+Took 10.012014s time to compute new_polys
+
+Took 1.244551s time to compute new_mons
+
+Took 399.134991s time to compute new_polys
+
+Took 1.249132s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 84377 to 19577
+       Took 411.784632s seconds.
+Took 4.313024s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 410 to 1
+       Took 4.524758s seconds.
+
+Optimization round 2
+Took 0.010595s time to compute new_polys
+
+Took 0.000061s time to compute new_mons
+
+Took 0.122432s time to compute new_polys
+
+Took 0.000170s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 19577 to 132
+       Took 0.133725s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000171s seconds.
+
+Optimization round 3
+Took 0.000051s time to compute new_polys
+
+Took 0.000027s time to compute new_mons
+
+Took 0.000272s time to compute new_polys
+
+Took 0.000149s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 132 to 132
+       Took 0.001709s seconds.
+Took 0.000007s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000149s seconds.
+
+Took 416.495793s to optimize.
+Took 0.001333s to compute basis. Size of trusted set = 532. Size of reduced f.(completion list of G1) U (completion list of GT) = 133. No. of monomials = 89. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 133*89
+Took 4.696339s time to solve
+
+Naive PPE e(F94,F0) = e(F2,F95) * (e(F4,F7))^-1 * e(F95,F291)
+Optimized PPE e(F94,F0) = e(F2,F95)*(e(F4,F7))^-1*e(F95,F291)
+
+F94 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.601432s seconds to compute completion list of Gt
+
+Took 2.894002s seconds to compute completion list of G1
+Took 5.495457s to compute completion lists.
+Processing untrusted polynomial F96 by rule1
+Took 0.008541s to multiply f with completionG1 . Size of trusted set = 533. Size of f.(completion list of G1) U (completion list of GT) = 85199.
+
+Optimization round 1
+Took 10.685641s time to compute new_polys
+
+Took 1.233626s time to compute new_mons
+
+Took 422.849611s time to compute new_polys
+
+Took 1.284758s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 84788 to 20050
+       Took 436.196303s seconds.
+Took 4.677968s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 411 to 1
+       Took 4.896488s seconds.
+
+Optimization round 2
+Took 0.014613s time to compute new_polys
+
+Took 0.000068s time to compute new_mons
+
+Took 0.137233s time to compute new_polys
+
+Took 0.000182s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 20050 to 135
+       Took 0.152658s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000206s seconds.
+
+Optimization round 3
+Took 0.000064s time to compute new_polys
+
+Took 0.000036s time to compute new_mons
+
+Took 0.000282s time to compute new_polys
+
+Took 0.000154s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 135 to 135
+       Took 0.000605s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001516s seconds.
+
+Took 441.329200s to optimize.
+Took 0.001589s to compute basis. Size of trusted set = 533. Size of reduced f.(completion list of G1) U (completion list of GT) = 136. No. of monomials = 91. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 136*91
+Took 4.535603s time to solve
+
+Naive PPE e(F96,F0) = e(F2,F97) * (e(F4,F7))^-1 * e(F97,F292)
+Optimized PPE e(F96,F0) = e(F2,F97)*(e(F4,F7))^-1*e(F97,F292)
+
+F96 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.950204s seconds to compute completion list of Gt
+
+Took 3.191449s seconds to compute completion list of G1
+Took 6.141677s to compute completion lists.
+Processing untrusted polynomial F98 by rule1
+Took 0.005449s to multiply f with completionG1 . Size of trusted set = 534. Size of f.(completion list of G1) U (completion list of GT) = 85612.
+
+Optimization round 1
+Took 11.044457s time to compute new_polys
+
+Took 1.423926s time to compute new_mons
+
+Took 414.830405s time to compute new_polys
+
+Took 1.473309s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 85200 to 20524
+       Took 428.927769s seconds.
+Took 4.649570s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 412 to 1
+       Took 4.872530s seconds.
+
+Optimization round 2
+Took 0.016720s time to compute new_polys
+
+Took 0.000087s time to compute new_mons
+
+Took 0.140334s time to compute new_polys
+
+Took 0.001894s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 20524 to 138
+       Took 0.159612s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000345s seconds.
+
+Optimization round 3
+Took 0.000105s time to compute new_polys
+
+Took 0.000057s time to compute new_mons
+
+Took 0.000335s time to compute new_polys
+
+Took 0.000211s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 138 to 138
+       Took 0.000819s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000170s seconds.
+
+Took 434.017521s to optimize.
+Took 0.001633s to compute basis. Size of trusted set = 534. Size of reduced f.(completion list of G1) U (completion list of GT) = 139. No. of monomials = 93. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 139*93
+Took 4.770475s time to solve
+
+Naive PPE e(F98,F0) = e(F2,F99) * (e(F4,F7))^-1 * e(F99,F293)
+Optimized PPE e(F98,F0) = e(F2,F99)*(e(F4,F7))^-1*e(F99,F293)
+
+F98 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.957006s seconds to compute completion list of Gt
+
+Took 2.937590s seconds to compute completion list of G1
+Took 5.894620s to compute completion lists.
+Processing untrusted polynomial F100 by rule1
+Took 0.004426s to multiply f with completionG1 . Size of trusted set = 535. Size of f.(completion list of G1) U (completion list of GT) = 86026.
+
+Optimization round 1
+Took 10.368567s time to compute new_polys
+
+Took 1.382481s time to compute new_mons
+
+Took 412.485209s time to compute new_polys
+
+Took 1.678461s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 85613 to 20999
+       Took 426.068198s seconds.
+Took 4.913156s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 413 to 1
+       Took 5.387819s seconds.
+
+Optimization round 2
+Took 0.015798s time to compute new_polys
+
+Took 0.000065s time to compute new_mons
+
+Took 0.146651s time to compute new_polys
+
+Took 0.000229s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 20999 to 141
+       Took 0.163283s seconds.
+Took 0.000008s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000199s seconds.
+
+Optimization round 3
+Took 0.000060s time to compute new_polys
+
+Took 0.000033s time to compute new_mons
+
+Took 0.000302s time to compute new_polys
+
+Took 0.000168s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 141 to 141
+       Took 0.000633s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001595s seconds.
+
+Took 431.680344s to optimize.
+Took 0.001750s to compute basis. Size of trusted set = 535. Size of reduced f.(completion list of G1) U (completion list of GT) = 142. No. of monomials = 95. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 142*95
+Took 4.109122s time to solve
+
+Naive PPE e(F100,F0) = e(F2,F101) * (e(F4,F7))^-1 * e(F101,F294)
+Optimized PPE e(F100,F0) = e(F2,F101)*(e(F4,F7))^-1*e(F101,F294)
+
+F100 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.047007s seconds to compute completion list of Gt
+
+Took 3.023690s seconds to compute completion list of G1
+Took 6.070724s to compute completion lists.
+Processing untrusted polynomial F102 by rule1
+Took 0.006473s to multiply f with completionG1 . Size of trusted set = 536. Size of f.(completion list of G1) U (completion list of GT) = 86441.
+
+Optimization round 1
+Took 10.327105s time to compute new_polys
+
+Took 1.372399s time to compute new_mons
+
+Took 347.288751s time to compute new_polys
+
+Took 0.933346s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 86027 to 21475
+       Took 360.073612s seconds.
+Took 3.485702s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 414 to 1
+       Took 3.677568s seconds.
+
+Optimization round 2
+Took 0.008876s time to compute new_polys
+
+Took 0.000064s time to compute new_mons
+
+Took 0.127100s time to compute new_polys
+
+Took 0.000276s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 21475 to 144
+       Took 0.139242s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000225s seconds.
+
+Optimization round 3
+Took 0.000067s time to compute new_polys
+
+Took 0.000036s time to compute new_mons
+
+Took 0.000318s time to compute new_polys
+
+Took 0.000243s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 144 to 144
+       Took 0.000745s seconds.
+Took 0.000017s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000386s seconds.
+
+Took 363.956177s to optimize.
+Took 0.001803s to compute basis. Size of trusted set = 536. Size of reduced f.(completion list of G1) U (completion list of GT) = 145. No. of monomials = 97. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 145*97
+Took 3.795830s time to solve
+
+Naive PPE e(F102,F0) = e(F2,F103) * (e(F4,F7))^-1 * e(F103,F295)
+Optimized PPE e(F102,F0) = e(F2,F103)*(e(F4,F7))^-1*e(F103,F295)
+
+F102 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.099346s seconds to compute completion list of Gt
+
+Took 2.457993s seconds to compute completion list of G1
+Took 4.557359s to compute completion lists.
+Processing untrusted polynomial F104 by rule1
+Took 0.003756s to multiply f with completionG1 . Size of trusted set = 537. Size of f.(completion list of G1) U (completion list of GT) = 86857.
+
+Optimization round 1
+Took 8.600622s time to compute new_polys
+
+Took 1.127733s time to compute new_mons
+
+Took 312.260648s time to compute new_polys
+
+Took 0.909988s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 86442 to 21952
+       Took 323.012626s seconds.
+Took 3.591211s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 415 to 1
+       Took 3.785284s seconds.
+
+Optimization round 2
+Took 0.011077s time to compute new_polys
+
+Took 0.000078s time to compute new_mons
+
+Took 0.130608s time to compute new_polys
+
+Took 0.000269s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 21952 to 147
+       Took 0.143069s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000207s seconds.
+
+Optimization round 3
+Took 0.000066s time to compute new_polys
+
+Took 0.000037s time to compute new_mons
+
+Took 0.000335s time to compute new_polys
+
+Took 0.001099s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 147 to 147
+       Took 0.001621s seconds.
+Took 0.000011s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000251s seconds.
+
+Took 326.992581s to optimize.
+Took 0.001662s to compute basis. Size of trusted set = 537. Size of reduced f.(completion list of G1) U (completion list of GT) = 148. No. of monomials = 99. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 148*99
+Took 3.134306s time to solve
+
+Naive PPE e(F104,F0) = e(F2,F105) * (e(F4,F7))^-1 * e(F105,F296)
+Optimized PPE e(F104,F0) = e(F2,F105)*(e(F4,F7))^-1*e(F105,F296)
+
+F104 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.117276s seconds to compute completion list of Gt
+
+Took 2.488793s seconds to compute completion list of G1
+Took 4.606090s to compute completion lists.
+Processing untrusted polynomial F106 by rule1
+Took 0.004049s to multiply f with completionG1 . Size of trusted set = 538. Size of f.(completion list of G1) U (completion list of GT) = 87274.
+
+Optimization round 1
+Took 8.676013s time to compute new_polys
+
+Took 1.145918s time to compute new_mons
+
+Took 347.509339s time to compute new_polys
+
+Took 1.449269s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 86858 to 22430
+       Took 358.899903s seconds.
+Took 4.659485s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 416 to 1
+       Took 4.898775s seconds.
+
+Optimization round 2
+Took 0.016579s time to compute new_polys
+
+Took 0.000083s time to compute new_mons
+
+Took 0.150030s time to compute new_polys
+
+Took 0.002268s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 22430 to 150
+       Took 0.169638s seconds.
+Took 0.000018s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000396s seconds.
+
+Optimization round 3
+Took 0.000119s time to compute new_polys
+
+Took 0.000072s time to compute new_mons
+
+Took 0.000559s time to compute new_polys
+
+Took 0.000343s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 150 to 150
+       Took 0.001219s seconds.
+Took 0.000015s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000294s seconds.
+
+Took 364.017897s to optimize.
+Took 0.004913s to compute basis. Size of trusted set = 538. Size of reduced f.(completion list of G1) U (completion list of GT) = 151. No. of monomials = 101. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 151*101
+Took 4.392788s time to solve
+
+Naive PPE e(F106,F0) = e(F2,F107) * (e(F4,F7))^-1 * e(F107,F297)
+Optimized PPE e(F106,F0) = e(F2,F107)*(e(F4,F7))^-1*e(F107,F297)
+
+F106 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.732320s seconds to compute completion list of Gt
+
+Took 3.006484s seconds to compute completion list of G1
+Took 5.738868s to compute completion lists.
+Processing untrusted polynomial F108 by rule1
+Took 0.003837s to multiply f with completionG1 . Size of trusted set = 539. Size of f.(completion list of G1) U (completion list of GT) = 87692.
+
+Optimization round 1
+Took 9.840388s time to compute new_polys
+
+Took 1.304313s time to compute new_mons
+
+Took 459.295508s time to compute new_polys
+
+Took 1.704696s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 87275 to 22909
+       Took 472.298526s seconds.
+Took 5.474295s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 417 to 1
+       Took 5.765430s seconds.
+
+Optimization round 2
+Took 0.012869s time to compute new_polys
+
+Took 0.000076s time to compute new_mons
+
+Took 0.175551s time to compute new_polys
+
+Took 0.000288s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 22909 to 153
+       Took 0.189826s seconds.
+Took 0.000011s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000306s seconds.
+
+Optimization round 3
+Took 0.000075s time to compute new_polys
+
+Took 0.000040s time to compute new_mons
+
+Took 0.000359s time to compute new_polys
+
+Took 0.000198s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 153 to 153
+       Took 0.000746s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000183s seconds.
+
+Took 478.308690s to optimize.
+Took 0.003070s to compute basis. Size of trusted set = 539. Size of reduced f.(completion list of G1) U (completion list of GT) = 154. No. of monomials = 103. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 154*103
+Took 4.531673s time to solve
+
+Naive PPE e(F108,F0) = e(F2,F109) * (e(F4,F7))^-1 * e(F109,F298)
+Optimized PPE e(F108,F0) = e(F2,F109)*(e(F4,F7))^-1*e(F109,F298)
+
+F108 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.017908s seconds to compute completion list of Gt
+
+Took 3.497886s seconds to compute completion list of G1
+Took 6.515828s to compute completion lists.
+Processing untrusted polynomial F110 by rule1
+Took 0.003910s to multiply f with completionG1 . Size of trusted set = 540. Size of f.(completion list of G1) U (completion list of GT) = 88111.
+
+Optimization round 1
+Took 12.971904s time to compute new_polys
+
+Took 2.342058s time to compute new_mons
+
+Took 484.813762s time to compute new_polys
+
+Took 2.020999s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 87693 to 23389
+       Took 502.311733s seconds.
+Took 4.985043s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 418 to 1
+       Took 5.383934s seconds.
+
+Optimization round 2
+Took 0.015058s time to compute new_polys
+
+Took 0.000092s time to compute new_mons
+
+Took 0.173352s time to compute new_polys
+
+Took 0.000289s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 23389 to 156
+       Took 0.189433s seconds.
+Took 0.000015s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000442s seconds.
+
+Optimization round 3
+Took 0.000102s time to compute new_polys
+
+Took 0.000070s time to compute new_mons
+
+Took 0.001872s time to compute new_polys
+
+Took 0.000339s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 156 to 156
+       Took 0.002523s seconds.
+Took 0.000015s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000320s seconds.
+
+Took 508.002107s to optimize.
+Took 0.002001s to compute basis. Size of trusted set = 540. Size of reduced f.(completion list of G1) U (completion list of GT) = 157. No. of monomials = 105. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 157*105
+Took 4.510051s time to solve
+
+Naive PPE e(F110,F0) = e(F2,F111) * (e(F4,F7))^-1 * e(F111,F299)
+Optimized PPE e(F110,F0) = e(F2,F111)*(e(F4,F7))^-1*e(F111,F299)
+
+F110 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.279215s seconds to compute completion list of Gt
+
+Took 3.250721s seconds to compute completion list of G1
+Took 6.529966s to compute completion lists.
+Processing untrusted polynomial F112 by rule1
+Took 0.006208s to multiply f with completionG1 . Size of trusted set = 541. Size of f.(completion list of G1) U (completion list of GT) = 88531.
+
+Optimization round 1
+Took 11.750905s time to compute new_polys
+
+Took 1.708365s time to compute new_mons
+
+Took 467.659347s time to compute new_polys
+
+Took 1.082446s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 88112 to 23870
+       Took 482.347066s seconds.
+Took 4.073944s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 419 to 1
+       Took 4.298500s seconds.
+
+Optimization round 2
+Took 0.014902s time to compute new_polys
+
+Took 0.000083s time to compute new_mons
+
+Took 0.155190s time to compute new_polys
+
+Took 0.000242s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 23870 to 159
+       Took 0.171160s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000224s seconds.
+
+Optimization round 3
+Took 0.001359s time to compute new_polys
+
+Took 0.000101s time to compute new_mons
+
+Took 0.000467s time to compute new_polys
+
+Took 0.000219s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 159 to 159
+       Took 0.002293s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000201s seconds.
+
+Took 486.888464s to optimize.
+Took 0.001903s to compute basis. Size of trusted set = 541. Size of reduced f.(completion list of G1) U (completion list of GT) = 160. No. of monomials = 107. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 160*107
+Took 3.669000s time to solve
+
+Naive PPE e(F112,F0) = e(F2,F113) * (e(F4,F7))^-1 * e(F113,F300)
+Optimized PPE e(F112,F0) = e(F2,F113)*(e(F4,F7))^-1*e(F113,F300)
+
+F112 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.251349s seconds to compute completion list of Gt
+
+Took 2.579355s seconds to compute completion list of G1
+Took 4.830727s to compute completion lists.
+Processing untrusted polynomial F114 by rule1
+Took 0.004111s to multiply f with completionG1 . Size of trusted set = 542. Size of f.(completion list of G1) U (completion list of GT) = 88952.
+
+Optimization round 1
+Took 9.183194s time to compute new_polys
+
+Took 1.275831s time to compute new_mons
+
+Took 424.404525s time to compute new_polys
+
+Took 2.969857s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 88532 to 24352
+       Took 437.962893s seconds.
+Took 5.351367s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 420 to 1
+       Took 5.710296s seconds.
+
+Optimization round 2
+Took 0.013108s time to compute new_polys
+
+Took 0.002386s time to compute new_mons
+
+Took 0.180182s time to compute new_polys
+
+Took 0.000272s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 24352 to 162
+       Took 0.199794s seconds.
+Took 0.000015s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.001650s seconds.
+
+Optimization round 3
+Took 0.000092s time to compute new_polys
+
+Took 0.000056s time to compute new_mons
+
+Took 0.000462s time to compute new_polys
+
+Took 0.000228s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 162 to 162
+       Took 0.000925s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000202s seconds.
+
+Took 443.928348s to optimize.
+Took 0.001971s to compute basis. Size of trusted set = 542. Size of reduced f.(completion list of G1) U (completion list of GT) = 163. No. of monomials = 109. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 163*109
+Took 4.201249s time to solve
+
+Naive PPE e(F114,F0) = e(F2,F115) * (e(F4,F7))^-1 * e(F115,F301)
+Optimized PPE e(F114,F0) = e(F2,F115)*(e(F4,F7))^-1*e(F115,F301)
+
+F114 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.707744s seconds to compute completion list of Gt
+
+Took 3.135009s seconds to compute completion list of G1
+Took 5.842777s to compute completion lists.
+Processing untrusted polynomial F116 by rule1
+Took 0.004149s to multiply f with completionG1 . Size of trusted set = 543. Size of f.(completion list of G1) U (completion list of GT) = 89374.
+
+Optimization round 1
+Took 13.660395s time to compute new_polys
+
+Took 1.723336s time to compute new_mons
+
+Took 551.155664s time to compute new_polys
+
+Took 2.144531s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 88953 to 24835
+       Took 568.818186s seconds.
+Took 6.161710s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 421 to 1
+       Took 6.476432s seconds.
+
+Optimization round 2
+Took 0.019190s time to compute new_polys
+
+Took 0.000103s time to compute new_mons
+
+Took 0.205789s time to compute new_polys
+
+Took 0.000315s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 24835 to 165
+       Took 0.226009s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000221s seconds.
+
+Optimization round 3
+Took 0.000052s time to compute new_polys
+
+Took 0.000033s time to compute new_mons
+
+Took 0.002194s time to compute new_polys
+
+Took 0.000276s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 165 to 165
+       Took 0.002690s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000235s seconds.
+
+Took 575.588497s to optimize.
+Took 0.002118s to compute basis. Size of trusted set = 543. Size of reduced f.(completion list of G1) U (completion list of GT) = 166. No. of monomials = 111. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 166*111
+Took 4.579411s time to solve
+
+Naive PPE e(F116,F0) = e(F2,F117) * (e(F4,F7))^-1 * e(F117,F302)
+Optimized PPE e(F116,F0) = e(F2,F117)*(e(F4,F7))^-1*e(F117,F302)
+
+F116 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.185136s seconds to compute completion list of Gt
+
+Took 3.430131s seconds to compute completion list of G1
+Took 6.615295s to compute completion lists.
+Processing untrusted polynomial F118 by rule1
+Took 0.004873s to multiply f with completionG1 . Size of trusted set = 544. Size of f.(completion list of G1) U (completion list of GT) = 89797.
+
+Optimization round 1
+Took 10.915797s time to compute new_polys
+
+Took 1.361055s time to compute new_mons
+
+Took 493.912932s time to compute new_polys
+
+Took 2.146516s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 89375 to 25319
+       Took 508.480251s seconds.
+Took 6.097523s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 422 to 1
+       Took 6.408582s seconds.
+
+Optimization round 2
+Took 0.013080s time to compute new_polys
+
+Took 0.000109s time to compute new_mons
+
+Took 0.203763s time to compute new_polys
+
+Took 0.001223s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 25319 to 168
+       Took 0.219111s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000236s seconds.
+
+Optimization round 3
+Took 0.000072s time to compute new_polys
+
+Took 0.000039s time to compute new_mons
+
+Took 0.000424s time to compute new_polys
+
+Took 0.000229s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 168 to 168
+       Took 0.000839s seconds.
+Took 0.000009s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000187s seconds.
+
+Took 515.186019s to optimize.
+Took 0.002158s to compute basis. Size of trusted set = 544. Size of reduced f.(completion list of G1) U (completion list of GT) = 169. No. of monomials = 113. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 169*113
+Took 4.447793s time to solve
+
+Naive PPE e(F118,F0) = e(F2,F119) * (e(F4,F7))^-1 * e(F119,F303)
+Optimized PPE e(F118,F0) = e(F2,F119)*(e(F4,F7))^-1*e(F119,F303)
+
+F118 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.256283s seconds to compute completion list of Gt
+
+Took 3.743059s seconds to compute completion list of G1
+Took 6.999362s to compute completion lists.
+Processing untrusted polynomial F120 by rule1
+Took 0.004386s to multiply f with completionG1 . Size of trusted set = 545. Size of f.(completion list of G1) U (completion list of GT) = 90221.
+
+Optimization round 1
+Took 11.604882s time to compute new_polys
+
+Took 1.760482s time to compute new_mons
+
+Took 502.316216s time to compute new_polys
+
+Took 2.416482s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 89798 to 25804
+       Took 518.277519s seconds.
+Took 8.425482s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 423 to 1
+       Took 8.737084s seconds.
+
+Optimization round 2
+Took 0.021867s time to compute new_polys
+
+Took 0.000132s time to compute new_mons
+
+Took 0.335668s time to compute new_polys
+
+Took 0.001395s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 25804 to 171
+       Took 0.360161s seconds.
+Took 0.000021s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000441s seconds.
+
+Optimization round 3
+Took 0.000119s time to compute new_polys
+
+Took 0.000073s time to compute new_mons
+
+Took 0.000810s time to compute new_polys
+
+Took 0.000724s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 171 to 171
+       Took 0.001870s seconds.
+Took 0.000037s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.002747s seconds.
+
+Took 527.461304s to optimize.
+Took 0.004598s to compute basis. Size of trusted set = 545. Size of reduced f.(completion list of G1) U (completion list of GT) = 172. No. of monomials = 115. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 172*115
+Took 4.844412s time to solve
+
+Naive PPE e(F120,F0) = e(F2,F121) * (e(F4,F7))^-1 * e(F121,F304)
+Optimized PPE e(F120,F0) = e(F2,F121)*(e(F4,F7))^-1*e(F121,F304)
+
+F120 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.942254s seconds to compute completion list of Gt
+
+Took 3.157698s seconds to compute completion list of G1
+Took 6.099977s to compute completion lists.
+Processing untrusted polynomial F122 by rule1
+Took 0.004855s to multiply f with completionG1 . Size of trusted set = 546. Size of f.(completion list of G1) U (completion list of GT) = 90646.
+
+Optimization round 1
+Took 14.760100s time to compute new_polys
+
+Took 2.240595s time to compute new_mons
+
+Took 446.798990s time to compute new_polys
+
+Took 1.408071s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 90222 to 26290
+       Took 465.384246s seconds.
+Took 4.698979s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 424 to 1
+       Took 4.939512s seconds.
+
+Optimization round 2
+Took 0.013280s time to compute new_polys
+
+Took 0.000100s time to compute new_mons
+
+Took 0.187148s time to compute new_polys
+
+Took 0.000326s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 26290 to 174
+       Took 0.203440s seconds.
+Took 0.000039s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000418s seconds.
+
+Optimization round 3
+Took 0.000115s time to compute new_polys
+
+Took 0.000051s time to compute new_mons
+
+Took 0.001601s time to compute new_polys
+
+Took 0.000288s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 174 to 174
+       Took 0.002165s seconds.
+Took 0.000010s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000241s seconds.
+
+Took 470.589652s to optimize.
+Took 0.002294s to compute basis. Size of trusted set = 546. Size of reduced f.(completion list of G1) U (completion list of GT) = 175. No. of monomials = 117. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 175*117
+Took 3.558565s time to solve
+
+Naive PPE e(F122,F0) = e(F2,F123) * (e(F4,F7))^-1 * e(F123,F305)
+Optimized PPE e(F122,F0) = e(F2,F123)*(e(F4,F7))^-1*e(F123,F305)
+
+F122 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 2.447726s seconds to compute completion list of Gt
+
+Took 2.634582s seconds to compute completion list of G1
+Took 5.082331s to compute completion lists.
+Processing untrusted polynomial F124 by rule1
+Took 0.004592s to multiply f with completionG1 . Size of trusted set = 547. Size of f.(completion list of G1) U (completion list of GT) = 91072.
+
+Optimization round 1
+Took 9.631893s time to compute new_polys
+
+Took 1.427373s time to compute new_mons
+
+Took 432.163822s time to compute new_polys
+
+Took 2.375406s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 90647 to 26777
+       Took 445.743756s seconds.
+Took 6.623035s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 425 to 1
+       Took 6.910796s seconds.
+
+Optimization round 2
+Took 0.036016s time to compute new_polys
+
+Took 0.000142s time to compute new_mons
+
+Took 1.390788s time to compute new_polys
+
+Took 0.000505s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 26777 to 177
+       Took 1.434252s seconds.
+Took 0.000031s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000432s seconds.
+
+Optimization round 3
+Took 0.000326s time to compute new_polys
+
+Took 0.000476s time to compute new_mons
+
+Took 0.002813s time to compute new_polys
+
+Took 0.013099s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 177 to 177
+       Took 0.017510s seconds.
+Took 0.000022s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.003628s seconds.
+
+Took 454.164237s to optimize.
+Took 0.004604s to compute basis. Size of trusted set = 547. Size of reduced f.(completion list of G1) U (completion list of GT) = 178. No. of monomials = 119. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 178*119
+Took 6.097912s time to solve
+
+Naive PPE e(F124,F0) = e(F2,F125) * (e(F4,F7))^-1 * e(F125,F306)
+Optimized PPE e(F124,F0) = e(F2,F125)*(e(F4,F7))^-1*e(F125,F306)
+
+F124 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 3.462822s seconds to compute completion list of Gt
+
+Took 3.653314s seconds to compute completion list of G1
+Took 7.116168s to compute completion lists.
+Processing untrusted polynomial F126 by rule1
+Took 0.006720s to multiply f with completionG1 . Size of trusted set = 548. Size of f.(completion list of G1) U (completion list of GT) = 91499.
+
+Optimization round 1
+Took 14.073960s time to compute new_polys
+
+Took 2.977559s time to compute new_mons
+
+Took 599.051729s time to compute new_polys
+
+Took 1.662740s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 91073 to 27265
+       Took 617.981702s seconds.
+Took 12.124674s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 426 to 1
+       Took 12.495475s seconds.
+
+Optimization round 2
+Took 0.045978s time to compute new_polys
+
+Took 0.000141s time to compute new_mons
+
+Took 0.450336s time to compute new_polys
+
+Took 0.002135s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 27265 to 180
+       Took 0.502050s seconds.
+Took 0.000011s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000309s seconds.
+
+Optimization round 3
+Took 0.000152s time to compute new_polys
+
+Took 0.000092s time to compute new_mons
+
+Took 0.000636s time to compute new_polys
+
+Took 0.000464s time to compute new_mons
+
+Reduced the polynomials in completion of GT from 180 to 180
+       Took 0.001512s seconds.
+Took 0.000014s time to filter mons in lst1
+
+Reduced number of polynomials in f.(completion of G1) from 1 to 1
+       Took 0.000559s seconds.
+
+Took 631.048098s to optimize.
+Took 0.005808s to compute basis. Size of trusted set = 548. Size of reduced f.(completion list of G1) U (completion list of GT) = 181. No. of monomials = 121. 
+        Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 181*121
+Took 10.159516s time to solve
+
+Naive PPE e(F126,F0) = e(F2,F127) * (e(F4,F7))^-1 * e(F127,F307)
+Optimized PPE e(F126,F0) = e(F2,F127)*(e(F4,F7))^-1*e(F127,F307)
+
+F126 moved to trusted set by rule 1
+
+
+......................................................................
+Execution time : 16879.666540s
+
+
+Untrusted set : 
+
+PPEs : e(F126,F0) = e(F2,F127)*(e(F4,F7))^-1*e(F127,F307),   e(F124,F0) = e(F2,F125)*(e(F4,F7))^-1*e(F125,F306),   e(F122,F0) = e(F2,F123)*(e(F4,F7))^-1*e(F123,F305),   e(F120,F0) = e(F2,F121)*(e(F4,F7))^-1*e(F121,F304),   e(F118,F0) = e(F2,F119)*(e(F4,F7))^-1*e(F119,F303),   e(F116,F0) = e(F2,F117)*(e(F4,F7))^-1*e(F117,F302),   e(F114,F0) = e(F2,F115)*(e(F4,F7))^-1*e(F115,F301),   e(F112,F0) = e(F2,F113)*(e(F4,F7))^-1*e(F113,F300),   e(F110,F0) = e(F2,F111)*(e(F4,F7))^-1*e(F111,F299),   e(F108,F0) = e(F2,F109)*(e(F4,F7))^-1*e(F109,F298),   e(F106,F0) = e(F2,F107)*(e(F4,F7))^-1*e(F107,F297),   e(F104,F0) = e(F2,F105)*(e(F4,F7))^-1*e(F105,F296),   e(F102,F0) = e(F2,F103)*(e(F4,F7))^-1*e(F103,F295),   e(F100,F0) = e(F2,F101)*(e(F4,F7))^-1*e(F101,F294),   e(F98,F0) = e(F2,F99)*(e(F4,F7))^-1*e(F99,F293),   e(F96,F0) = e(F2,F97)*(e(F4,F7))^-1*e(F97,F292),   e(F94,F0) = e(F2,F95)*(e(F4,F7))^-1*e(F95,F291),   e(F92,F0) = e(F2,F93)*(e(F4,F7))^-1*e(F93,F290),   e(F90,F0) = e(F2,F91)*(e(F4,F7))^-1*e(F91,F289),   e(F88,F0) = e(F2,F89)*(e(F4,F7))^-1*e(F89,F288),   e(F86,F0) = e(F2,F87)*(e(F4,F7))^-1*e(F87,F287),   e(F84,F0) = e(F2,F85)*(e(F4,F7))^-1*e(F85,F286),   e(F82,F0) = e(F2,F83)*(e(F4,F7))^-1*e(F83,F285),   e(F80,F0) = e(F2,F81)*(e(F4,F7))^-1*e(F81,F284),   e(F78,F0) = e(F2,F79)*(e(F4,F7))^-1*e(F79,F283),   e(F76,F0) = e(F2,F77)*(e(F4,F7))^-1*e(F77,F282),   e(F74,F0) = e(F2,F75)*(e(F4,F7))^-1*e(F75,F281),   e(F72,F0) = e(F2,F73)*(e(F4,F7))^-1*e(F73,F280),   e(F70,F0) = e(F2,F71)*(e(F4,F7))^-1*e(F71,F279),   e(F68,F0) = e(F2,F69)*(e(F4,F7))^-1*e(F69,F278),   e(F66,F0) = e(F2,F67)*(e(F4,F7))^-1*e(F67,F277),   e(F64,F0) = e(F2,F65)*(e(F4,F7))^-1*e(F65,F276),   e(F62,F0) = e(F2,F63)*(e(F4,F7))^-1*e(F63,F275),   e(F60,F0) = e(F2,F61)*(e(F4,F7))^-1*e(F61,F274),   e(F58,F0) = e(F2,F59)*(e(F4,F7))^-1*e(F59,F273),   e(F56,F0) = e(F2,F57)*(e(F4,F7))^-1*e(F57,F272),   e(F54,F0) = e(F2,F55)*(e(F4,F7))^-1*e(F55,F271),   e(F52,F0) = e(F2,F53)*(e(F4,F7))^-1*e(F53,F270),   e(F50,F0) = e(F2,F51)*(e(F4,F7))^-1*e(F51,F269),   e(F48,F0) = e(F2,F49)*(e(F4,F7))^-1*e(F49,F268),   e(F46,F0) = e(F2,F47)*(e(F4,F7))^-1*e(F47,F267),   e(F44,F0) = e(F2,F45)*(e(F4,F7))^-1*e(F45,F266),   e(F42,F0) = e(F2,F43)*(e(F4,F7))^-1*e(F43,F265),   e(F40,F0) = e(F2,F41)*(e(F4,F7))^-1*e(F41,F264),   e(F38,F0) = e(F2,F39)*(e(F4,F7))^-1*e(F39,F263),   e(F36,F0) = e(F2,F37)*(e(F4,F7))^-1*e(F37,F262),   e(F34,F0) = e(F2,F35)*(e(F4,F7))^-1*e(F35,F261),   e(F32,F0) = e(F2,F33)*(e(F4,F7))^-1*e(F33,F260),   e(F30,F0) = e(F2,F31)*(e(F4,F7))^-1*e(F31,F259),   e(F28,F0) = e(F2,F29)*(e(F4,F7))^-1*e(F29,F258),   e(F26,F0) = e(F2,F27)*(e(F4,F7))^-1*e(F27,F257),   e(F24,F0) = e(F2,F25)*(e(F4,F7))^-1*e(F25,F256),   e(F22,F0) = e(F2,F23)*(e(F4,F7))^-1*e(F23,F255),   e(F20,F0) = e(F2,F21)*(e(F4,F7))^-1*e(F21,F254),   e(F18,F0) = e(F2,F19)*(e(F4,F7))^-1*e(F19,F253),   e(F16,F0) = e(F2,F17)*(e(F4,F7))^-1*e(F17,F252),   e(F14,F0) = e(F2,F15)*(e(F4,F7))^-1*e(F15,F251),   e(F12,F0) = e(F2,F13)*(e(F4,F7))^-1*e(F13,F250),   e(F10,F0) = e(F2,F11)*(e(F4,F7))^-1*e(F11,F249),   e(F8,F0) = e(F2,F9)*(e(F4,F7))^-1*e(F9,F248),   e(F6,F0) = F5*e(F3,F7),   
+
+Ouptut : PPE Testable :)
+wireless-10-147-200-53:project satya$ 
+
+
+
+*)

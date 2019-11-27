@@ -1,0 +1,139 @@
+
+maps G1 * G1 -> GT.
+
+fixed_vars [a1, a2, b, alpha, v, v1, v2, w, u, h].
+unfixed_vars [r1, r2, z1, z2].
+Zp_vars [id, tag].
+
+trusted_polys [F1 = b, F2 = a1, F3 = a2, F4 = b*a1, F5 = b*a2, F6 = v+v1*a1, F7 = v+v2*a2, F8 = b*(v+v1*a1), F9 = b*(v+v2*a2), F10 = w, F11 = u, F12 = h] in G1.
+trusted_polys [F13 = alpha*a1*b] in GT.
+
+untrusted_polys [F14 = alpha*a1+v*(r1+r2), F15 = -alpha+v1*(r1+r2)+z1, F16 = -b*z1, F17 = v2*(r1+r2) + z2, F18 = -b*z2, F19 = r2*b, F20 = r1, F21 = (u*id+w*tag+h)*r1 ] in G1.
+
+
+
+(*****************Output after execution*************)
+
+(*
+lindys-MacBook-Pro:project satya$ ./gga.native examples/type1/waters09.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  id in G1,  tag in G1,  id in GT,  tag in GT,  b*id in G1,  b*tag in G1,  a1*id in G1,  a1*tag in G1,  a2*id in G1,  a2*tag in G1,  a1*b*id in G1,  a1*b*tag in G1,  a2*b*id in G1,  a2*b*tag in G1,  id*v + a1*id*v1 in G1,  tag*v + a1*tag*v1 in G1,  id*v + a2*id*v2 in G1,  tag*v + a2*tag*v2 in G1,  b*id*v + a1*b*id*v1 in G1,  b*tag*v + a1*b*tag*v1 in G1,  b*id*v + a2*b*id*v2 in G1,  b*tag*v + a2*b*tag*v2 in G1,  id*w in G1,  tag*w in G1,  id*u in G1,  tag*u in G1,  h*id in G1,  h*tag in G1,  a1*alpha*b*id in GT,  a1*alpha*b*tag in GT, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = b in G1
+F2 = a1 in G1
+F3 = a2 in G1
+F4 = a1*b in G1
+F5 = a2*b in G1
+F6 = v + a1*v1 in G1
+F7 = v + a2*v2 in G1
+F8 = b*v + a1*b*v1 in G1
+F9 = b*v + a2*b*v2 in G1
+F10 = w in G1
+F11 = u in G1
+F12 = h in G1
+F13 = a1*alpha*b in GT
+F14 = a1*alpha + r1*v + r2*v in G1
+F15 = z1 + r1*v1 + r2*v1 - alpha in G1
+F16 = -1*b*z1 in G1
+F17 = z2 + r1*v2 + r2*v2 in G1
+F18 = -1*b*z2 in G1
+F19 = b*r2 in G1
+F20 = r1 in G1
+F21 = h*r1 + id*r1*u + r1*tag*w in G1
+F22 = id in G1
+F23 = tag in G1
+F24 = id in GT
+F25 = tag in GT
+F26 = b*id in G1
+F27 = b*tag in G1
+F28 = a1*id in G1
+F29 = a1*tag in G1
+F30 = a2*id in G1
+F31 = a2*tag in G1
+F32 = a1*b*id in G1
+F33 = a1*b*tag in G1
+F34 = a2*b*id in G1
+F35 = a2*b*tag in G1
+F36 = id*v + a1*id*v1 in G1
+F37 = tag*v + a1*tag*v1 in G1
+F38 = id*v + a2*id*v2 in G1
+F39 = tag*v + a2*tag*v2 in G1
+F40 = b*id*v + a1*b*id*v1 in G1
+F41 = b*tag*v + a1*b*tag*v1 in G1
+F42 = b*id*v + a2*b*id*v2 in G1
+F43 = b*tag*v + a2*b*tag*v2 in G1
+F44 = id*w in G1
+F45 = tag*w in G1
+F46 = id*u in G1
+F47 = tag*u in G1
+F48 = h*id in G1
+F49 = h*tag in G1
+F50 = a1*alpha*b*id in GT
+F51 = a1*alpha*b*tag in GT
+
+......................................................................
+
+Processing untrusted polynomial F16 = -1*b*z1 by rule2
+Rule not applied
+
+Processing untrusted polynomial F18 = -1*b*z2 by rule2
+Rule not applied
+
+Processing untrusted polynomial F19 = b*r2 by rule2
+Rule not applied
+
+Processing untrusted polynomial F20 = r1 by rule2
+F20 moved to trusted set and r1 moved to fixed set by rule 2
+
+
+......................................................................
+
+Processing untrusted polynomial F14 = a1*alpha + r1*v + r2*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F16 = -1*b*z1 by rule2
+Rule not applied
+
+Processing untrusted polynomial F18 = -1*b*z2 by rule2
+Rule not applied
+
+Processing untrusted polynomial F19 = b*r2 by rule2
+Rule not applied
+
+Processing untrusted polynomial F21 = h*r1 + id*r1*u + r1*tag*w by rule1
+
+
+Adding PPE e(F21,F0) = e(F12,F20) * e(F20,F45) * e(F20,F46)
+F21 moved to trusted set by rule 1
+
+
+......................................................................
+
+Processing untrusted polynomial F14 = a1*alpha + r1*v + r2*v by rule2
+Rule not applied
+
+Processing untrusted polynomial F16 = -1*b*z1 by rule2
+Rule not applied
+
+Processing untrusted polynomial F18 = -1*b*z2 by rule2
+Rule not applied
+
+Processing untrusted polynomial F19 = b*r2 by rule2
+Rule not applied
+Execution time : 33.176417s
+
+
+Fixed set :  r1,  a1,  a2,  b,  alpha,  v,  v1,  v2,  w,  u,  h, 
+
+Trusted set :  h*r1 + id*r1*u + r1*tag*w in G1,  r1 in G1,  1 in G1,  1 in GT,  b in G1,  a1 in G1,  a2 in G1,  a1*b in G1,  a2*b in G1,  v + a1*v1 in G1,  v + a2*v2 in G1,  b*v + a1*b*v1 in G1,  b*v + a2*b*v2 in G1,  w in G1,  u in G1,  h in G1,  a1*alpha*b in GT,  id in G1,  tag in G1,  id in GT,  tag in GT,  b*id in G1,  b*tag in G1,  a1*id in G1,  a1*tag in G1,  a2*id in G1,  a2*tag in G1,  a1*b*id in G1,  a1*b*tag in G1,  a2*b*id in G1,  a2*b*tag in G1,  id*v + a1*id*v1 in G1,  tag*v + a1*tag*v1 in G1,  id*v + a2*id*v2 in G1,  tag*v + a2*tag*v2 in G1,  b*id*v + a1*b*id*v1 in G1,  b*tag*v + a1*b*tag*v1 in G1,  b*id*v + a2*b*id*v2 in G1,  b*tag*v + a2*b*tag*v2 in G1,  id*w in G1,  tag*w in G1,  id*u in G1,  tag*u in G1,  h*id in G1,  h*tag in G1,  a1*alpha*b*id in GT,  a1*alpha*b*tag in GT, 
+
+Untrusted set :  a1*alpha + r1*v + r2*v in G1,  z1 + r1*v1 + r2*v1 - alpha in G1,  -1*b*z1 in G1,  z2 + r1*v2 + r2*v2 in G1,  -1*b*z2 in G1,  b*r2 in G1, 
+
+PPEs : e(F21,F0) = e(F12,F20) * e(F20,F45) * e(F20,F46),   
+
+Output : Unknown :(
+
+*)

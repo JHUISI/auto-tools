@@ -1,0 +1,16 @@
+(*naccache scheme with n = 8*)
+
+maps G1 * G2 -> GT.
+
+fixed_vars [alpha, beta, u, u1, u2, u3, u4, u5, u6, u7, u8].
+unfixed_vars [r].
+
+(*Identity. These variables are actually boolean variables. We upgrade them to variables in Zp*)
+Zp_vars [v1, v2, v3, v4, v5, v6, v7, v8].
+
+trusted_polys [F1 = alpha] in G1.
+trusted_polys [F2 = beta, F3 = u, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = u6, F10 = u7, F11 = u8] in G2.
+
+untrusted_polys [F12 = r] in G1.
+untrusted_polys [F13 = alpha*beta + (u + v1*u1 + v2*u2 + v3*u3 + v4*u4 + v5*u5 + v6*u6 + v7*u7 + v8*u8)*r] in G2.
+
