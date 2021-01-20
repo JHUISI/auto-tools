@@ -1,0 +1,7 @@
+
+maps G1 * G1 -> GT.
+
+Zp_vars [id].
+trusted_polys [F1 = t1*t2*omega] in GT.
+trusted_polys [F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4] in G1.
+untrusted_polys [F8 = r1*t1*t2 + r2*t3*t4, F9 = -omega*t2 - a*r1*t2 - id*b*r1*t2, F10 = -omega*t1 - a*r1*t1 - id*b*r1*t1, F11 = -a*r2*t4 - id*b*r2*t4, F12 = -a*r2*t3 - id*b*r2*t3] in G1.

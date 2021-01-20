@@ -1,0 +1,12 @@
+
+(*BB04b scheme when length of hash of identity (n) = 16 *)
+
+maps G1 * G1 -> GT. 
+
+Zp_vars [a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15, a16].
+
+trusted_polys [F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F11 = u50, F12 = u51, F13 = u60, F14 = u61, F15 = u70, F16 = u71, F17 = u80, F18 = u81, F19 = u90, F20 = u91, F21 = u100, F22 = u101, F23 = u110, F24 = u111, F25 = u120, F26 = u121, F27 = u130, F28 = u131, F29 = u140, F30 = u141, F31 = u150, F32 = u151, F33 = u160, F34 = u161] in G1.
+
+untrusted_polys [F35 = r1, F36 = r2, F37 = r3, F38 = r4, F39 = r5, F40 = r6, F41 = r7, F42 = r8, F43 = r9, F44 = r10, F45 = r11, F46 = r12, F47 = r13, F48 = r14, F49 = r15, F50 = r16] in G1.
+
+untrusted_polys [F51 = alpha*beta + r1*(a1*u11 + (1-a1)*u10) + r2*(a2*u21 + (1-a2)*u20) + r3*(a3*u31 + (1-a3)*u30) + r4*(a4*u41 + (1-a4)*u40) + r5*(a5*u51 + (1-a5)*u50) + r6*(a6*u61 + (1-a6)*u60) + r7*(a7*u71 + (1-a7)*u70) + r8*(a8*u81 + (1-a8)*u80) + r9*(a9*u91 + (1-a9)*u90) + r10*(a10*u101 + (1-a10)*u100) + r11*(a11*u111 + (1-a11)*u110) + r12*(a12*u121 + (1-a12)*u120) + r13*(a13*u131 + (1-a13)*u130) + r14*(a14*u141 + (1-a14)*u140) + r15*(a15*u151 + (1-a15)*u150) + r16*(a16*u161 + (1-a16)*u160)] in G1. 

@@ -1,0 +1,18 @@
+
+(*
+
+https://link.springer.com/content/pdf/10.1007/11761679_26.pdf
+Section 3.1
+Id length k = 5
+message length m = 10
+*)
+
+maps G1 * G1 -> GT.
+
+trusted_polys [F1 = y0, F2 = y1, F3 = y2, F4 = y3, F5 = y4, F6 = y5] in G1. 
+trusted_polys [F7 = z0, F8 = z1, F9 = z2, F10 = z3, F11 = z4, F12 = z5, F13 = z6, F14 = z7, F15 = z8, F16 = z9, F17 = z10] in G1.
+trusted_polys [F18 = alpha] in GT. 
+Zp_vars [k1, k2, k3, k4, k5, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10].
+untrusted_polys [F19 = alpha + r*(y0 + y1*k1 + y2*k2 + y3*k3 + y4*k4 + y5*k5) + s*(z0 + z1*m1 + z2*m2 + z3*m3 + z4*m4 + z5*m5 + z6*m6 + z7*m7 + z8*m8 + z9*m9 + z10*m10), F20 = -r, F21 = -s] in G1.
+
+

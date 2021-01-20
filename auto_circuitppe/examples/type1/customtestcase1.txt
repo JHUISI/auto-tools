@@ -1,0 +1,18 @@
+
+
+(*
+
+Test case 1
+
+Trusted: g, g^x, g^xa, g^xb
+
+Untrusted: g^r, g^xr, g^a, g^a+br
+
+*)
+
+maps G1 * G1 -> GT.
+
+trusted_polys [F1 = x, F2 = x*a, F3 = x*b] in G1.
+
+untrusted_polys [F4 = r, F5 = x*r, F6 = a, F7 = a+b*r] in G1.
+

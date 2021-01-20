@@ -1,0 +1,10 @@
+
+(*BLS signature scheme*)
+
+maps G1 * G1 -> GT.
+
+(*Verification Key*)
+trusted_polys [F1 = s] in G1.
+
+(*Signature*)
+untrusted_polys [F2 = h*s, F3 = h] in G1.

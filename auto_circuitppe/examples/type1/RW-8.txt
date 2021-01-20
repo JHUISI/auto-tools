@@ -1,0 +1,23 @@
+
+(*Rouselakis Waters CP-ABE construction with k = 8*)
+(*https://eprint.iacr.org/2012/583.pdf*)
+
+maps G1 * G1 -> GT.
+
+(*public key*)
+trusted_polys [F1 = u, F2 = h, F3 = w, F4 = v] in G1.
+trusted_polys [F5 = alpha] in GT.
+
+(*attributes*)
+Zp_vars [a1, a2, a3, a4, a5, a6, a7, a8].
+
+(*Secret key for*)
+untrusted_polys [F6 = alpha + w*r, F7 = r] in G1.
+untrusted_polys [F8 = (u*a1 + h)*r1 - v*r, F16 = r1] in G1.
+untrusted_polys [F9 = (u*a2 + h)*r2 - v*r, F17 = r2] in G1.
+untrusted_polys [F10 = (u*a3 + h)*r3 - v*r, F18 = r3] in G1.
+untrusted_polys [F11 = (u*a4 + h)*r4 - v*r, F19 = r4] in G1.
+untrusted_polys [F12 = (u*a5 + h)*r5 - v*r, F20 = r5] in G1.
+untrusted_polys [F13 = (u*a6 + h)*r6 - v*r, F21 = r6] in G1.
+untrusted_polys [F14 = (u*a7 + h)*r7 - v*r, F22 = r7] in G1.
+untrusted_polys [F15 = (u*a8 + h)*r8 - v*r, F23 = r8] in G1.

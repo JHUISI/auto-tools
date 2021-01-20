@@ -1,0 +1,14 @@
+
+(*Camenisch Lysyanskaya Signature Scheme C for 4 block message. i.e. l = 3*)
+
+maps G1 * G1 -> GT.
+
+Zp_vars [m0, m1, m2, m3].
+
+
+(*verification key*)
+trusted_polys [F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3] in G1.
+
+(*signature*)
+untrusted_polys [F10 = a, F11 = a*z1, F12 = a*z2, F13 = a*z3, F18 = a*y, F19 = a*z1*y, F20 = a*z2*y, F21 = a*z3*y, F26 = a*(x+m0*x*y) + a*x*y*(m1*z1 + m2*z2 + m3*z3)] in G1.
+

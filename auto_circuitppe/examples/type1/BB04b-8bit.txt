@@ -1,0 +1,11 @@
+
+(*BB04b scheme when length of hash of identity (n) = 8 *)
+
+maps G1 * G1 -> GT. 
+
+(*hash of identity*)
+Zp_vars [a1, a2, a3, a4, a5, a6, a7, a8].
+
+trusted_polys [F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F11 = u50, F12 = u51, F13 = u60, F14 = u61, F15 = u70, F16 = u71, F17 = u80, F18 = u81] in G1.
+
+untrusted_polys [F19 = alpha*beta + r1*(a1*u11 + (1-a1)*u10) + r2*(a2*u21 + (1-a2)*u20) + r3*(a3*u31 + (1-a3)*u30) + r4*(a4*u41 + (1-a4)*u40) + r5*(a5*u51 + (1-a5)*u50) + r6*(a6*u61 + (1-a6)*u60) + r7*(a7*u71 + (1-a7)*u70) + r8*(a8*u81 + (1-a8)*u80), F20 = r1, F21 = r2, F22 = r3, F23 = r4, F24 = r5, F25 = r6, F26 = r7, F27 = r8] in G1.
