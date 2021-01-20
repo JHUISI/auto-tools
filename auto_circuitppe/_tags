@@ -1,0 +1,6 @@
+true: bin_annot
+<src/Util/Util.*>: package(yojson)
+<src/Tool> or <src/Poly> or <src/Util>: include
+<src/Solver> or <src/PPE>: include
+<src/Tool/autocircuitppe.*> or <src/Solver/*.ml> or <src/Util/Util.ml>: package(yojson), package(str), package(num), package(unix), package(ctypes.foreign), package(cryptokit)
+<src/PPE/PPETest.*>: package(num), package(oUnit), package(yojson),package(str)
