@@ -1,11 +1,10 @@
 opam-version: "1.2"
-name: "generic-group-analyzer"
+name: "AutoCircuitPPE"
 version: "0.1"
-maintainer: "Benedikt Schmidt <beschmi@gmail.com>"
-authors: [ "Benedikt Schmidt <beschmi@gmail.com>" "Edvard Fagerholm" ]
-homepage: "http://www.easycrypt.info/GGA"
+maintainer: "Satyanarayana Vusirikala <satya.vus.ut@gmail.com>"
+authors: [ "Satyanarayana Vusirikala <satya.vus.ut@gmail.com>" "Satyanarayana Vusirikala" ]
 bug-reports: ""
-dev-repo: "https://github.com/generic-group-analyzer/gga"
+dev-repo: "https://github.com/JHUISI/auto-tools"
 license: "GPL"
 ocaml-version: [>= "4.02.0"]
 build: [
