@@ -1,0 +1,14 @@
+
+(*Camenisch Lysyanskaya Signature Scheme A*)
+
+maps G1 * G2 -> GT.
+
+Zp_vars [m].
+
+
+(*verification key*)
+trusted_polys [F1 = x, F2 = y] in G1.
+
+(*signature*)
+untrusted_polys [F3 = a, F4 = a*y, F5 = a*(x+m*x*y)] in G1.
+
