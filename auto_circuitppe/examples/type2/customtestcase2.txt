@@ -1,0 +1,13 @@
+
+(*
+Figure 1 of https://eprint.iacr.org/2014/312.pdf
+*)
+
+maps G1 * G2 -> GT.
+
+isos G2 -> G1.
+
+trusted_polys [F1 = v] in G1. 
+trusted_polys [F2 = w] in G2.
+
+untrusted_polys [F3 = m, F4 = r, F5 = m*v + r^2 + w] in G2. 
