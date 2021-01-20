@@ -1,0 +1,116 @@
+We use this script to find attacks against the
+CDDH1 and CDDH2 assumptions.
+
+Since these are decisional interactive assumptions,
+we cannot use the same algorithm that we use for
+LRSW, IBSAS, ... .
+
+We have developed this Sage/Python script that implements the
+general algorithms and contains hardcoded input data for
+the CDDH1 and CDDH2 problem.
+
+In both problems, the adversary has to distinguish Left or Right
+and the Left and Right games also flip a bit b. Hence, there are
+four possible adversary inputs which we denote l1/l2/r1/r2 for
+both games.
+
+Running 'sage -python interactive.py j li rk' searches for
+distinguishing tests between CDDHj li vs rk.
+
+To find the attacks against CDDH1, we proceed as follows:
+
+1. Search for test that distinguishes Left with sampled bit 0
+   from Right with sampled bit 0:
+
+   sage -python interactive.py 1 l1 r1
+
+2. Search for test that distinguishes Left with sampled bit 0
+   from Right with sampled bit 1:
+
+   sage -python interactive.py 1 l1 r2
+
+3. Search for test that distinguishes Left with sampled bit 1
+   from Right with sampled bit 0:
+  
+  sage -python interactive.py 1 l2 r1
+
+
+4. Search for test that distinguishes Left with sampled bit 1
+   from Right with sampled bit 1:
+
+   sage -python interactive.py 1 l2 r2
+
+Choose common test that returns True for left and False for right
+in 1&2 or 3&4. Then the adversary can get a non-distinguishable
+distinguishing advantage.
+
+In this case, we get for l1/r1: 
+
+> 1. Smallest attack:
+> The following equality holds for left, but not for right (8 varieties explored so far):
+> (y3) * L[0] + (-1) * L[4]
+>  [on the right] 
+>  = ((-y3)*U*R0 + y3*X*R0) + (0) + (0) + (0) + ((-y3)*U*V*R1 + y3*U*X*R1 + y3*V*X*R1 + (-y3)*X^2*R1)
+>  = (-y3)*U*V*R1 + y3*U*X*R1 + y3*V*X*R1 + (-y3)*X^2*R1 + (-y3)*U*R0 + y3*X*R0
+>  [on the left] 
+>  = ((-y3)*U*R0 + y3*X*R0) + (0) + (0) + (0) + (y3*U*R0 + (-y3)*X*R0)
+>  = 0
+> for choices of parameters in V(I) for I = [y2, y1 + y3, y0].
+
+If the adversary chooses Y such that Y = U - X, then the
+given test yields a non-zero value on the right and zero on the
+left.
+
+For l1/r2 we get:
+
+> 1. Smallest attack:
+> The following equality holds for left, but not for right (8 varieties explored so far):
+> (y3) * L[0] + (-1) * L[4]
+> [on the right] 
+> = ((-y3)*U*R1 + y3*X*R1) + (0) + (0) + (0) + (y3*U*R0 + (-y3)*X*R0)
+> = y3*U*R0 + (-y3)*X*R0 + (-y3)*U*R1 + y3*X*R1
+> [on the left] 
+> = ((-y3)*U*R0 + y3*X*R0) + (0) + (0) + (0) + (y3*U*R0 + (-y3)*X*R0)
+> = 0
+> for choices of parameters in V(I) for I = [y2, y1 + y3, y0].
+
+Hence, the same test returns True on the left in at least half the
+cases and always returns False on the right.
+
+
+l1 vs r1
+
+1. Smallest attack:
+The following equality holds for left, but not for right (11 varieties explored so far):
+(-y2) * L[0] + (y2) * L[2] + (1) * L[4]
+
+(-y2) * L[0] + (y2) * L[2] + (1) * L[4]
+
+ [on the right] 
+ = (y2*U*R0 + (-y2)*X*R0) + (0) + ((-y2)*V*R1 + y2*X*R1) + (0) + ((-y2)*U*R0 + y2*V*R0)
+ = y2*V*R0 + (-y2)*X*R0 + (-y2)*V*R1 + y2*X*R1
+ [on the left] 
+ = (y2*U*R0 + (-y2)*X*R0) + (0) + ((-y2)*V*R0 + y2*X*R0) + (0) + ((-y2)*U*R0 + y2*V*R0)
+ = 0
+for choices of parameters in V(I) for I = [y3, y1 + y2, y0].
+
+Y = V/U
+y2 = 1
+y1 = -1
+
+
+
+l1 vs r2
+Other attacks:
+2. The following equality holds for left, but not for right (12 varieties explored so far):
+(-y2) * L[0] + (y2) * L[2] + (1) * L[4]
+ [on the right] 
+ = (y2*U*R1 + (-y2)*X*R1) + (0) + ((-y2)*V*R0 + y2*X*R0) + (0) + ((-y2)*U*R0 + y2*V*R0)
+ = (-y2)*U*R0 + y2*X*R0 + y2*U*R1 + (-y2)*X*R1
+ [on the left] 
+ = (y2*U*R0 + (-y2)*X*R0) + (0) + ((-y2)*V*R0 + y2*X*R0) + (0) + ((-y2)*U*R0 + y2*V*R0)
+ = 0
+for choices of parameters in V(I) for I = [y3, y1 + y2, y0]. 
+
+
+
