@@ -1,0 +1,22 @@
+opam-version: "1.2"
+name: "generic-group-analyzer"
+version: "0.1"
+maintainer: "Benedikt Schmidt <beschmi@gmail.com>"
+authors: [ "Benedikt Schmidt <beschmi@gmail.com>" "Edvard Fagerholm" ]
+homepage: "http://www.easycrypt.info/GGA"
+bug-reports: ""
+dev-repo: "https://github.com/generic-group-analyzer/gga"
+license: "GPL"
+ocaml-version: [>= "4.02.0"]
+build: [
+  [make]
+]
+install: [make "install"]
+depends: [
+  "ocamlfind"
+  "ctypes"
+  "ctypes-foreign"
+  "cryptokit"
+  "yojson"
+  "menhir"
+]
