@@ -1,0 +1,92 @@
+### Starting build.
+# Target: src/Tool/autorationalppe.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/Tool/autorationalppe.ml, ocaml, ocamldep, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamldep -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -modules src/Tool/autorationalppe.ml > src/Tool/autorationalppe.ml.depends # cached
+# Target: src/PPE/PPEAnalyze.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPEAnalyze.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEAnalyze.ml > src/PPE/PPEAnalyze.ml.depends # cached
+# Target: src/PPE/PPECompletion.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/PPE/PPECompletion.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPECompletion.mli > src/PPE/PPECompletion.mli.depends # cached
+# Target: src/PPE/PPEInput.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/PPE/PPEInput.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEInput.mli > src/PPE/PPEInput.mli.depends # cached
+# Target: src/Poly/LPolyInterfaces.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/Poly/LPolyInterfaces.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/Poly/LPolyInterfaces.mli > src/Poly/LPolyInterfaces.mli.depends # cached
+# Target: src/Poly/LPolyInterfaces.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/Poly/LPolyInterfaces.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/Poly -I src/Tool -I src/Solver -I src/PPE -I src/Util -o src/Poly/LPolyInterfaces.cmi src/Poly/LPolyInterfaces.mli # cached
+# Target: src/Util/Util.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/Util/Util.ml, ocaml, ocamldep, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamldep -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -modules src/Util/Util.ml > src/Util/Util.ml.depends # cached
+# Target: src/Util/Util.cmo, tags: { annot, bin_annot, byte, compile, debug, extension:cmo, extension:ml, file:src/Util/Util.cmo, file:src/Util/Util.ml, implem, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Util -I src/Poly -I src/Tool -I src/Solver -I src/PPE -o src/Util/Util.cmo src/Util/Util.ml # cached
+# Target: src/PPE/PPEInput.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/PPE/PPEInput.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEInput.cmi src/PPE/PPEInput.mli # cached
+# Target: src/PPE/PPECompletion.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/PPE/PPECompletion.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPECompletion.cmi src/PPE/PPECompletion.mli # cached
+# Target: src/PPE/PPEHelper.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/PPE/PPEHelper.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEHelper.mli > src/PPE/PPEHelper.mli.depends # cached
+# Target: src/PPE/PPEHelper.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/PPE/PPEHelper.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEHelper.cmi src/PPE/PPEHelper.mli # cached
+# Target: src/PPE/PPELexer.mll, tags: { annot, bin_annot, debug, extension:mll, file:src/PPE/PPELexer.mll, lexer, ocaml, ocamllex, quiet, traverse }
+/Users/satya/.opam/autoppe/bin/ocamllex.opt -q src/PPE/PPELexer.mll # cached
+# Target: src/PPE/PPELexer.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPELexer.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPELexer.ml > src/PPE/PPELexer.ml.depends # cached
+# Target: src/PPE/PPEParser.mly.depends, tags: { annot, bin_annot, debug, extension:mly, file:src/PPE/PPEParser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet, traverse }
+menhir -v --raw-depend --ocamldep 'ocamlfind ocamldep -modules' src/PPE/PPEParser.mly > src/PPE/PPEParser.mly.depends # cached
+# Target: src/PPE/PPEParser.mly, tags: { annot, bin_annot, byte, compile, debug, extension:ml, extension:mly, file:src/PPE/PPEParser.ml, file:src/PPE/PPEParser.mly, infer, menhir, ocaml, parser, quiet, traverse }
+menhir -v --ocamlc 'ocamlfind ocamlc -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util' --infer src/PPE/PPEParser.mly # cached
+# Target: src/PPE/PPEParser.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/PPE/PPEParser.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEParser.mli > src/PPE/PPEParser.mli.depends # cached
+# Target: src/PPE/PPEParser.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/PPE/PPEParser.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEParser.cmi src/PPE/PPEParser.mli # cached
+# Target: src/PPE/PPELexer.cmo, tags: { annot, bin_annot, byte, compile, debug, extension:cmo, extension:ml, file:src/PPE/PPELexer.cmo, file:src/PPE/PPELexer.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPELexer.cmo src/PPE/PPELexer.ml # cached
+# Target: src/PPE/PPERules.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/PPE/PPERules.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPERules.mli > src/PPE/PPERules.mli.depends # cached
+# Target: src/Solver/Sage_Solver.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/Solver/Sage_Solver.ml, ocaml, ocamldep, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamldep -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -modules src/Solver/Sage_Solver.ml > src/Solver/Sage_Solver.ml.depends # cached
+# Target: src/Solver/Sage_Solver.cmo, tags: { annot, bin_annot, byte, compile, debug, extension:cmo, extension:ml, file:src/Solver/Sage_Solver.cmo, file:src/Solver/Sage_Solver.ml, implem, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Solver -I src/Poly -I src/Tool -I src/PPE -I src/Util -o src/Solver/Sage_Solver.cmo src/Solver/Sage_Solver.ml # cached
+# Target: src/PPE/PPERules.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/PPE/PPERules.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPERules.cmi src/PPE/PPERules.mli # cached
+# Target: src/PPE/PPEAnalyze.cmo, tags: { annot, bin_annot, byte, compile, debug, extension:cmo, extension:ml, file:src/PPE/PPEAnalyze.cmo, file:src/PPE/PPEAnalyze.ml, implem, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEAnalyze.cmo src/PPE/PPEAnalyze.ml # cached
+# Target: src/Tool/autorationalppe.cmo, tags: { annot, bin_annot, byte, compile, debug, extension:cmo, extension:ml, file:src/Tool/autorationalppe.cmo, file:src/Tool/autorationalppe.ml, implem, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Tool -I src/Poly -I src/Solver -I src/PPE -I src/Util -o src/Tool/autorationalppe.cmo src/Tool/autorationalppe.ml # cached
+# Target: src/PPE/PPECompletion.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPECompletion.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPECompletion.ml > src/PPE/PPECompletion.ml.depends # cached
+# Target: src/Poly/LPoly.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/Poly/LPoly.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/Poly/LPoly.ml > src/Poly/LPoly.ml.depends # cached
+# Target: src/Poly/LPoly.mli.depends, tags: { annot, bin_annot, debug, extension:mli, file:src/Poly/LPoly.mli, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/Poly/LPoly.mli > src/Poly/LPoly.mli.depends # cached
+# Target: src/Poly/LPoly.cmi, tags: { annot, bin_annot, byte, compile, debug, extension:mli, file:src/Poly/LPoly.mli, interf, ocaml, quiet, traverse }
+ocamlfind ocamlc -c -w +a-e-9 -g -annot -bin-annot -I src/Poly -I src/Tool -I src/Solver -I src/PPE -I src/Util -o src/Poly/LPoly.cmi src/Poly/LPoly.mli # cached
+# Target: src/Util/Util.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/Util/Util.cmx, file:src/Util/Util.ml, implem, native, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Util -I src/Poly -I src/Tool -I src/Solver -I src/PPE -o src/Util/Util.cmx src/Util/Util.ml # cached
+# Target: src/Poly/LPoly.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/Poly/LPoly.cmx, file:src/Poly/LPoly.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/Poly -I src/Tool -I src/Solver -I src/PPE -I src/Util -o src/Poly/LPoly.cmx src/Poly/LPoly.ml # cached
+# Target: src/PPE/PPEInput.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPEInput.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEInput.ml > src/PPE/PPEInput.ml.depends # cached
+# Target: src/PPE/PPEInput.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPEInput.cmx, file:src/PPE/PPEInput.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEInput.cmx src/PPE/PPEInput.ml # cached
+# Target: src/PPE/PPECompletion.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPECompletion.cmx, file:src/PPE/PPECompletion.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPECompletion.cmx src/PPE/PPECompletion.ml # cached
+# Target: src/PPE/PPEHelper.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPEHelper.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEHelper.ml > src/PPE/PPEHelper.ml.depends # cached
+# Target: src/PPE/PPEHelper.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPEHelper.cmx, file:src/PPE/PPEHelper.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEHelper.cmx src/PPE/PPEHelper.ml # cached
+# Target: src/PPE/PPEParser.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPEParser.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPEParser.ml > src/PPE/PPEParser.ml.depends # cached
+# Target: src/PPE/PPEParser.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPEParser.cmx, file:src/PPE/PPEParser.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEParser.cmx src/PPE/PPEParser.ml # cached
+# Target: src/PPE/PPELexer.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPELexer.cmx, file:src/PPE/PPELexer.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPELexer.cmx src/PPE/PPELexer.ml # cached
+# Target: src/PPE/PPERules.ml.depends, tags: { annot, bin_annot, debug, extension:ml, file:src/PPE/PPERules.ml, ocaml, ocamldep, quiet, traverse }
+ocamlfind ocamldep -modules src/PPE/PPERules.ml > src/PPE/PPERules.ml.depends # cached
+# Target: src/Solver/Sage_Solver.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/Solver/Sage_Solver.cmx, file:src/Solver/Sage_Solver.ml, implem, native, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Solver -I src/Poly -I src/Tool -I src/PPE -I src/Util -o src/Solver/Sage_Solver.cmx src/Solver/Sage_Solver.ml # cached
+# Target: src/PPE/PPERules.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPERules.cmx, file:src/PPE/PPERules.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPERules.cmx src/PPE/PPERules.ml # cached
+# Target: src/PPE/PPEAnalyze.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/PPE/PPEAnalyze.cmx, file:src/PPE/PPEAnalyze.ml, implem, native, ocaml, quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -I src/PPE -I src/Poly -I src/Tool -I src/Solver -I src/Util -o src/PPE/PPEAnalyze.cmx src/PPE/PPEAnalyze.ml # cached
+# Target: src/Tool/autorationalppe.cmx, tags: { annot, bin_annot, compile, debug, extension:cmx, extension:ml, file:src/Tool/autorationalppe.cmx, file:src/Tool/autorationalppe.ml, implem, native, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), quiet, traverse }
+ocamlfind ocamlopt -c -w +a-e-9 -g -annot -bin-annot -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit -I src/Tool -I src/Poly -I src/Solver -I src/PPE -I src/Util -o src/Tool/autorationalppe.cmx src/Tool/autorationalppe.ml # cached
+# Target: src/Tool/autorationalppe.native, tags: { annot, bin_annot, debug, dont_link_with, extension:native, file:src/Tool/autorationalppe.native, link, native, ocaml, package(cryptokit), package(ctypes.foreign), package(num), package(str), package(unix), package(yojson), program, quiet, traverse }
+ocamlfind ocamlopt -cclib -Lc_src -cclib -lpari -cclib -lparistubs -linkpkg -g -package num -package yojson -package str -package unix -package ctypes.foreign -package cryptokit src/Util/Util.cmx src/Poly/LPoly.cmx src/PPE/PPEInput.cmx src/PPE/PPECompletion.cmx src/PPE/PPEHelper.cmx src/PPE/PPEParser.cmx src/PPE/PPELexer.cmx src/Solver/Sage_Solver.cmx src/PPE/PPERules.cmx src/PPE/PPEAnalyze.cmx src/Tool/autorationalppe.cmx -o src/Tool/autorationalppe.native # cached
+# Compilation successful.

@@ -1,0 +1,9 @@
+
+(*A toy eyample*)
+
+maps G1 * G1 -> GT.
+
+trusted_polys [F1 = x1, F2 = x2, F3 = x3, F4 = x4, F5 = x5, F6 = x6, F7 = x7, F8 = x8, F9 = x9, F10 = x10, F11 = x11, F12 = x12, F13 = x13, F14 = x14, F15 = x15, F16 = x16, F17 = x17, F18 = x18, F19 = x19, F20 = x20, F21 = y1, F22 = y2, F23 = y3, F24 = y4, F25 = y5, F26 = y6, F27 = y7, F28 = y8, F29 = y9, F30 = y10, F31 = y11, F32 = y12, F33 = y13, F34 = y14, F35 = y15, F36 = y16, F37 = y17, F38 = y18, F39 = y19, F40 = y20, F41 = x1*y1, F42 = x2*y2, F43 = x3*y3, F44 = x4*y4, F45 = x5*y5, F46 = x6*y6, F47 = x7*y7, F48 = x8*y8, F49 = x9*y9, F50 = x10*y10, F51 = x11*y11, F52 = x12*y12, F53 = x13*y13, F54 = x14*y14, F55 = x15*y15, F56 = x16*y16, F57 = x17*y17, F58 = x18*y18, F59 = x19*y19, F60 = x20*y20, F61 = a, F62 = b] in G1.
+
+untrusted_polys [F63 = a*b + (x1*y1 + x2*y2 + x3*y3 + x4*y4 + x5*y5 + x6*y6 + x7*y7 + x8*y8 + x9*y9 + x10*y10 + x11*y11 + x12*y12 + x13*y13 + x14*y14 + x15*y15 + x16*y16 + x17*y17 + x18*y18 + x19*y19 + x20*y20)*b] in G1.
+

@@ -1,0 +1,8 @@
+
+(* Boneh Boyen Signatures. https://crypto.stanford.edu/~dabo/papers/bbsigs.pdf *)
+
+maps G1 * G2 -> GT.
+
+Zp_vars [m, r].
+trusted_polys [F1 = x, F2 = y] in G2.
+untrusted_polys [F3 = 1/(x + m + y*r)] in G1. 

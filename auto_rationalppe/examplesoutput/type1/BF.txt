@@ -1,0 +1,26 @@
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/BF.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = h in G1
+F2 = s in G1
+F3 = h*s in G1
+Checking for Rule 1. Took 1.861227s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = h, F2 = s, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F3 = h*s, 
+Untrusted set in GT: rule 1 applied to F3 = h*s.     C := e(F3,F0) =  e(F1,F2)
+....
+Execution time : 1.879403s
+
+(e(F3,F0) =  e(F1,F2) AND ACC)
+
+
+
+G1 : e(F3,F0) = e(F1,F2)
+

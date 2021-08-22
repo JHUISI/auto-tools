@@ -1,0 +1,106 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/customtestcase1.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x in G1
+F2 = a*x in G1
+F3 = b*x in G1
+F4 = r in G1
+F5 = r*x in G1
+F6 = a in G1
+F7 = a + b*r in G1
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = a*x, F3 = b*x, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F4 = r, F5 = r*x, F6 = a, F7 = a + b*r, 
+Untrusted set in GT: 
+rule 2 applied to F4 = r.
+....
+Checking for Rule 1. Took 2.562639s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = a*x, F3 = b*x, F4 = r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F5 = r*x, F6 = a, F7 = a + b*r, 
+Untrusted set in GT: rule 1 applied to F5 = r*x.     C := e(F5,F0) =  e(F1,F4)
+....
+Checking for Rule 3. Took 0.000005s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 4. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 4*2
+Checking for Rule 3. Took 0.003829s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = a*x, F3 = b*x, F4 = r, F5 = r*x, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F6 = a, F7 = a + b*r, 
+Untrusted set in GT: 
+rule 3 applied on F6 = a. isidentity := F1 =  I      C := e(F6,F1) =  e(F0,F2)
+....
+Checking for Rule 3. Took 0.000006s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 4. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 4*2
+Checking for Rule 3. Took 0.000593s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = a*x, F3 = b*x, F4 = r, F5 = r*x, F6 = a, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F7 = a + b*r, 
+Untrusted set in GT: 
+rule 3 applied on F7 = a + b*r. isidentity := F1 =  I      C := e(F7,F1) =  e(F3,F4)*e(F1,F6)
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = r, F5 = 0, F6 = a, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F7 = a + b*r, 
+Untrusted set in GT: 
+rule 4 applied on F7 = a + b*r and variable b. isidentity := F4 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = 0, F5 = 0, F6 = a, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F7 = a, 
+Untrusted set in GT: 
+rule 1 applied to F7 = a.     C := F7 =  F6
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = r, F5 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F6 = a, F7 = a + b*r, 
+Untrusted set in GT: 
+rule 2 applied to F6 = a.
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = r, F5 = 0, F6 = a, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F7 = a + b*r, 
+Untrusted set in GT: 
+rule 4 applied on F7 = a + b*r and variable b. isidentity := F4 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = 0, F5 = 0, F6 = a, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F7 = a, 
+Untrusted set in GT: 
+rule 1 applied to F7 = a.     C := F7 =  F6
+....
+Execution time : 2.695123s
+
+(e(F5,F0) =  e(F1,F4) AND ((((NOT F1 =  I) AND e(F6,F1) =  e(F0,F2)) AND ((((NOT F1 =  I) AND e(F7,F1) =  e(F3,F4)*e(F1,F6)) AND ACC) OR (F1 =  I AND (((NOT F4 =  I) AND ACC) OR (F4 =  I AND (F7 =  F6 AND ACC)))))) OR (F1 =  I AND (((NOT F4 =  I) AND ACC) OR (F4 =  I AND (F7 =  F6 AND ACC))))))
+
+
+
+G1 : e(F5,F0) = e(F1,F4)
+G2 : F1 = I
+G3 : e(F6,F1) = e(F0,F2)
+G4 : e(F7,F1) = e(F3,F4)*e(F1,F6)
+G5 : F4 = I
+G6 : F7 = F6
+G7 : NOT G2
+G8 : G7 AND G3
+G9 : G8 AND G4
+G10 : NOT G5
+G11 : G5 AND G6
+G12 : G10 OR G11
+G13 : G2 AND G12
+G14 : G9 OR G13
+G15 : G1 AND G14

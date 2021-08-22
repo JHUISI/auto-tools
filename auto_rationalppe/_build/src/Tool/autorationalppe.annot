@@ -1,0 +1,351 @@
+"src/Tool/autorationalppe.ml" 11 150 154 "src/Tool/autorationalppe.ml" 11 150 158
+type(
+  unit
+)
+ident(
+  def main "src/Tool/autorationalppe.ml" 33 1120 1131 "src/Tool/autorationalppe.ml" 1 0 -1
+)
+"src/Tool/autorationalppe.ml" 12 161 166 "src/Tool/autorationalppe.ml" 12 161 178
+type(
+  string array -> int
+)
+ident(
+  ext_ref Array.length
+)
+"src/Tool/autorationalppe.ml" 12 161 179 "src/Tool/autorationalppe.ml" 12 161 187
+type(
+  string array
+)
+ident(
+  ext_ref Sys.argv
+)
+"src/Tool/autorationalppe.ml" 12 161 166 "src/Tool/autorationalppe.ml" 12 161 187
+type(
+  int
+)
+"src/Tool/autorationalppe.ml" 12 161 188 "src/Tool/autorationalppe.ml" 12 161 190
+type(
+  int -> int -> bool
+)
+ident(
+  ext_ref Pervasives.( <> )
+)
+"src/Tool/autorationalppe.ml" 12 161 191 "src/Tool/autorationalppe.ml" 12 161 192
+type(
+  int
+)
+"src/Tool/autorationalppe.ml" 12 161 166 "src/Tool/autorationalppe.ml" 12 161 192
+type(
+  bool
+)
+"src/Tool/autorationalppe.ml" 13 198 202 "src/Tool/autorationalppe.ml" 13 198 215
+type(
+  out_channel -> string -> unit
+)
+ident(
+  ext_ref Pervasives.output_string
+)
+"src/Tool/autorationalppe.ml" 13 198 216 "src/Tool/autorationalppe.ml" 13 198 222
+type(
+  out_channel
+)
+ident(
+  ext_ref Pervasives.stderr
+)
+"src/Tool/autorationalppe.ml" 13 198 224 "src/Tool/autorationalppe.ml" 13 198 233
+type(
+  (string -> string, unit, string) format -> string -> string
+)
+ident(
+  ext_ref Util.F.sprintf
+)
+"src/Tool/autorationalppe.ml" 13 198 234 "src/Tool/autorationalppe.ml" 13 198 259
+type(
+  (string -> string, unit, string) format
+)
+"src/Tool/autorationalppe.ml" 13 198 260 "src/Tool/autorationalppe.ml" 13 198 268
+type(
+  string array
+)
+ident(
+  ext_ref Sys.argv
+)
+"src/Tool/autorationalppe.ml" 13 198 270 "src/Tool/autorationalppe.ml" 13 198 271
+type(
+  int
+)
+"src/Tool/autorationalppe.ml" 13 198 260 "src/Tool/autorationalppe.ml" 13 198 272
+type(
+  string
+)
+"src/Tool/autorationalppe.ml" 13 198 223 "src/Tool/autorationalppe.ml" 13 198 273
+call(
+  stack
+)
+type(
+  string
+)
+"src/Tool/autorationalppe.ml" 13 198 202 "src/Tool/autorationalppe.ml" 13 198 273
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 15 281 289 "src/Tool/autorationalppe.ml" 15 281 294
+type(
+  string
+)
+ident(
+  def scmds "src/Tool/autorationalppe.ml" 16 329 337 "src/Tool/autorationalppe.ml" 33 1120 1131
+)
+"src/Tool/autorationalppe.ml" 15 281 297 "src/Tool/autorationalppe.ml" 15 281 312
+type(
+  string -> string
+)
+ident(
+  ext_ref Util.input_file
+)
+"src/Tool/autorationalppe.ml" 15 281 313 "src/Tool/autorationalppe.ml" 15 281 321
+type(
+  string array
+)
+ident(
+  ext_ref Sys.argv
+)
+"src/Tool/autorationalppe.ml" 15 281 323 "src/Tool/autorationalppe.ml" 15 281 324
+type(
+  int
+)
+"src/Tool/autorationalppe.ml" 15 281 313 "src/Tool/autorationalppe.ml" 15 281 325
+type(
+  string
+)
+"src/Tool/autorationalppe.ml" 15 281 297 "src/Tool/autorationalppe.ml" 15 281 325
+call(
+  stack
+)
+type(
+  string
+)
+"src/Tool/autorationalppe.ml" 19 408 425 "src/Tool/autorationalppe.ml" 19 408 432
+type(
+  bool
+)
+ident(
+  def success "src/Tool/autorationalppe.ml" 20 482 494 "src/Tool/autorationalppe.ml" 28 898 974
+)
+"src/Tool/autorationalppe.ml" 19 408 434 "src/Tool/autorationalppe.ml" 19 408 437
+type(
+  PPEInput.circuit
+)
+ident(
+  def res "src/Tool/autorationalppe.ml" 20 482 494 "src/Tool/autorationalppe.ml" 28 898 974
+)
+"src/Tool/autorationalppe.ml" 19 408 424 "src/Tool/autorationalppe.ml" 19 408 438
+type(
+  bool * PPEInput.circuit
+)
+"src/Tool/autorationalppe.ml" 19 408 441 "src/Tool/autorationalppe.ml" 19 408 471
+type(
+  string -> bool * PPEInput.circuit
+)
+ident(
+  ext_ref PPEAnalyze.analyze_from_string
+)
+"src/Tool/autorationalppe.ml" 19 408 472 "src/Tool/autorationalppe.ml" 19 408 477
+type(
+  string
+)
+ident(
+  int_ref scmds "src/Tool/autorationalppe.ml" 15 281 289 "src/Tool/autorationalppe.ml" 15 281 294
+)
+"src/Tool/autorationalppe.ml" 19 408 441 "src/Tool/autorationalppe.ml" 19 408 477
+call(
+  stack
+)
+type(
+  bool * PPEInput.circuit
+)
+"src/Tool/autorationalppe.ml" 20 482 497 "src/Tool/autorationalppe.ml" 20 482 504
+type(
+  bool
+)
+ident(
+  int_ref success "src/Tool/autorationalppe.ml" 19 408 425 "src/Tool/autorationalppe.ml" 19 408 432
+)
+"src/Tool/autorationalppe.ml" 24 710 726 "src/Tool/autorationalppe.ml" 24 710 735
+type(
+  Util.F.formatter ->
+  ((Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit,
+   Util.F.formatter, unit)
+  format ->
+  (Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit
+)
+ident(
+  ext_ref Util.F.fprintf
+)
+"src/Tool/autorationalppe.ml" 24 710 736 "src/Tool/autorationalppe.ml" 24 710 756
+type(
+  Util.F.formatter
+)
+ident(
+  ext_ref Format.std_formatter
+)
+"src/Tool/autorationalppe.ml" 24 710 757 "src/Tool/autorationalppe.ml" 24 710 767
+type(
+  ((Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit,
+   Util.F.formatter, unit)
+  format
+)
+"src/Tool/autorationalppe.ml" 24 710 768 "src/Tool/autorationalppe.ml" 24 710 778
+type(
+  Util.F.formatter -> PPEInput.circuit -> unit
+)
+ident(
+  ext_ref PPEInput.pp_circuit
+)
+"src/Tool/autorationalppe.ml" 24 710 779 "src/Tool/autorationalppe.ml" 24 710 782
+type(
+  PPEInput.circuit
+)
+ident(
+  int_ref res "src/Tool/autorationalppe.ml" 19 408 434 "src/Tool/autorationalppe.ml" 19 408 437
+)
+"src/Tool/autorationalppe.ml" 24 710 726 "src/Tool/autorationalppe.ml" 24 710 782
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 25 784 800 "src/Tool/autorationalppe.ml" 25 784 809
+type(
+  Util.F.formatter ->
+  ((Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit,
+   Util.F.formatter, unit)
+  format ->
+  (Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit
+)
+ident(
+  ext_ref Util.F.fprintf
+)
+"src/Tool/autorationalppe.ml" 25 784 810 "src/Tool/autorationalppe.ml" 25 784 830
+type(
+  Util.F.formatter
+)
+ident(
+  ext_ref Format.std_formatter
+)
+"src/Tool/autorationalppe.ml" 25 784 831 "src/Tool/autorationalppe.ml" 25 784 841
+type(
+  ((Util.F.formatter -> PPEInput.circuit -> unit) -> PPEInput.circuit -> unit,
+   Util.F.formatter, unit)
+  format
+)
+"src/Tool/autorationalppe.ml" 25 784 842 "src/Tool/autorationalppe.ml" 25 784 861
+type(
+  Util.F.formatter -> PPEInput.circuit -> unit
+)
+ident(
+  ext_ref PPEInput.optimize_pp_circuit
+)
+"src/Tool/autorationalppe.ml" 25 784 862 "src/Tool/autorationalppe.ml" 25 784 865
+type(
+  PPEInput.circuit
+)
+ident(
+  int_ref res "src/Tool/autorationalppe.ml" 19 408 434 "src/Tool/autorationalppe.ml" 19 408 437
+)
+"src/Tool/autorationalppe.ml" 25 784 800 "src/Tool/autorationalppe.ml" 25 784 866
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 23 696 708 "src/Tool/autorationalppe.ml" 26 867 880
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 28 898 914 "src/Tool/autorationalppe.ml" 28 898 923
+type(
+  Util.F.formatter -> (unit, Util.F.formatter, unit) format -> unit
+)
+ident(
+  ext_ref Util.F.fprintf
+)
+"src/Tool/autorationalppe.ml" 28 898 924 "src/Tool/autorationalppe.ml" 28 898 944
+type(
+  Util.F.formatter
+)
+ident(
+  ext_ref Format.std_formatter
+)
+"src/Tool/autorationalppe.ml" 28 898 945 "src/Tool/autorationalppe.ml" 28 898 973
+type(
+  (unit, Util.F.formatter, unit) format
+)
+"src/Tool/autorationalppe.ml" 28 898 914 "src/Tool/autorationalppe.ml" 28 898 973
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 20 482 494 "src/Tool/autorationalppe.ml" 28 898 974
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 19 408 420 "src/Tool/autorationalppe.ml" 28 898 974
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 31 1032 1066 "src/Tool/autorationalppe.ml" 31 1032 1069
+type(
+  string
+)
+ident(
+  def err "src/Tool/autorationalppe.ml" 32 1073 1085 "src/Tool/autorationalppe.ml" 32 1073 1119
+)
+"src/Tool/autorationalppe.ml" 31 1032 1044 "src/Tool/autorationalppe.ml" 31 1032 1069
+type(
+  exn
+)
+"src/Tool/autorationalppe.ml" 32 1073 1085 "src/Tool/autorationalppe.ml" 32 1073 1093
+type(
+  (string -> unit, Util.F.formatter, unit) format -> string -> unit
+)
+ident(
+  ext_ref Util.F.printf
+)
+"src/Tool/autorationalppe.ml" 32 1073 1094 "src/Tool/autorationalppe.ml" 32 1073 1115
+type(
+  (string -> unit, Util.F.formatter, unit) format
+)
+"src/Tool/autorationalppe.ml" 32 1073 1116 "src/Tool/autorationalppe.ml" 32 1073 1119
+type(
+  string
+)
+ident(
+  int_ref err "src/Tool/autorationalppe.ml" 31 1032 1066 "src/Tool/autorationalppe.ml" 31 1032 1069
+)
+"src/Tool/autorationalppe.ml" 32 1073 1085 "src/Tool/autorationalppe.ml" 32 1073 1119
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 18 390 398 "src/Tool/autorationalppe.ml" 33 1120 1131
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 15 281 285 "src/Tool/autorationalppe.ml" 33 1120 1131
+type(
+  unit
+)
+"src/Tool/autorationalppe.ml" 12 161 163 "src/Tool/autorationalppe.ml" 33 1120 1131
+type(
+  unit
+)

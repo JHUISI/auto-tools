@@ -1,0 +1,12 @@
+
+(*
+https://link.springer.com/content/pdf/10.1007/978-3-642-29011-4_15.pdf
+4-bit identities
+*)
+
+maps G1 * G1 -> GT. 
+
+trusted_polys [F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh] in G1. 
+
+untrusted_polys [F16 = hash*t*r + h*t*rh, F17 = hashh*r + hh*rh, F18 = -t*r, F19 = -t*rh] in G1. 
+

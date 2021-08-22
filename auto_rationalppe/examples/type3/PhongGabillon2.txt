@@ -1,0 +1,11 @@
+
+
+(* Phong Gabillon Signature
+https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.112.3810&rep=rep1&type=pdf *)
+
+maps G1 * G2 -> GT. 
+
+Zp_vars [m,r].
+trusted_polys [F1 = y] in GT.
+
+untrusted_polys [F2 = (r + m*y)/(x + s), F3 = x*(r + m*y)/(x + s), F4 = s*(r + m*y)/(x + s)] in G1.

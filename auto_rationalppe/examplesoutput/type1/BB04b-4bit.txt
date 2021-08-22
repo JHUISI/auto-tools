@@ -1,0 +1,114 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/BB04b-4bit.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  a1 in G1,  a2 in G1,  a3 in G1,  a4 in G1,  a1 in GT,  a2 in GT,  a3 in GT,  a4 in GT,  a1*alpha in G1,  a2*alpha in G1,  a3*alpha in G1,  a4*alpha in G1,  a1*beta in G1,  a2*beta in G1,  a3*beta in G1,  a4*beta in G1,  a1*u10 in G1,  a2*u10 in G1,  a3*u10 in G1,  a4*u10 in G1,  a1*u11 in G1,  a2*u11 in G1,  a3*u11 in G1,  a4*u11 in G1,  a1*u20 in G1,  a2*u20 in G1,  a3*u20 in G1,  a4*u20 in G1,  a1*u21 in G1,  a2*u21 in G1,  a3*u21 in G1,  a4*u21 in G1,  a1*u30 in G1,  a2*u30 in G1,  a3*u30 in G1,  a4*u30 in G1,  a1*u31 in G1,  a2*u31 in G1,  a3*u31 in G1,  a4*u31 in G1,  a1*u40 in G1,  a2*u40 in G1,  a3*u40 in G1,  a4*u40 in G1,  a1*u41 in G1,  a2*u41 in G1,  a3*u41 in G1,  a4*u41 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = alpha in G1
+F2 = beta in G1
+F3 = u10 in G1
+F4 = u11 in G1
+F5 = u20 in G1
+F6 = u21 in G1
+F7 = u30 in G1
+F8 = u31 in G1
+F9 = u40 in G1
+F10 = u41 in G1
+F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41 in G1
+F20 = r1 in G1
+F21 = r2 in G1
+F22 = r3 in G1
+F23 = r4 in G1
+F0^a1 = a1 in G1
+F0^a2 = a2 in G1
+F0^a3 = a3 in G1
+F0^a4 = a4 in G1
+F0^a1 = a1 in GT
+F0^a2 = a2 in GT
+F0^a3 = a3 in GT
+F0^a4 = a4 in GT
+F1^a1 = a1*alpha in G1
+F1^a2 = a2*alpha in G1
+F1^a3 = a3*alpha in G1
+F1^a4 = a4*alpha in G1
+F2^a1 = a1*beta in G1
+F2^a2 = a2*beta in G1
+F2^a3 = a3*beta in G1
+F2^a4 = a4*beta in G1
+F3^a1 = a1*u10 in G1
+F3^a2 = a2*u10 in G1
+F3^a3 = a3*u10 in G1
+F3^a4 = a4*u10 in G1
+F4^a1 = a1*u11 in G1
+F4^a2 = a2*u11 in G1
+F4^a3 = a3*u11 in G1
+F4^a4 = a4*u11 in G1
+F5^a1 = a1*u20 in G1
+F5^a2 = a2*u20 in G1
+F5^a3 = a3*u20 in G1
+F5^a4 = a4*u20 in G1
+F6^a1 = a1*u21 in G1
+F6^a2 = a2*u21 in G1
+F6^a3 = a3*u21 in G1
+F6^a4 = a4*u21 in G1
+F7^a1 = a1*u30 in G1
+F7^a2 = a2*u30 in G1
+F7^a3 = a3*u30 in G1
+F7^a4 = a4*u30 in G1
+F8^a1 = a1*u31 in G1
+F8^a2 = a2*u31 in G1
+F8^a3 = a3*u31 in G1
+F8^a4 = a4*u31 in G1
+F9^a1 = a1*u40 in G1
+F9^a2 = a2*u40 in G1
+F9^a3 = a3*u40 in G1
+F9^a4 = a4*u40 in G1
+F10^a1 = a1*u41 in G1
+F10^a2 = a2*u41 in G1
+F10^a3 = a3*u41 in G1
+F10^a4 = a4*u41 in G1
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, F1^a1 = a1*alpha, F1^a2 = a2*alpha, F1^a3 = a3*alpha, F1^a4 = a4*alpha, F2^a1 = a1*beta, F2^a2 = a2*beta, F2^a3 = a3*beta, F2^a4 = a4*beta, F3^a1 = a1*u10, F3^a2 = a2*u10, F3^a3 = a3*u10, F3^a4 = a4*u10, F4^a1 = a1*u11, F4^a2 = a2*u11, F4^a3 = a3*u11, F4^a4 = a4*u11, F5^a1 = a1*u20, F5^a2 = a2*u20, F5^a3 = a3*u20, F5^a4 = a4*u20, F6^a1 = a1*u21, F6^a2 = a2*u21, F6^a3 = a3*u21, F6^a4 = a4*u21, F7^a1 = a1*u30, F7^a2 = a2*u30, F7^a3 = a3*u30, F7^a4 = a4*u30, F8^a1 = a1*u31, F8^a2 = a2*u31, F8^a3 = a3*u31, F8^a4 = a4*u31, F9^a1 = a1*u40, F9^a2 = a2*u40, F9^a3 = a3*u40, F9^a4 = a4*u40, F10^a1 = a1*u41, F10^a2 = a2*u41, F10^a3 = a3*u41, F10^a4 = a4*u41, 
+Trusted set in GT: F0 = 1, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, 
+Untrusted set in G1: F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41, F20 = r1, F21 = r2, F22 = r3, F23 = r4, 
+Untrusted set in GT: 
+rule 2 applied to F20 = r1.
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, F1^a1 = a1*alpha, F1^a2 = a2*alpha, F1^a3 = a3*alpha, F1^a4 = a4*alpha, F2^a1 = a1*beta, F2^a2 = a2*beta, F2^a3 = a3*beta, F2^a4 = a4*beta, F3^a1 = a1*u10, F3^a2 = a2*u10, F3^a3 = a3*u10, F3^a4 = a4*u10, F4^a1 = a1*u11, F4^a2 = a2*u11, F4^a3 = a3*u11, F4^a4 = a4*u11, F5^a1 = a1*u20, F5^a2 = a2*u20, F5^a3 = a3*u20, F5^a4 = a4*u20, F6^a1 = a1*u21, F6^a2 = a2*u21, F6^a3 = a3*u21, F6^a4 = a4*u21, F7^a1 = a1*u30, F7^a2 = a2*u30, F7^a3 = a3*u30, F7^a4 = a4*u30, F8^a1 = a1*u31, F8^a2 = a2*u31, F8^a3 = a3*u31, F8^a4 = a4*u31, F9^a1 = a1*u40, F9^a2 = a2*u40, F9^a3 = a3*u40, F9^a4 = a4*u40, F10^a1 = a1*u41, F10^a2 = a2*u41, F10^a3 = a3*u41, F10^a4 = a4*u41, F20 = r1, F20^a1 = a1*r1, F20^a2 = a2*r1, F20^a3 = a3*r1, F20^a4 = a4*r1, 
+Trusted set in GT: F0 = 1, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, 
+Untrusted set in G1: F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41, F21 = r2, F22 = r3, F23 = r4, 
+Untrusted set in GT: 
+rule 2 applied to F21 = r2.
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, F1^a1 = a1*alpha, F1^a2 = a2*alpha, F1^a3 = a3*alpha, F1^a4 = a4*alpha, F2^a1 = a1*beta, F2^a2 = a2*beta, F2^a3 = a3*beta, F2^a4 = a4*beta, F3^a1 = a1*u10, F3^a2 = a2*u10, F3^a3 = a3*u10, F3^a4 = a4*u10, F4^a1 = a1*u11, F4^a2 = a2*u11, F4^a3 = a3*u11, F4^a4 = a4*u11, F5^a1 = a1*u20, F5^a2 = a2*u20, F5^a3 = a3*u20, F5^a4 = a4*u20, F6^a1 = a1*u21, F6^a2 = a2*u21, F6^a3 = a3*u21, F6^a4 = a4*u21, F7^a1 = a1*u30, F7^a2 = a2*u30, F7^a3 = a3*u30, F7^a4 = a4*u30, F8^a1 = a1*u31, F8^a2 = a2*u31, F8^a3 = a3*u31, F8^a4 = a4*u31, F9^a1 = a1*u40, F9^a2 = a2*u40, F9^a3 = a3*u40, F9^a4 = a4*u40, F10^a1 = a1*u41, F10^a2 = a2*u41, F10^a3 = a3*u41, F10^a4 = a4*u41, F20 = r1, F20^a1 = a1*r1, F20^a2 = a2*r1, F20^a3 = a3*r1, F20^a4 = a4*r1, F21 = r2, F21^a1 = a1*r2, F21^a2 = a2*r2, F21^a3 = a3*r2, F21^a4 = a4*r2, 
+Trusted set in GT: F0 = 1, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, 
+Untrusted set in G1: F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41, F22 = r3, F23 = r4, 
+Untrusted set in GT: 
+rule 2 applied to F22 = r3.
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, F1^a1 = a1*alpha, F1^a2 = a2*alpha, F1^a3 = a3*alpha, F1^a4 = a4*alpha, F2^a1 = a1*beta, F2^a2 = a2*beta, F2^a3 = a3*beta, F2^a4 = a4*beta, F3^a1 = a1*u10, F3^a2 = a2*u10, F3^a3 = a3*u10, F3^a4 = a4*u10, F4^a1 = a1*u11, F4^a2 = a2*u11, F4^a3 = a3*u11, F4^a4 = a4*u11, F5^a1 = a1*u20, F5^a2 = a2*u20, F5^a3 = a3*u20, F5^a4 = a4*u20, F6^a1 = a1*u21, F6^a2 = a2*u21, F6^a3 = a3*u21, F6^a4 = a4*u21, F7^a1 = a1*u30, F7^a2 = a2*u30, F7^a3 = a3*u30, F7^a4 = a4*u30, F8^a1 = a1*u31, F8^a2 = a2*u31, F8^a3 = a3*u31, F8^a4 = a4*u31, F9^a1 = a1*u40, F9^a2 = a2*u40, F9^a3 = a3*u40, F9^a4 = a4*u40, F10^a1 = a1*u41, F10^a2 = a2*u41, F10^a3 = a3*u41, F10^a4 = a4*u41, F20 = r1, F20^a1 = a1*r1, F20^a2 = a2*r1, F20^a3 = a3*r1, F20^a4 = a4*r1, F21 = r2, F21^a1 = a1*r2, F21^a2 = a2*r2, F21^a3 = a3*r2, F21^a4 = a4*r2, F22 = r3, F22^a1 = a1*r3, F22^a2 = a2*r3, F22^a3 = a3*r3, F22^a4 = a4*r3, 
+Trusted set in GT: F0 = 1, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, 
+Untrusted set in G1: F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41, F23 = r4, 
+Untrusted set in GT: 
+rule 2 applied to F23 = r4.
+....
+Checking for Rule 1. Took 1.414242s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = u10, F4 = u11, F5 = u20, F6 = u21, F7 = u30, F8 = u31, F9 = u40, F10 = u41, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, F1^a1 = a1*alpha, F1^a2 = a2*alpha, F1^a3 = a3*alpha, F1^a4 = a4*alpha, F2^a1 = a1*beta, F2^a2 = a2*beta, F2^a3 = a3*beta, F2^a4 = a4*beta, F3^a1 = a1*u10, F3^a2 = a2*u10, F3^a3 = a3*u10, F3^a4 = a4*u10, F4^a1 = a1*u11, F4^a2 = a2*u11, F4^a3 = a3*u11, F4^a4 = a4*u11, F5^a1 = a1*u20, F5^a2 = a2*u20, F5^a3 = a3*u20, F5^a4 = a4*u20, F6^a1 = a1*u21, F6^a2 = a2*u21, F6^a3 = a3*u21, F6^a4 = a4*u21, F7^a1 = a1*u30, F7^a2 = a2*u30, F7^a3 = a3*u30, F7^a4 = a4*u30, F8^a1 = a1*u31, F8^a2 = a2*u31, F8^a3 = a3*u31, F8^a4 = a4*u31, F9^a1 = a1*u40, F9^a2 = a2*u40, F9^a3 = a3*u40, F9^a4 = a4*u40, F10^a1 = a1*u41, F10^a2 = a2*u41, F10^a3 = a3*u41, F10^a4 = a4*u41, F20 = r1, F20^a1 = a1*r1, F20^a2 = a2*r1, F20^a3 = a3*r1, F20^a4 = a4*r1, F21 = r2, F21^a1 = a1*r2, F21^a2 = a2*r2, F21^a3 = a3*r2, F21^a4 = a4*r2, F22 = r3, F22^a1 = a1*r3, F22^a2 = a2*r3, F22^a3 = a3*r3, F22^a4 = a4*r3, F23 = r4, F23^a1 = a1*r4, F23^a2 = a2*r4, F23^a3 = a3*r4, F23^a4 = a4*r4, 
+Trusted set in GT: F0 = 1, F0^a1 = a1, F0^a2 = a2, F0^a3 = a3, F0^a4 = a4, 
+Untrusted set in G1: F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41, 
+Untrusted set in GT: rule 1 applied to F19 = alpha*beta + r1*u10 + r2*u20 + r3*u30 + r4*u40 - a1*r1*u10 + a1*r1*u11 - a2*r2*u20 + a2*r2*u21 - a3*r3*u30 + a3*r3*u31 - a4*r4*u40 + a4*r4*u41.     C := e(F19,F0) =  e(F10,F23^a4)*(e(F9,F23^a4))^-1*e(F9,F23)*e(F8,F22^a3)*(e(F7,F22^a3))^-1*e(F7,F22)*e(F6,F21^a2)*(e(F5,F21^a2))^-1*e(F5,F21)*e(F4,F20^a1)*(e(F3,F20^a1))^-1*e(F3,F20)*e(F1,F2)
+....
+Execution time : 1.950632s
+
+(e(F19,F0) =  e(F10,F23^a4)*(e(F9,F23^a4))^-1*e(F9,F23)*e(F8,F22^a3)*(e(F7,F22^a3))^-1*e(F7,F22)*e(F6,F21^a2)*(e(F5,F21^a2))^-1*e(F5,F21)*e(F4,F20^a1)*(e(F3,F20^a1))^-1*e(F3,F20)*e(F1,F2) AND ACC)
+
+
+
+G1 : e(F19,F0) = e(F10,F23^a4)*(e(F9,F23^a4))^-1*e(F9,F23)*e(F8,F22^a3)*(e(F7,F22^a3))^-1*e(F7,F22)*e(F6,F21^a2)*(e(F5,F21^a2))^-1*e(F5,F21)*e(F4,F20^a1)*(e(F3,F20^a1))^-1*e(F3,F20)*e(F1,F2)

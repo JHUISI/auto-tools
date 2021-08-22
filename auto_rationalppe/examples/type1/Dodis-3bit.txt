@@ -1,0 +1,21 @@
+
+(*Dodis VRF constrution when L = 3
+https://link.springer.com/content/pdf/10.1007%2F3-540-36288-6_1.pdf*)
+
+maps G1 * G1 -> GT.
+
+(*message x*)
+Zp_vars [x1, x2, x3].
+
+(*verification key*)
+trusted_polys [F1 = a1*c, F2 = a2*c, F3 = a3*c, F4 = c] in G1.
+
+(*proof*)
+untrusted_polys [F5 = (a1*x1 + (1-x1))] in G1.
+
+untrusted_polys [F6 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2))] in G1.
+
+(*VRF value*)
+untrusted_polys [F7 = (a1*x1 + (1-x1)) * (a2*x2 + (1-x2)) * (a3*x3 + (1-x3))] in G1.
+
+

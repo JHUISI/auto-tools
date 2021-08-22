@@ -1,0 +1,3 @@
+maps G1 * G1 -> GT.
+trusted_polys [F1 = h, F2 = s] in G1. (*g^h = H(id)*)
+untrusted_polys [F3 = h*s] in G1.

@@ -1,0 +1,7 @@
+
+(*BB1 HIBE scheme when number of levels is fixed to be 5*)
+
+maps G1 * G1 -> GT.
+trusted_polys [F1 = alpha, F2=x, F3=h1, F4=h2, F5=h3] in G1.
+Zp_vars [id1, id2, id3].
+untrusted_polys [F6=x*alpha + (alpha*id1+h1)*r1 + (alpha*id2+h2)*r2 + (alpha*id3+h3)*r3, F7=r1, F8=r2, F9=r3] in G1.

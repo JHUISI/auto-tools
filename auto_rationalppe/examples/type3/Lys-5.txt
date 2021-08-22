@@ -1,0 +1,22 @@
+(*Lysyanskya VRF construction when n = 5.
+This construction same as their construction for Unified signatures 
+ https://link.springer.com/content/pdf/10.1007%2F3-540-45708-9_38.pdf*)
+
+maps G1 * G2 -> GT.
+
+(*verification key*)
+trusted_polys [F1 = a10, F2 = a11, F3 = a20, F4 = a21, F5 = a30, F6 = a31, F7 = a40, F8 = a41, F9 = a50, F10 = a51] in G2.
+
+(*message*)
+Zp_vars [m1, m2, m3, m4, m5].
+
+(*Signature/VRF*)
+untrusted_polys [F13 = (a10 * (1-m1) + a11*m1) ] in G1.
+
+untrusted_polys [F14 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) ] in G1.
+
+untrusted_polys [F15 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) * (a30 * (1-m3) + a31*m3) ] in G1.
+
+untrusted_polys [F16 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) * (a30 * (1-m3) + a31*m3) * (a40 * (1-m4) + a41*m4)] in G1.
+
+untrusted_polys [F17 = (a10 * (1-m1) + a11*m1) * (a20 * (1-m2) + a21*m2) * (a30 * (1-m3) + a31*m3) * (a40 * (1-m4) + a41*m4) * (a50 * (1-m5) + a51*m5)] in G1.

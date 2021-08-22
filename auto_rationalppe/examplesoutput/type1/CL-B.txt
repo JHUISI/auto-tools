@@ -1,0 +1,78 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/CL-B.txt
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  m in G1,  r in G1,  m in GT,  r in GT,  m*x in G1,  r*x in G1,  m*y in G1,  r*y in G1,  m*z in G1,  r*z in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x in G1
+F2 = y in G1
+F3 = z in G1
+F4 = a*z in G1
+F5 = a*y in G1
+F6 = a*y*z in G1
+F7 = a*x + a*m*x*y + a*r*x*y*z in G1
+F8 = a in G1
+F0^m = m in G1
+F0^r = r in G1
+F0^m = m in GT
+F0^r = r in GT
+F1^m = m*x in G1
+F1^r = r*x in G1
+F2^m = m*y in G1
+F2^r = r*y in G1
+F3^m = m*z in G1
+F3^r = r*z in G1
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z, F0^m = m, F0^r = r, F1^m = m*x, F1^r = r*x, F2^m = m*y, F2^r = r*y, F3^m = m*z, F3^r = r*z, 
+Trusted set in GT: F0 = 1, F0^m = m, F0^r = r, 
+Untrusted set in G1: F4 = a*z, F5 = a*y, F6 = a*y*z, F7 = a*x + a*m*x*y + a*r*x*y*z, F8 = a, 
+Untrusted set in GT: 
+rule 2 applied to F8 = a.
+....
+Checking for Rule 1. Took 1.643544s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z, F0^m = m, F0^r = r, F1^m = m*x, F1^r = r*x, F2^m = m*y, F2^r = r*y, F3^m = m*z, F3^r = r*z, F8 = a, F8^m = a*m, F8^r = a*r, 
+Trusted set in GT: F0 = 1, F0^m = m, F0^r = r, 
+Untrusted set in G1: F4 = a*z, F5 = a*y, F6 = a*y*z, F7 = a*x + a*m*x*y + a*r*x*y*z, 
+Untrusted set in GT: rule 1 applied to F4 = a*z.     C := e(F4,F0) =  e(F3,F8)
+....
+Checking for Rule 1. Took 0.000517s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z, F0^m = m, F0^r = r, F1^m = m*x, F1^r = r*x, F2^m = m*y, F2^r = r*y, F3^m = m*z, F3^r = r*z, F8 = a, F8^m = a*m, F8^r = a*r, F4 = a*z, F4^m = a*m*z, F4^r = a*r*z, 
+Trusted set in GT: F0 = 1, F0^m = m, F0^r = r, 
+Untrusted set in G1: F5 = a*y, F6 = a*y*z, F7 = a*x + a*m*x*y + a*r*x*y*z, 
+Untrusted set in GT: rule 1 applied to F5 = a*y.     C := e(F5,F0) =  e(F2,F8)
+....
+Checking for Rule 1. Took 0.004519s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z, F0^m = m, F0^r = r, F1^m = m*x, F1^r = r*x, F2^m = m*y, F2^r = r*y, F3^m = m*z, F3^r = r*z, F8 = a, F8^m = a*m, F8^r = a*r, F4 = a*z, F4^m = a*m*z, F4^r = a*r*z, F5 = a*y, F5^m = a*m*y, F5^r = a*r*y, 
+Trusted set in GT: F0 = 1, F0^m = m, F0^r = r, 
+Untrusted set in G1: F6 = a*y*z, F7 = a*x + a*m*x*y + a*r*x*y*z, 
+Untrusted set in GT: rule 1 applied to F6 = a*y*z.     C := e(F6,F0) =  e(F2,F4)
+....
+Checking for Rule 1. Took 0.003696s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z, F0^m = m, F0^r = r, F1^m = m*x, F1^r = r*x, F2^m = m*y, F2^r = r*y, F3^m = m*z, F3^r = r*z, F8 = a, F8^m = a*m, F8^r = a*r, F4 = a*z, F4^m = a*m*z, F4^r = a*r*z, F5 = a*y, F5^m = a*m*y, F5^r = a*r*y, F6 = a*y*z, F6^m = a*m*y*z, F6^r = a*r*y*z, 
+Trusted set in GT: F0 = 1, F0^m = m, F0^r = r, 
+Untrusted set in G1: F7 = a*x + a*m*x*y + a*r*x*y*z, 
+Untrusted set in GT: rule 1 applied to F7 = a*x + a*m*x*y + a*r*x*y*z.     C := e(F7,F0) =  e(F1,F6^r)*e(F1,F5^m)*e(F1,F8)
+....
+Execution time : 1.755333s
+
+(e(F4,F0) =  e(F3,F8) AND (e(F5,F0) =  e(F2,F8) AND (e(F6,F0) =  e(F2,F4) AND (e(F7,F0) =  e(F1,F6^r)*e(F1,F5^m)*e(F1,F8) AND ACC))))
+
+
+
+G1 : e(F4,F0) = e(F3,F8)
+G2 : e(F5,F0) = e(F2,F8)
+G3 : e(F6,F0) = e(F2,F4)
+G4 : e(F7,F0) = e(F1,F6^r)*e(F1,F5^m)*e(F1,F8)
+G5 : G3 AND G4
+G6 : G2 AND G5
+G7 : G1 AND G6

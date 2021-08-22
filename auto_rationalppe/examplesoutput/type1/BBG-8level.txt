@@ -1,0 +1,187 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/BBG-8level.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  id1 in G1,  id2 in G1,  id3 in G1,  id4 in G1,  id5 in G1,  id6 in G1,  id7 in G1,  id8 in G1,  id1 in GT,  id2 in GT,  id3 in GT,  id4 in GT,  id5 in GT,  id6 in GT,  id7 in GT,  id8 in GT,  alpha*id1 in G1,  alpha*id2 in G1,  alpha*id3 in G1,  alpha*id4 in G1,  alpha*id5 in G1,  alpha*id6 in G1,  alpha*id7 in G1,  alpha*id8 in G1,  beta*id1 in G1,  beta*id2 in G1,  beta*id3 in G1,  beta*id4 in G1,  beta*id5 in G1,  beta*id6 in G1,  beta*id7 in G1,  beta*id8 in G1,  gamma*id1 in G1,  gamma*id2 in G1,  gamma*id3 in G1,  gamma*id4 in G1,  gamma*id5 in G1,  gamma*id6 in G1,  gamma*id7 in G1,  gamma*id8 in G1,  h1*id1 in G1,  h1*id2 in G1,  h1*id3 in G1,  h1*id4 in G1,  h1*id5 in G1,  h1*id6 in G1,  h1*id7 in G1,  h1*id8 in G1,  h2*id1 in G1,  h2*id2 in G1,  h2*id3 in G1,  h2*id4 in G1,  h2*id5 in G1,  h2*id6 in G1,  h2*id7 in G1,  h2*id8 in G1,  h3*id1 in G1,  h3*id2 in G1,  h3*id3 in G1,  h3*id4 in G1,  h3*id5 in G1,  h3*id6 in G1,  h3*id7 in G1,  h3*id8 in G1,  h4*id1 in G1,  h4*id2 in G1,  h4*id3 in G1,  h4*id4 in G1,  h4*id5 in G1,  h4*id6 in G1,  h4*id7 in G1,  h4*id8 in G1,  h5*id1 in G1,  h5*id2 in G1,  h5*id3 in G1,  h5*id4 in G1,  h5*id5 in G1,  h5*id6 in G1,  h5*id7 in G1,  h5*id8 in G1,  h6*id1 in G1,  h6*id2 in G1,  h6*id3 in G1,  h6*id4 in G1,  h6*id5 in G1,  h6*id6 in G1,  h6*id7 in G1,  h6*id8 in G1,  h7*id1 in G1,  h7*id2 in G1,  h7*id3 in G1,  h7*id4 in G1,  h7*id5 in G1,  h7*id6 in G1,  h7*id7 in G1,  h7*id8 in G1,  h8*id1 in G1,  h8*id2 in G1,  h8*id3 in G1,  h8*id4 in G1,  h8*id5 in G1,  h8*id6 in G1,  h8*id7 in G1,  h8*id8 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = alpha in G1
+F2 = beta in G1
+F3 = gamma in G1
+F4 = h1 in G1
+F5 = h2 in G1
+F6 = h3 in G1
+F7 = h4 in G1
+F8 = h5 in G1
+F9 = h6 in G1
+F10 = h7 in G1
+F11 = h8 in G1
+F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r in G1
+F13 = r in G1
+F14 = h5*id5 in G1
+F15 = h6*id6 in G1
+F16 = h7*id7 in G1
+F17 = h8*id8 in G1
+F0^id1 = id1 in G1
+F0^id2 = id2 in G1
+F0^id3 = id3 in G1
+F0^id4 = id4 in G1
+F0^id5 = id5 in G1
+F0^id6 = id6 in G1
+F0^id7 = id7 in G1
+F0^id8 = id8 in G1
+F0^id1 = id1 in GT
+F0^id2 = id2 in GT
+F0^id3 = id3 in GT
+F0^id4 = id4 in GT
+F0^id5 = id5 in GT
+F0^id6 = id6 in GT
+F0^id7 = id7 in GT
+F0^id8 = id8 in GT
+F1^id1 = alpha*id1 in G1
+F1^id2 = alpha*id2 in G1
+F1^id3 = alpha*id3 in G1
+F1^id4 = alpha*id4 in G1
+F1^id5 = alpha*id5 in G1
+F1^id6 = alpha*id6 in G1
+F1^id7 = alpha*id7 in G1
+F1^id8 = alpha*id8 in G1
+F2^id1 = beta*id1 in G1
+F2^id2 = beta*id2 in G1
+F2^id3 = beta*id3 in G1
+F2^id4 = beta*id4 in G1
+F2^id5 = beta*id5 in G1
+F2^id6 = beta*id6 in G1
+F2^id7 = beta*id7 in G1
+F2^id8 = beta*id8 in G1
+F3^id1 = gamma*id1 in G1
+F3^id2 = gamma*id2 in G1
+F3^id3 = gamma*id3 in G1
+F3^id4 = gamma*id4 in G1
+F3^id5 = gamma*id5 in G1
+F3^id6 = gamma*id6 in G1
+F3^id7 = gamma*id7 in G1
+F3^id8 = gamma*id8 in G1
+F4^id1 = h1*id1 in G1
+F4^id2 = h1*id2 in G1
+F4^id3 = h1*id3 in G1
+F4^id4 = h1*id4 in G1
+F4^id5 = h1*id5 in G1
+F4^id6 = h1*id6 in G1
+F4^id7 = h1*id7 in G1
+F4^id8 = h1*id8 in G1
+F5^id1 = h2*id1 in G1
+F5^id2 = h2*id2 in G1
+F5^id3 = h2*id3 in G1
+F5^id4 = h2*id4 in G1
+F5^id5 = h2*id5 in G1
+F5^id6 = h2*id6 in G1
+F5^id7 = h2*id7 in G1
+F5^id8 = h2*id8 in G1
+F6^id1 = h3*id1 in G1
+F6^id2 = h3*id2 in G1
+F6^id3 = h3*id3 in G1
+F6^id4 = h3*id4 in G1
+F6^id5 = h3*id5 in G1
+F6^id6 = h3*id6 in G1
+F6^id7 = h3*id7 in G1
+F6^id8 = h3*id8 in G1
+F7^id1 = h4*id1 in G1
+F7^id2 = h4*id2 in G1
+F7^id3 = h4*id3 in G1
+F7^id4 = h4*id4 in G1
+F7^id5 = h4*id5 in G1
+F7^id6 = h4*id6 in G1
+F7^id7 = h4*id7 in G1
+F7^id8 = h4*id8 in G1
+F8^id1 = h5*id1 in G1
+F8^id2 = h5*id2 in G1
+F8^id3 = h5*id3 in G1
+F8^id4 = h5*id4 in G1
+F8^id5 = h5*id5 in G1
+F8^id6 = h5*id6 in G1
+F8^id7 = h5*id7 in G1
+F8^id8 = h5*id8 in G1
+F9^id1 = h6*id1 in G1
+F9^id2 = h6*id2 in G1
+F9^id3 = h6*id3 in G1
+F9^id4 = h6*id4 in G1
+F9^id5 = h6*id5 in G1
+F9^id6 = h6*id6 in G1
+F9^id7 = h6*id7 in G1
+F9^id8 = h6*id8 in G1
+F10^id1 = h7*id1 in G1
+F10^id2 = h7*id2 in G1
+F10^id3 = h7*id3 in G1
+F10^id4 = h7*id4 in G1
+F10^id5 = h7*id5 in G1
+F10^id6 = h7*id6 in G1
+F10^id7 = h7*id7 in G1
+F10^id8 = h7*id8 in G1
+F11^id1 = h8*id1 in G1
+F11^id2 = h8*id2 in G1
+F11^id3 = h8*id3 in G1
+F11^id4 = h8*id4 in G1
+F11^id5 = h8*id5 in G1
+F11^id6 = h8*id6 in G1
+F11^id7 = h8*id7 in G1
+F11^id8 = h8*id8 in G1
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, F13 = r, F14 = h5*id5, F15 = h6*id6, F16 = h7*id7, F17 = h8*id8, 
+Untrusted set in GT: 
+rule 1 applied to F14 = h5*id5.     C := F14 =  F8^id5
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, F14 = h5*id5, F14^id1 = h5*id1*id5, F14^id2 = h5*id2*id5, F14^id3 = h5*id3*id5, F14^id4 = h5*id4*id5, F14^id5 = h5*id5^2, F14^id6 = h5*id5*id6, F14^id7 = h5*id5*id7, F14^id8 = h5*id5*id8, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, F13 = r, F15 = h6*id6, F16 = h7*id7, F17 = h8*id8, 
+Untrusted set in GT: 
+rule 1 applied to F15 = h6*id6.     C := F15 =  F9^id6
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, F14 = h5*id5, F14^id1 = h5*id1*id5, F14^id2 = h5*id2*id5, F14^id3 = h5*id3*id5, F14^id4 = h5*id4*id5, F14^id5 = h5*id5^2, F14^id6 = h5*id5*id6, F14^id7 = h5*id5*id7, F14^id8 = h5*id5*id8, F15 = h6*id6, F15^id1 = h6*id1*id6, F15^id2 = h6*id2*id6, F15^id3 = h6*id3*id6, F15^id4 = h6*id4*id6, F15^id5 = h6*id5*id6, F15^id6 = h6*id6^2, F15^id7 = h6*id6*id7, F15^id8 = h6*id6*id8, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, F13 = r, F16 = h7*id7, F17 = h8*id8, 
+Untrusted set in GT: 
+rule 1 applied to F16 = h7*id7.     C := F16 =  F10^id7
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, F14 = h5*id5, F14^id1 = h5*id1*id5, F14^id2 = h5*id2*id5, F14^id3 = h5*id3*id5, F14^id4 = h5*id4*id5, F14^id5 = h5*id5^2, F14^id6 = h5*id5*id6, F14^id7 = h5*id5*id7, F14^id8 = h5*id5*id8, F15 = h6*id6, F15^id1 = h6*id1*id6, F15^id2 = h6*id2*id6, F15^id3 = h6*id3*id6, F15^id4 = h6*id4*id6, F15^id5 = h6*id5*id6, F15^id6 = h6*id6^2, F15^id7 = h6*id6*id7, F15^id8 = h6*id6*id8, F16 = h7*id7, F16^id1 = h7*id1*id7, F16^id2 = h7*id2*id7, F16^id3 = h7*id3*id7, F16^id4 = h7*id4*id7, F16^id5 = h7*id5*id7, F16^id6 = h7*id6*id7, F16^id7 = h7*id7^2, F16^id8 = h7*id7*id8, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, F13 = r, F17 = h8*id8, 
+Untrusted set in GT: 
+rule 1 applied to F17 = h8*id8.     C := F17 =  F11^id8
+....
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, F14 = h5*id5, F14^id1 = h5*id1*id5, F14^id2 = h5*id2*id5, F14^id3 = h5*id3*id5, F14^id4 = h5*id4*id5, F14^id5 = h5*id5^2, F14^id6 = h5*id5*id6, F14^id7 = h5*id5*id7, F14^id8 = h5*id5*id8, F15 = h6*id6, F15^id1 = h6*id1*id6, F15^id2 = h6*id2*id6, F15^id3 = h6*id3*id6, F15^id4 = h6*id4*id6, F15^id5 = h6*id5*id6, F15^id6 = h6*id6^2, F15^id7 = h6*id6*id7, F15^id8 = h6*id6*id8, F16 = h7*id7, F16^id1 = h7*id1*id7, F16^id2 = h7*id2*id7, F16^id3 = h7*id3*id7, F16^id4 = h7*id4*id7, F16^id5 = h7*id5*id7, F16^id6 = h7*id6*id7, F16^id7 = h7*id7^2, F16^id8 = h7*id7*id8, F17 = h8*id8, F17^id1 = h8*id1*id8, F17^id2 = h8*id2*id8, F17^id3 = h8*id3*id8, F17^id4 = h8*id4*id8, F17^id5 = h8*id5*id8, F17^id6 = h8*id6*id8, F17^id7 = h8*id7*id8, F17^id8 = h8*id8^2, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, F13 = r, 
+Untrusted set in GT: 
+rule 2 applied to F13 = r.
+....
+Checking for Rule 1. Took 0.006989s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = alpha, F2 = beta, F3 = gamma, F4 = h1, F5 = h2, F6 = h3, F7 = h4, F8 = h5, F9 = h6, F10 = h7, F11 = h8, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, F1^id1 = alpha*id1, F1^id2 = alpha*id2, F1^id3 = alpha*id3, F1^id4 = alpha*id4, F1^id5 = alpha*id5, F1^id6 = alpha*id6, F1^id7 = alpha*id7, F1^id8 = alpha*id8, F2^id1 = beta*id1, F2^id2 = beta*id2, F2^id3 = beta*id3, F2^id4 = beta*id4, F2^id5 = beta*id5, F2^id6 = beta*id6, F2^id7 = beta*id7, F2^id8 = beta*id8, F3^id1 = gamma*id1, F3^id2 = gamma*id2, F3^id3 = gamma*id3, F3^id4 = gamma*id4, F3^id5 = gamma*id5, F3^id6 = gamma*id6, F3^id7 = gamma*id7, F3^id8 = gamma*id8, F4^id1 = h1*id1, F4^id2 = h1*id2, F4^id3 = h1*id3, F4^id4 = h1*id4, F4^id5 = h1*id5, F4^id6 = h1*id6, F4^id7 = h1*id7, F4^id8 = h1*id8, F5^id1 = h2*id1, F5^id2 = h2*id2, F5^id3 = h2*id3, F5^id4 = h2*id4, F5^id5 = h2*id5, F5^id6 = h2*id6, F5^id7 = h2*id7, F5^id8 = h2*id8, F6^id1 = h3*id1, F6^id2 = h3*id2, F6^id3 = h3*id3, F6^id4 = h3*id4, F6^id5 = h3*id5, F6^id6 = h3*id6, F6^id7 = h3*id7, F6^id8 = h3*id8, F7^id1 = h4*id1, F7^id2 = h4*id2, F7^id3 = h4*id3, F7^id4 = h4*id4, F7^id5 = h4*id5, F7^id6 = h4*id6, F7^id7 = h4*id7, F7^id8 = h4*id8, F8^id1 = h5*id1, F8^id2 = h5*id2, F8^id3 = h5*id3, F8^id4 = h5*id4, F8^id5 = h5*id5, F8^id6 = h5*id6, F8^id7 = h5*id7, F8^id8 = h5*id8, F9^id1 = h6*id1, F9^id2 = h6*id2, F9^id3 = h6*id3, F9^id4 = h6*id4, F9^id5 = h6*id5, F9^id6 = h6*id6, F9^id7 = h6*id7, F9^id8 = h6*id8, F10^id1 = h7*id1, F10^id2 = h7*id2, F10^id3 = h7*id3, F10^id4 = h7*id4, F10^id5 = h7*id5, F10^id6 = h7*id6, F10^id7 = h7*id7, F10^id8 = h7*id8, F11^id1 = h8*id1, F11^id2 = h8*id2, F11^id3 = h8*id3, F11^id4 = h8*id4, F11^id5 = h8*id5, F11^id6 = h8*id6, F11^id7 = h8*id7, F11^id8 = h8*id8, F14 = h5*id5, F14^id1 = h5*id1*id5, F14^id2 = h5*id2*id5, F14^id3 = h5*id3*id5, F14^id4 = h5*id4*id5, F14^id5 = h5*id5^2, F14^id6 = h5*id5*id6, F14^id7 = h5*id5*id7, F14^id8 = h5*id5*id8, F15 = h6*id6, F15^id1 = h6*id1*id6, F15^id2 = h6*id2*id6, F15^id3 = h6*id3*id6, F15^id4 = h6*id4*id6, F15^id5 = h6*id5*id6, F15^id6 = h6*id6^2, F15^id7 = h6*id6*id7, F15^id8 = h6*id6*id8, F16 = h7*id7, F16^id1 = h7*id1*id7, F16^id2 = h7*id2*id7, F16^id3 = h7*id3*id7, F16^id4 = h7*id4*id7, F16^id5 = h7*id5*id7, F16^id6 = h7*id6*id7, F16^id7 = h7*id7^2, F16^id8 = h7*id7*id8, F17 = h8*id8, F17^id1 = h8*id1*id8, F17^id2 = h8*id2*id8, F17^id3 = h8*id3*id8, F17^id4 = h8*id4*id8, F17^id5 = h8*id5*id8, F17^id6 = h8*id6*id8, F17^id7 = h8*id7*id8, F17^id8 = h8*id8^2, F13 = r, F13^id1 = id1*r, F13^id2 = id2*r, F13^id3 = id3*r, F13^id4 = id4*r, F13^id5 = id5*r, F13^id6 = id6*r, F13^id7 = id7*r, F13^id8 = id8*r, 
+Trusted set in GT: F0 = 1, F0^id1 = id1, F0^id2 = id2, F0^id3 = id3, F0^id4 = id4, F0^id5 = id5, F0^id6 = id6, F0^id7 = id7, F0^id8 = id8, 
+Untrusted set in G1: F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r, 
+Untrusted set in GT: rule 1 applied to F12 = alpha*beta + gamma*r + h1*id1*r + h2*id2*r + h3*id3*r + h4*id4*r.     C := e(F12,F0) =  e(F7,F13^id4)*e(F6,F13^id3)*e(F5,F13^id2)*e(F4,F13^id1)*e(F3,F13)*e(F1,F2)
+....
+Execution time : 4.649314s
+
+(F14 =  F8^id5 AND (F15 =  F9^id6 AND (F16 =  F10^id7 AND (F17 =  F11^id8 AND (e(F12,F0) =  e(F7,F13^id4)*e(F6,F13^id3)*e(F5,F13^id2)*e(F4,F13^id1)*e(F3,F13)*e(F1,F2) AND ACC)))))
+
+
+
+G1 : F14 = F8^id5
+G2 : F15 = F9^id6
+G3 : F16 = F10^id7
+G4 : F17 = F11^id8
+G5 : e(F12,F0) = e(F7,F13^id4)*e(F6,F13^id3)*e(F5,F13^id2)*e(F4,F13^id1)*e(F3,F13)*e(F1,F2)
+G6 : G4 AND G5
+G7 : G3 AND G6
+G8 : G2 AND G7
+G9 : G1 AND G8

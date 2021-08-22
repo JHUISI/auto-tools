@@ -1,0 +1,24 @@
+
+maps G1 * G2 -> GT.
+
+(*gk*)
+trusted_polys [F1 = f2, F2 = f3, F3 = u] in G1. 
+trusted_polys [F4 = f2, F5 = f3, F6 = u] in G2. 
+
+(*vk*)
+trusted_polys [F7 = v, F8 = vp, F9 = h] in G1. 
+trusted_polys [F10 = v, F11 = vp, F12 = h] in G2. 
+
+trusted_polys [F13 = v + vp*a] in G1.
+trusted_polys [F14 = v + vp*a] in G2. 
+
+trusted_polys [F15 = b, F16 = a, F17 = b*a, F18 = (v + vp*a)*b, F19 = a*b/rho] in G2. 
+trusted_polys [F20 = rho] in G1. 
+
+(*msg*)
+trusted_polys [F21 = f2*m, F22 = f3*m, F23 = u*m] in G2.
+
+
+(*sig*)
+untrusted_polys [F24 = (u*m + h)*r1] in G2. 
+untrusted_polys [F25 = alpha + v*(r1+r2), F26 = vp*(r1+r2) - z, F27 = b*z, F28 = b*r2, F29 = r1] in G1.

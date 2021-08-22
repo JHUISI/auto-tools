@@ -1,0 +1,10 @@
+
+(*Dodis Yampolsky
+https://cs.nyu.edu/~dodis/ps/short-vrf.pdf *)
+
+maps G1 * G1 -> GT. 
+
+Zp_vars [x].
+trusted_polys [F1 = s] in G1. 
+untrusted_polys [F2 = 1/(x+s)] in G1.
+untrusted_polys [F3 = 1/(x+s)] in GT.

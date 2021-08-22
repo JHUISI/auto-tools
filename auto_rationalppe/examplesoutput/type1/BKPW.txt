@@ -1,0 +1,356 @@
+MacBook-Pro:project-autocircuitppe$ ./autocircuitppe.native examples/type1/BKPW.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set : 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = t in G1
+F2 = h in G1
+F3 = hh in G1
+F4 = u1 in G1
+F5 = u2 in G1
+F6 = u3 in G1
+F7 = u4 in G1
+F8 = u5 in G1
+F9 = uh1 in G1
+F10 = uh2 in G1
+F11 = uh3 in G1
+F12 = uh4 in G1
+F13 = uh5 in G1
+F14 = hash in G1
+F15 = hashh in G1
+F16 = h*rh*t + hash*r*t in G1
+F17 = hashh*r + hh*rh in G1
+F18 = -1*r*t in G1
+F19 = -1*rh*t in G1
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = h*rh*t + hash*r*t, F17 = hashh*r + hh*rh, F18 = -1*r*t, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F16 = h*rh*t + hash*r*t and variable r. isidentity := e(F1,F14) =  I
+....
+Checking for Rule 3. Took 0.000003s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*2
+Checking for Rule 3. Took 0.001866s time to solve
+Checking for Rule 3. Took 0.000003s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*2
+Checking for Rule 3. Took 0.000574s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F16 = h*rh*t + hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, F18 = -1*r*t, F19 = -1*rh*t, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = h*rh*t + hash*r*t, F17 = hashh*r + hh*rh, F18 = -1*r*t, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r + hh*rh and variable r. isidentity := F15 =  I
+....
+Checking for Rule 3. Took 0.000003s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*2
+Checking for Rule 3. Took 0.000871s time to solve
+Checking for Rule 3. Took 0.000004s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*2
+Checking for Rule 3. Took 0.000565s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F17 = hashh*r + hh*rh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = h*rh*t + hash*r*t, F18 = -1*r*t, F19 = -1*rh*t, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = h*rh*t + hash*r*t, F17 = hashh*r + hh*rh, F18 = -1*r*t, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F18 = -1*r*t and variable r. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = h*rh*t + hash*r*t, F17 = hashh*r + hh*rh, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F16 = h*rh*t + hash*r*t and variable rh. isidentity := e(F1,F2) =  I
+....
+Checking for Rule 3. Took 0.000004s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 3. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 3*2
+Checking for Rule 3. Took 0.001587s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = h*rh*t + hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 3 applied on F19 = -1*rh*t. isidentity := F2 =  I      C := e(F19,F2) =  (e(F14,F18))^-1*(e(F0,F16))^-1
+....
+Checking for Rule 3. Took 0.000005s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 3. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 3*2
+Checking for Rule 3. Took 0.000547s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = h*rh*t + hash*r*t, F19 = -1*rh*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, 
+Untrusted set in GT: 
+rule 3 applied on F17 = hashh*r + hh*rh. isidentity := F1 =  I      C := e(F17,F1) =  (e(F15,F18))^-1*(e(F3,F19))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r + hh*rh and variable r. isidentity := F15 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hh*rh, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hh*rh and variable rh. isidentity := F3 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F17 = 0.     C := F17 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = 0, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r + hh*rh and variable rh. isidentity := F3 =  I
+....
+Checking for Rule 3. Took 0.000004s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 3. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 3*2
+Checking for Rule 3. Took 0.001090s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = 0, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r + hh*rh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 3 applied on F19 = -1*rh*t. isidentity := F3 =  I      C := e(F19,F3) =  (e(F15,F18))^-1*(e(F1,F17))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F19 = -1*rh*t and variable rh. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+Checking for Rule 3. Took 0.000003s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 1. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*1
+Checking for Rule 3. Took 0.000983s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 3 applied on F17 = hashh*r. isidentity := F1 =  I      C := e(F17,F1) =  (e(F15,F18))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F19 = -1*rh*t and variable rh. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r and variable r. isidentity := F15 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F17 = 0.     C := F17 =  I
+....
+Checking for Rule 1. Took 0.001084s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = hash*r*t, F17 = hashh*r + hh*rh, F19 = -1*rh*t, 
+Untrusted set in GT: rule 1 applied to F16 = hash*r*t.     C := e(F16,F0) =  (e(F14,F18))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r + hh*rh and variable rh. isidentity := F3 =  I
+....
+Checking for Rule 3. Took 0.000004s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 3. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 3*2
+Checking for Rule 3. Took 0.001101s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r + hh*rh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 3 applied on F19 = -1*rh*t. isidentity := F3 =  I      C := e(F19,F3) =  (e(F15,F18))^-1*(e(F1,F17))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F19 = -1*rh*t and variable rh. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+Checking for Rule 3. Took 0.000003s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 2. No. of monomials = 1. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 2*1
+Checking for Rule 3. Took 0.000920s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 3 applied on F17 = hashh*r. isidentity := F1 =  I      C := e(F17,F1) =  (e(F15,F18))^-1
+....
+....
+Trusted set in G1: F0 = 1, F1 = t, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = -1*r*t, F16 = hash*r*t, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = -1*rh*t, 
+Untrusted set in GT: 
+rule 4 applied on F19 = -1*rh*t and variable rh. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F17 = hashh*r, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F19 = 0.     C := F19 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r and variable r. isidentity := F15 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F18 = 0, F16 = 0, F19 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F17 = 0.     C := F17 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F16 = 0, F17 = hashh*r + hh*rh, F18 = 0, F19 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F16 = 0.     C := F16 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = hashh, F16 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hashh*r + hh*rh, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hashh*r + hh*rh and variable r. isidentity := F15 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = hh, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F16 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = hh*rh, 
+Untrusted set in GT: 
+rule 4 applied on F17 = hh*rh and variable rh. isidentity := F3 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = h, F3 = 0, F4 = u1, F5 = u2, F6 = u3, F7 = u4, F8 = u5, F9 = uh1, F10 = uh2, F11 = uh3, F12 = uh4, F13 = uh5, F14 = hash, F15 = 0, F16 = 0, 
+Trusted set in GT: F0 = 1, 
+Untrusted set in G1: F17 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F17 = 0.     C := F17 =  I
+....
+Execution time : 2.794476s
+
+(((NOT (F1)^-1 =  I) AND (((NOT e(F1,F2) =  I) AND ((((NOT F2 =  I) AND e(F19,F2) =  (e(F14,F18))^-1*(e(F0,F16))^-1) AND ((((NOT F1 =  I) AND e(F17,F1) =  (e(F15,F18))^-1*(e(F3,F19))^-1) AND ACC) OR (F1 =  I AND (((NOT F15 =  I) AND ACC) OR (F15 =  I AND (((NOT F3 =  I) AND ACC) OR (F3 =  I AND (F17 =  I AND ACC)))))))) OR (F2 =  I AND (((NOT F3 =  I) AND ((((NOT F3 =  I) AND e(F19,F3) =  (e(F15,F18))^-1*(e(F1,F17))^-1) AND ACC) OR (F3 =  I AND (((NOT (F1)^-1 =  I) AND ACC) OR ((F1)^-1 =  I AND (F19 =  I AND ACC)))))) OR (F3 =  I AND ((((NOT F1 =  I) AND e(F17,F1) =  (e(F15,F18))^-1) AND (((NOT (F1)^-1 =  I) AND ACC) OR ((F1)^-1 =  I AND (F19 =  I AND ACC)))) OR (F1 =  I AND (F19 =  I AND (((NOT F15 =  I) AND ACC) OR (F15 =  I AND (F17 =  I AND ACC))))))))))) OR (e(F1,F2) =  I AND (e(F16,F0) =  (e(F14,F18))^-1 AND (((NOT F3 =  I) AND ((((NOT F3 =  I) AND e(F19,F3) =  (e(F15,F18))^-1*(e(F1,F17))^-1) AND ACC) OR (F3 =  I AND (((NOT (F1)^-1 =  I) AND ACC) OR ((F1)^-1 =  I AND (F19 =  I AND ACC)))))) OR (F3 =  I AND ((((NOT F1 =  I) AND e(F17,F1) =  (e(F15,F18))^-1) AND (((NOT (F1)^-1 =  I) AND ACC) OR ((F1)^-1 =  I AND (F19 =  I AND ACC)))) OR (F1 =  I AND (F19 =  I AND (((NOT F15 =  I) AND ACC) OR (F15 =  I AND (F17 =  I AND ACC)))))))))))) OR ((F1)^-1 =  I AND (F16 =  I AND (((NOT F15 =  I) AND ACC) OR (F15 =  I AND (((NOT F3 =  I) AND ACC) OR (F3 =  I AND (F17 =  I AND ACC))))))))
+
+
+
+G1 : (F1)^-1 = I
+G2 : e(F1,F2) = I
+G3 : F2 = I
+G4 : e(F19,F2) = (e(F14,F18))^-1*(e(F0,F16))^-1
+G5 : F1 = I
+G6 : e(F17,F1) = (e(F15,F18))^-1*(e(F3,F19))^-1
+G7 : F15 = I
+G8 : F3 = I
+G9 : F17 = I
+G10 : e(F19,F3) = (e(F15,F18))^-1*(e(F1,F17))^-1
+G11 : F19 = I
+G12 : e(F17,F1) = (e(F15,F18))^-1
+G13 : e(F16,F0) = (e(F14,F18))^-1
+G14 : F16 = I
+G15 : NOT G1
+G16 : NOT G2
+G17 : NOT G3
+G18 : G17 AND G4
+G19 : NOT G5
+G20 : G19 AND G6
+G21 : NOT G7
+G22 : NOT G8
+G23 : G8 AND G9
+G24 : G22 OR G23
+G25 : G7 AND G24
+G26 : G20 OR G5
+G27 : G18 AND G26
+G28 : G22 AND G10
+G29 : G19 AND G12
+G30 : G7 AND G9
+G31 : G21 OR G30
+G32 : G11 AND G31
+G33 : G5 AND G32
+G34 : G29 OR G33
+G35 : G8 AND G34
+G36 : G28 OR G35
+G37 : G3 AND G36
+G38 : G27 OR G37
+G39 : G16 AND G38
+G40 : G13 AND G36
+G41 : G2 AND G40
+G42 : G39 OR G41
+G43 : G15 AND G42
+G44 : G1 AND G14
+G45 : G43 OR G44

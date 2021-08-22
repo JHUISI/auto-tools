@@ -1,0 +1,26 @@
+
+(*Jager 15 VRF scheme when n = 4
+https://eprint.iacr.org/2014/799.pdf*)
+
+maps G1 * G1 -> GT.
+
+
+(* bits of C(x). Expanding their domain to Zp *)
+Zp_vars [x1, x2, x3, x4].
+
+(*verification key*)
+trusted_polys [F1 = alpha10, F2 = alpha11, F3 = alpha20, F4 = alpha21, F5 = alpha30, F6 = alpha31, F7 = alpha40, F8 = alpha41, F9 = beta] in G1.
+
+(*Proof*)
+untrusted_polys [F10 = (alpha10*(1-x1) + alpha11*x1)] in G1.
+
+untrusted_polys [F11 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2)] in G1.
+
+untrusted_polys [F12 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) ] in G1.
+
+untrusted_polys [F13 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) * (alpha40*(1-x4) + alpha41*x4) ] in G1.
+
+
+(*VRF output*)
+untrusted_polys [F14 = beta*(alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) * (alpha40*(1-x4) + alpha41*x4) ] in GT.
+

@@ -1,0 +1,112 @@
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/waters09.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  id in G1,  tag in G1,  id in GT,  tag in GT,  b*id in G1,  b*tag in G1,  a1*id in G1,  a1*tag in G1,  a2*id in G1,  a2*tag in G1,  a1*b*id in G1,  a1*b*tag in G1,  a2*b*id in G1,  a2*b*tag in G1,  id*v + a1*id*v1 in G1,  tag*v + a1*tag*v1 in G1,  id*v + a2*id*v2 in G1,  tag*v + a2*tag*v2 in G1,  b*id*v + a1*b*id*v1 in G1,  b*tag*v + a1*b*tag*v1 in G1,  b*id*v + a2*b*id*v2 in G1,  b*tag*v + a2*b*tag*v2 in G1,  id*w in G1,  tag*w in G1,  id*u in G1,  tag*u in G1,  h*id in G1,  h*tag in G1,  a1*alpha*b*id in GT,  a1*alpha*b*tag in GT, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = b in G1
+F2 = a1 in G1
+F3 = a2 in G1
+F4 = a1*b in G1
+F5 = a2*b in G1
+F6 = v + a1*v1 in G1
+F7 = v + a2*v2 in G1
+F8 = b*v + a1*b*v1 in G1
+F9 = b*v + a2*b*v2 in G1
+F10 = w in G1
+F11 = u in G1
+F12 = h in G1
+F13 = a1*alpha*b in GT
+F14 = a1*alpha + r1*v + r2*v in G1
+F15 = -1*alpha + z1 + r1*v1 + r2*v1 in G1
+F16 = -1*b*z1 in G1
+F17 = z2 + r1*v2 + r2*v2 in G1
+F18 = -1*b*z2 in G1
+F19 = b*r2 in G1
+F20 = r1 in G1
+F21 = h*r1 + id*r1*u + r1*tag*w in G1
+F0^id = id in G1
+F0^tag = tag in G1
+F0^id = id in GT
+F0^tag = tag in GT
+F1^id = b*id in G1
+F1^tag = b*tag in G1
+F2^id = a1*id in G1
+F2^tag = a1*tag in G1
+F3^id = a2*id in G1
+F3^tag = a2*tag in G1
+F4^id = a1*b*id in G1
+F4^tag = a1*b*tag in G1
+F5^id = a2*b*id in G1
+F5^tag = a2*b*tag in G1
+F6^id = id*v + a1*id*v1 in G1
+F6^tag = tag*v + a1*tag*v1 in G1
+F7^id = id*v + a2*id*v2 in G1
+F7^tag = tag*v + a2*tag*v2 in G1
+F8^id = b*id*v + a1*b*id*v1 in G1
+F8^tag = b*tag*v + a1*b*tag*v1 in G1
+F9^id = b*id*v + a2*b*id*v2 in G1
+F9^tag = b*tag*v + a2*b*tag*v2 in G1
+F10^id = id*w in G1
+F10^tag = tag*w in G1
+F11^id = id*u in G1
+F11^tag = tag*u in G1
+F12^id = h*id in G1
+F12^tag = h*tag in G1
+F13^id = a1*alpha*b*id in GT
+F13^tag = a1*alpha*b*tag in GT
+....
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F16 = -1*b*z1, F17 = z2 + r1*v2 + r2*v2, F18 = -1*b*z2, F19 = b*r2, F20 = r1, F21 = h*r1 + id*r1*u + r1*tag*w, 
+Untrusted set in GT: 
+rule 2 applied to F20 = r1.
+....
+Checking for Rule 1. Took 2.327177s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, F20 = r1, F20^id = id*r1, F20^tag = r1*tag, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F16 = -1*b*z1, F17 = z2 + r1*v2 + r2*v2, F18 = -1*b*z2, F19 = b*r2, F21 = h*r1 + id*r1*u + r1*tag*w, 
+Untrusted set in GT: rule 1 applied to F21 = h*r1 + id*r1*u + r1*tag*w.     C := e(F21,F0) =  e(F12,F20)*e(F11,F20^id)*e(F10,F20^tag)
+....
+....
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, F20 = r1, F20^id = id*r1, F20^tag = r1*tag, F21 = h*r1 + id*r1*u + r1*tag*w, F21^id = h*id*r1 + id^2*r1*u + id*r1*tag*w, F21^tag = h*r1*tag + r1*tag^2*w + id*r1*tag*u, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F16 = -1*b*z1, F17 = z2 + r1*v2 + r2*v2, F18 = -1*b*z2, F19 = b*r2, 
+Untrusted set in GT: 
+rule 4 applied on F16 = -1*b*z1 and variable z1. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, F20 = r1, F20^id = id*r1, F20^tag = r1*tag, F21 = h*r1 + id*r1*u + r1*tag*w, F21^id = h*id*r1 + id^2*r1*u + id*r1*tag*w, F21^tag = h*r1*tag + r1*tag^2*w + id*r1*tag*u, F16 = -1*b*z1, F16^id = -1*b*id*z1, F16^tag = -1*b*tag*z1, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F17 = z2 + r1*v2 + r2*v2, F18 = -1*b*z2, F19 = b*r2, 
+Untrusted set in GT: 
+rule 4 applied on F18 = -1*b*z2 and variable z2. isidentity := (F1)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, F20 = r1, F20^id = id*r1, F20^tag = r1*tag, F21 = h*r1 + id*r1*u + r1*tag*w, F21^id = h*id*r1 + id^2*r1*u + id*r1*tag*w, F21^tag = h*r1*tag + r1*tag^2*w + id*r1*tag*u, F16 = -1*b*z1, F16^id = -1*b*id*z1, F16^tag = -1*b*tag*z1, F18 = -1*b*z2, F18^id = -1*b*id*z2, F18^tag = -1*b*tag*z2, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F17 = z2 + r1*v2 + r2*v2, F19 = b*r2, 
+Untrusted set in GT: 
+rule 4 applied on F19 = b*r2 and variable r2. isidentity := F1 =  I
+....
+Checking for Rule 3. Took 0.000112s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 26. No. of monomials = 21. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 26*21
+Checking for Rule 3. Took 0.005538s time to solve
+Checking for Rule 3. Took 0.000198s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 31. No. of monomials = 24. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 31*24
+Checking for Rule 3. Took 0.004696s time to solve
+Checking for Rule 3. Took 0.000124s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 28. No. of monomials = 21. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 28*21
+Checking for Rule 3. Took 0.028322s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F1 = b, F2 = a1, F3 = a2, F4 = a1*b, F5 = a2*b, F6 = v + a1*v1, F7 = v + a2*v2, F8 = b*v + a1*b*v1, F9 = b*v + a2*b*v2, F10 = w, F11 = u, F12 = h, F0^id = id, F0^tag = tag, F1^id = b*id, F1^tag = b*tag, F2^id = a1*id, F2^tag = a1*tag, F3^id = a2*id, F3^tag = a2*tag, F4^id = a1*b*id, F4^tag = a1*b*tag, F5^id = a2*b*id, F5^tag = a2*b*tag, F6^id = id*v + a1*id*v1, F6^tag = tag*v + a1*tag*v1, F7^id = id*v + a2*id*v2, F7^tag = tag*v + a2*tag*v2, F8^id = b*id*v + a1*b*id*v1, F8^tag = b*tag*v + a1*b*tag*v1, F9^id = b*id*v + a2*b*id*v2, F9^tag = b*tag*v + a2*b*tag*v2, F10^id = id*w, F10^tag = tag*w, F11^id = id*u, F11^tag = tag*u, F12^id = h*id, F12^tag = h*tag, F20 = r1, F20^id = id*r1, F20^tag = r1*tag, F21 = h*r1 + id*r1*u + r1*tag*w, F21^id = h*id*r1 + id^2*r1*u + id*r1*tag*w, F21^tag = h*r1*tag + r1*tag^2*w + id*r1*tag*u, F16 = -1*b*z1, F16^id = -1*b*id*z1, F16^tag = -1*b*tag*z1, F18 = -1*b*z2, F18^id = -1*b*id*z2, F18^tag = -1*b*tag*z2, F19 = b*r2, F19^id = b*id*r2, F19^tag = b*r2*tag, 
+Trusted set in GT: F0 = 1, F13 = a1*alpha*b, F0^id = id, F0^tag = tag, F13^id = a1*alpha*b*id, F13^tag = a1*alpha*b*tag, 
+Untrusted set in G1: F14 = a1*alpha + r1*v + r2*v, F15 = -1*alpha + z1 + r1*v1 + r2*v1, F17 = z2 + r1*v2 + r2*v2, 
+Untrusted set in GT: 
+Execution time : 96.821272s
+
+
+Result: Unknown :(

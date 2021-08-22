@@ -1,0 +1,21 @@
+
+maps G1 * G2 -> GT. 
+
+(*gk*)
+trusted_polys [F1 = f2, F2 = f3, F3 = u] in G1. 
+trusted_polys [F4 = f2, F5 = f3, F6 = u] in G2. 
+
+(*msg*)
+(*trusted_polys [F7 = f2*m, F8 = f3*m, F9 = u*m] in G2. *)
+
+(*public key*)
+trusted_polys [F10 = u*wr, F11 = u*xi1 + u*wr*gam1, F12 = u*xi2 + u*wr*gam2, F13 = u*xi3 + u*wr*gam3, F14 = u*xi4 + u*wr*gam4, F15 = u*xi5 + u*wr*gam5] in G1. 
+
+(*opk*)
+trusted_polys [F16 = u*a] in G1. 
+
+(*msg*)
+trusted_polys [F17 = M1, F18 = M2, F19 = M3, F20 = M4] in G2.  
+
+(*signature*)
+untrusted_polys [F21 = u*(a-rho*wr) - M1*xi1 - M2*xi2 - M3*xi3 - M4*xi4, F22 = u*rho - M1*gam1 - M2*gam2 - M3*gam3 - M4*gam4] in G2. 

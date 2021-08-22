@@ -1,0 +1,142 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/CL-C-4block.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  m0 in G1,  m1 in G1,  m2 in G1,  m3 in G1,  m0 in GT,  m1 in GT,  m2 in GT,  m3 in GT,  m0*x in G1,  m1*x in G1,  m2*x in G1,  m3*x in G1,  m0*y in G1,  m1*y in G1,  m2*y in G1,  m3*y in G1,  m0*z1 in G1,  m1*z1 in G1,  m2*z1 in G1,  m3*z1 in G1,  m0*z2 in G1,  m1*z2 in G1,  m2*z2 in G1,  m3*z2 in G1,  m0*z3 in G1,  m1*z3 in G1,  m2*z3 in G1,  m3*z3 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x in G1
+F2 = y in G1
+F3 = z1 in G1
+F4 = z2 in G1
+F5 = z3 in G1
+F10 = a in G1
+F11 = a*z1 in G1
+F12 = a*z2 in G1
+F13 = a*z3 in G1
+F18 = a*y in G1
+F19 = a*y*z1 in G1
+F20 = a*y*z2 in G1
+F21 = a*y*z3 in G1
+F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 in G1
+F0^m0 = m0 in G1
+F0^m1 = m1 in G1
+F0^m2 = m2 in G1
+F0^m3 = m3 in G1
+F0^m0 = m0 in GT
+F0^m1 = m1 in GT
+F0^m2 = m2 in GT
+F0^m3 = m3 in GT
+F1^m0 = m0*x in G1
+F1^m1 = m1*x in G1
+F1^m2 = m2*x in G1
+F1^m3 = m3*x in G1
+F2^m0 = m0*y in G1
+F2^m1 = m1*y in G1
+F2^m2 = m2*y in G1
+F2^m3 = m3*y in G1
+F3^m0 = m0*z1 in G1
+F3^m1 = m1*z1 in G1
+F3^m2 = m2*z1 in G1
+F3^m3 = m3*z1 in G1
+F4^m0 = m0*z2 in G1
+F4^m1 = m1*z2 in G1
+F4^m2 = m2*z2 in G1
+F4^m3 = m3*z2 in G1
+F5^m0 = m0*z3 in G1
+F5^m1 = m1*z3 in G1
+F5^m2 = m2*z3 in G1
+F5^m3 = m3*z3 in G1
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F10 = a, F11 = a*z1, F12 = a*z2, F13 = a*z3, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: 
+rule 2 applied to F10 = a.
+....
+Checking for Rule 1. Took 1.688362s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F11 = a*z1, F12 = a*z2, F13 = a*z3, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F11 = a*z1.     C := e(F11,F0) =  e(F3,F10)
+....
+Checking for Rule 1. Took 0.000601s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F12 = a*z2, F13 = a*z3, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F12 = a*z2.     C := e(F12,F0) =  e(F4,F10)
+....
+Checking for Rule 1. Took 0.000589s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F13 = a*z3, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F13 = a*z3.     C := e(F13,F0) =  e(F5,F10)
+....
+Checking for Rule 1. Took 0.000546s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F18 = a*y.     C := e(F18,F0) =  e(F2,F10)
+....
+Checking for Rule 1. Took 0.004603s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F19 = a*y*z1.     C := e(F19,F0) =  e(F2,F11)
+....
+Checking for Rule 1. Took 0.000669s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F20 = a*y*z2, F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F20 = a*y*z2.     C := e(F20,F0) =  e(F2,F12)
+....
+Checking for Rule 1. Took 0.000604s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F21 = a*y*z3, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F21 = a*y*z3.     C := e(F21,F0) =  e(F2,F13)
+....
+Checking for Rule 1. Took 0.003906s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, 
+Untrusted set in G1: F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3, 
+Untrusted set in GT: rule 1 applied to F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3.     C := e(F26,F0) =  e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10)
+....
+Execution time : 2.502672s
+
+(e(F11,F0) =  e(F3,F10) AND (e(F12,F0) =  e(F4,F10) AND (e(F13,F0) =  e(F5,F10) AND (e(F18,F0) =  e(F2,F10) AND (e(F19,F0) =  e(F2,F11) AND (e(F20,F0) =  e(F2,F12) AND (e(F21,F0) =  e(F2,F13) AND (e(F26,F0) =  e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10) AND ACC))))))))
+
+
+
+G1 : e(F11,F0) = e(F3,F10)
+G2 : e(F12,F0) = e(F4,F10)
+G3 : e(F13,F0) = e(F5,F10)
+G4 : e(F18,F0) = e(F2,F10)
+G5 : e(F19,F0) = e(F2,F11)
+G6 : e(F20,F0) = e(F2,F12)
+G7 : e(F21,F0) = e(F2,F13)
+G8 : e(F26,F0) = e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10)
+G9 : G7 AND G8
+G10 : G6 AND G9
+G11 : G5 AND G10
+G12 : G4 AND G11
+G13 : G3 AND G12
+G14 : G2 AND G13
+G15 : G1 AND G14

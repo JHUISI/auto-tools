@@ -1,0 +1,116 @@
+
+** Conflict (shift/reduce) in state 18.
+** Token involved: EXP
+** This state is reached from cmds_t after reading:
+
+ZP LBRACK MINUS poly 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+cmds_t 
+list(cmd) EOF 
+cmd list(cmd) 
+ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+          poly 
+          (?)
+
+** In state 18, looking ahead at EXP, shifting is permitted
+** because of the following sub-derivation:
+
+MINUS poly 
+      poly . EXP INT 
+
+** In state 18, looking ahead at EXP, reducing production
+** poly -> MINUS poly 
+** is permitted because of the following sub-derivation:
+
+poly EXP INT // lookahead token appears
+MINUS poly . 
+
+** Conflict (shift/reduce) in state 17.
+** Token involved: EXP
+** This state is reached from cmds_t after reading:
+
+ZP LBRACK poly MINUS poly 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+cmds_t 
+list(cmd) EOF 
+cmd list(cmd) 
+ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+          poly 
+          (?)
+
+** In state 17, looking ahead at EXP, reducing production
+** poly -> poly MINUS poly 
+** is permitted because of the following sub-derivation:
+
+poly EXP INT // lookahead token appears
+poly MINUS poly . 
+
+** In state 17, looking ahead at EXP, shifting is permitted
+** because of the following sub-derivation:
+
+poly MINUS poly 
+           poly . EXP INT 
+
+** Conflict (shift/reduce) in state 15.
+** Token involved: EXP
+** This state is reached from cmds_t after reading:
+
+ZP LBRACK poly PLUS poly 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+cmds_t 
+list(cmd) EOF 
+cmd list(cmd) 
+ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+          poly 
+          (?)
+
+** In state 15, looking ahead at EXP, reducing production
+** poly -> poly PLUS poly 
+** is permitted because of the following sub-derivation:
+
+poly EXP INT // lookahead token appears
+poly PLUS poly . 
+
+** In state 15, looking ahead at EXP, shifting is permitted
+** because of the following sub-derivation:
+
+poly PLUS poly 
+          poly . EXP INT 
+
+** Conflict (shift/reduce) in state 10.
+** Token involved: EXP
+** This state is reached from cmds_t after reading:
+
+ZP LBRACK poly STAR poly 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+cmds_t 
+list(cmd) EOF 
+cmd list(cmd) 
+ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+          poly 
+          (?)
+
+** In state 10, looking ahead at EXP, reducing production
+** poly -> poly STAR poly 
+** is permitted because of the following sub-derivation:
+
+poly EXP INT // lookahead token appears
+poly STAR poly . 
+
+** In state 10, looking ahead at EXP, shifting is permitted
+** because of the following sub-derivation:
+
+poly STAR poly 
+          poly . EXP INT 

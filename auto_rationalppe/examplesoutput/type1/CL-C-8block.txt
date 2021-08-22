@@ -1,0 +1,294 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/CL-C-8block.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  m0 in G1,  m1 in G1,  m2 in G1,  m3 in G1,  m4 in G1,  m5 in G1,  m6 in G1,  m7 in G1,  m0 in GT,  m1 in GT,  m2 in GT,  m3 in GT,  m4 in GT,  m5 in GT,  m6 in GT,  m7 in GT,  m0*x in G1,  m1*x in G1,  m2*x in G1,  m3*x in G1,  m4*x in G1,  m5*x in G1,  m6*x in G1,  m7*x in G1,  m0*y in G1,  m1*y in G1,  m2*y in G1,  m3*y in G1,  m4*y in G1,  m5*y in G1,  m6*y in G1,  m7*y in G1,  m0*z1 in G1,  m1*z1 in G1,  m2*z1 in G1,  m3*z1 in G1,  m4*z1 in G1,  m5*z1 in G1,  m6*z1 in G1,  m7*z1 in G1,  m0*z2 in G1,  m1*z2 in G1,  m2*z2 in G1,  m3*z2 in G1,  m4*z2 in G1,  m5*z2 in G1,  m6*z2 in G1,  m7*z2 in G1,  m0*z3 in G1,  m1*z3 in G1,  m2*z3 in G1,  m3*z3 in G1,  m4*z3 in G1,  m5*z3 in G1,  m6*z3 in G1,  m7*z3 in G1,  m0*z4 in G1,  m1*z4 in G1,  m2*z4 in G1,  m3*z4 in G1,  m4*z4 in G1,  m5*z4 in G1,  m6*z4 in G1,  m7*z4 in G1,  m0*z5 in G1,  m1*z5 in G1,  m2*z5 in G1,  m3*z5 in G1,  m4*z5 in G1,  m5*z5 in G1,  m6*z5 in G1,  m7*z5 in G1,  m0*z6 in G1,  m1*z6 in G1,  m2*z6 in G1,  m3*z6 in G1,  m4*z6 in G1,  m5*z6 in G1,  m6*z6 in G1,  m7*z6 in G1,  m0*z7 in G1,  m1*z7 in G1,  m2*z7 in G1,  m3*z7 in G1,  m4*z7 in G1,  m5*z7 in G1,  m6*z7 in G1,  m7*z7 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = x in G1
+F2 = y in G1
+F3 = z1 in G1
+F4 = z2 in G1
+F5 = z3 in G1
+F6 = z4 in G1
+F7 = z5 in G1
+F8 = z6 in G1
+F9 = z7 in G1
+F10 = a in G1
+F11 = a*z1 in G1
+F12 = a*z2 in G1
+F13 = a*z3 in G1
+F14 = a*z4 in G1
+F15 = a*z5 in G1
+F16 = a*z6 in G1
+F17 = a*z7 in G1
+F18 = a*y in G1
+F19 = a*y*z1 in G1
+F20 = a*y*z2 in G1
+F21 = a*y*z3 in G1
+F22 = a*y*z4 in G1
+F23 = a*y*z5 in G1
+F24 = a*y*z6 in G1
+F25 = a*y*z7 in G1
+F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7 in G1
+F0^m0 = m0 in G1
+F0^m1 = m1 in G1
+F0^m2 = m2 in G1
+F0^m3 = m3 in G1
+F0^m4 = m4 in G1
+F0^m5 = m5 in G1
+F0^m6 = m6 in G1
+F0^m7 = m7 in G1
+F0^m0 = m0 in GT
+F0^m1 = m1 in GT
+F0^m2 = m2 in GT
+F0^m3 = m3 in GT
+F0^m4 = m4 in GT
+F0^m5 = m5 in GT
+F0^m6 = m6 in GT
+F0^m7 = m7 in GT
+F1^m0 = m0*x in G1
+F1^m1 = m1*x in G1
+F1^m2 = m2*x in G1
+F1^m3 = m3*x in G1
+F1^m4 = m4*x in G1
+F1^m5 = m5*x in G1
+F1^m6 = m6*x in G1
+F1^m7 = m7*x in G1
+F2^m0 = m0*y in G1
+F2^m1 = m1*y in G1
+F2^m2 = m2*y in G1
+F2^m3 = m3*y in G1
+F2^m4 = m4*y in G1
+F2^m5 = m5*y in G1
+F2^m6 = m6*y in G1
+F2^m7 = m7*y in G1
+F3^m0 = m0*z1 in G1
+F3^m1 = m1*z1 in G1
+F3^m2 = m2*z1 in G1
+F3^m3 = m3*z1 in G1
+F3^m4 = m4*z1 in G1
+F3^m5 = m5*z1 in G1
+F3^m6 = m6*z1 in G1
+F3^m7 = m7*z1 in G1
+F4^m0 = m0*z2 in G1
+F4^m1 = m1*z2 in G1
+F4^m2 = m2*z2 in G1
+F4^m3 = m3*z2 in G1
+F4^m4 = m4*z2 in G1
+F4^m5 = m5*z2 in G1
+F4^m6 = m6*z2 in G1
+F4^m7 = m7*z2 in G1
+F5^m0 = m0*z3 in G1
+F5^m1 = m1*z3 in G1
+F5^m2 = m2*z3 in G1
+F5^m3 = m3*z3 in G1
+F5^m4 = m4*z3 in G1
+F5^m5 = m5*z3 in G1
+F5^m6 = m6*z3 in G1
+F5^m7 = m7*z3 in G1
+F6^m0 = m0*z4 in G1
+F6^m1 = m1*z4 in G1
+F6^m2 = m2*z4 in G1
+F6^m3 = m3*z4 in G1
+F6^m4 = m4*z4 in G1
+F6^m5 = m5*z4 in G1
+F6^m6 = m6*z4 in G1
+F6^m7 = m7*z4 in G1
+F7^m0 = m0*z5 in G1
+F7^m1 = m1*z5 in G1
+F7^m2 = m2*z5 in G1
+F7^m3 = m3*z5 in G1
+F7^m4 = m4*z5 in G1
+F7^m5 = m5*z5 in G1
+F7^m6 = m6*z5 in G1
+F7^m7 = m7*z5 in G1
+F8^m0 = m0*z6 in G1
+F8^m1 = m1*z6 in G1
+F8^m2 = m2*z6 in G1
+F8^m3 = m3*z6 in G1
+F8^m4 = m4*z6 in G1
+F8^m5 = m5*z6 in G1
+F8^m6 = m6*z6 in G1
+F8^m7 = m7*z6 in G1
+F9^m0 = m0*z7 in G1
+F9^m1 = m1*z7 in G1
+F9^m2 = m2*z7 in G1
+F9^m3 = m3*z7 in G1
+F9^m4 = m4*z7 in G1
+F9^m5 = m5*z7 in G1
+F9^m6 = m6*z7 in G1
+F9^m7 = m7*z7 in G1
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F10 = a, F11 = a*z1, F12 = a*z2, F13 = a*z3, F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: 
+rule 2 applied to F10 = a.
+....
+Checking for Rule 1. Took 1.783862s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F11 = a*z1, F12 = a*z2, F13 = a*z3, F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F11 = a*z1.     C := e(F11,F0) =  e(F3,F10)
+....
+Checking for Rule 1. Took 0.000611s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F12 = a*z2, F13 = a*z3, F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F12 = a*z2.     C := e(F12,F0) =  e(F4,F10)
+....
+Checking for Rule 1. Took 0.000839s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F13 = a*z3, F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F13 = a*z3.     C := e(F13,F0) =  e(F5,F10)
+....
+Checking for Rule 1. Took 0.000687s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F14 = a*z4, F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F14 = a*z4.     C := e(F14,F0) =  e(F6,F10)
+....
+Checking for Rule 1. Took 0.000657s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F15 = a*z5, F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F15 = a*z5.     C := e(F15,F0) =  e(F7,F10)
+....
+Checking for Rule 1. Took 0.000605s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F16 = a*z6, F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F16 = a*z6.     C := e(F16,F0) =  e(F8,F10)
+....
+Checking for Rule 1. Took 0.000665s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F17 = a*z7, F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F17 = a*z7.     C := e(F17,F0) =  e(F9,F10)
+....
+Checking for Rule 1. Took 0.000680s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F18 = a*y, F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F18 = a*y.     C := e(F18,F0) =  e(F2,F10)
+....
+Checking for Rule 1. Took 0.007113s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F19 = a*y*z1, F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F19 = a*y*z1.     C := e(F19,F0) =  e(F2,F11)
+....
+Checking for Rule 1. Took 0.000710s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F20 = a*y*z2, F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F20 = a*y*z2.     C := e(F20,F0) =  e(F2,F12)
+....
+Checking for Rule 1. Took 0.000744s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F21 = a*y*z3, F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F21 = a*y*z3.     C := e(F21,F0) =  e(F2,F13)
+....
+Checking for Rule 1. Took 0.000692s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, F21^m4 = a*m4*y*z3, F21^m5 = a*m5*y*z3, F21^m6 = a*m6*y*z3, F21^m7 = a*m7*y*z3, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F22 = a*y*z4, F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F22 = a*y*z4.     C := e(F22,F0) =  e(F2,F14)
+....
+Checking for Rule 1. Took 0.000703s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, F21^m4 = a*m4*y*z3, F21^m5 = a*m5*y*z3, F21^m6 = a*m6*y*z3, F21^m7 = a*m7*y*z3, F22 = a*y*z4, F22^m0 = a*m0*y*z4, F22^m1 = a*m1*y*z4, F22^m2 = a*m2*y*z4, F22^m3 = a*m3*y*z4, F22^m4 = a*m4*y*z4, F22^m5 = a*m5*y*z4, F22^m6 = a*m6*y*z4, F22^m7 = a*m7*y*z4, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F23 = a*y*z5, F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F23 = a*y*z5.     C := e(F23,F0) =  e(F2,F15)
+....
+Checking for Rule 1. Took 0.000749s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, F21^m4 = a*m4*y*z3, F21^m5 = a*m5*y*z3, F21^m6 = a*m6*y*z3, F21^m7 = a*m7*y*z3, F22 = a*y*z4, F22^m0 = a*m0*y*z4, F22^m1 = a*m1*y*z4, F22^m2 = a*m2*y*z4, F22^m3 = a*m3*y*z4, F22^m4 = a*m4*y*z4, F22^m5 = a*m5*y*z4, F22^m6 = a*m6*y*z4, F22^m7 = a*m7*y*z4, F23 = a*y*z5, F23^m0 = a*m0*y*z5, F23^m1 = a*m1*y*z5, F23^m2 = a*m2*y*z5, F23^m3 = a*m3*y*z5, F23^m4 = a*m4*y*z5, F23^m5 = a*m5*y*z5, F23^m6 = a*m6*y*z5, F23^m7 = a*m7*y*z5, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F24 = a*y*z6, F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F24 = a*y*z6.     C := e(F24,F0) =  e(F2,F16)
+....
+Checking for Rule 1. Took 0.000665s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, F21^m4 = a*m4*y*z3, F21^m5 = a*m5*y*z3, F21^m6 = a*m6*y*z3, F21^m7 = a*m7*y*z3, F22 = a*y*z4, F22^m0 = a*m0*y*z4, F22^m1 = a*m1*y*z4, F22^m2 = a*m2*y*z4, F22^m3 = a*m3*y*z4, F22^m4 = a*m4*y*z4, F22^m5 = a*m5*y*z4, F22^m6 = a*m6*y*z4, F22^m7 = a*m7*y*z4, F23 = a*y*z5, F23^m0 = a*m0*y*z5, F23^m1 = a*m1*y*z5, F23^m2 = a*m2*y*z5, F23^m3 = a*m3*y*z5, F23^m4 = a*m4*y*z5, F23^m5 = a*m5*y*z5, F23^m6 = a*m6*y*z5, F23^m7 = a*m7*y*z5, F24 = a*y*z6, F24^m0 = a*m0*y*z6, F24^m1 = a*m1*y*z6, F24^m2 = a*m2*y*z6, F24^m3 = a*m3*y*z6, F24^m4 = a*m4*y*z6, F24^m5 = a*m5*y*z6, F24^m6 = a*m6*y*z6, F24^m7 = a*m7*y*z6, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F25 = a*y*z7, F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F25 = a*y*z7.     C := e(F25,F0) =  e(F2,F17)
+....
+Checking for Rule 1. Took 0.004953s time to solve
+
+....
+Trusted set in G1: F0 = 1, F1 = x, F2 = y, F3 = z1, F4 = z2, F5 = z3, F6 = z4, F7 = z5, F8 = z6, F9 = z7, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, F1^m0 = m0*x, F1^m1 = m1*x, F1^m2 = m2*x, F1^m3 = m3*x, F1^m4 = m4*x, F1^m5 = m5*x, F1^m6 = m6*x, F1^m7 = m7*x, F2^m0 = m0*y, F2^m1 = m1*y, F2^m2 = m2*y, F2^m3 = m3*y, F2^m4 = m4*y, F2^m5 = m5*y, F2^m6 = m6*y, F2^m7 = m7*y, F3^m0 = m0*z1, F3^m1 = m1*z1, F3^m2 = m2*z1, F3^m3 = m3*z1, F3^m4 = m4*z1, F3^m5 = m5*z1, F3^m6 = m6*z1, F3^m7 = m7*z1, F4^m0 = m0*z2, F4^m1 = m1*z2, F4^m2 = m2*z2, F4^m3 = m3*z2, F4^m4 = m4*z2, F4^m5 = m5*z2, F4^m6 = m6*z2, F4^m7 = m7*z2, F5^m0 = m0*z3, F5^m1 = m1*z3, F5^m2 = m2*z3, F5^m3 = m3*z3, F5^m4 = m4*z3, F5^m5 = m5*z3, F5^m6 = m6*z3, F5^m7 = m7*z3, F6^m0 = m0*z4, F6^m1 = m1*z4, F6^m2 = m2*z4, F6^m3 = m3*z4, F6^m4 = m4*z4, F6^m5 = m5*z4, F6^m6 = m6*z4, F6^m7 = m7*z4, F7^m0 = m0*z5, F7^m1 = m1*z5, F7^m2 = m2*z5, F7^m3 = m3*z5, F7^m4 = m4*z5, F7^m5 = m5*z5, F7^m6 = m6*z5, F7^m7 = m7*z5, F8^m0 = m0*z6, F8^m1 = m1*z6, F8^m2 = m2*z6, F8^m3 = m3*z6, F8^m4 = m4*z6, F8^m5 = m5*z6, F8^m6 = m6*z6, F8^m7 = m7*z6, F9^m0 = m0*z7, F9^m1 = m1*z7, F9^m2 = m2*z7, F9^m3 = m3*z7, F9^m4 = m4*z7, F9^m5 = m5*z7, F9^m6 = m6*z7, F9^m7 = m7*z7, F10 = a, F10^m0 = a*m0, F10^m1 = a*m1, F10^m2 = a*m2, F10^m3 = a*m3, F10^m4 = a*m4, F10^m5 = a*m5, F10^m6 = a*m6, F10^m7 = a*m7, F11 = a*z1, F11^m0 = a*m0*z1, F11^m1 = a*m1*z1, F11^m2 = a*m2*z1, F11^m3 = a*m3*z1, F11^m4 = a*m4*z1, F11^m5 = a*m5*z1, F11^m6 = a*m6*z1, F11^m7 = a*m7*z1, F12 = a*z2, F12^m0 = a*m0*z2, F12^m1 = a*m1*z2, F12^m2 = a*m2*z2, F12^m3 = a*m3*z2, F12^m4 = a*m4*z2, F12^m5 = a*m5*z2, F12^m6 = a*m6*z2, F12^m7 = a*m7*z2, F13 = a*z3, F13^m0 = a*m0*z3, F13^m1 = a*m1*z3, F13^m2 = a*m2*z3, F13^m3 = a*m3*z3, F13^m4 = a*m4*z3, F13^m5 = a*m5*z3, F13^m6 = a*m6*z3, F13^m7 = a*m7*z3, F14 = a*z4, F14^m0 = a*m0*z4, F14^m1 = a*m1*z4, F14^m2 = a*m2*z4, F14^m3 = a*m3*z4, F14^m4 = a*m4*z4, F14^m5 = a*m5*z4, F14^m6 = a*m6*z4, F14^m7 = a*m7*z4, F15 = a*z5, F15^m0 = a*m0*z5, F15^m1 = a*m1*z5, F15^m2 = a*m2*z5, F15^m3 = a*m3*z5, F15^m4 = a*m4*z5, F15^m5 = a*m5*z5, F15^m6 = a*m6*z5, F15^m7 = a*m7*z5, F16 = a*z6, F16^m0 = a*m0*z6, F16^m1 = a*m1*z6, F16^m2 = a*m2*z6, F16^m3 = a*m3*z6, F16^m4 = a*m4*z6, F16^m5 = a*m5*z6, F16^m6 = a*m6*z6, F16^m7 = a*m7*z6, F17 = a*z7, F17^m0 = a*m0*z7, F17^m1 = a*m1*z7, F17^m2 = a*m2*z7, F17^m3 = a*m3*z7, F17^m4 = a*m4*z7, F17^m5 = a*m5*z7, F17^m6 = a*m6*z7, F17^m7 = a*m7*z7, F18 = a*y, F18^m0 = a*m0*y, F18^m1 = a*m1*y, F18^m2 = a*m2*y, F18^m3 = a*m3*y, F18^m4 = a*m4*y, F18^m5 = a*m5*y, F18^m6 = a*m6*y, F18^m7 = a*m7*y, F19 = a*y*z1, F19^m0 = a*m0*y*z1, F19^m1 = a*m1*y*z1, F19^m2 = a*m2*y*z1, F19^m3 = a*m3*y*z1, F19^m4 = a*m4*y*z1, F19^m5 = a*m5*y*z1, F19^m6 = a*m6*y*z1, F19^m7 = a*m7*y*z1, F20 = a*y*z2, F20^m0 = a*m0*y*z2, F20^m1 = a*m1*y*z2, F20^m2 = a*m2*y*z2, F20^m3 = a*m3*y*z2, F20^m4 = a*m4*y*z2, F20^m5 = a*m5*y*z2, F20^m6 = a*m6*y*z2, F20^m7 = a*m7*y*z2, F21 = a*y*z3, F21^m0 = a*m0*y*z3, F21^m1 = a*m1*y*z3, F21^m2 = a*m2*y*z3, F21^m3 = a*m3*y*z3, F21^m4 = a*m4*y*z3, F21^m5 = a*m5*y*z3, F21^m6 = a*m6*y*z3, F21^m7 = a*m7*y*z3, F22 = a*y*z4, F22^m0 = a*m0*y*z4, F22^m1 = a*m1*y*z4, F22^m2 = a*m2*y*z4, F22^m3 = a*m3*y*z4, F22^m4 = a*m4*y*z4, F22^m5 = a*m5*y*z4, F22^m6 = a*m6*y*z4, F22^m7 = a*m7*y*z4, F23 = a*y*z5, F23^m0 = a*m0*y*z5, F23^m1 = a*m1*y*z5, F23^m2 = a*m2*y*z5, F23^m3 = a*m3*y*z5, F23^m4 = a*m4*y*z5, F23^m5 = a*m5*y*z5, F23^m6 = a*m6*y*z5, F23^m7 = a*m7*y*z5, F24 = a*y*z6, F24^m0 = a*m0*y*z6, F24^m1 = a*m1*y*z6, F24^m2 = a*m2*y*z6, F24^m3 = a*m3*y*z6, F24^m4 = a*m4*y*z6, F24^m5 = a*m5*y*z6, F24^m6 = a*m6*y*z6, F24^m7 = a*m7*y*z6, F25 = a*y*z7, F25^m0 = a*m0*y*z7, F25^m1 = a*m1*y*z7, F25^m2 = a*m2*y*z7, F25^m3 = a*m3*y*z7, F25^m4 = a*m4*y*z7, F25^m5 = a*m5*y*z7, F25^m6 = a*m6*y*z7, F25^m7 = a*m7*y*z7, 
+Trusted set in GT: F0 = 1, F0^m0 = m0, F0^m1 = m1, F0^m2 = m2, F0^m3 = m3, F0^m4 = m4, F0^m5 = m5, F0^m6 = m6, F0^m7 = m7, 
+Untrusted set in G1: F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7, 
+Untrusted set in GT: rule 1 applied to F26 = a*x + a*m0*x*y + a*m1*x*y*z1 + a*m2*x*y*z2 + a*m3*x*y*z3 + a*m4*x*y*z4 + a*m5*x*y*z5 + a*m6*x*y*z6 + a*m7*x*y*z7.     C := e(F26,F0) =  e(F1,F25^m7)*e(F1,F24^m6)*e(F1,F23^m5)*e(F1,F22^m4)*e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10)
+....
+Execution time : 16.546616s
+
+(e(F11,F0) =  e(F3,F10) AND (e(F12,F0) =  e(F4,F10) AND (e(F13,F0) =  e(F5,F10) AND (e(F14,F0) =  e(F6,F10) AND (e(F15,F0) =  e(F7,F10) AND (e(F16,F0) =  e(F8,F10) AND (e(F17,F0) =  e(F9,F10) AND (e(F18,F0) =  e(F2,F10) AND (e(F19,F0) =  e(F2,F11) AND (e(F20,F0) =  e(F2,F12) AND (e(F21,F0) =  e(F2,F13) AND (e(F22,F0) =  e(F2,F14) AND (e(F23,F0) =  e(F2,F15) AND (e(F24,F0) =  e(F2,F16) AND (e(F25,F0) =  e(F2,F17) AND (e(F26,F0) =  e(F1,F25^m7)*e(F1,F24^m6)*e(F1,F23^m5)*e(F1,F22^m4)*e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10) AND ACC))))))))))))))))
+
+
+
+G1 : e(F11,F0) = e(F3,F10)
+G2 : e(F12,F0) = e(F4,F10)
+G3 : e(F13,F0) = e(F5,F10)
+G4 : e(F14,F0) = e(F6,F10)
+G5 : e(F15,F0) = e(F7,F10)
+G6 : e(F16,F0) = e(F8,F10)
+G7 : e(F17,F0) = e(F9,F10)
+G8 : e(F18,F0) = e(F2,F10)
+G9 : e(F19,F0) = e(F2,F11)
+G10 : e(F20,F0) = e(F2,F12)
+G11 : e(F21,F0) = e(F2,F13)
+G12 : e(F22,F0) = e(F2,F14)
+G13 : e(F23,F0) = e(F2,F15)
+G14 : e(F24,F0) = e(F2,F16)
+G15 : e(F25,F0) = e(F2,F17)
+G16 : e(F26,F0) = e(F1,F25^m7)*e(F1,F24^m6)*e(F1,F23^m5)*e(F1,F22^m4)*e(F1,F21^m3)*e(F1,F20^m2)*e(F1,F19^m1)*e(F1,F18^m0)*e(F1,F10)
+G17 : G15 AND G16
+G18 : G14 AND G17
+G19 : G13 AND G18
+G20 : G12 AND G19
+G21 : G11 AND G20
+G22 : G10 AND G21
+G23 : G9 AND G22
+G24 : G8 AND G23
+G25 : G7 AND G24
+G26 : G6 AND G25
+G27 : G5 AND G26
+G28 : G4 AND G27
+G29 : G3 AND G28
+G30 : G2 AND G29
+G31 : G1 AND G30

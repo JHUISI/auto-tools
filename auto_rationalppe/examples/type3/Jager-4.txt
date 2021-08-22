@@ -1,0 +1,200 @@
+
+(*Jager 15 VRF scheme when n = 4
+https://eprint.iacr.org/2014/799.pdf*)
+
+maps G1 * G2 -> GT.
+
+(* bits of C(x). Expanding their domain to Zp *)
+Zp_vars [x1, x2, x3, x4].
+
+(*verification key*)
+trusted_polys [F1 = alpha10, F2 = alpha11, F3 = alpha20, F4 = alpha21, F5 = alpha30, F6 = alpha31, F7 = alpha40, F8 = alpha41] in G1.
+trusted_polys [F9 = alpha10, F10 = alpha11, F11 = alpha20, F12 = alpha21, F13 = alpha30, F14 = alpha31, F15 = alpha40, F16 = alpha41] in G2.
+
+trusted_polys [F17 = beta] in G2.
+
+(*Proof*)
+untrusted_polys [F18 = (alpha10*(1-x1) + alpha11*x1)] in G1.
+
+untrusted_polys [F19 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2)] in G1.
+
+untrusted_polys [F20 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) ] in G1.
+
+untrusted_polys [F21 = (alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) * (alpha40*(1-x4) + alpha41*x4) ] in G1.
+
+
+(*VRF output*)
+untrusted_polys [F22 = beta*(alpha10*(1-x1) + alpha11*x1) * (alpha20*(1-x2) + alpha21*x2) * (alpha30*(1-x3) + alpha31*x3) * (alpha40*(1-x4) + alpha41*x4) ] in GT.
+
+
+
+(***************Output on execution************)
+(*
+
+F0 = 1 in G1
+F0 = 1 in G2
+F0 = 1 in GT
+F1 = alpha10 in G1
+F2 = alpha11 in G1
+F3 = alpha20 in G1
+F4 = alpha21 in G1
+F5 = alpha30 in G1
+F6 = alpha31 in G1
+F7 = alpha40 in G1
+F8 = alpha41 in G1
+F9 = beta in G2
+F10 = alpha10 - alpha10*x1 + alpha11*x1 in G1
+F11 = alpha10*alpha20 - alpha10*alpha20*x1 - alpha10*alpha20*x2 + alpha10*alpha21*x2 + alpha11*alpha20*x1 + alpha10*alpha20*x1*x2 - alpha10*alpha21*x1*x2 - alpha11*alpha20*x1*x2 + alpha11*alpha21*x1*x2 in G1
+F12 = alpha10*alpha20*alpha30 - alpha10*alpha20*alpha30*x1 - alpha10*alpha20*alpha30*x2 - alpha10*alpha20*alpha30*x3 + alpha10*alpha20*alpha31*x3 + alpha10*alpha21*alpha30*x2 + alpha11*alpha20*alpha30*x1 + alpha10*alpha20*alpha30*x1*x2 + alpha10*alpha20*alpha30*x1*x3 + alpha10*alpha20*alpha30*x2*x3 - alpha10*alpha20*alpha31*x1*x3 - alpha10*alpha20*alpha31*x2*x3 - alpha10*alpha21*alpha30*x1*x2 - alpha10*alpha21*alpha30*x2*x3 + alpha10*alpha21*alpha31*x2*x3 - alpha11*alpha20*alpha30*x1*x2 - alpha11*alpha20*alpha30*x1*x3 + alpha11*alpha20*alpha31*x1*x3 + alpha11*alpha21*alpha30*x1*x2 - alpha10*alpha20*alpha30*x1*x2*x3 + alpha10*alpha20*alpha31*x1*x2*x3 + alpha10*alpha21*alpha30*x1*x2*x3 - alpha10*alpha21*alpha31*x1*x2*x3 + alpha11*alpha20*alpha30*x1*x2*x3 - alpha11*alpha20*alpha31*x1*x2*x3 - alpha11*alpha21*alpha30*x1*x2*x3 + alpha11*alpha21*alpha31*x1*x2*x3 in G1
+F13 = alpha10*alpha20*alpha30*alpha40 - alpha10*alpha20*alpha30*alpha40*x1 - alpha10*alpha20*alpha30*alpha40*x2 - alpha10*alpha20*alpha30*alpha40*x3 - alpha10*alpha20*alpha30*alpha40*x4 + alpha10*alpha20*alpha30*alpha41*x4 + alpha10*alpha20*alpha31*alpha40*x3 + alpha10*alpha21*alpha30*alpha40*x2 + alpha11*alpha20*alpha30*alpha40*x1 + alpha10*alpha20*alpha30*alpha40*x1*x2 + alpha10*alpha20*alpha30*alpha40*x1*x3 + alpha10*alpha20*alpha30*alpha40*x1*x4 + alpha10*alpha20*alpha30*alpha40*x2*x3 + alpha10*alpha20*alpha30*alpha40*x2*x4 + alpha10*alpha20*alpha30*alpha40*x3*x4 - alpha10*alpha20*alpha30*alpha41*x1*x4 - alpha10*alpha20*alpha30*alpha41*x2*x4 - alpha10*alpha20*alpha30*alpha41*x3*x4 - alpha10*alpha20*alpha31*alpha40*x1*x3 - alpha10*alpha20*alpha31*alpha40*x2*x3 - alpha10*alpha20*alpha31*alpha40*x3*x4 + alpha10*alpha20*alpha31*alpha41*x3*x4 - alpha10*alpha21*alpha30*alpha40*x1*x2 - alpha10*alpha21*alpha30*alpha40*x2*x3 - alpha10*alpha21*alpha30*alpha40*x2*x4 + alpha10*alpha21*alpha30*alpha41*x2*x4 + alpha10*alpha21*alpha31*alpha40*x2*x3 - alpha11*alpha20*alpha30*alpha40*x1*x2 - alpha11*alpha20*alpha30*alpha40*x1*x3 - alpha11*alpha20*alpha30*alpha40*x1*x4 + alpha11*alpha20*alpha30*alpha41*x1*x4 + alpha11*alpha20*alpha31*alpha40*x1*x3 + alpha11*alpha21*alpha30*alpha40*x1*x2 - alpha10*alpha20*alpha30*alpha40*x1*x2*x3 - alpha10*alpha20*alpha30*alpha40*x1*x2*x4 - alpha10*alpha20*alpha30*alpha40*x1*x3*x4 - alpha10*alpha20*alpha30*alpha40*x2*x3*x4 + alpha10*alpha20*alpha30*alpha41*x1*x2*x4 + alpha10*alpha20*alpha30*alpha41*x1*x3*x4 + alpha10*alpha20*alpha30*alpha41*x2*x3*x4 + alpha10*alpha20*alpha31*alpha40*x1*x2*x3 + alpha10*alpha20*alpha31*alpha40*x1*x3*x4 + alpha10*alpha20*alpha31*alpha40*x2*x3*x4 - alpha10*alpha20*alpha31*alpha41*x1*x3*x4 - alpha10*alpha20*alpha31*alpha41*x2*x3*x4 + alpha10*alpha21*alpha30*alpha40*x1*x2*x3 + alpha10*alpha21*alpha30*alpha40*x1*x2*x4 + alpha10*alpha21*alpha30*alpha40*x2*x3*x4 - alpha10*alpha21*alpha30*alpha41*x1*x2*x4 - alpha10*alpha21*alpha30*alpha41*x2*x3*x4 - alpha10*alpha21*alpha31*alpha40*x1*x2*x3 - alpha10*alpha21*alpha31*alpha40*x2*x3*x4 + alpha10*alpha21*alpha31*alpha41*x2*x3*x4 + alpha11*alpha20*alpha30*alpha40*x1*x2*x3 + alpha11*alpha20*alpha30*alpha40*x1*x2*x4 + alpha11*alpha20*alpha30*alpha40*x1*x3*x4 - alpha11*alpha20*alpha30*alpha41*x1*x2*x4 - alpha11*alpha20*alpha30*alpha41*x1*x3*x4 - alpha11*alpha20*alpha31*alpha40*x1*x2*x3 - alpha11*alpha20*alpha31*alpha40*x1*x3*x4 + alpha11*alpha20*alpha31*alpha41*x1*x3*x4 - alpha11*alpha21*alpha30*alpha40*x1*x2*x3 - alpha11*alpha21*alpha30*alpha40*x1*x2*x4 + alpha11*alpha21*alpha30*alpha41*x1*x2*x4 + alpha11*alpha21*alpha31*alpha40*x1*x2*x3 + alpha10*alpha20*alpha30*alpha40*x1*x2*x3*x4 - alpha10*alpha20*alpha30*alpha41*x1*x2*x3*x4 - alpha10*alpha20*alpha31*alpha40*x1*x2*x3*x4 + alpha10*alpha20*alpha31*alpha41*x1*x2*x3*x4 - alpha10*alpha21*alpha30*alpha40*x1*x2*x3*x4 + alpha10*alpha21*alpha30*alpha41*x1*x2*x3*x4 + alpha10*alpha21*alpha31*alpha40*x1*x2*x3*x4 - alpha10*alpha21*alpha31*alpha41*x1*x2*x3*x4 - alpha11*alpha20*alpha30*alpha40*x1*x2*x3*x4 + alpha11*alpha20*alpha30*alpha41*x1*x2*x3*x4 + alpha11*alpha20*alpha31*alpha40*x1*x2*x3*x4 - alpha11*alpha20*alpha31*alpha41*x1*x2*x3*x4 + alpha11*alpha21*alpha30*alpha40*x1*x2*x3*x4 - alpha11*alpha21*alpha30*alpha41*x1*x2*x3*x4 - alpha11*alpha21*alpha31*alpha40*x1*x2*x3*x4 + alpha11*alpha21*alpha31*alpha41*x1*x2*x3*x4 in G1
+F14 = alpha10*alpha20*alpha30*alpha40*beta - alpha10*alpha20*alpha30*alpha40*beta*x1 - alpha10*alpha20*alpha30*alpha40*beta*x2 - alpha10*alpha20*alpha30*alpha40*beta*x3 - alpha10*alpha20*alpha30*alpha40*beta*x4 + alpha10*alpha20*alpha30*alpha41*beta*x4 + alpha10*alpha20*alpha31*alpha40*beta*x3 + alpha10*alpha21*alpha30*alpha40*beta*x2 + alpha11*alpha20*alpha30*alpha40*beta*x1 + alpha10*alpha20*alpha30*alpha40*beta*x1*x2 + alpha10*alpha20*alpha30*alpha40*beta*x1*x3 + alpha10*alpha20*alpha30*alpha40*beta*x1*x4 + alpha10*alpha20*alpha30*alpha40*beta*x2*x3 + alpha10*alpha20*alpha30*alpha40*beta*x2*x4 + alpha10*alpha20*alpha30*alpha40*beta*x3*x4 - alpha10*alpha20*alpha30*alpha41*beta*x1*x4 - alpha10*alpha20*alpha30*alpha41*beta*x2*x4 - alpha10*alpha20*alpha30*alpha41*beta*x3*x4 - alpha10*alpha20*alpha31*alpha40*beta*x1*x3 - alpha10*alpha20*alpha31*alpha40*beta*x2*x3 - alpha10*alpha20*alpha31*alpha40*beta*x3*x4 + alpha10*alpha20*alpha31*alpha41*beta*x3*x4 - alpha10*alpha21*alpha30*alpha40*beta*x1*x2 - alpha10*alpha21*alpha30*alpha40*beta*x2*x3 - alpha10*alpha21*alpha30*alpha40*beta*x2*x4 + alpha10*alpha21*alpha30*alpha41*beta*x2*x4 + alpha10*alpha21*alpha31*alpha40*beta*x2*x3 - alpha11*alpha20*alpha30*alpha40*beta*x1*x2 - alpha11*alpha20*alpha30*alpha40*beta*x1*x3 - alpha11*alpha20*alpha30*alpha40*beta*x1*x4 + alpha11*alpha20*alpha30*alpha41*beta*x1*x4 + alpha11*alpha20*alpha31*alpha40*beta*x1*x3 + alpha11*alpha21*alpha30*alpha40*beta*x1*x2 - alpha10*alpha20*alpha30*alpha40*beta*x1*x2*x3 - alpha10*alpha20*alpha30*alpha40*beta*x1*x2*x4 - alpha10*alpha20*alpha30*alpha40*beta*x1*x3*x4 - alpha10*alpha20*alpha30*alpha40*beta*x2*x3*x4 + alpha10*alpha20*alpha30*alpha41*beta*x1*x2*x4 + alpha10*alpha20*alpha30*alpha41*beta*x1*x3*x4 + alpha10*alpha20*alpha30*alpha41*beta*x2*x3*x4 + alpha10*alpha20*alpha31*alpha40*beta*x1*x2*x3 + alpha10*alpha20*alpha31*alpha40*beta*x1*x3*x4 + alpha10*alpha20*alpha31*alpha40*beta*x2*x3*x4 - alpha10*alpha20*alpha31*alpha41*beta*x1*x3*x4 - alpha10*alpha20*alpha31*alpha41*beta*x2*x3*x4 + alpha10*alpha21*alpha30*alpha40*beta*x1*x2*x3 + alpha10*alpha21*alpha30*alpha40*beta*x1*x2*x4 + alpha10*alpha21*alpha30*alpha40*beta*x2*x3*x4 - alpha10*alpha21*alpha30*alpha41*beta*x1*x2*x4 - alpha10*alpha21*alpha30*alpha41*beta*x2*x3*x4 - alpha10*alpha21*alpha31*alpha40*beta*x1*x2*x3 - alpha10*alpha21*alpha31*alpha40*beta*x2*x3*x4 + alpha10*alpha21*alpha31*alpha41*beta*x2*x3*x4 + alpha11*alpha20*alpha30*alpha40*beta*x1*x2*x3 + alpha11*alpha20*alpha30*alpha40*beta*x1*x2*x4 + alpha11*alpha20*alpha30*alpha40*beta*x1*x3*x4 - alpha11*alpha20*alpha30*alpha41*beta*x1*x2*x4 - alpha11*alpha20*alpha30*alpha41*beta*x1*x3*x4 - alpha11*alpha20*alpha31*alpha40*beta*x1*x2*x3 - alpha11*alpha20*alpha31*alpha40*beta*x1*x3*x4 + alpha11*alpha20*alpha31*alpha41*beta*x1*x3*x4 - alpha11*alpha21*alpha30*alpha40*beta*x1*x2*x3 - alpha11*alpha21*alpha30*alpha40*beta*x1*x2*x4 + alpha11*alpha21*alpha30*alpha41*beta*x1*x2*x4 + alpha11*alpha21*alpha31*alpha40*beta*x1*x2*x3 + alpha10*alpha20*alpha30*alpha40*beta*x1*x2*x3*x4 - alpha10*alpha20*alpha30*alpha41*beta*x1*x2*x3*x4 - alpha10*alpha20*alpha31*alpha40*beta*x1*x2*x3*x4 + alpha10*alpha20*alpha31*alpha41*beta*x1*x2*x3*x4 - alpha10*alpha21*alpha30*alpha40*beta*x1*x2*x3*x4 + alpha10*alpha21*alpha30*alpha41*beta*x1*x2*x3*x4 + alpha10*alpha21*alpha31*alpha40*beta*x1*x2*x3*x4 - alpha10*alpha21*alpha31*alpha41*beta*x1*x2*x3*x4 - alpha11*alpha20*alpha30*alpha40*beta*x1*x2*x3*x4 + alpha11*alpha20*alpha30*alpha41*beta*x1*x2*x3*x4 + alpha11*alpha20*alpha31*alpha40*beta*x1*x2*x3*x4 - alpha11*alpha20*alpha31*alpha41*beta*x1*x2*x3*x4 + alpha11*alpha21*alpha30*alpha40*beta*x1*x2*x3*x4 - alpha11*alpha21*alpha30*alpha41*beta*x1*x2*x3*x4 - alpha11*alpha21*alpha31*alpha40*beta*x1*x2*x3*x4 + alpha11*alpha21*alpha31*alpha41*beta*x1*x2*x3*x4 in GT
+F15 = x1 in G1
+F16 = x2 in G1
+F17 = x3 in G1
+F18 = x4 in G1
+F19 = x1 in G2
+F20 = x2 in G2
+F21 = x3 in G2
+F22 = x4 in G2
+F23 = x1 in GT
+F24 = x2 in GT
+F25 = x3 in GT
+F26 = x4 in GT
+F27 = alpha10*x1 in G1
+F28 = alpha10*x2 in G1
+F29 = alpha10*x3 in G1
+F30 = alpha10*x4 in G1
+F31 = alpha11*x1 in G1
+F32 = alpha11*x2 in G1
+F33 = alpha11*x3 in G1
+F34 = alpha11*x4 in G1
+F35 = alpha20*x1 in G1
+F36 = alpha20*x2 in G1
+F37 = alpha20*x3 in G1
+F38 = alpha20*x4 in G1
+F39 = alpha21*x1 in G1
+F40 = alpha21*x2 in G1
+F41 = alpha21*x3 in G1
+F42 = alpha21*x4 in G1
+F43 = alpha30*x1 in G1
+F44 = alpha30*x2 in G1
+F45 = alpha30*x3 in G1
+F46 = alpha30*x4 in G1
+F47 = alpha31*x1 in G1
+F48 = alpha31*x2 in G1
+F49 = alpha31*x3 in G1
+F50 = alpha31*x4 in G1
+F51 = alpha40*x1 in G1
+F52 = alpha40*x2 in G1
+F53 = alpha40*x3 in G1
+F54 = alpha40*x4 in G1
+F55 = alpha41*x1 in G1
+F56 = alpha41*x2 in G1
+F57 = alpha41*x3 in G1
+F58 = alpha41*x4 in G1
+F59 = beta*x1 in G2
+F60 = beta*x2 in G2
+F61 = beta*x3 in G2
+F62 = beta*x4 in G2
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.006838s seconds to compute completion list of Gt
+
+Took 0.004303s seconds to compute completion list of G1
+Took 0.011176s to compute completion lists.
+Processing untrusted polynomial F10 by rule1
+Took 0.000041s to multiply f with completionG1 . Size of trusted set = 60. Size of f.(completion list of G1) U (completion list of GT) = 465.
+
+Optimization round 1
+
+Optimization round 2
+
+Took 0.014100s to optimize.
+Took 0.000260s to compute basis. Size of trusted set = 60. Size of reduced f.(completion list of G1) U (completion list of GT) = 60. No. of monomials = 28. 
+          Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 60*28
+Took 3.976922s time to solve
+
+Naive PPE e(F10,F0) = e(F1,F0) * (e(F1,F19))^-1 * e(F2,F19)
+Optimized PPE e(F10,F0) = e(F1,F0)*e((F1)^-1*F2,F19)
+
+F10 moved to trusted set by rule 1
+
+
+......................................................................
+
+Computing completion for by rule1
+
+
+Took 0.000831s seconds to compute completion list of Gt
+
+Took 0.007681s seconds to compute completion list of G1
+Took 0.008529s to compute completion lists.
+Processing untrusted polynomial F11 by rule1
+Took 0.000223s to multiply f with completionG1 . Size of trusted set = 61. Size of f.(completion list of G1) U (completion list of GT) = 475.
+
+Optimization round 1
+
+Optimization round 2
+
+Took 0.013297s to optimize.
+Rule not applied
+Computing completion for by rule1
+
+Took 0.000000s seconds to compute completion list of Gt
+
+Took 0.004459s seconds to compute completion list of G1
+Took 0.004474s to compute completion lists.
+Processing untrusted polynomial F12 by rule1
+Took 0.000934s to multiply f with completionG1 . Size of trusted set = 61. Size of f.(completion list of G1) U (completion list of GT) = 475.
+
+Optimization round 1
+
+Optimization round 2
+
+Took 0.007841s to optimize.
+Rule not applied
+Computing completion for by rule1
+
+Took 0.000001s seconds to compute completion list of Gt
+
+Took 0.004670s seconds to compute completion list of G1
+Took 0.004685s to compute completion lists.
+Processing untrusted polynomial F13 by rule1
+Took 0.003604s to multiply f with completionG1 . Size of trusted set = 61. Size of f.(completion list of G1) U (completion list of GT) = 475.
+
+Optimization round 1
+
+Optimization round 2
+
+Took 0.017110s to optimize.
+Rule not applied
+Computing completion for by rule1
+
+Processing untrusted polynomial F14 by rule1
+Took 0.000007s time to compute completion lists. Size of trusted set = 61. Size of completion list = 465.
+
+Optimization round 1
+
+Optimization round 2
+
+Took 0.008971s time to optimize. Rule not applied at optimization phase
+
+Execution time : 4.079671s
+
+
+Untrusted set :  F11,  F12,  F13,  F14, 
+
+PPEs : e(F10,F0) = e(F1,F0)*e((F1)^-1*F2,F19),   
+
+Output : Unknown :(
+
+*)
+
+
+
+
+

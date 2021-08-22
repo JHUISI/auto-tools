@@ -1,0 +1,10 @@
+
+(*Boneh Boyen IBE
+https://eprint.iacr.org/2004/172.pdf 
+*)
+
+maps G1 * G1 -> GT.
+
+Zp_vars [id,r].
+trusted_polys [F1 = x, F2 = y] in G1.
+untrusted_polys [F3 = 1/(id + x + r*y)] in G1.

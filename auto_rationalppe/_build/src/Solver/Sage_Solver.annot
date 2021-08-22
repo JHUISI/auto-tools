@@ -1,0 +1,2973 @@
+"src/Solver/Sage_Solver.ml" 15 312 316 "src/Solver/Sage_Solver.ml" 15 312 327
+type(
+  string
+)
+ident(
+  def sage_script "src/Solver/Sage_Solver.ml" 17 355 355 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 15 312 330 "src/Solver/Sage_Solver.ml" 15 312 353
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 23 459 463 "src/Solver/Sage_Solver.ml" 23 459 473
+type(
+  unit -> st_sage
+)
+ident(
+  def start_sage "src/Solver/Sage_Solver.ml" 27 594 594 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 23 459 474 "src/Solver/Sage_Solver.ml" 23 459 476
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 24 479 486 "src/Solver/Sage_Solver.ml" 24 479 490
+type(
+  in_channel
+)
+ident(
+  def c_in "src/Solver/Sage_Solver.ml" 25 534 536 "src/Solver/Sage_Solver.ml" 25 534 592
+)
+"src/Solver/Sage_Solver.ml" 24 479 492 "src/Solver/Sage_Solver.ml" 24 479 497
+type(
+  out_channel
+)
+ident(
+  def c_out "src/Solver/Sage_Solver.ml" 25 534 536 "src/Solver/Sage_Solver.ml" 25 534 592
+)
+"src/Solver/Sage_Solver.ml" 24 479 485 "src/Solver/Sage_Solver.ml" 24 479 498
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 24 479 501 "src/Solver/Sage_Solver.ml" 24 479 518
+type(
+  string -> in_channel * out_channel
+)
+ident(
+  ext_ref Unix.open_process
+)
+"src/Solver/Sage_Solver.ml" 24 479 519 "src/Solver/Sage_Solver.ml" 24 479 530
+type(
+  string
+)
+ident(
+  int_ref sage_script "src/Solver/Sage_Solver.ml" 15 312 316 "src/Solver/Sage_Solver.ml" 15 312 327
+)
+"src/Solver/Sage_Solver.ml" 24 479 501 "src/Solver/Sage_Solver.ml" 24 479 530
+call(
+  stack
+)
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 25 534 548 "src/Solver/Sage_Solver.ml" 25 534 552
+type(
+  in_channel
+)
+ident(
+  int_ref c_in "src/Solver/Sage_Solver.ml" 24 479 486 "src/Solver/Sage_Solver.ml" 24 479 490
+)
+"src/Solver/Sage_Solver.ml" 25 534 565 "src/Solver/Sage_Solver.ml" 25 534 570
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 24 479 492 "src/Solver/Sage_Solver.ml" 24 479 497
+)
+"src/Solver/Sage_Solver.ml" 25 534 585 "src/Solver/Sage_Solver.ml" 25 534 590
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 25 534 536 "src/Solver/Sage_Solver.ml" 25 534 592
+type(
+  st_sage
+)
+"src/Solver/Sage_Solver.ml" 24 479 481 "src/Solver/Sage_Solver.ml" 25 534 592
+type(
+  st_sage
+)
+"src/Solver/Sage_Solver.ml" 27 594 598 "src/Solver/Sage_Solver.ml" 27 594 607
+type(
+  st_sage -> string -> string
+)
+ident(
+  def eval_sage "src/Solver/Sage_Solver.ml" 39 939 939 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 27 594 608 "src/Solver/Sage_Solver.ml" 27 594 611
+type(
+  st_sage
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 27 594 612 "src/Solver/Sage_Solver.ml" 36 931 936
+)
+"src/Solver/Sage_Solver.ml" 27 594 612 "src/Solver/Sage_Solver.ml" 27 594 615
+type(
+  string
+)
+ident(
+  def cmd "src/Solver/Sage_Solver.ml" 28 618 620 "src/Solver/Sage_Solver.ml" 36 931 936
+)
+"src/Solver/Sage_Solver.ml" 28 618 623 "src/Solver/Sage_Solver.ml" 28 618 626
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 27 594 608 "src/Solver/Sage_Solver.ml" 27 594 611
+)
+"src/Solver/Sage_Solver.ml" 28 618 623 "src/Solver/Sage_Solver.ml" 28 618 637
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 28 618 643 "src/Solver/Sage_Solver.ml" 28 618 651
+type(
+  string -> unit
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 28 618 652 "src/Solver/Sage_Solver.ml" 28 618 681
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 28 618 643 "src/Solver/Sage_Solver.ml" 28 618 681
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 28 618 620 "src/Solver/Sage_Solver.ml" 28 618 681
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 29 683 690 "src/Solver/Sage_Solver.ml" 29 683 694
+type(
+  in_channel
+)
+ident(
+  def c_in "src/Solver/Sage_Solver.ml" 31 777 779 "src/Solver/Sage_Solver.ml" 36 931 936
+)
+"src/Solver/Sage_Solver.ml" 29 683 696 "src/Solver/Sage_Solver.ml" 29 683 701
+type(
+  out_channel
+)
+ident(
+  def c_out "src/Solver/Sage_Solver.ml" 31 777 779 "src/Solver/Sage_Solver.ml" 36 931 936
+)
+"src/Solver/Sage_Solver.ml" 29 683 689 "src/Solver/Sage_Solver.ml" 29 683 702
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 29 683 705 "src/Solver/Sage_Solver.ml" 29 683 708
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 27 594 608 "src/Solver/Sage_Solver.ml" 27 594 611
+)
+"src/Solver/Sage_Solver.ml" 29 683 705 "src/Solver/Sage_Solver.ml" 29 683 716
+type(
+  in_channel
+)
+"src/Solver/Sage_Solver.ml" 29 683 718 "src/Solver/Sage_Solver.ml" 29 683 721
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 27 594 608 "src/Solver/Sage_Solver.ml" 27 594 611
+)
+"src/Solver/Sage_Solver.ml" 29 683 718 "src/Solver/Sage_Solver.ml" 29 683 730
+type(
+  out_channel
+)
+"src/Solver/Sage_Solver.ml" 29 683 705 "src/Solver/Sage_Solver.ml" 29 683 730
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 31 777 779 "src/Solver/Sage_Solver.ml" 31 777 792
+type(
+  out_channel -> string -> unit
+)
+ident(
+  ext_ref Pervasives.output_string
+)
+"src/Solver/Sage_Solver.ml" 31 777 793 "src/Solver/Sage_Solver.ml" 31 777 798
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 29 683 696 "src/Solver/Sage_Solver.ml" 29 683 701
+)
+"src/Solver/Sage_Solver.ml" 31 777 799 "src/Solver/Sage_Solver.ml" 31 777 802
+type(
+  string
+)
+ident(
+  int_ref cmd "src/Solver/Sage_Solver.ml" 27 594 612 "src/Solver/Sage_Solver.ml" 27 594 615
+)
+"src/Solver/Sage_Solver.ml" 31 777 779 "src/Solver/Sage_Solver.ml" 31 777 802
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 32 804 806 "src/Solver/Sage_Solver.ml" 32 804 811
+type(
+  out_channel -> unit
+)
+ident(
+  ext_ref Pervasives.flush
+)
+"src/Solver/Sage_Solver.ml" 32 804 812 "src/Solver/Sage_Solver.ml" 32 804 817
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 29 683 696 "src/Solver/Sage_Solver.ml" 29 683 701
+)
+"src/Solver/Sage_Solver.ml" 32 804 806 "src/Solver/Sage_Solver.ml" 32 804 817
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 34 858 864 "src/Solver/Sage_Solver.ml" 34 858 867
+type(
+  string
+)
+ident(
+  def res "src/Solver/Sage_Solver.ml" 36 931 933 "src/Solver/Sage_Solver.ml" 36 931 936
+)
+"src/Solver/Sage_Solver.ml" 34 858 870 "src/Solver/Sage_Solver.ml" 34 858 880
+type(
+  in_channel -> string
+)
+ident(
+  ext_ref Pervasives.input_line
+)
+"src/Solver/Sage_Solver.ml" 34 858 881 "src/Solver/Sage_Solver.ml" 34 858 885
+type(
+  in_channel
+)
+ident(
+  int_ref c_in "src/Solver/Sage_Solver.ml" 29 683 690 "src/Solver/Sage_Solver.ml" 29 683 694
+)
+"src/Solver/Sage_Solver.ml" 34 858 870 "src/Solver/Sage_Solver.ml" 34 858 885
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 36 931 933 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+ident(
+  int_ref res "src/Solver/Sage_Solver.ml" 34 858 864 "src/Solver/Sage_Solver.ml" 34 858 867
+)
+"src/Solver/Sage_Solver.ml" 34 858 860 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 32 804 806 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 31 777 779 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 29 683 685 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 28 618 620 "src/Solver/Sage_Solver.ml" 36 931 936
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 39 939 943 "src/Solver/Sage_Solver.ml" 39 939 952
+type(
+  st_sage -> unit
+)
+ident(
+  def stop_sage "src/Solver/Sage_Solver.ml" 49 1312 1312 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 39 939 953 "src/Solver/Sage_Solver.ml" 39 939 956
+type(
+  st_sage
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 40 959 961 "src/Solver/Sage_Solver.ml" 47 1268 1310
+)
+"src/Solver/Sage_Solver.ml" 40 959 964 "src/Solver/Sage_Solver.ml" 40 959 967
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 39 939 953 "src/Solver/Sage_Solver.ml" 39 939 956
+)
+"src/Solver/Sage_Solver.ml" 40 959 964 "src/Solver/Sage_Solver.ml" 40 959 978
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 40 959 984 "src/Solver/Sage_Solver.ml" 40 959 992
+type(
+  string -> unit
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 40 959 993 "src/Solver/Sage_Solver.ml" 40 959 1022
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 40 959 984 "src/Solver/Sage_Solver.ml" 40 959 1022
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 40 959 961 "src/Solver/Sage_Solver.ml" 40 959 1022
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1031 "src/Solver/Sage_Solver.ml" 41 1024 1035
+type(
+  in_channel
+)
+ident(
+  def c_in "src/Solver/Sage_Solver.ml" 42 1075 1077 "src/Solver/Sage_Solver.ml" 47 1268 1310
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1037 "src/Solver/Sage_Solver.ml" 41 1024 1042
+type(
+  out_channel
+)
+ident(
+  def c_out "src/Solver/Sage_Solver.ml" 42 1075 1077 "src/Solver/Sage_Solver.ml" 47 1268 1310
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1030 "src/Solver/Sage_Solver.ml" 41 1024 1043
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1046 "src/Solver/Sage_Solver.ml" 41 1024 1049
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 39 939 953 "src/Solver/Sage_Solver.ml" 39 939 956
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1046 "src/Solver/Sage_Solver.ml" 41 1024 1057
+type(
+  in_channel
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1059 "src/Solver/Sage_Solver.ml" 41 1024 1062
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 39 939 953 "src/Solver/Sage_Solver.ml" 39 939 956
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1059 "src/Solver/Sage_Solver.ml" 41 1024 1071
+type(
+  out_channel
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1046 "src/Solver/Sage_Solver.ml" 41 1024 1071
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1081 "src/Solver/Sage_Solver.ml" 42 1075 1084
+type(
+  string
+)
+ident(
+  def cmd "src/Solver/Sage_Solver.ml" 43 1144 1146 "src/Solver/Sage_Solver.ml" 47 1268 1310
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1087 "src/Solver/Sage_Solver.ml" 42 1075 1099
+type(
+  ?buf:Bi_outbuf.t -> ?len:int -> ?std:bool -> YS.json -> string
+)
+ident(
+  ext_ref YS.to_string
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1111 "src/Solver/Sage_Solver.ml" 42 1075 1116
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1125 "src/Solver/Sage_Solver.ml" 42 1075 1131
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1117 "src/Solver/Sage_Solver.ml" 42 1075 1131
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1110 "src/Solver/Sage_Solver.ml" 42 1075 1132
+type(
+  string * YS.json
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1108 "src/Solver/Sage_Solver.ml" 42 1075 1134
+type(
+  (string * YS.json) list
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1100 "src/Solver/Sage_Solver.ml" 42 1075 1135
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1087 "src/Solver/Sage_Solver.ml" 42 1075 1135
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1135 "src/Solver/Sage_Solver.ml" 42 1075 1136
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1136 "src/Solver/Sage_Solver.ml" 42 1075 1140
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1087 "src/Solver/Sage_Solver.ml" 42 1075 1140
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 43 1144 1146 "src/Solver/Sage_Solver.ml" 43 1144 1159
+type(
+  out_channel -> string -> unit
+)
+ident(
+  ext_ref Pervasives.output_string
+)
+"src/Solver/Sage_Solver.ml" 43 1144 1160 "src/Solver/Sage_Solver.ml" 43 1144 1165
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 41 1024 1037 "src/Solver/Sage_Solver.ml" 41 1024 1042
+)
+"src/Solver/Sage_Solver.ml" 43 1144 1166 "src/Solver/Sage_Solver.ml" 43 1144 1169
+type(
+  string
+)
+ident(
+  int_ref cmd "src/Solver/Sage_Solver.ml" 42 1075 1081 "src/Solver/Sage_Solver.ml" 42 1075 1084
+)
+"src/Solver/Sage_Solver.ml" 43 1144 1146 "src/Solver/Sage_Solver.ml" 43 1144 1169
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 44 1171 1173 "src/Solver/Sage_Solver.ml" 44 1171 1178
+type(
+  out_channel -> unit
+)
+ident(
+  ext_ref Pervasives.flush
+)
+"src/Solver/Sage_Solver.ml" 44 1171 1179 "src/Solver/Sage_Solver.ml" 44 1171 1184
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 41 1024 1037 "src/Solver/Sage_Solver.ml" 41 1024 1042
+)
+"src/Solver/Sage_Solver.ml" 44 1171 1173 "src/Solver/Sage_Solver.ml" 44 1171 1184
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 45 1186 1192 "src/Solver/Sage_Solver.ml" 45 1186 1193
+type(
+  string
+)
+ident(
+  def o "src/Solver/Sage_Solver.ml" 46 1215 1217 "src/Solver/Sage_Solver.ml" 47 1268 1310
+)
+"src/Solver/Sage_Solver.ml" 45 1186 1196 "src/Solver/Sage_Solver.ml" 45 1186 1206
+type(
+  in_channel -> string
+)
+ident(
+  ext_ref Pervasives.input_line
+)
+"src/Solver/Sage_Solver.ml" 45 1186 1207 "src/Solver/Sage_Solver.ml" 45 1186 1211
+type(
+  in_channel
+)
+ident(
+  int_ref c_in "src/Solver/Sage_Solver.ml" 41 1024 1031 "src/Solver/Sage_Solver.ml" 41 1024 1035
+)
+"src/Solver/Sage_Solver.ml" 45 1186 1196 "src/Solver/Sage_Solver.ml" 45 1186 1211
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1220 "src/Solver/Sage_Solver.ml" 46 1215 1221
+type(
+  string
+)
+ident(
+  int_ref o "src/Solver/Sage_Solver.ml" 45 1186 1192 "src/Solver/Sage_Solver.ml" 45 1186 1193
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1222 "src/Solver/Sage_Solver.ml" 46 1215 1224
+type(
+  string -> string -> bool
+)
+ident(
+  ext_ref Pervasives.( <> )
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1225 "src/Solver/Sage_Solver.ml" 46 1215 1230
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1220 "src/Solver/Sage_Solver.ml" 46 1215 1230
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1236 "src/Solver/Sage_Solver.ml" 46 1215 1244
+type(
+  string -> unit
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1245 "src/Solver/Sage_Solver.ml" 46 1215 1266
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1236 "src/Solver/Sage_Solver.ml" 46 1215 1266
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1217 "src/Solver/Sage_Solver.ml" 46 1215 1266
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1270 "src/Solver/Sage_Solver.ml" 47 1268 1276
+type(
+  Unix.process_status -> unit
+)
+ident(
+  ext_ref Pervasives.ignore
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1278 "src/Solver/Sage_Solver.ml" 47 1268 1296
+type(
+  in_channel * out_channel -> Unix.process_status
+)
+ident(
+  ext_ref Unix.close_process
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1298 "src/Solver/Sage_Solver.ml" 47 1268 1302
+type(
+  in_channel
+)
+ident(
+  int_ref c_in "src/Solver/Sage_Solver.ml" 41 1024 1031 "src/Solver/Sage_Solver.ml" 41 1024 1035
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1303 "src/Solver/Sage_Solver.ml" 47 1268 1308
+type(
+  out_channel
+)
+ident(
+  int_ref c_out "src/Solver/Sage_Solver.ml" 41 1024 1037 "src/Solver/Sage_Solver.ml" 41 1024 1042
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1297 "src/Solver/Sage_Solver.ml" 47 1268 1309
+type(
+  in_channel * out_channel
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1277 "src/Solver/Sage_Solver.ml" 47 1268 1310
+call(
+  stack
+)
+type(
+  Unix.process_status
+)
+"src/Solver/Sage_Solver.ml" 47 1268 1270 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 46 1215 1217 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 45 1186 1188 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 44 1171 1173 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 43 1144 1146 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 42 1075 1077 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 41 1024 1026 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 40 959 961 "src/Solver/Sage_Solver.ml" 47 1268 1310
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 49 1312 1316 "src/Solver/Sage_Solver.ml" 49 1312 1325
+type(
+  ?sts:st_sage -> string -> string
+)
+ident(
+  def call_Sage "src/Solver/Sage_Solver.ml" 59 1498 1498 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 49 1312 1327 "src/Solver/Sage_Solver.ml" 49 1312 1330
+type(
+  st_sage option
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 49 1312 1331 "src/Solver/Sage_Solver.ml" 57 1475 1496
+)
+"src/Solver/Sage_Solver.ml" 49 1312 1331 "src/Solver/Sage_Solver.ml" 49 1312 1334
+type(
+  string
+)
+ident(
+  def cmd "src/Solver/Sage_Solver.ml" 50 1337 1339 "src/Solver/Sage_Solver.ml" 57 1475 1496
+)
+"src/Solver/Sage_Solver.ml" 50 1337 1345 "src/Solver/Sage_Solver.ml" 50 1337 1348
+type(
+  st_sage option
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 49 1312 1327 "src/Solver/Sage_Solver.ml" 49 1312 1330
+)
+"src/Solver/Sage_Solver.ml" 51 1354 1358 "src/Solver/Sage_Solver.ml" 51 1354 1362
+type(
+  st_sage option
+)
+"src/Solver/Sage_Solver.ml" 52 1366 1374 "src/Solver/Sage_Solver.ml" 52 1366 1377
+type(
+  st_sage
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 53 1397 1401 "src/Solver/Sage_Solver.ml" 55 1451 1458
+)
+"src/Solver/Sage_Solver.ml" 52 1366 1380 "src/Solver/Sage_Solver.ml" 52 1366 1390
+type(
+  unit -> st_sage
+)
+ident(
+  int_ref start_sage "src/Solver/Sage_Solver.ml" 23 459 463 "src/Solver/Sage_Solver.ml" 23 459 473
+)
+"src/Solver/Sage_Solver.ml" 52 1366 1391 "src/Solver/Sage_Solver.ml" 52 1366 1393
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 52 1366 1380 "src/Solver/Sage_Solver.ml" 52 1366 1393
+call(
+  stack
+)
+type(
+  st_sage
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1405 "src/Solver/Sage_Solver.ml" 53 1397 1408
+type(
+  string
+)
+ident(
+  def res "src/Solver/Sage_Solver.ml" 54 1432 1436 "src/Solver/Sage_Solver.ml" 55 1451 1458
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1411 "src/Solver/Sage_Solver.ml" 53 1397 1420
+type(
+  st_sage -> string -> string
+)
+ident(
+  int_ref eval_sage "src/Solver/Sage_Solver.ml" 27 594 598 "src/Solver/Sage_Solver.ml" 27 594 607
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1421 "src/Solver/Sage_Solver.ml" 53 1397 1424
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 52 1366 1374 "src/Solver/Sage_Solver.ml" 52 1366 1377
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1425 "src/Solver/Sage_Solver.ml" 53 1397 1428
+type(
+  string
+)
+ident(
+  int_ref cmd "src/Solver/Sage_Solver.ml" 49 1312 1331 "src/Solver/Sage_Solver.ml" 49 1312 1334
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1411 "src/Solver/Sage_Solver.ml" 53 1397 1428
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 54 1432 1436 "src/Solver/Sage_Solver.ml" 54 1432 1445
+type(
+  st_sage -> unit
+)
+ident(
+  int_ref stop_sage "src/Solver/Sage_Solver.ml" 39 939 943 "src/Solver/Sage_Solver.ml" 39 939 952
+)
+"src/Solver/Sage_Solver.ml" 54 1432 1446 "src/Solver/Sage_Solver.ml" 54 1432 1449
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 52 1366 1374 "src/Solver/Sage_Solver.ml" 52 1366 1377
+)
+"src/Solver/Sage_Solver.ml" 54 1432 1436 "src/Solver/Sage_Solver.ml" 54 1432 1449
+call(
+  stack
+)
+type(
+  unit
+)
+"src/Solver/Sage_Solver.ml" 55 1451 1455 "src/Solver/Sage_Solver.ml" 55 1451 1458
+type(
+  string
+)
+ident(
+  int_ref res "src/Solver/Sage_Solver.ml" 53 1397 1405 "src/Solver/Sage_Solver.ml" 53 1397 1408
+)
+"src/Solver/Sage_Solver.ml" 54 1432 1436 "src/Solver/Sage_Solver.ml" 55 1451 1458
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 53 1397 1401 "src/Solver/Sage_Solver.ml" 55 1451 1458
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 52 1366 1370 "src/Solver/Sage_Solver.ml" 55 1451 1458
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 56 1459 1468 "src/Solver/Sage_Solver.ml" 56 1459 1471
+type(
+  st_sage
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 57 1475 1479 "src/Solver/Sage_Solver.ml" 57 1475 1496
+)
+"src/Solver/Sage_Solver.ml" 56 1459 1463 "src/Solver/Sage_Solver.ml" 56 1459 1471
+type(
+  st_sage option
+)
+"src/Solver/Sage_Solver.ml" 57 1475 1479 "src/Solver/Sage_Solver.ml" 57 1475 1488
+type(
+  st_sage -> string -> string
+)
+ident(
+  int_ref eval_sage "src/Solver/Sage_Solver.ml" 27 594 598 "src/Solver/Sage_Solver.ml" 27 594 607
+)
+"src/Solver/Sage_Solver.ml" 57 1475 1489 "src/Solver/Sage_Solver.ml" 57 1475 1492
+type(
+  st_sage
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 56 1459 1468 "src/Solver/Sage_Solver.ml" 56 1459 1471
+)
+"src/Solver/Sage_Solver.ml" 57 1475 1493 "src/Solver/Sage_Solver.ml" 57 1475 1496
+type(
+  string
+)
+ident(
+  int_ref cmd "src/Solver/Sage_Solver.ml" 49 1312 1331 "src/Solver/Sage_Solver.ml" 49 1312 1334
+)
+"src/Solver/Sage_Solver.ml" 57 1475 1479 "src/Solver/Sage_Solver.ml" 57 1475 1496
+call(
+  tail
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 50 1337 1339 "src/Solver/Sage_Solver.ml" 57 1475 1496
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1502 "src/Solver/Sage_Solver.ml" 59 1498 1513
+type(
+  Big_int.big_int list -> [> `List of [> `Int of int ] list ]
+)
+ident(
+  def vec_to_json "src/Solver/Sage_Solver.ml" 61 1570 1570 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1514 "src/Solver/Sage_Solver.ml" 59 1498 1515
+type(
+  Big_int.big_int list
+)
+ident(
+  def v "src/Solver/Sage_Solver.ml" 59 1498 1518 "src/Solver/Sage_Solver.ml" 59 1498 1568
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1525 "src/Solver/Sage_Solver.ml" 59 1498 1530
+type(
+  (Big_int.big_int -> ([> `Int of int ] as 'a)) ->
+  Big_int.big_int list -> 'a list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1536 "src/Solver/Sage_Solver.ml" 59 1498 1537
+type(
+  Big_int.big_int
+)
+ident(
+  def i "src/Solver/Sage_Solver.ml" 59 1498 1541 "src/Solver/Sage_Solver.ml" 59 1498 1564
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1547 "src/Solver/Sage_Solver.ml" 59 1498 1561
+type(
+  Big_int.big_int -> int
+)
+ident(
+  ext_ref Big_int.int_of_big_int
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1562 "src/Solver/Sage_Solver.ml" 59 1498 1563
+type(
+  Big_int.big_int
+)
+ident(
+  int_ref i "src/Solver/Sage_Solver.ml" 59 1498 1536 "src/Solver/Sage_Solver.ml" 59 1498 1537
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1546 "src/Solver/Sage_Solver.ml" 59 1498 1564
+call(
+  stack
+)
+type(
+  int
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1541 "src/Solver/Sage_Solver.ml" 59 1498 1564
+type(
+  'a
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1531 "src/Solver/Sage_Solver.ml" 59 1498 1565
+type(
+  Big_int.big_int -> 'a
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1566 "src/Solver/Sage_Solver.ml" 59 1498 1567
+type(
+  Big_int.big_int list
+)
+ident(
+  int_ref v "src/Solver/Sage_Solver.ml" 59 1498 1514 "src/Solver/Sage_Solver.ml" 59 1498 1515
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1524 "src/Solver/Sage_Solver.ml" 59 1498 1568
+call(
+  stack
+)
+type(
+  'a list
+)
+"src/Solver/Sage_Solver.ml" 59 1498 1518 "src/Solver/Sage_Solver.ml" 59 1498 1568
+type(
+  [> `List of 'a list ] as 'b
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1574 "src/Solver/Sage_Solver.ml" 61 1570 1585
+type(
+  Big_int.big_int list list ->
+  [> `List of [> `List of [> `Int of int ] list ] list ]
+)
+ident(
+  def mat_to_json "src/Solver/Sage_Solver.ml" 63 1632 1632 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1586 "src/Solver/Sage_Solver.ml" 61 1570 1587
+type(
+  Big_int.big_int list list
+)
+ident(
+  def m "src/Solver/Sage_Solver.ml" 61 1570 1590 "src/Solver/Sage_Solver.ml" 61 1570 1630
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1597 "src/Solver/Sage_Solver.ml" 61 1570 1602
+type(
+  (Big_int.big_int list -> ([> `List of [> `Int of int ] list ] as 'a)) ->
+  Big_int.big_int list list -> 'a list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1608 "src/Solver/Sage_Solver.ml" 61 1570 1609
+type(
+  Big_int.big_int list
+)
+ident(
+  def v "src/Solver/Sage_Solver.ml" 61 1570 1613 "src/Solver/Sage_Solver.ml" 61 1570 1626
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1613 "src/Solver/Sage_Solver.ml" 61 1570 1624
+type(
+  Big_int.big_int list -> 'a
+)
+ident(
+  int_ref vec_to_json "src/Solver/Sage_Solver.ml" 59 1498 1502 "src/Solver/Sage_Solver.ml" 59 1498 1513
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1625 "src/Solver/Sage_Solver.ml" 61 1570 1626
+type(
+  Big_int.big_int list
+)
+ident(
+  int_ref v "src/Solver/Sage_Solver.ml" 61 1570 1608 "src/Solver/Sage_Solver.ml" 61 1570 1609
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1613 "src/Solver/Sage_Solver.ml" 61 1570 1626
+call(
+  tail
+)
+type(
+  'a
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1603 "src/Solver/Sage_Solver.ml" 61 1570 1627
+type(
+  Big_int.big_int list -> 'a
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1628 "src/Solver/Sage_Solver.ml" 61 1570 1629
+type(
+  Big_int.big_int list list
+)
+ident(
+  int_ref m "src/Solver/Sage_Solver.ml" 61 1570 1586 "src/Solver/Sage_Solver.ml" 61 1570 1587
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1596 "src/Solver/Sage_Solver.ml" 61 1570 1630
+call(
+  stack
+)
+type(
+  'a list
+)
+"src/Solver/Sage_Solver.ml" 61 1570 1590 "src/Solver/Sage_Solver.ml" 61 1570 1630
+type(
+  [> `List of 'a list ] as 'b
+)
+"src/Solver/Sage_Solver.ml" 63 1632 1636 "src/Solver/Sage_Solver.ml" 63 1632 1645
+type(
+  ?sts:st_sage ->
+  Big_int.big_int list list -> Big_int.big_int list -> int list option
+)
+ident(
+  def lin_solve "src/Solver/Sage_Solver.ml" 81 2291 2291 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 63 1632 1647 "src/Solver/Sage_Solver.ml" 63 1632 1650
+type(
+  st_sage option
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 63 1632 1651 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 63 1632 1651 "src/Solver/Sage_Solver.ml" 63 1632 1652
+type(
+  Big_int.big_int list list
+)
+ident(
+  def m "src/Solver/Sage_Solver.ml" 63 1632 1653 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 63 1632 1653 "src/Solver/Sage_Solver.ml" 63 1632 1654
+type(
+  Big_int.big_int list
+)
+ident(
+  def b "src/Solver/Sage_Solver.ml" 64 1657 1659 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 64 1657 1663 "src/Solver/Sage_Solver.ml" 64 1657 1665
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list ]
+)
+ident(
+  def mr "src/Solver/Sage_Solver.ml" 65 1685 1687 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 64 1657 1668 "src/Solver/Sage_Solver.ml" 64 1657 1679
+type(
+  Big_int.big_int list list ->
+  ([> `List of [> `List of [> `Int of int ] list ] list ] as 'a)
+)
+ident(
+  int_ref mat_to_json "src/Solver/Sage_Solver.ml" 61 1570 1574 "src/Solver/Sage_Solver.ml" 61 1570 1585
+)
+"src/Solver/Sage_Solver.ml" 64 1657 1680 "src/Solver/Sage_Solver.ml" 64 1657 1681
+type(
+  Big_int.big_int list list
+)
+ident(
+  int_ref m "src/Solver/Sage_Solver.ml" 63 1632 1651 "src/Solver/Sage_Solver.ml" 63 1632 1652
+)
+"src/Solver/Sage_Solver.ml" 64 1657 1668 "src/Solver/Sage_Solver.ml" 64 1657 1681
+call(
+  stack
+)
+type(
+  'a
+)
+"src/Solver/Sage_Solver.ml" 65 1685 1691 "src/Solver/Sage_Solver.ml" 65 1685 1693
+type(
+  [> `List of [> `Int of int ] list ]
+)
+ident(
+  def br "src/Solver/Sage_Solver.ml" 66 1713 1715 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 65 1685 1696 "src/Solver/Sage_Solver.ml" 65 1685 1707
+type(
+  Big_int.big_int list -> ([> `List of [> `Int of int ] list ] as 'b)
+)
+ident(
+  int_ref vec_to_json "src/Solver/Sage_Solver.ml" 59 1498 1502 "src/Solver/Sage_Solver.ml" 59 1498 1513
+)
+"src/Solver/Sage_Solver.ml" 65 1685 1708 "src/Solver/Sage_Solver.ml" 65 1685 1709
+type(
+  Big_int.big_int list
+)
+ident(
+  int_ref b "src/Solver/Sage_Solver.ml" 63 1632 1653 "src/Solver/Sage_Solver.ml" 63 1632 1654
+)
+"src/Solver/Sage_Solver.ml" 65 1685 1696 "src/Solver/Sage_Solver.ml" 65 1685 1709
+call(
+  stack
+)
+type(
+  'b
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1719 "src/Solver/Sage_Solver.ml" 66 1713 1722
+type(
+  [> `Assoc of
+       (string *
+        [> `List of [> `Int of int | `List of [> `Int of int ] list ] list
+         | `String of string ])
+       list ]
+)
+ident(
+  def req "src/Solver/Sage_Solver.ml" 67 1786 1788 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1735 "src/Solver/Sage_Solver.ml" 66 1713 1740
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1749 "src/Solver/Sage_Solver.ml" 66 1713 1759
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1741 "src/Solver/Sage_Solver.ml" 66 1713 1759
+type(
+  [> `List of [> `Int of int | `List of [> `Int of int ] list ] list
+   | `String of string ]
+  as 'c
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1734 "src/Solver/Sage_Solver.ml" 66 1713 1760
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1763 "src/Solver/Sage_Solver.ml" 66 1713 1766
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1767 "src/Solver/Sage_Solver.ml" 66 1713 1769
+type(
+  'c
+)
+ident(
+  int_ref mr "src/Solver/Sage_Solver.ml" 64 1657 1663 "src/Solver/Sage_Solver.ml" 64 1657 1665
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1762 "src/Solver/Sage_Solver.ml" 66 1713 1770
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1773 "src/Solver/Sage_Solver.ml" 66 1713 1776
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1777 "src/Solver/Sage_Solver.ml" 66 1713 1779
+type(
+  'c
+)
+ident(
+  int_ref br "src/Solver/Sage_Solver.ml" 65 1685 1691 "src/Solver/Sage_Solver.ml" 65 1685 1693
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1772 "src/Solver/Sage_Solver.ml" 66 1713 1780
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1732 "src/Solver/Sage_Solver.ml" 66 1713 1782
+type(
+  (string * 'c) list
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1725 "src/Solver/Sage_Solver.ml" 66 1713 1782
+type(
+  [> `Assoc of (string * 'c) list ] as 'd
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1792 "src/Solver/Sage_Solver.ml" 67 1786 1796
+type(
+  string
+)
+ident(
+  def sres "src/Solver/Sage_Solver.ml" 68 1841 1843 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1799 "src/Solver/Sage_Solver.ml" 67 1786 1808
+type(
+  ?sts:st_sage -> string -> string
+)
+ident(
+  int_ref call_Sage "src/Solver/Sage_Solver.ml" 49 1312 1316 "src/Solver/Sage_Solver.ml" 49 1312 1325
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1810 "src/Solver/Sage_Solver.ml" 67 1786 1813
+type(
+  st_sage option
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 63 1632 1647 "src/Solver/Sage_Solver.ml" 63 1632 1650
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1815 "src/Solver/Sage_Solver.ml" 67 1786 1827
+type(
+  ?buf:Bi_outbuf.t -> ?len:int -> ?std:bool -> YS.json -> string
+)
+ident(
+  ext_ref YS.to_string
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1828 "src/Solver/Sage_Solver.ml" 67 1786 1831
+type(
+  YS.json
+)
+ident(
+  int_ref req "src/Solver/Sage_Solver.ml" 66 1713 1719 "src/Solver/Sage_Solver.ml" 66 1713 1722
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1815 "src/Solver/Sage_Solver.ml" 67 1786 1831
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1831 "src/Solver/Sage_Solver.ml" 67 1786 1832
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1832 "src/Solver/Sage_Solver.ml" 67 1786 1836
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1814 "src/Solver/Sage_Solver.ml" 67 1786 1837
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1799 "src/Solver/Sage_Solver.ml" 67 1786 1837
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 68 1841 1847 "src/Solver/Sage_Solver.ml" 68 1841 1851
+type(
+  YS.json
+)
+ident(
+  def mres "src/Solver/Sage_Solver.ml" 69 1877 1879 "src/Solver/Sage_Solver.ml" 79 2241 2289
+)
+"src/Solver/Sage_Solver.ml" 68 1841 1854 "src/Solver/Sage_Solver.ml" 68 1841 1868
+type(
+  ?buf:Bi_outbuf.t -> ?fname:string -> ?lnum:int -> string -> YS.json
+)
+ident(
+  ext_ref YS.from_string
+)
+"src/Solver/Sage_Solver.ml" 68 1841 1869 "src/Solver/Sage_Solver.ml" 68 1841 1873
+type(
+  string
+)
+ident(
+  int_ref sres "src/Solver/Sage_Solver.ml" 67 1786 1792 "src/Solver/Sage_Solver.ml" 67 1786 1796
+)
+"src/Solver/Sage_Solver.ml" 68 1841 1854 "src/Solver/Sage_Solver.ml" 68 1841 1873
+call(
+  stack
+)
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1882 "src/Solver/Sage_Solver.ml" 69 1877 1891
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1892 "src/Solver/Sage_Solver.ml" 69 1877 1896
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1897 "src/Solver/Sage_Solver.ml" 69 1877 1901
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 68 1841 1847 "src/Solver/Sage_Solver.ml" 68 1841 1851
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1882 "src/Solver/Sage_Solver.ml" 69 1877 1901
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1902 "src/Solver/Sage_Solver.ml" 69 1877 1904
+type(
+  Util.YS.json -> (Util.YS.json -> bool) -> bool
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1905 "src/Solver/Sage_Solver.ml" 69 1877 1913
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1882 "src/Solver/Sage_Solver.ml" 69 1877 1913
+call(
+  stack
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1941 "src/Solver/Sage_Solver.ml" 71 1923 1950
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1951 "src/Solver/Sage_Solver.ml" 71 1923 1956
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1957 "src/Solver/Sage_Solver.ml" 71 1923 1961
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 68 1841 1847 "src/Solver/Sage_Solver.ml" 68 1841 1851
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1941 "src/Solver/Sage_Solver.ml" 71 1923 1961
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1962 "src/Solver/Sage_Solver.ml" 71 1923 1964
+type(
+  Util.YS.json -> (Util.YS.json -> string) -> string
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1965 "src/Solver/Sage_Solver.ml" 71 1923 1975
+type(
+  Util.YS.json -> string
+)
+ident(
+  ext_ref Util.get_string
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1941 "src/Solver/Sage_Solver.ml" 71 1923 1975
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 72 1981 1989 "src/Solver/Sage_Solver.ml" 72 1981 1994
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2007 "src/Solver/Sage_Solver.ml" 72 1981 2016
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2017 "src/Solver/Sage_Solver.ml" 72 1981 2022
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2023 "src/Solver/Sage_Solver.ml" 72 1981 2027
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 68 1841 1847 "src/Solver/Sage_Solver.ml" 68 1841 1851
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2007 "src/Solver/Sage_Solver.ml" 72 1981 2027
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2028 "src/Solver/Sage_Solver.ml" 72 1981 2030
+type(
+  Util.YS.json -> (Util.YS.json -> int list) -> int list
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2031 "src/Solver/Sage_Solver.ml" 72 1981 2038
+type(
+  Util.YS.json -> int list
+)
+ident(
+  ext_ref Util.get_vec
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2006 "src/Solver/Sage_Solver.ml" 72 1981 2039
+call(
+  stack
+)
+type(
+  int list
+)
+"src/Solver/Sage_Solver.ml" 72 1981 2002 "src/Solver/Sage_Solver.ml" 72 1981 2039
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 73 2040 2048 "src/Solver/Sage_Solver.ml" 73 2040 2055
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 73 2040 2061 "src/Solver/Sage_Solver.ml" 73 2040 2065
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 74 2066 2074 "src/Solver/Sage_Solver.ml" 74 2066 2075
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 74 2066 2087 "src/Solver/Sage_Solver.ml" 74 2066 2095
+type(
+  string -> int list option
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 74 2066 2096 "src/Solver/Sage_Solver.ml" 74 2066 2150
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 74 2066 2087 "src/Solver/Sage_Solver.ml" 74 2066 2150
+call(
+  tail
+)
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 71 1923 1929 "src/Solver/Sage_Solver.ml" 75 2151 2160
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 77 2170 2176 "src/Solver/Sage_Solver.ml" 77 2170 2184
+type(
+  string -> int list option
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 78 2185 2194 "src/Solver/Sage_Solver.ml" 78 2185 2239
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 78 2185 2239 "src/Solver/Sage_Solver.ml" 78 2185 2240
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2251 "src/Solver/Sage_Solver.ml" 79 2241 2260
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2261 "src/Solver/Sage_Solver.ml" 79 2241 2268
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2269 "src/Solver/Sage_Solver.ml" 79 2241 2273
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 68 1841 1847 "src/Solver/Sage_Solver.ml" 68 1841 1851
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2251 "src/Solver/Sage_Solver.ml" 79 2241 2273
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2274 "src/Solver/Sage_Solver.ml" 79 2241 2276
+type(
+  Util.YS.json -> (Util.YS.json -> string) -> string
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2277 "src/Solver/Sage_Solver.ml" 79 2241 2287
+type(
+  Util.YS.json -> string
+)
+ident(
+  ext_ref Util.get_string
+)
+"src/Solver/Sage_Solver.ml" 79 2241 2250 "src/Solver/Sage_Solver.ml" 79 2241 2288
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 78 2185 2193 "src/Solver/Sage_Solver.ml" 79 2241 2289
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 77 2170 2176 "src/Solver/Sage_Solver.ml" 79 2241 2289
+call(
+  tail
+)
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 69 1877 1879 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 68 1841 1843 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 67 1786 1788 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 66 1713 1715 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 65 1685 1687 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 64 1657 1659 "src/Solver/Sage_Solver.ml" 79 2241 2289
+type(
+  int list option
+)
+"src/Solver/Sage_Solver.ml" 81 2291 2295 "src/Solver/Sage_Solver.ml" 81 2291 2309
+type(
+  ?sts:st_sage ->
+  Big_int.big_int list list ->
+  Big_int.big_int list list ->
+  int list list * int list list * int * (bool * int list) list
+)
+ident(
+  def compare_kernel "src/Solver/Sage_Solver.ml" 102 3077 3077 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 81 2291 2311 "src/Solver/Sage_Solver.ml" 81 2291 2314
+type(
+  st_sage option
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 81 2291 2315 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 81 2291 2315 "src/Solver/Sage_Solver.ml" 81 2291 2317
+type(
+  Big_int.big_int list list
+)
+ident(
+  def lm "src/Solver/Sage_Solver.ml" 81 2291 2318 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 81 2291 2318 "src/Solver/Sage_Solver.ml" 81 2291 2320
+type(
+  Big_int.big_int list list
+)
+ident(
+  def rm "src/Solver/Sage_Solver.ml" 82 2323 2325 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 82 2323 2329 "src/Solver/Sage_Solver.ml" 82 2323 2332
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list ]
+)
+ident(
+  def lmj "src/Solver/Sage_Solver.ml" 83 2353 2355 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 82 2323 2335 "src/Solver/Sage_Solver.ml" 82 2323 2346
+type(
+  Big_int.big_int list list ->
+  ([> `List of [> `List of [> `Int of int ] list ] list ] as 'a)
+)
+ident(
+  int_ref mat_to_json "src/Solver/Sage_Solver.ml" 61 1570 1574 "src/Solver/Sage_Solver.ml" 61 1570 1585
+)
+"src/Solver/Sage_Solver.ml" 82 2323 2347 "src/Solver/Sage_Solver.ml" 82 2323 2349
+type(
+  Big_int.big_int list list
+)
+ident(
+  int_ref lm "src/Solver/Sage_Solver.ml" 81 2291 2315 "src/Solver/Sage_Solver.ml" 81 2291 2317
+)
+"src/Solver/Sage_Solver.ml" 82 2323 2335 "src/Solver/Sage_Solver.ml" 82 2323 2349
+call(
+  stack
+)
+type(
+  'a
+)
+"src/Solver/Sage_Solver.ml" 83 2353 2359 "src/Solver/Sage_Solver.ml" 83 2353 2362
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list ]
+)
+ident(
+  def rmj "src/Solver/Sage_Solver.ml" 84 2383 2385 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 83 2353 2365 "src/Solver/Sage_Solver.ml" 83 2353 2376
+type(
+  Big_int.big_int list list ->
+  ([> `List of [> `List of [> `Int of int ] list ] list ] as 'b)
+)
+ident(
+  int_ref mat_to_json "src/Solver/Sage_Solver.ml" 61 1570 1574 "src/Solver/Sage_Solver.ml" 61 1570 1585
+)
+"src/Solver/Sage_Solver.ml" 83 2353 2377 "src/Solver/Sage_Solver.ml" 83 2353 2379
+type(
+  Big_int.big_int list list
+)
+ident(
+  int_ref rm "src/Solver/Sage_Solver.ml" 81 2291 2318 "src/Solver/Sage_Solver.ml" 81 2291 2320
+)
+"src/Solver/Sage_Solver.ml" 83 2353 2365 "src/Solver/Sage_Solver.ml" 83 2353 2379
+call(
+  stack
+)
+type(
+  'b
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2389 "src/Solver/Sage_Solver.ml" 84 2383 2392
+type(
+  [> `Assoc of
+       (string *
+        [> `List of [> `List of [> `Int of int ] list ] list
+         | `String of string ])
+       list ]
+)
+ident(
+  def req "src/Solver/Sage_Solver.ml" 85 2465 2467 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2405 "src/Solver/Sage_Solver.ml" 84 2383 2410
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2419 "src/Solver/Sage_Solver.ml" 84 2383 2434
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2411 "src/Solver/Sage_Solver.ml" 84 2383 2434
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list | `String of string ]
+  as 'c
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2404 "src/Solver/Sage_Solver.ml" 84 2383 2435
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2438 "src/Solver/Sage_Solver.ml" 84 2383 2442
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2443 "src/Solver/Sage_Solver.ml" 84 2383 2446
+type(
+  'c
+)
+ident(
+  int_ref lmj "src/Solver/Sage_Solver.ml" 82 2323 2329 "src/Solver/Sage_Solver.ml" 82 2323 2332
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2437 "src/Solver/Sage_Solver.ml" 84 2383 2447
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2450 "src/Solver/Sage_Solver.ml" 84 2383 2454
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2455 "src/Solver/Sage_Solver.ml" 84 2383 2458
+type(
+  'c
+)
+ident(
+  int_ref rmj "src/Solver/Sage_Solver.ml" 83 2353 2359 "src/Solver/Sage_Solver.ml" 83 2353 2362
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2449 "src/Solver/Sage_Solver.ml" 84 2383 2459
+type(
+  string * 'c
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2402 "src/Solver/Sage_Solver.ml" 84 2383 2461
+type(
+  (string * 'c) list
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2395 "src/Solver/Sage_Solver.ml" 84 2383 2461
+type(
+  [> `Assoc of (string * 'c) list ] as 'd
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2471 "src/Solver/Sage_Solver.ml" 85 2465 2475
+type(
+  string
+)
+ident(
+  def sres "src/Solver/Sage_Solver.ml" 86 2520 2522 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2478 "src/Solver/Sage_Solver.ml" 85 2465 2487
+type(
+  ?sts:st_sage -> string -> string
+)
+ident(
+  int_ref call_Sage "src/Solver/Sage_Solver.ml" 49 1312 1316 "src/Solver/Sage_Solver.ml" 49 1312 1325
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2489 "src/Solver/Sage_Solver.ml" 85 2465 2492
+type(
+  st_sage option
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 81 2291 2311 "src/Solver/Sage_Solver.ml" 81 2291 2314
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2494 "src/Solver/Sage_Solver.ml" 85 2465 2506
+type(
+  ?buf:Bi_outbuf.t -> ?len:int -> ?std:bool -> YS.json -> string
+)
+ident(
+  ext_ref YS.to_string
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2507 "src/Solver/Sage_Solver.ml" 85 2465 2510
+type(
+  YS.json
+)
+ident(
+  int_ref req "src/Solver/Sage_Solver.ml" 84 2383 2389 "src/Solver/Sage_Solver.ml" 84 2383 2392
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2494 "src/Solver/Sage_Solver.ml" 85 2465 2510
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2510 "src/Solver/Sage_Solver.ml" 85 2465 2511
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2511 "src/Solver/Sage_Solver.ml" 85 2465 2515
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2493 "src/Solver/Sage_Solver.ml" 85 2465 2516
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2478 "src/Solver/Sage_Solver.ml" 85 2465 2516
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+type(
+  YS.json
+)
+ident(
+  def mres "src/Solver/Sage_Solver.ml" 87 2556 2558 "src/Solver/Sage_Solver.ml" 100 3070 3075
+)
+"src/Solver/Sage_Solver.ml" 86 2520 2533 "src/Solver/Sage_Solver.ml" 86 2520 2547
+type(
+  ?buf:Bi_outbuf.t -> ?fname:string -> ?lnum:int -> string -> YS.json
+)
+ident(
+  ext_ref YS.from_string
+)
+"src/Solver/Sage_Solver.ml" 86 2520 2548 "src/Solver/Sage_Solver.ml" 86 2520 2552
+type(
+  string
+)
+ident(
+  int_ref sres "src/Solver/Sage_Solver.ml" 85 2465 2471 "src/Solver/Sage_Solver.ml" 85 2465 2475
+)
+"src/Solver/Sage_Solver.ml" 86 2520 2533 "src/Solver/Sage_Solver.ml" 86 2520 2552
+call(
+  stack
+)
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2561 "src/Solver/Sage_Solver.ml" 87 2556 2570
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2571 "src/Solver/Sage_Solver.ml" 87 2556 2575
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2576 "src/Solver/Sage_Solver.ml" 87 2556 2580
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2561 "src/Solver/Sage_Solver.ml" 87 2556 2580
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2581 "src/Solver/Sage_Solver.ml" 87 2556 2583
+type(
+  Util.YS.json -> (Util.YS.json -> bool) -> bool
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2584 "src/Solver/Sage_Solver.ml" 87 2556 2592
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2561 "src/Solver/Sage_Solver.ml" 87 2556 2592
+call(
+  stack
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2614 "src/Solver/Sage_Solver.ml" 89 2604 2616
+type(
+  int list list
+)
+ident(
+  def lk "src/Solver/Sage_Solver.ml" 90 2666 2672 "src/Solver/Sage_Solver.ml" 95 2900 2931
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2624 "src/Solver/Sage_Solver.ml" 89 2604 2633
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2634 "src/Solver/Sage_Solver.ml" 89 2604 2638
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2639 "src/Solver/Sage_Solver.ml" 89 2604 2643
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2624 "src/Solver/Sage_Solver.ml" 89 2604 2643
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2649 "src/Solver/Sage_Solver.ml" 89 2604 2651
+type(
+  Util.YS.json -> (Util.YS.json -> int list list) -> int list list
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2652 "src/Solver/Sage_Solver.ml" 89 2604 2662
+type(
+  Util.YS.json -> int list list
+)
+ident(
+  ext_ref Util.get_matrix
+)
+"src/Solver/Sage_Solver.ml" 89 2604 2624 "src/Solver/Sage_Solver.ml" 89 2604 2662
+call(
+  stack
+)
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2676 "src/Solver/Sage_Solver.ml" 90 2666 2678
+type(
+  int list list
+)
+ident(
+  def rk "src/Solver/Sage_Solver.ml" 91 2728 2734 "src/Solver/Sage_Solver.ml" 95 2900 2931
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2686 "src/Solver/Sage_Solver.ml" 90 2666 2695
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2696 "src/Solver/Sage_Solver.ml" 90 2666 2700
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2701 "src/Solver/Sage_Solver.ml" 90 2666 2705
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2686 "src/Solver/Sage_Solver.ml" 90 2666 2705
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2711 "src/Solver/Sage_Solver.ml" 90 2666 2713
+type(
+  Util.YS.json -> (Util.YS.json -> int list list) -> int list list
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2714 "src/Solver/Sage_Solver.ml" 90 2666 2724
+type(
+  Util.YS.json -> int list list
+)
+ident(
+  ext_ref Util.get_matrix
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2686 "src/Solver/Sage_Solver.ml" 90 2666 2724
+call(
+  stack
+)
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2738 "src/Solver/Sage_Solver.ml" 91 2728 2744
+type(
+  int
+)
+ident(
+  def exc_ub "src/Solver/Sage_Solver.ml" 92 2787 2793 "src/Solver/Sage_Solver.ml" 95 2900 2931
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2748 "src/Solver/Sage_Solver.ml" 91 2728 2757
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2758 "src/Solver/Sage_Solver.ml" 91 2728 2766
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2767 "src/Solver/Sage_Solver.ml" 91 2728 2771
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2748 "src/Solver/Sage_Solver.ml" 91 2728 2771
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2773 "src/Solver/Sage_Solver.ml" 91 2728 2775
+type(
+  Util.YS.json -> (Util.YS.json -> int) -> int
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2776 "src/Solver/Sage_Solver.ml" 91 2728 2783
+type(
+  Util.YS.json -> int
+)
+ident(
+  ext_ref Util.get_int
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2748 "src/Solver/Sage_Solver.ml" 91 2728 2783
+call(
+  stack
+)
+type(
+  int
+)
+"src/Solver/Sage_Solver.ml" 92 2787 2797 "src/Solver/Sage_Solver.ml" 92 2787 2804
+type(
+  (bool * int list) list
+)
+ident(
+  def attacks "src/Solver/Sage_Solver.ml" 95 2900 2906 "src/Solver/Sage_Solver.ml" 95 2900 2931
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2815 "src/Solver/Sage_Solver.ml" 93 2807 2824
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2825 "src/Solver/Sage_Solver.ml" 93 2807 2834
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2835 "src/Solver/Sage_Solver.ml" 93 2807 2839
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2815 "src/Solver/Sage_Solver.ml" 93 2807 2839
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2840 "src/Solver/Sage_Solver.ml" 93 2807 2842
+type(
+  Util.YS.json ->
+  (Util.YS.json -> (bool * int list) list) -> (bool * int list) list
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2843 "src/Solver/Sage_Solver.ml" 93 2807 2851
+type(
+  (Util.YS.json -> bool * int list) -> Util.YS.json -> (bool * int list) list
+)
+ident(
+  ext_ref Util.get_list
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2853 "src/Solver/Sage_Solver.ml" 93 2807 2861
+type(
+  (Util.YS.json -> bool) ->
+  (Util.YS.json -> int list) -> Util.YS.json -> bool * int list
+)
+ident(
+  ext_ref Util.get_pair
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2862 "src/Solver/Sage_Solver.ml" 93 2807 2870
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2872 "src/Solver/Sage_Solver.ml" 93 2807 2880
+type(
+  (Util.YS.json -> int) -> Util.YS.json -> int list
+)
+ident(
+  ext_ref Util.get_list
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2881 "src/Solver/Sage_Solver.ml" 93 2807 2888
+type(
+  Util.YS.json -> int
+)
+ident(
+  ext_ref Util.get_int
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2871 "src/Solver/Sage_Solver.ml" 93 2807 2889
+call(
+  stack
+)
+type(
+  Util.YS.json -> int list
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2852 "src/Solver/Sage_Solver.ml" 93 2807 2890
+call(
+  stack
+)
+type(
+  Util.YS.json -> bool * int list
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2843 "src/Solver/Sage_Solver.ml" 93 2807 2890
+type(
+  Util.YS.json -> (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 93 2807 2815 "src/Solver/Sage_Solver.ml" 93 2807 2890
+call(
+  stack
+)
+type(
+  (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 95 2900 2907 "src/Solver/Sage_Solver.ml" 95 2900 2909
+type(
+  int list list
+)
+ident(
+  int_ref lk "src/Solver/Sage_Solver.ml" 89 2604 2614 "src/Solver/Sage_Solver.ml" 89 2604 2616
+)
+"src/Solver/Sage_Solver.ml" 95 2900 2911 "src/Solver/Sage_Solver.ml" 95 2900 2913
+type(
+  int list list
+)
+ident(
+  int_ref rk "src/Solver/Sage_Solver.ml" 90 2666 2676 "src/Solver/Sage_Solver.ml" 90 2666 2678
+)
+"src/Solver/Sage_Solver.ml" 95 2900 2915 "src/Solver/Sage_Solver.ml" 95 2900 2921
+type(
+  int
+)
+ident(
+  int_ref exc_ub "src/Solver/Sage_Solver.ml" 91 2728 2738 "src/Solver/Sage_Solver.ml" 91 2728 2744
+)
+"src/Solver/Sage_Solver.ml" 95 2900 2923 "src/Solver/Sage_Solver.ml" 95 2900 2930
+type(
+  (bool * int list) list
+)
+ident(
+  int_ref attacks "src/Solver/Sage_Solver.ml" 92 2787 2797 "src/Solver/Sage_Solver.ml" 92 2787 2804
+)
+"src/Solver/Sage_Solver.ml" 95 2900 2906 "src/Solver/Sage_Solver.ml" 95 2900 2931
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 92 2787 2793 "src/Solver/Sage_Solver.ml" 95 2900 2931
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 91 2728 2734 "src/Solver/Sage_Solver.ml" 95 2900 2931
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 90 2666 2672 "src/Solver/Sage_Solver.ml" 95 2900 2931
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 88 2593 2602 "src/Solver/Sage_Solver.ml" 96 2932 2937
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 97 2945 2951 "src/Solver/Sage_Solver.ml" 97 2945 2959
+type(
+  string -> int list list * int list list * int * (bool * int list) list
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 98 2960 2969 "src/Solver/Sage_Solver.ml" 98 2960 3019
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 98 2960 3019 "src/Solver/Sage_Solver.ml" 98 2960 3020
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3031 "src/Solver/Sage_Solver.ml" 99 3021 3040
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3041 "src/Solver/Sage_Solver.ml" 99 3021 3048
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3049 "src/Solver/Sage_Solver.ml" 99 3021 3053
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 86 2520 2526 "src/Solver/Sage_Solver.ml" 86 2520 2530
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3031 "src/Solver/Sage_Solver.ml" 99 3021 3053
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3054 "src/Solver/Sage_Solver.ml" 99 3021 3056
+type(
+  Util.YS.json -> (Util.YS.json -> string) -> string
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3057 "src/Solver/Sage_Solver.ml" 99 3021 3067
+type(
+  Util.YS.json -> string
+)
+ident(
+  ext_ref Util.get_string
+)
+"src/Solver/Sage_Solver.ml" 99 3021 3030 "src/Solver/Sage_Solver.ml" 99 3021 3068
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 98 2960 2968 "src/Solver/Sage_Solver.ml" 99 3021 3069
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 96 2932 2943 "src/Solver/Sage_Solver.ml" 100 3070 3075
+call(
+  tail
+)
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 87 2556 2558 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 86 2520 2522 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 85 2465 2467 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 84 2383 2385 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 83 2353 2355 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 82 2323 2325 "src/Solver/Sage_Solver.ml" 100 3070 3075
+type(
+  int list list * int list list * int * (bool * int list) list
+)
+"src/Solver/Sage_Solver.ml" 102 3077 3081 "src/Solver/Sage_Solver.ml" 102 3077 3095
+type(
+  ?sts:st_sage -> Big_int.big_int list list -> int list list
+)
+ident(
+  def compute_kernel "src/Solver/Sage_Solver.ml" 115 3519 3519 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 102 3077 3097 "src/Solver/Sage_Solver.ml" 102 3077 3100
+type(
+  st_sage option
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 102 3077 3101 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 102 3077 3101 "src/Solver/Sage_Solver.ml" 102 3077 3102
+type(
+  Big_int.big_int list list
+)
+ident(
+  def m "src/Solver/Sage_Solver.ml" 103 3105 3107 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 103 3105 3111 "src/Solver/Sage_Solver.ml" 103 3105 3113
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list ]
+)
+ident(
+  def mj "src/Solver/Sage_Solver.ml" 104 3133 3135 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 103 3105 3116 "src/Solver/Sage_Solver.ml" 103 3105 3127
+type(
+  Big_int.big_int list list ->
+  ([> `List of [> `List of [> `Int of int ] list ] list ] as 'a)
+)
+ident(
+  int_ref mat_to_json "src/Solver/Sage_Solver.ml" 61 1570 1574 "src/Solver/Sage_Solver.ml" 61 1570 1585
+)
+"src/Solver/Sage_Solver.ml" 103 3105 3128 "src/Solver/Sage_Solver.ml" 103 3105 3129
+type(
+  Big_int.big_int list list
+)
+ident(
+  int_ref m "src/Solver/Sage_Solver.ml" 102 3077 3101 "src/Solver/Sage_Solver.ml" 102 3077 3102
+)
+"src/Solver/Sage_Solver.ml" 103 3105 3116 "src/Solver/Sage_Solver.ml" 103 3105 3129
+call(
+  stack
+)
+type(
+  'a
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3139 "src/Solver/Sage_Solver.ml" 104 3133 3142
+type(
+  [> `Assoc of
+       (string *
+        [> `List of [> `List of [> `Int of int ] list ] list
+         | `String of string ])
+       list ]
+)
+ident(
+  def req "src/Solver/Sage_Solver.ml" 105 3202 3204 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3155 "src/Solver/Sage_Solver.ml" 104 3133 3160
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3169 "src/Solver/Sage_Solver.ml" 104 3133 3184
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3161 "src/Solver/Sage_Solver.ml" 104 3133 3184
+type(
+  [> `List of [> `List of [> `Int of int ] list ] list | `String of string ]
+  as 'b
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3154 "src/Solver/Sage_Solver.ml" 104 3133 3185
+type(
+  string * 'b
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3188 "src/Solver/Sage_Solver.ml" 104 3133 3191
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3193 "src/Solver/Sage_Solver.ml" 104 3133 3195
+type(
+  'b
+)
+ident(
+  int_ref mj "src/Solver/Sage_Solver.ml" 103 3105 3111 "src/Solver/Sage_Solver.ml" 103 3105 3113
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3187 "src/Solver/Sage_Solver.ml" 104 3133 3196
+type(
+  string * 'b
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3152 "src/Solver/Sage_Solver.ml" 104 3133 3198
+type(
+  (string * 'b) list
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3145 "src/Solver/Sage_Solver.ml" 104 3133 3198
+type(
+  [> `Assoc of (string * 'b) list ] as 'c
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3208 "src/Solver/Sage_Solver.ml" 105 3202 3212
+type(
+  string
+)
+ident(
+  def sres "src/Solver/Sage_Solver.ml" 106 3261 3263 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3215 "src/Solver/Sage_Solver.ml" 105 3202 3224
+type(
+  ?sts:st_sage -> string -> string
+)
+ident(
+  int_ref call_Sage "src/Solver/Sage_Solver.ml" 49 1312 1316 "src/Solver/Sage_Solver.ml" 49 1312 1325
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3230 "src/Solver/Sage_Solver.ml" 105 3202 3233
+type(
+  st_sage option
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 102 3077 3097 "src/Solver/Sage_Solver.ml" 102 3077 3100
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3235 "src/Solver/Sage_Solver.ml" 105 3202 3247
+type(
+  ?buf:Bi_outbuf.t -> ?len:int -> ?std:bool -> YS.json -> string
+)
+ident(
+  ext_ref YS.to_string
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3248 "src/Solver/Sage_Solver.ml" 105 3202 3251
+type(
+  YS.json
+)
+ident(
+  int_ref req "src/Solver/Sage_Solver.ml" 104 3133 3139 "src/Solver/Sage_Solver.ml" 104 3133 3142
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3235 "src/Solver/Sage_Solver.ml" 105 3202 3251
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3251 "src/Solver/Sage_Solver.ml" 105 3202 3252
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3252 "src/Solver/Sage_Solver.ml" 105 3202 3256
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3234 "src/Solver/Sage_Solver.ml" 105 3202 3257
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3215 "src/Solver/Sage_Solver.ml" 105 3202 3257
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 106 3261 3267 "src/Solver/Sage_Solver.ml" 106 3261 3271
+type(
+  YS.json
+)
+ident(
+  def mres "src/Solver/Sage_Solver.ml" 107 3297 3299 "src/Solver/Sage_Solver.ml" 113 3512 3517
+)
+"src/Solver/Sage_Solver.ml" 106 3261 3274 "src/Solver/Sage_Solver.ml" 106 3261 3288
+type(
+  ?buf:Bi_outbuf.t -> ?fname:string -> ?lnum:int -> string -> YS.json
+)
+ident(
+  ext_ref YS.from_string
+)
+"src/Solver/Sage_Solver.ml" 106 3261 3289 "src/Solver/Sage_Solver.ml" 106 3261 3293
+type(
+  string
+)
+ident(
+  int_ref sres "src/Solver/Sage_Solver.ml" 105 3202 3208 "src/Solver/Sage_Solver.ml" 105 3202 3212
+)
+"src/Solver/Sage_Solver.ml" 106 3261 3274 "src/Solver/Sage_Solver.ml" 106 3261 3293
+call(
+  stack
+)
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3302 "src/Solver/Sage_Solver.ml" 107 3297 3311
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3312 "src/Solver/Sage_Solver.ml" 107 3297 3316
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3317 "src/Solver/Sage_Solver.ml" 107 3297 3321
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 106 3261 3267 "src/Solver/Sage_Solver.ml" 106 3261 3271
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3302 "src/Solver/Sage_Solver.ml" 107 3297 3321
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3322 "src/Solver/Sage_Solver.ml" 107 3297 3324
+type(
+  Util.YS.json -> (Util.YS.json -> bool) -> bool
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3325 "src/Solver/Sage_Solver.ml" 107 3297 3333
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3302 "src/Solver/Sage_Solver.ml" 107 3297 3333
+call(
+  stack
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3343 "src/Solver/Sage_Solver.ml" 108 3334 3352
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3353 "src/Solver/Sage_Solver.ml" 108 3334 3356
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3357 "src/Solver/Sage_Solver.ml" 108 3334 3361
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 106 3261 3267 "src/Solver/Sage_Solver.ml" 106 3261 3271
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3343 "src/Solver/Sage_Solver.ml" 108 3334 3361
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3362 "src/Solver/Sage_Solver.ml" 108 3334 3364
+type(
+  Util.YS.json -> (Util.YS.json -> int list list) -> int list list
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3365 "src/Solver/Sage_Solver.ml" 108 3334 3375
+type(
+  Util.YS.json -> int list list
+)
+ident(
+  ext_ref Util.get_matrix
+)
+"src/Solver/Sage_Solver.ml" 108 3334 3343 "src/Solver/Sage_Solver.ml" 108 3334 3375
+call(
+  tail
+)
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 110 3387 3393 "src/Solver/Sage_Solver.ml" 110 3387 3401
+type(
+  string -> int list list
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 111 3402 3411 "src/Solver/Sage_Solver.ml" 111 3402 3461
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 111 3402 3461 "src/Solver/Sage_Solver.ml" 111 3402 3462
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3473 "src/Solver/Sage_Solver.ml" 112 3463 3482
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3483 "src/Solver/Sage_Solver.ml" 112 3463 3490
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3491 "src/Solver/Sage_Solver.ml" 112 3463 3495
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 106 3261 3267 "src/Solver/Sage_Solver.ml" 106 3261 3271
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3473 "src/Solver/Sage_Solver.ml" 112 3463 3495
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3496 "src/Solver/Sage_Solver.ml" 112 3463 3498
+type(
+  Util.YS.json -> (Util.YS.json -> string) -> string
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3499 "src/Solver/Sage_Solver.ml" 112 3463 3509
+type(
+  Util.YS.json -> string
+)
+ident(
+  ext_ref Util.get_string
+)
+"src/Solver/Sage_Solver.ml" 112 3463 3472 "src/Solver/Sage_Solver.ml" 112 3463 3510
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 111 3402 3410 "src/Solver/Sage_Solver.ml" 112 3463 3511
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 109 3376 3385 "src/Solver/Sage_Solver.ml" 113 3512 3517
+call(
+  tail
+)
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 107 3297 3299 "src/Solver/Sage_Solver.ml" 113 3512 3517
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 106 3261 3263 "src/Solver/Sage_Solver.ml" 113 3512 3517
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 105 3202 3204 "src/Solver/Sage_Solver.ml" 113 3512 3517
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 104 3133 3135 "src/Solver/Sage_Solver.ml" 113 3512 3517
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 103 3105 3107 "src/Solver/Sage_Solver.ml" 113 3512 3517
+type(
+  int list list
+)
+"src/Solver/Sage_Solver.ml" 115 3519 3523 "src/Solver/Sage_Solver.ml" 115 3519 3539
+type(
+  ?sts:st_sage -> YS.json -> YS.json -> YS.json -> bool
+)
+ident(
+  def is_contradictory "src/Solver/Sage_Solver.ml" 131 4064 4069 "src/Solver/Sage_Solver.ml" 1 0 -1
+)
+"src/Solver/Sage_Solver.ml" 115 3519 3541 "src/Solver/Sage_Solver.ml" 115 3519 3544
+type(
+  st_sage option
+)
+ident(
+  def sts "src/Solver/Sage_Solver.ml" 115 3519 3545 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 115 3519 3545 "src/Solver/Sage_Solver.ml" 115 3519 3557
+type(
+  YS.json
+)
+ident(
+  def zero_constrs "src/Solver/Sage_Solver.ml" 115 3519 3558 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 115 3519 3558 "src/Solver/Sage_Solver.ml" 115 3519 3571
+type(
+  YS.json
+)
+ident(
+  def nzero_constrs "src/Solver/Sage_Solver.ml" 115 3519 3572 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 115 3519 3572 "src/Solver/Sage_Solver.ml" 115 3519 3576
+type(
+  YS.json
+)
+ident(
+  def vars "src/Solver/Sage_Solver.ml" 116 3579 3581 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 116 3579 3585 "src/Solver/Sage_Solver.ml" 116 3579 3588
+type(
+  [> `Assoc of (string * YS.json) list ]
+)
+ident(
+  def req "src/Solver/Sage_Solver.ml" 122 3738 3740 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3606 "src/Solver/Sage_Solver.ml" 117 3592 3611
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3620 "src/Solver/Sage_Solver.ml" 117 3592 3630
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3612 "src/Solver/Sage_Solver.ml" 117 3592 3630
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3605 "src/Solver/Sage_Solver.ml" 117 3592 3631
+type(
+  string * YS.json
+)
+"src/Solver/Sage_Solver.ml" 118 3632 3646 "src/Solver/Sage_Solver.ml" 118 3632 3652
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 118 3632 3653 "src/Solver/Sage_Solver.ml" 118 3632 3665
+type(
+  YS.json
+)
+ident(
+  int_ref zero_constrs "src/Solver/Sage_Solver.ml" 115 3519 3545 "src/Solver/Sage_Solver.ml" 115 3519 3557
+)
+"src/Solver/Sage_Solver.ml" 118 3632 3645 "src/Solver/Sage_Solver.ml" 118 3632 3666
+type(
+  string * YS.json
+)
+"src/Solver/Sage_Solver.ml" 119 3667 3681 "src/Solver/Sage_Solver.ml" 119 3667 3688
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 119 3667 3689 "src/Solver/Sage_Solver.ml" 119 3667 3702
+type(
+  YS.json
+)
+ident(
+  int_ref nzero_constrs "src/Solver/Sage_Solver.ml" 115 3519 3558 "src/Solver/Sage_Solver.ml" 115 3519 3571
+)
+"src/Solver/Sage_Solver.ml" 119 3667 3680 "src/Solver/Sage_Solver.ml" 119 3667 3703
+type(
+  string * YS.json
+)
+"src/Solver/Sage_Solver.ml" 120 3704 3718 "src/Solver/Sage_Solver.ml" 120 3704 3724
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 120 3704 3726 "src/Solver/Sage_Solver.ml" 120 3704 3730
+type(
+  YS.json
+)
+ident(
+  int_ref vars "src/Solver/Sage_Solver.ml" 115 3519 3572 "src/Solver/Sage_Solver.ml" 115 3519 3576
+)
+"src/Solver/Sage_Solver.ml" 120 3704 3717 "src/Solver/Sage_Solver.ml" 120 3704 3731
+type(
+  string * YS.json
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3603 "src/Solver/Sage_Solver.ml" 120 3704 3732
+type(
+  (string * YS.json) list
+)
+"src/Solver/Sage_Solver.ml" 117 3592 3596 "src/Solver/Sage_Solver.ml" 120 3704 3732
+type(
+  [> `Assoc of (string * YS.json) list ] as 'a
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3744 "src/Solver/Sage_Solver.ml" 122 3738 3748
+type(
+  string
+)
+ident(
+  def sres "src/Solver/Sage_Solver.ml" 123 3793 3795 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3751 "src/Solver/Sage_Solver.ml" 122 3738 3760
+type(
+  ?sts:st_sage -> string -> string
+)
+ident(
+  int_ref call_Sage "src/Solver/Sage_Solver.ml" 49 1312 1316 "src/Solver/Sage_Solver.ml" 49 1312 1325
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3762 "src/Solver/Sage_Solver.ml" 122 3738 3765
+type(
+  st_sage option
+)
+ident(
+  int_ref sts "src/Solver/Sage_Solver.ml" 115 3519 3541 "src/Solver/Sage_Solver.ml" 115 3519 3544
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3767 "src/Solver/Sage_Solver.ml" 122 3738 3779
+type(
+  ?buf:Bi_outbuf.t -> ?len:int -> ?std:bool -> YS.json -> string
+)
+ident(
+  ext_ref YS.to_string
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3780 "src/Solver/Sage_Solver.ml" 122 3738 3783
+type(
+  YS.json
+)
+ident(
+  int_ref req "src/Solver/Sage_Solver.ml" 116 3579 3585 "src/Solver/Sage_Solver.ml" 116 3579 3588
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3767 "src/Solver/Sage_Solver.ml" 122 3738 3783
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3783 "src/Solver/Sage_Solver.ml" 122 3738 3784
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3784 "src/Solver/Sage_Solver.ml" 122 3738 3788
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3766 "src/Solver/Sage_Solver.ml" 122 3738 3789
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3751 "src/Solver/Sage_Solver.ml" 122 3738 3789
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 123 3793 3799 "src/Solver/Sage_Solver.ml" 123 3793 3803
+type(
+  YS.json
+)
+ident(
+  def mres "src/Solver/Sage_Solver.ml" 124 3829 3831 "src/Solver/Sage_Solver.ml" 131 4064 4069
+)
+"src/Solver/Sage_Solver.ml" 123 3793 3806 "src/Solver/Sage_Solver.ml" 123 3793 3820
+type(
+  ?buf:Bi_outbuf.t -> ?fname:string -> ?lnum:int -> string -> YS.json
+)
+ident(
+  ext_ref YS.from_string
+)
+"src/Solver/Sage_Solver.ml" 123 3793 3821 "src/Solver/Sage_Solver.ml" 123 3793 3825
+type(
+  string
+)
+ident(
+  int_ref sres "src/Solver/Sage_Solver.ml" 122 3738 3744 "src/Solver/Sage_Solver.ml" 122 3738 3748
+)
+"src/Solver/Sage_Solver.ml" 123 3793 3806 "src/Solver/Sage_Solver.ml" 123 3793 3825
+call(
+  stack
+)
+type(
+  YS.json
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3834 "src/Solver/Sage_Solver.ml" 124 3829 3843
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3844 "src/Solver/Sage_Solver.ml" 124 3829 3848
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3849 "src/Solver/Sage_Solver.ml" 124 3829 3853
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 123 3793 3799 "src/Solver/Sage_Solver.ml" 123 3793 3803
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3834 "src/Solver/Sage_Solver.ml" 124 3829 3853
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3854 "src/Solver/Sage_Solver.ml" 124 3829 3856
+type(
+  Util.YS.json -> (Util.YS.json -> bool) -> bool
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3857 "src/Solver/Sage_Solver.ml" 124 3829 3865
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3834 "src/Solver/Sage_Solver.ml" 124 3829 3865
+call(
+  stack
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3883 "src/Solver/Sage_Solver.ml" 126 3877 3892
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3893 "src/Solver/Sage_Solver.ml" 126 3877 3908
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3909 "src/Solver/Sage_Solver.ml" 126 3877 3913
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 123 3793 3799 "src/Solver/Sage_Solver.ml" 123 3793 3803
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3883 "src/Solver/Sage_Solver.ml" 126 3877 3913
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3914 "src/Solver/Sage_Solver.ml" 126 3877 3916
+type(
+  Util.YS.json -> (Util.YS.json -> bool) -> bool
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 126 3877 3917 "src/Solver/Sage_Solver.ml" 126 3877 3925
+type(
+  Util.YS.json -> bool
+)
+ident(
+  ext_ref Util.get_bool
+)
+"src/Solver/Sage_Solver.ml" 125 3866 3875 "src/Solver/Sage_Solver.ml" 127 3926 3931
+call(
+  tail
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 128 3939 3945 "src/Solver/Sage_Solver.ml" 128 3939 3953
+type(
+  string -> bool
+)
+ident(
+  ext_ref Pervasives.failwith
+)
+"src/Solver/Sage_Solver.ml" 129 3954 3963 "src/Solver/Sage_Solver.ml" 129 3954 4013
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 129 3954 4013 "src/Solver/Sage_Solver.ml" 129 3954 4014
+type(
+  string -> string -> string
+)
+ident(
+  ext_ref Pervasives.( ^ )
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4025 "src/Solver/Sage_Solver.ml" 130 4015 4034
+type(
+  string -> Util.YS.json -> Util.YS.json
+)
+ident(
+  ext_ref Util.get_assoc
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4035 "src/Solver/Sage_Solver.ml" 130 4015 4042
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4043 "src/Solver/Sage_Solver.ml" 130 4015 4047
+type(
+  YS.json
+)
+ident(
+  int_ref mres "src/Solver/Sage_Solver.ml" 123 3793 3799 "src/Solver/Sage_Solver.ml" 123 3793 3803
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4025 "src/Solver/Sage_Solver.ml" 130 4015 4047
+call(
+  stack
+)
+type(
+  Util.YS.json
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4048 "src/Solver/Sage_Solver.ml" 130 4015 4050
+type(
+  Util.YS.json -> (Util.YS.json -> string) -> string
+)
+ident(
+  ext_ref Pervasives.( |> )
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4051 "src/Solver/Sage_Solver.ml" 130 4015 4061
+type(
+  Util.YS.json -> string
+)
+ident(
+  ext_ref Util.get_string
+)
+"src/Solver/Sage_Solver.ml" 130 4015 4024 "src/Solver/Sage_Solver.ml" 130 4015 4062
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 129 3954 3962 "src/Solver/Sage_Solver.ml" 130 4015 4063
+call(
+  stack
+)
+type(
+  string
+)
+"src/Solver/Sage_Solver.ml" 127 3926 3937 "src/Solver/Sage_Solver.ml" 131 4064 4069
+call(
+  tail
+)
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 124 3829 3831 "src/Solver/Sage_Solver.ml" 131 4064 4069
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 123 3793 3795 "src/Solver/Sage_Solver.ml" 131 4064 4069
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 122 3738 3740 "src/Solver/Sage_Solver.ml" 131 4064 4069
+type(
+  bool
+)
+"src/Solver/Sage_Solver.ml" 116 3579 3581 "src/Solver/Sage_Solver.ml" 131 4064 4069
+type(
+  bool
+)

@@ -1,0 +1,130 @@
+
+MacBook-Pro:project-plus$ ./autocircuitppe.native examples/type1/Dodis-2bit.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  x1 in G1,  x2 in G1,  x1 in GT,  x2 in GT,  a1*c*x1 in G1,  a1*c*x2 in G1,  a2*c*x1 in G1,  a2*c*x2 in G1,  c*x1 in G1,  c*x2 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = a1*c in G1
+F2 = a2*c in G1
+F3 = c in G1
+F4 = 1 - x1 + a1*x1 in G1
+F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2 in G1
+F0^x1 = x1 in G1
+F0^x2 = x2 in G1
+F0^x1 = x1 in GT
+F0^x2 = x2 in GT
+F1^x1 = a1*c*x1 in G1
+F1^x2 = a1*c*x2 in G1
+F2^x1 = a2*c*x1 in G1
+F2^x2 = a2*c*x2 in G1
+F3^x1 = c*x1 in G1
+F3^x2 = c*x2 in G1
+Checking for Rule 3. Took 0.000028s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 16. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 16*8
+Checking for Rule 3. Took 1.761797s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = a1*c, F2 = a2*c, F3 = c, F0^x1 = x1, F0^x2 = x2, F1^x1 = a1*c*x1, F1^x2 = a1*c*x2, F2^x1 = a2*c*x1, F2^x2 = a2*c*x2, F3^x1 = c*x1, F3^x2 = c*x2, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F4 = 1 - x1 + a1*x1, F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2, 
+Untrusted set in GT: 
+rule 3 applied on F4 = 1 - x1 + a1*x1. isidentity := F3 =  I      C := e(F4,F3) =  (e(F3,F0^x1))^-1*e(F1,F0^x1)*e(F0,F3)
+....
+Checking for Rule 3. Took 0.000375s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 49. No. of monomials = 32. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 49*32
+Checking for Rule 3. Took 0.008614s time to solve
+....
+Trusted set in G1: F0 = 1, F1 = a1*c, F2 = a2*c, F3 = c, F0^x1 = x1, F0^x2 = x2, F1^x1 = a1*c*x1, F1^x2 = a1*c*x2, F2^x1 = a2*c*x1, F2^x2 = a2*c*x2, F3^x1 = c*x1, F3^x2 = c*x2, F4 = 1 - x1 + a1*x1, F4^x1 = x1 - x1^2 + a1*x1^2, F4^x2 = x2 - x1*x2 + a1*x1*x2, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2, 
+Untrusted set in GT: 
+rule 3 applied on F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2. isidentity := F3 =  I      C := e(F5,F3) =  (e(F3^x2,F4))^-1*e(F2^x2,F4)*e(F3,F4)
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = x1, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1 - x1 + a1*x1, F4^x1 = x1 - x1^2 + a1*x1^2, F4^x2 = x2 - x1*x2 + a1*x1*x2, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2, 
+Untrusted set in GT: 
+rule 4 applied on F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2 and variable a2. isidentity := F4^x2 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = x1, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1 - x1 + a1*x1, F4^x1 = x1 - x1^2 + a1*x1^2, F4^x2 = 0, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x1 + a1*x1, 
+Untrusted set in GT: 
+rule 1 applied to F5 = 1 - x1 + a1*x1.     C := F5 =  F4
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = x1, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F4 = 1 - x1 + a1*x1, F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2, 
+Untrusted set in GT: 
+rule 4 applied on F4 = 1 - x1 + a1*x1 and variable a1. isidentity := F0^x1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = x1, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1 - x1 + a1*x1, F4^x1 = x1 - x1^2 + a1*x1^2, F4^x2 = x2 - x1*x2 + a1*x1*x2, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2, 
+Untrusted set in GT: 
+rule 4 applied on F5 = 1 - x1 - x2 + a1*x1 + a2*x2 + x1*x2 - a1*x1*x2 - a2*x1*x2 + a1*a2*x1*x2 and variable a2. isidentity := F4^x2 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = x1, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1 - x1 + a1*x1, F4^x1 = x1 - x1^2 + a1*x1^2, F4^x2 = 0, 
+Trusted set in GT: F0 = 1, F0^x1 = x1, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x1 + a1*x1, 
+Untrusted set in GT: 
+rule 1 applied to F5 = 1 - x1 + a1*x1.     C := F5 =  F4
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = 0, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, 
+Trusted set in GT: F0 = 1, F0^x1 = 0, F0^x2 = x2, 
+Untrusted set in G1: F4 = 1, F5 = 1 - x2 + a2*x2, 
+Untrusted set in GT: 
+rule 1 applied to F4 = 1.     C := F4 =  F0
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = 0, F0^x2 = x2, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1, F4^x1 = x1, F4^x2 = x2, 
+Trusted set in GT: F0 = 1, F0^x1 = 0, F0^x2 = x2, 
+Untrusted set in G1: F5 = 1 - x2 + a2*x2, 
+Untrusted set in GT: 
+rule 4 applied on F5 = 1 - x2 + a2*x2 and variable a2. isidentity := F0^x2 =  I
+....
+....
+Trusted set in G1: F0 = 1, F1 = 0, F2 = 0, F3 = 0, F0^x1 = 0, F0^x2 = 0, F1^x1 = 0, F1^x2 = 0, F2^x1 = 0, F2^x2 = 0, F3^x1 = 0, F3^x2 = 0, F4 = 1, F4^x1 = x1, F4^x2 = 0, 
+Trusted set in GT: F0 = 1, F0^x1 = 0, F0^x2 = 0, 
+Untrusted set in G1: F5 = 1, 
+Untrusted set in GT: 
+rule 1 applied to F5 = 1.     C := F5 =  F0
+....
+Execution time : 2.006849s
+
+((((NOT F3 =  I) AND e(F4,F3) =  (e(F3,F0^x1))^-1*e(F1,F0^x1)*e(F0,F3)) AND ((((NOT F3 =  I) AND e(F5,F3) =  (e(F3^x2,F4))^-1*e(F2^x2,F4)*e(F3,F4)) AND ACC) OR (F3 =  I AND (((NOT F4^x2 =  I) AND ACC) OR (F4^x2 =  I AND (F5 =  F4 AND ACC)))))) OR (F3 =  I AND (((NOT F0^x1 =  I) AND (((NOT F4^x2 =  I) AND ACC) OR (F4^x2 =  I AND (F5 =  F4 AND ACC)))) OR (F0^x1 =  I AND (F4 =  F0 AND (((NOT F0^x2 =  I) AND ACC) OR (F0^x2 =  I AND (F5 =  F0 AND ACC))))))))
+
+
+
+G1 : F3 = I
+G2 : e(F4,F3) = (e(F3,F0^x1))^-1*e(F1,F0^x1)*e(F0,F3)
+G3 : e(F5,F3) = (e(F3^x2,F4))^-1*e(F2^x2,F4)*e(F3,F4)
+G4 : F4^x2 = I
+G5 : F5 = F4
+G6 : F0^x1 = I
+G7 : F4 = F0
+G8 : F0^x2 = I
+G9 : F5 = F0
+G10 : NOT G1
+G11 : G10 AND G2
+G12 : G11 AND G3
+G13 : NOT G6
+G14 : NOT G4
+G15 : G4 AND G5
+G16 : G14 OR G15
+G17 : G13 AND G16
+G18 : NOT G8
+G19 : G8 AND G9
+G20 : G18 OR G19
+G21 : G7 AND G20
+G22 : G6 AND G21
+G23 : G17 OR G22
+G24 : G1 AND G23
+G25 : G12 OR G24

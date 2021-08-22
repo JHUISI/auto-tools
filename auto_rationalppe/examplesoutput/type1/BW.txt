@@ -1,0 +1,1539 @@
+MacBook-Pro:project-autocircuitppe$ ./autocircuitppe.native examples/type1/BW.txt 
+
+Assigning FID 0 to every unit polynomial 1
+
+Adding set :  id in G1,  id in GT,  id*omega*t1*t2 in GT,  a*id in G1,  b*id in G1,  id*t1 in G1,  id*t2 in G1,  id*t3 in G1,  id*t4 in G1, 
+F0 = 1 in G1
+F0 = 1 in GT
+F1 = omega*t1*t2 in GT
+F2 = a in G1
+F3 = b in G1
+F4 = t1 in G1
+F5 = t2 in G1
+F6 = t3 in G1
+F7 = t4 in G1
+F8 = r1*t1*t2 + r2*t3*t4 in G1
+F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2 in G1
+F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 in G1
+F11 = -1*a*r2*t4 - b*id*r2*t4 in G1
+F12 = -1*a*r2*t3 - b*id*r2*t3 in G1
+F0^id = id in G1
+F0^id = id in GT
+F1^id = id*omega*t1*t2 in GT
+F2^id = a*id in G1
+F3^id = b*id in G1
+F4^id = id*t1 in G1
+F5^id = id*t2 in G1
+F6^id = id*t3 in G1
+F7^id = id*t4 in G1
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000026s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 10. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 10*10
+Checking for Rule 3. Took 0.002753s time to solve
+Checking for Rule 3. Took 0.000026s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 10. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 10*10
+Checking for Rule 3. Took 0.000910s time to solve
+Checking for Rule 3. Took 0.000022s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.001387s time to solve
+Checking for Rule 3. Took 0.000024s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.000759s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2 and variable r1. isidentity := (e(F3,F5^id))^-1*(e(F2,F5))^-1 =  I
+....
+Checking for Rule 3. Took 0.000016s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 7. No. of monomials = 6. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 7*6
+Checking for Rule 3. Took 0.001551s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1. isidentity := F5 =  I      C := e(F10,F5) =  e(F4,F9)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+Checking for Rule 3. Took 0.000050s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 16. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 16*10
+Checking for Rule 3. Took 0.002132s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F11 = -1*a*r2*t4 - b*id*r2*t4. isidentity := F6 =  I      C := e(F11,F6) =  (e(F3^id,F8))^-1*(e(F5,F10))^-1*(e(F2,F8))^-1*(F1)^-1
+....
+Checking for Rule 3. Took 0.000062s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 19. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 19*10
+Checking for Rule 3. Took 0.001930s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+Checking for Rule 3. Took 0.000024s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 11. No. of monomials = 6. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 11*6
+Checking for Rule 3. Took 0.001772s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F8 = r1*t1*t2. isidentity := F3^id*F2 =  I      C := e(F8,F3^id*F2) =  (e(F5,F10))^-1*(F1)^-1
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000009s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001416s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2 - a*r1*t2 - b*id*r1*t2, F9^id = -1*id*omega*t2 - a*id*r1*t2 - b*id^2*r1*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, F11 = 0, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 and variable r1. isidentity := e(F4,F5) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*4
+Checking for Rule 3. Took 0.001475s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F11 = -1*a*r2*t4 - b*id*r2*t4. isidentity := F6 =  I      C := e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1
+....
+Checking for Rule 3. Took 0.000017s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 11. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 11*4
+Checking for Rule 3. Took 0.002795s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000010s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001442s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000010s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001810s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+Checking for Rule 3. Took 0.000004s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 4. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 4*2
+Checking for Rule 3. Took 0.001464s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F9 = -1*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F9 = -1*omega*t2. isidentity := F4 =  I      C := e(F9,F4) =  (F1)^-1
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000029s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 13. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 13*10
+Checking for Rule 3. Took 0.002715s time to solve
+Checking for Rule 3. Took 0.000019s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.000994s time to solve
+Checking for Rule 3. Took 0.000020s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.000783s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1 and variable r1. isidentity := (e(F3,F4^id))^-1*(e(F2,F4))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+Checking for Rule 3. Took 0.000043s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 16. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 16*10
+Checking for Rule 3. Took 0.002170s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F11 = -1*a*r2*t4 - b*id*r2*t4. isidentity := F6 =  I      C := e(F11,F6) =  (e(F3^id,F8))^-1*(e(F5,F10))^-1*e(F4,F9)*(e(F2,F8))^-1
+....
+Checking for Rule 3. Took 0.000054s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 19. No. of monomials = 10. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 19*10
+Checking for Rule 3. Took 0.002211s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+Checking for Rule 3. Took 0.000027s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 11. No. of monomials = 6. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 11*6
+Checking for Rule 3. Took 0.001642s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F8 = r1*t1*t2. isidentity := F3^id*F2 =  I      C := e(F8,F3^id*F2) =  (e(F5,F10))^-1*e(F4,F9)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001668s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1 - a*r1*t1 - b*id*r1*t1, F10^id = -1*id*omega*t1 - a*id*r1*t1 - b*id^2*r1*t1, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, F11 = 0, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 and variable r1. isidentity := e(F4,F5) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+Checking for Rule 3. Took 0.000006s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 7. No. of monomials = 2. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 7*2
+Checking for Rule 3. Took 0.001622s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F10 = -1*omega*t1. isidentity := F5 =  I      C := e(F10,F5) =  e(F4,F9)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000021s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.001468s time to solve
+Checking for Rule 3. Took 0.000021s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.000719s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000012s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001175s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000015s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 9. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 9*4
+Checking for Rule 3. Took 0.001633s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, 
+Untrusted set in GT: 
+rule 3 applied on F8 = r2*t3*t4. isidentity := F3^id*F2 =  I      C := e(F8,F3^id*F2) =  (e(F7,F12))^-1
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 and variable r1. isidentity := e(F4,F5) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F8 = r1*t1*t2, F8^id = id*r1*t1*t2, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000024s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 8. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*8
+Checking for Rule 3. Took 0.001192s time to solve
+None of the rules are applicable on following PPE problem 
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F8 = r1*t1*t2 + r2*t3*t4, F8^id = id*r1*t1*t2 + id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+Checking for Rule 3. Took 0.000009s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 6. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 6*4
+Checking for Rule 3. Took 0.001487s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, 
+Untrusted set in GT: 
+rule 3 applied on F8 = r2*t3*t4. isidentity := F3^id*F2 =  I      C := e(F8,F3^id*F2) =  (e(F7,F12))^-1
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = omega*t1*t2, F0^id = id, F1^id = id*omega*t1*t2, 
+Untrusted set in G1: F8 = r1*t1*t2 + r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r1*t1*t2 + r2*t3*t4 and variable r1. isidentity := e(F4,F5) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*4
+Checking for Rule 3. Took 0.001548s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F11 = -1*a*r2*t4 - b*id*r2*t4. isidentity := F6 =  I      C := e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1
+....
+Checking for Rule 3. Took 0.000017s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 11. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 11*4
+Checking for Rule 3. Took 0.001268s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = -1*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F10 = -1*omega*t1 and variable omega. isidentity := (F4)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000010s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001375s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = t1, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = id*t1, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = -1*omega*t1, F10^id = -1*id*omega*t1, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F10 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001009s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F9 = 0, F9^id = 0, F8 = 0, F8^id = 0, F10 = 0, F10^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, F9 = -1*omega*t2, F10 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F10 = 0.     C := F10 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = r2*t3*t4, F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F8 = r2*t3*t4 and variable r2. isidentity := e(F6,F7) =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 8. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 8*4
+Checking for Rule 3. Took 0.001717s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F11 = -1*a*r2*t4 - b*id*r2*t4. isidentity := F6 =  I      C := e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1
+....
+Checking for Rule 3. Took 0.000019s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 11. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 11*4
+Checking for Rule 3. Took 0.001030s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, 
+Untrusted set in GT: 
+rule 4 applied on F9 = -1*omega*t2 and variable omega. isidentity := (F5)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = r2*t3*t4, F8^id = id*r2*t3*t4, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, F12^id = -1*a*id*r2*t3 - b*id^2*r2*t3, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F9 = 0.     C := F9 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F9 = -1*omega*t2 and variable omega. isidentity := (F5)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F9 = 0.     C := F9 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F11 = 0, F11^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F9 = -1*omega*t2 and variable omega. isidentity := (F5)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 1 applied to F9 = 0.     C := F9 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = 0, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = 0, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F12 = 0, F12^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F8 = 0, F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F8 = 0.     C := F8 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = -1*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F9 = -1*omega*t2 and variable omega. isidentity := (F5)^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000010s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001082s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = t2, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = id*t2, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = -1*omega*t2, F9^id = -1*id*omega*t2, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F9 = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F9 = 0.     C := F9 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = -1*a*r2*t4 - b*id*r2*t4, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F11 = -1*a*r2*t4 - b*id*r2*t4 and variable r2. isidentity := (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I
+....
+Checking for Rule 3. Took 0.000011s to compute basis. Size of reduced f.(completion list of G1) U (completion list of GT) = 5. No. of monomials = 4. 
+              Solving equation of form x.M = 0, where x is the required coefficient vector and dimensions of M = 5*4
+Checking for Rule 3. Took 0.001258s time to solve
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, F11 = -1*a*r2*t4 - b*id*r2*t4, F11^id = -1*a*id*r2*t4 - b*id^2*r2*t4, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 3 applied on F12 = -1*a*r2*t3 - b*id*r2*t3. isidentity := F7 =  I      C := e(F12,F7) =  e(F6,F11)
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = 0, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = 0, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F11 = 0, F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 1 applied to F11 = 0.     C := F11 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = -1*a*r2*t3 - b*id*r2*t3, 
+Untrusted set in GT: 
+rule 4 applied on F12 = -1*a*r2*t3 - b*id*r2*t3 and variable r2. isidentity := (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I
+....
+....
+Trusted set in G1: F0 = 1, F2 = a, F3 = b, F4 = 0, F5 = 0, F6 = t3, F7 = t4, F0^id = id, F2^id = a*id, F3^id = b*id, F4^id = 0, F5^id = 0, F6^id = id*t3, F7^id = id*t4, F10 = 0, F10^id = 0, F8 = 0, F8^id = 0, F9 = 0, F9^id = 0, F11 = 0, F11^id = 0, 
+Trusted set in GT: F0 = 1, F1 = 0, F0^id = id, F1^id = 0, 
+Untrusted set in G1: F12 = 0, 
+Untrusted set in GT: 
+rule 1 applied to F12 = 0.     C := F12 =  I
+....
+Execution time : 19.575265s
+
+(((NOT (e(F3,F5^id))^-1*(e(F2,F5))^-1 =  I) AND ((((NOT F5 =  I) AND e(F10,F5) =  e(F4,F9)) AND (((NOT e(F6,F7) =  I) AND ((((NOT F6 =  I) AND e(F11,F6) =  (e(F3^id,F8))^-1*(e(F5,F10))^-1*(e(F2,F8))^-1*(F1)^-1) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR (F6 =  I AND (F12 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC))))))) OR (e(F6,F7) =  I AND ((((NOT F3^id*F2 =  I) AND e(F8,F3^id*F2) =  (e(F5,F10))^-1*(F1)^-1) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))) OR (F3^id*F2 =  I AND (F11 =  I AND (((NOT e(F4,F5) =  I) AND ACC) OR (e(F4,F5) =  I AND (F8 =  I AND ACC))))))))) OR (F5 =  I AND (((NOT e(F6,F7) =  I) AND ((((NOT F6 =  I) AND e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND (((NOT (F4)^-1 =  I) AND ACC) OR ((F4)^-1 =  I AND (F10 =  I AND ACC)))) OR (F7 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))) OR (F6 =  I AND (F12 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))))))))) OR (e(F6,F7) =  I AND (F8 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))))))))) OR ((e(F3,F5^id))^-1*(e(F2,F5))^-1 =  I AND ((((NOT F4 =  I) AND e(F9,F4) =  (F1)^-1) AND (((NOT (e(F3,F4^id))^-1*(e(F2,F4))^-1 =  I) AND (((NOT e(F6,F7) =  I) AND ((((NOT F6 =  I) AND e(F11,F6) =  (e(F3^id,F8))^-1*(e(F5,F10))^-1*e(F4,F9)*(e(F2,F8))^-1) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR (F6 =  I AND (F12 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC))))))) OR (e(F6,F7) =  I AND ((((NOT F3^id*F2 =  I) AND e(F8,F3^id*F2) =  (e(F5,F10))^-1*e(F4,F9)) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))) OR (F3^id*F2 =  I AND (F11 =  I AND (((NOT e(F4,F5) =  I) AND ACC) OR (e(F4,F5) =  I AND (F8 =  I AND ACC))))))))) OR ((e(F3,F4^id))^-1*(e(F2,F4))^-1 =  I AND ((((NOT F5 =  I) AND e(F10,F5) =  e(F4,F9)) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND (((NOT e(F4,F5) =  I) AND ACC) OR (e(F4,F5) =  I AND ((((NOT F3^id*F2 =  I) AND e(F8,F3^id*F2) =  (e(F7,F12))^-1) AND ACC) OR (F3^id*F2 =  I AND (((NOT e(F6,F7) =  I) AND ACC) OR (e(F6,F7) =  I AND (F8 =  I AND ACC)))))))) OR (F7 =  I AND (((NOT e(F4,F5) =  I) AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))) OR (e(F4,F5) =  I AND (F8 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND (((NOT e(F4,F5) =  I) AND ACC) OR (e(F4,F5) =  I AND ((((NOT F3^id*F2 =  I) AND e(F8,F3^id*F2) =  (e(F7,F12))^-1) AND ACC) OR (F3^id*F2 =  I AND (((NOT e(F6,F7) =  I) AND ACC) OR (e(F6,F7) =  I AND (F8 =  I AND ACC)))))))) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND (((NOT e(F4,F5) =  I) AND ACC) OR (e(F4,F5) =  I AND (((NOT e(F6,F7) =  I) AND ACC) OR (e(F6,F7) =  I AND (F8 =  I AND ACC)))))))))))) OR (F5 =  I AND (((NOT e(F6,F7) =  I) AND ((((NOT F6 =  I) AND e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND (((NOT (F4)^-1 =  I) AND ACC) OR ((F4)^-1 =  I AND (F10 =  I AND ACC)))) OR (F7 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))) OR (F6 =  I AND (F12 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))))))))) OR (e(F6,F7) =  I AND (F8 =  I AND (((NOT (F4)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))) OR ((F4)^-1 =  I AND (F10 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))))))))))) OR (F4 =  I AND (F10 =  I AND (((NOT e(F6,F7) =  I) AND ((((NOT F6 =  I) AND e(F11,F6) =  (e(F3^id,F8))^-1*(e(F2,F8))^-1) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND (((NOT (F5)^-1 =  I) AND ACC) OR ((F5)^-1 =  I AND (F9 =  I AND ACC)))) OR (F7 =  I AND (((NOT (F5)^-1 =  I) AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))) OR ((F5)^-1 =  I AND (F9 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))))) OR (F6 =  I AND (F12 =  I AND (((NOT (F5)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))) OR ((F5)^-1 =  I AND (F9 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ACC) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND ACC)))))))))) OR (e(F6,F7) =  I AND (F8 =  I AND (((NOT (F5)^-1 =  I) AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC))))))) OR ((F5)^-1 =  I AND (F9 =  I AND (((NOT (e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I) AND ((((NOT F7 =  I) AND e(F12,F7) =  e(F6,F11)) AND ACC) OR (F7 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))) OR ((e(F3,F7^id))^-1*(e(F2,F7))^-1 =  I AND (F11 =  I AND (((NOT (e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I) AND ACC) OR ((e(F3,F6^id))^-1*(e(F2,F6))^-1 =  I AND (F12 =  I AND ACC)))))))))))))))))
+
+
+
+G1 : (e(F3,F5^id))^-1*(e(F2,F5))^-1 = I
+G2 : F5 = I
+G3 : e(F10,F5) = e(F4,F9)
+G4 : e(F6,F7) = I
+G5 : F6 = I
+G6 : e(F11,F6) = (e(F3^id,F8))^-1*(e(F5,F10))^-1*(e(F2,F8))^-1*(F1)^-1
+G7 : F7 = I
+G8 : e(F12,F7) = e(F6,F11)
+G9 : (e(F3,F6^id))^-1*(e(F2,F6))^-1 = I
+G10 : F12 = I
+G11 : (e(F3,F7^id))^-1*(e(F2,F7))^-1 = I
+G12 : F11 = I
+G13 : F3^id*F2 = I
+G14 : e(F8,F3^id*F2) = (e(F5,F10))^-1*(F1)^-1
+G15 : e(F4,F5) = I
+G16 : F8 = I
+G17 : e(F11,F6) = (e(F3^id,F8))^-1*(e(F2,F8))^-1
+G18 : (F4)^-1 = I
+G19 : F10 = I
+G20 : F4 = I
+G21 : e(F9,F4) = (F1)^-1
+G22 : (e(F3,F4^id))^-1*(e(F2,F4))^-1 = I
+G23 : e(F11,F6) = (e(F3^id,F8))^-1*(e(F5,F10))^-1*e(F4,F9)*(e(F2,F8))^-1
+G24 : e(F8,F3^id*F2) = (e(F5,F10))^-1*e(F4,F9)
+G25 : e(F8,F3^id*F2) = (e(F7,F12))^-1
+G26 : (F5)^-1 = I
+G27 : F9 = I
+G28 : NOT G1
+G29 : NOT G2
+G30 : G29 AND G3
+G31 : NOT G4
+G32 : NOT G5
+G33 : G32 AND G6
+G34 : NOT G7
+G35 : G34 AND G8
+G36 : NOT G9
+G37 : G9 AND G10
+G38 : G36 OR G37
+G39 : G7 AND G38
+G40 : G35 OR G39
+G41 : G33 AND G40
+G42 : NOT G11
+G43 : G11 AND G12
+G44 : G42 OR G43
+G45 : G10 AND G44
+G46 : G5 AND G45
+G47 : G41 OR G46
+G48 : G31 AND G47
+G49 : NOT G13
+G50 : G49 AND G14
+G51 : G42 AND G40
+G52 : G12 AND G38
+G53 : G11 AND G52
+G54 : G51 OR G53
+G55 : G50 AND G54
+G56 : NOT G15
+G57 : G15 AND G16
+G58 : G56 OR G57
+G59 : G12 AND G58
+G60 : G13 AND G59
+G61 : G55 OR G60
+G62 : G4 AND G61
+G63 : G32 AND G17
+G64 : NOT G18
+G65 : G18 AND G19
+G66 : G64 OR G65
+G67 : G35 AND G66
+G68 : G64 AND G38
+G69 : G19 AND G38
+G70 : G18 AND G69
+G71 : G68 OR G70
+G72 : G7 AND G71
+G73 : G67 OR G72
+G74 : G63 AND G73
+G75 : G64 AND G44
+G76 : G19 AND G44
+G77 : G18 AND G76
+G78 : G75 OR G77
+G79 : G10 AND G78
+G80 : G5 AND G79
+G81 : G74 OR G80
+G82 : G31 AND G81
+G83 : G64 AND G54
+G84 : G19 AND G54
+G85 : G18 AND G84
+G86 : G83 OR G85
+G87 : G16 AND G86
+G88 : G4 AND G87
+G89 : G82 OR G88
+G90 : G2 AND G89
+G91 : G30 OR G90
+G92 : G28 AND G91
+G93 : NOT G20
+G94 : G93 AND G21
+G95 : NOT G22
+G96 : G32 AND G23
+G97 : G96 AND G40
+G98 : G97 OR G46
+G99 : G31 AND G98
+G100 : G49 AND G24
+G101 : G100 AND G54
+G102 : G101 OR G60
+G103 : G4 AND G102
+G104 : G49 AND G25
+G105 : G4 AND G16
+G106 : G31 OR G105
+G107 : G13 AND G106
+G108 : G104 OR G107
+G109 : G15 AND G108
+G110 : G56 AND G38
+G111 : G16 AND G38
+G112 : G15 AND G111
+G113 : G110 OR G112
+G114 : G7 AND G113
+G115 : G35 OR G114
+G116 : G42 AND G115
+G117 : G15 AND G106
+G118 : G116 OR G53
+G119 : G30 AND G118
+G120 : G119 OR G90
+G121 : G22 AND G120
+G122 : NOT G26
+G123 : G26 AND G27
+G124 : G122 OR G123
+G125 : G35 AND G124
+G126 : G122 AND G38
+G127 : G27 AND G38
+G128 : G26 AND G127
+G129 : G126 OR G128
+G130 : G7 AND G129
+G131 : G125 OR G130
+G132 : G63 AND G131
+G133 : G122 AND G44
+G134 : G27 AND G44
+G135 : G26 AND G134
+G136 : G133 OR G135
+G137 : G10 AND G136
+G138 : G5 AND G137
+G139 : G132 OR G138
+G140 : G31 AND G139
+G141 : G122 AND G54
+G142 : G27 AND G54
+G143 : G26 AND G142
+G144 : G141 OR G143
+G145 : G16 AND G144
+G146 : G4 AND G145
+G147 : G140 OR G146
+G148 : G19 AND G147
+G149 : G20 AND G148
+G150 : G94 OR G149
+G151 : G1 AND G150
+

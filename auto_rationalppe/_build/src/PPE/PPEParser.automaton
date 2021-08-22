@@ -1,0 +1,558 @@
+State 0:
+cmds_t' -> . cmds_t [ # ]
+-- On ZP shift to state 1
+-- On UNTRUSTED shift to state 25
+-- On TRUSTED shift to state 40
+-- On ORDER shift to state 47
+-- On ISOS shift to state 50
+-- On EMAPS shift to state 59
+-- On list(cmd) shift to state 71
+-- On cmds_t shift to state 73
+-- On cmd shift to state 74
+-- On EOF reduce production list(cmd) -> 
+
+State 1:
+cmd -> ZP . LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On LBRACK shift to state 2
+
+State 2:
+cmd -> ZP LBRACK . separated_nonempty_list(COMMA,poly) RBRACK DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On separated_nonempty_list(COMMA,poly) shift to state 19
+-- On poly shift to state 22
+
+State 3:
+variable -> VARU . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR reduce production variable -> VARU 
+-- On RPAR reduce production variable -> VARU 
+-- On RBRACK reduce production variable -> VARU 
+-- On PLUS reduce production variable -> VARU 
+-- On MINUS reduce production variable -> VARU 
+-- On EXP reduce production variable -> VARU 
+-- On DIVIDES reduce production variable -> VARU 
+-- On COMMA reduce production variable -> VARU 
+
+State 4:
+poly -> MINUS . poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 18
+
+State 5:
+poly -> LPAR . poly RPAR [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 8
+
+State 6:
+poly -> INT . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR reduce production poly -> INT 
+-- On RPAR reduce production poly -> INT 
+-- On RBRACK reduce production poly -> INT 
+-- On PLUS reduce production poly -> INT 
+-- On MINUS reduce production poly -> INT 
+-- On EXP reduce production poly -> INT 
+-- On DIVIDES reduce production poly -> INT 
+-- On COMMA reduce production poly -> INT 
+
+State 7:
+poly -> variable . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR reduce production poly -> variable 
+-- On RPAR reduce production poly -> variable 
+-- On RBRACK reduce production poly -> variable 
+-- On PLUS reduce production poly -> variable 
+-- On MINUS reduce production poly -> variable 
+-- On EXP reduce production poly -> variable 
+-- On DIVIDES reduce production poly -> variable 
+-- On COMMA reduce production poly -> variable 
+
+State 8:
+poly -> poly . PLUS poly [ STAR RPAR PLUS MINUS EXP ]
+poly -> poly . STAR poly [ STAR RPAR PLUS MINUS EXP ]
+poly -> poly . MINUS poly [ STAR RPAR PLUS MINUS EXP ]
+poly -> poly . EXP INT [ STAR RPAR PLUS MINUS EXP ]
+poly -> LPAR poly . RPAR [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR shift to state 9
+-- On RPAR shift to state 13
+-- On PLUS shift to state 14
+-- On MINUS shift to state 16
+-- On EXP shift to state 11
+
+State 9:
+poly -> poly STAR . poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 10
+
+State 10:
+poly -> poly . PLUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . STAR poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly STAR poly . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . MINUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . EXP INT [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On EXP shift to state 11
+-- On STAR reduce production poly -> poly STAR poly 
+-- On RPAR reduce production poly -> poly STAR poly 
+-- On RBRACK reduce production poly -> poly STAR poly 
+-- On PLUS reduce production poly -> poly STAR poly 
+-- On MINUS reduce production poly -> poly STAR poly 
+-- On EXP reduce production poly -> poly STAR poly 
+-- On DIVIDES reduce production poly -> poly STAR poly 
+-- On COMMA reduce production poly -> poly STAR poly 
+** Conflict on EXP
+
+State 11:
+poly -> poly EXP . INT [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On INT shift to state 12
+
+State 12:
+poly -> poly EXP INT . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR reduce production poly -> poly EXP INT 
+-- On RPAR reduce production poly -> poly EXP INT 
+-- On RBRACK reduce production poly -> poly EXP INT 
+-- On PLUS reduce production poly -> poly EXP INT 
+-- On MINUS reduce production poly -> poly EXP INT 
+-- On EXP reduce production poly -> poly EXP INT 
+-- On DIVIDES reduce production poly -> poly EXP INT 
+-- On COMMA reduce production poly -> poly EXP INT 
+
+State 13:
+poly -> LPAR poly RPAR . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR reduce production poly -> LPAR poly RPAR 
+-- On RPAR reduce production poly -> LPAR poly RPAR 
+-- On RBRACK reduce production poly -> LPAR poly RPAR 
+-- On PLUS reduce production poly -> LPAR poly RPAR 
+-- On MINUS reduce production poly -> LPAR poly RPAR 
+-- On EXP reduce production poly -> LPAR poly RPAR 
+-- On DIVIDES reduce production poly -> LPAR poly RPAR 
+-- On COMMA reduce production poly -> LPAR poly RPAR 
+
+State 14:
+poly -> poly PLUS . poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 15
+
+State 15:
+poly -> poly . PLUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly PLUS poly . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . STAR poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . MINUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . EXP INT [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR shift to state 9
+-- On EXP shift to state 11
+-- On RPAR reduce production poly -> poly PLUS poly 
+-- On RBRACK reduce production poly -> poly PLUS poly 
+-- On PLUS reduce production poly -> poly PLUS poly 
+-- On MINUS reduce production poly -> poly PLUS poly 
+-- On EXP reduce production poly -> poly PLUS poly 
+-- On DIVIDES reduce production poly -> poly PLUS poly 
+-- On COMMA reduce production poly -> poly PLUS poly 
+** Conflict on EXP
+
+State 16:
+poly -> poly MINUS . poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 17
+
+State 17:
+poly -> poly . PLUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . STAR poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . MINUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly MINUS poly . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . EXP INT [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR shift to state 9
+-- On EXP shift to state 11
+-- On RPAR reduce production poly -> poly MINUS poly 
+-- On RBRACK reduce production poly -> poly MINUS poly 
+-- On PLUS reduce production poly -> poly MINUS poly 
+-- On MINUS reduce production poly -> poly MINUS poly 
+-- On EXP reduce production poly -> poly MINUS poly 
+-- On DIVIDES reduce production poly -> poly MINUS poly 
+-- On COMMA reduce production poly -> poly MINUS poly 
+** Conflict on EXP
+
+State 18:
+poly -> poly . PLUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . STAR poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . MINUS poly [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . EXP INT [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> MINUS poly . [ STAR RPAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+-- On STAR shift to state 9
+-- On EXP shift to state 11
+-- On RPAR reduce production poly -> MINUS poly 
+-- On RBRACK reduce production poly -> MINUS poly 
+-- On PLUS reduce production poly -> MINUS poly 
+-- On MINUS reduce production poly -> MINUS poly 
+-- On EXP reduce production poly -> MINUS poly 
+-- On DIVIDES reduce production poly -> MINUS poly 
+-- On COMMA reduce production poly -> MINUS poly 
+** Conflict on EXP
+
+State 19:
+cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) . RBRACK DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On RBRACK shift to state 20
+
+State 20:
+cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 21
+
+State 21:
+cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On UNTRUSTED reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On TRUSTED reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On ORDER reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On ISOS reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On EOF reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+-- On EMAPS reduce production cmd -> ZP LBRACK separated_nonempty_list(COMMA,poly) RBRACK DOT 
+
+State 22:
+poly -> poly . PLUS poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . STAR poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . MINUS poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . EXP INT [ STAR RBRACK PLUS MINUS EXP COMMA ]
+separated_nonempty_list(COMMA,poly) -> poly . [ RBRACK ]
+separated_nonempty_list(COMMA,poly) -> poly . COMMA separated_nonempty_list(COMMA,poly) [ RBRACK ]
+-- On STAR shift to state 9
+-- On PLUS shift to state 14
+-- On MINUS shift to state 16
+-- On EXP shift to state 11
+-- On COMMA shift to state 23
+-- On RBRACK reduce production separated_nonempty_list(COMMA,poly) -> poly 
+
+State 23:
+separated_nonempty_list(COMMA,poly) -> poly COMMA . separated_nonempty_list(COMMA,poly) [ RBRACK ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On separated_nonempty_list(COMMA,poly) shift to state 24
+-- On poly shift to state 22
+
+State 24:
+separated_nonempty_list(COMMA,poly) -> poly COMMA separated_nonempty_list(COMMA,poly) . [ RBRACK ]
+-- On RBRACK reduce production separated_nonempty_list(COMMA,poly) -> poly COMMA separated_nonempty_list(COMMA,poly) 
+
+State 25:
+cmd -> UNTRUSTED . LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On LBRACK shift to state 26
+
+State 26:
+cmd -> UNTRUSTED LBRACK . separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On FID shift to state 27
+-- On separated_nonempty_list(COMMA,polywithid) shift to state 32
+-- On polywithid shift to state 37
+
+State 27:
+polywithid -> FID . EQUALS poly [ RBRACK COMMA ]
+polywithid -> FID . EQUALS poly DIVIDES poly [ RBRACK COMMA ]
+-- On EQUALS shift to state 28
+
+State 28:
+polywithid -> FID EQUALS . poly [ RBRACK COMMA ]
+polywithid -> FID EQUALS . poly DIVIDES poly [ RBRACK COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 29
+
+State 29:
+poly -> poly . PLUS poly [ STAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . STAR poly [ STAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . MINUS poly [ STAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+poly -> poly . EXP INT [ STAR RBRACK PLUS MINUS EXP DIVIDES COMMA ]
+polywithid -> FID EQUALS poly . [ RBRACK COMMA ]
+polywithid -> FID EQUALS poly . DIVIDES poly [ RBRACK COMMA ]
+-- On STAR shift to state 9
+-- On PLUS shift to state 14
+-- On MINUS shift to state 16
+-- On EXP shift to state 11
+-- On DIVIDES shift to state 30
+-- On RBRACK reduce production polywithid -> FID EQUALS poly 
+-- On COMMA reduce production polywithid -> FID EQUALS poly 
+
+State 30:
+polywithid -> FID EQUALS poly DIVIDES . poly [ RBRACK COMMA ]
+-- On VARU shift to state 3
+-- On MINUS shift to state 4
+-- On LPAR shift to state 5
+-- On INT shift to state 6
+-- On variable shift to state 7
+-- On poly shift to state 31
+
+State 31:
+poly -> poly . PLUS poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . STAR poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . MINUS poly [ STAR RBRACK PLUS MINUS EXP COMMA ]
+poly -> poly . EXP INT [ STAR RBRACK PLUS MINUS EXP COMMA ]
+polywithid -> FID EQUALS poly DIVIDES poly . [ RBRACK COMMA ]
+-- On STAR shift to state 9
+-- On PLUS shift to state 14
+-- On MINUS shift to state 16
+-- On EXP shift to state 11
+-- On RBRACK reduce production polywithid -> FID EQUALS poly DIVIDES poly 
+-- On COMMA reduce production polywithid -> FID EQUALS poly DIVIDES poly 
+
+State 32:
+cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) . RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On RBRACK shift to state 33
+
+State 33:
+cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK . IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On IN shift to state 34
+
+State 34:
+cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN . GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On GID shift to state 35
+
+State 35:
+cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 36
+
+State 36:
+cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On UNTRUSTED reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On TRUSTED reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On ORDER reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On ISOS reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On EOF reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On EMAPS reduce production cmd -> UNTRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+
+State 37:
+separated_nonempty_list(COMMA,polywithid) -> polywithid . [ RBRACK ]
+separated_nonempty_list(COMMA,polywithid) -> polywithid . COMMA separated_nonempty_list(COMMA,polywithid) [ RBRACK ]
+-- On COMMA shift to state 38
+-- On RBRACK reduce production separated_nonempty_list(COMMA,polywithid) -> polywithid 
+
+State 38:
+separated_nonempty_list(COMMA,polywithid) -> polywithid COMMA . separated_nonempty_list(COMMA,polywithid) [ RBRACK ]
+-- On FID shift to state 27
+-- On separated_nonempty_list(COMMA,polywithid) shift to state 39
+-- On polywithid shift to state 37
+
+State 39:
+separated_nonempty_list(COMMA,polywithid) -> polywithid COMMA separated_nonempty_list(COMMA,polywithid) . [ RBRACK ]
+-- On RBRACK reduce production separated_nonempty_list(COMMA,polywithid) -> polywithid COMMA separated_nonempty_list(COMMA,polywithid) 
+
+State 40:
+cmd -> TRUSTED . LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On LBRACK shift to state 41
+
+State 41:
+cmd -> TRUSTED LBRACK . separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On FID shift to state 27
+-- On separated_nonempty_list(COMMA,polywithid) shift to state 42
+-- On polywithid shift to state 37
+
+State 42:
+cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) . RBRACK IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On RBRACK shift to state 43
+
+State 43:
+cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK . IN GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On IN shift to state 44
+
+State 44:
+cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN . GID DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On GID shift to state 45
+
+State 45:
+cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 46
+
+State 46:
+cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On UNTRUSTED reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On TRUSTED reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On ORDER reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On ISOS reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On EOF reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+-- On EMAPS reduce production cmd -> TRUSTED LBRACK separated_nonempty_list(COMMA,polywithid) RBRACK IN GID DOT 
+
+State 47:
+cmd -> ORDER . INT DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On INT shift to state 48
+
+State 48:
+cmd -> ORDER INT . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 49
+
+State 49:
+cmd -> ORDER INT DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> ORDER INT DOT 
+-- On UNTRUSTED reduce production cmd -> ORDER INT DOT 
+-- On TRUSTED reduce production cmd -> ORDER INT DOT 
+-- On ORDER reduce production cmd -> ORDER INT DOT 
+-- On ISOS reduce production cmd -> ORDER INT DOT 
+-- On EOF reduce production cmd -> ORDER INT DOT 
+-- On EMAPS reduce production cmd -> ORDER INT DOT 
+
+State 50:
+cmd -> ISOS . separated_nonempty_list(COMMA,iso) DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On GID shift to state 51
+-- On separated_nonempty_list(COMMA,iso) shift to state 54
+-- On iso shift to state 56
+
+State 51:
+iso -> GID . TO GID [ DOT COMMA ]
+-- On TO shift to state 52
+
+State 52:
+iso -> GID TO . GID [ DOT COMMA ]
+-- On GID shift to state 53
+
+State 53:
+iso -> GID TO GID . [ DOT COMMA ]
+-- On DOT reduce production iso -> GID TO GID 
+-- On COMMA reduce production iso -> GID TO GID 
+
+State 54:
+cmd -> ISOS separated_nonempty_list(COMMA,iso) . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 55
+
+State 55:
+cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On UNTRUSTED reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On TRUSTED reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On ORDER reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On ISOS reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On EOF reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+-- On EMAPS reduce production cmd -> ISOS separated_nonempty_list(COMMA,iso) DOT 
+
+State 56:
+separated_nonempty_list(COMMA,iso) -> iso . [ DOT ]
+separated_nonempty_list(COMMA,iso) -> iso . COMMA separated_nonempty_list(COMMA,iso) [ DOT ]
+-- On COMMA shift to state 57
+-- On DOT reduce production separated_nonempty_list(COMMA,iso) -> iso 
+
+State 57:
+separated_nonempty_list(COMMA,iso) -> iso COMMA . separated_nonempty_list(COMMA,iso) [ DOT ]
+-- On GID shift to state 51
+-- On separated_nonempty_list(COMMA,iso) shift to state 58
+-- On iso shift to state 56
+
+State 58:
+separated_nonempty_list(COMMA,iso) -> iso COMMA separated_nonempty_list(COMMA,iso) . [ DOT ]
+-- On DOT reduce production separated_nonempty_list(COMMA,iso) -> iso COMMA separated_nonempty_list(COMMA,iso) 
+
+State 59:
+cmd -> EMAPS . separated_nonempty_list(COMMA,emap) DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On GID shift to state 60
+-- On separated_nonempty_list(STAR,GID) shift to state 63
+-- On separated_nonempty_list(COMMA,emap) shift to state 66
+-- On emap shift to state 68
+
+State 60:
+separated_nonempty_list(STAR,GID) -> GID . [ TO ]
+separated_nonempty_list(STAR,GID) -> GID . STAR separated_nonempty_list(STAR,GID) [ TO ]
+-- On STAR shift to state 61
+-- On TO reduce production separated_nonempty_list(STAR,GID) -> GID 
+
+State 61:
+separated_nonempty_list(STAR,GID) -> GID STAR . separated_nonempty_list(STAR,GID) [ TO ]
+-- On GID shift to state 60
+-- On separated_nonempty_list(STAR,GID) shift to state 62
+
+State 62:
+separated_nonempty_list(STAR,GID) -> GID STAR separated_nonempty_list(STAR,GID) . [ TO ]
+-- On TO reduce production separated_nonempty_list(STAR,GID) -> GID STAR separated_nonempty_list(STAR,GID) 
+
+State 63:
+emap -> separated_nonempty_list(STAR,GID) . TO GID [ DOT COMMA ]
+-- On TO shift to state 64
+
+State 64:
+emap -> separated_nonempty_list(STAR,GID) TO . GID [ DOT COMMA ]
+-- On GID shift to state 65
+
+State 65:
+emap -> separated_nonempty_list(STAR,GID) TO GID . [ DOT COMMA ]
+-- On DOT reduce production emap -> separated_nonempty_list(STAR,GID) TO GID 
+-- On COMMA reduce production emap -> separated_nonempty_list(STAR,GID) TO GID 
+
+State 66:
+cmd -> EMAPS separated_nonempty_list(COMMA,emap) . DOT [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On DOT shift to state 67
+
+State 67:
+cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT . [ ZP UNTRUSTED TRUSTED ORDER ISOS EOF EMAPS ]
+-- On ZP reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On UNTRUSTED reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On TRUSTED reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On ORDER reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On ISOS reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On EOF reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+-- On EMAPS reduce production cmd -> EMAPS separated_nonempty_list(COMMA,emap) DOT 
+
+State 68:
+separated_nonempty_list(COMMA,emap) -> emap . [ DOT ]
+separated_nonempty_list(COMMA,emap) -> emap . COMMA separated_nonempty_list(COMMA,emap) [ DOT ]
+-- On COMMA shift to state 69
+-- On DOT reduce production separated_nonempty_list(COMMA,emap) -> emap 
+
+State 69:
+separated_nonempty_list(COMMA,emap) -> emap COMMA . separated_nonempty_list(COMMA,emap) [ DOT ]
+-- On GID shift to state 60
+-- On separated_nonempty_list(STAR,GID) shift to state 63
+-- On separated_nonempty_list(COMMA,emap) shift to state 70
+-- On emap shift to state 68
+
+State 70:
+separated_nonempty_list(COMMA,emap) -> emap COMMA separated_nonempty_list(COMMA,emap) . [ DOT ]
+-- On DOT reduce production separated_nonempty_list(COMMA,emap) -> emap COMMA separated_nonempty_list(COMMA,emap) 
+
+State 71:
+cmds_t -> list(cmd) . EOF [ # ]
+-- On EOF shift to state 72
+
+State 72:
+cmds_t -> list(cmd) EOF . [ # ]
+-- On # reduce production cmds_t -> list(cmd) EOF 
+
+State 73:
+cmds_t' -> cmds_t . [ # ]
+-- On # accept cmds_t
+
+State 74:
+list(cmd) -> cmd . list(cmd) [ EOF ]
+-- On ZP shift to state 1
+-- On UNTRUSTED shift to state 25
+-- On TRUSTED shift to state 40
+-- On ORDER shift to state 47
+-- On ISOS shift to state 50
+-- On EMAPS shift to state 59
+-- On list(cmd) shift to state 75
+-- On cmd shift to state 74
+-- On EOF reduce production list(cmd) -> 
+
+State 75:
+list(cmd) -> cmd list(cmd) . [ EOF ]
+-- On EOF reduce production list(cmd) -> cmd list(cmd) 
+

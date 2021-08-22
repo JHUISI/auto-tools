@@ -1,0 +1,10 @@
+
+
+
+maps G1 * G2 -> GT.
+
+trusted_polys [F1 = a] in G1. 
+trusted_polys [F2 = b] in G2. 
+
+untrusted_polys [F3 = d, F4 = a/(d*b+c)] in G1.
+untrusted_polys [F5 = c, F6 = d*b] in G2.

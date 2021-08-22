@@ -1,0 +1,6256 @@
+"src/PPE/PPECompletion.ml" 17 263 267 "src/PPE/PPECompletion.ml" 17 263 272
+type(
+  PPEInput.group_elem list -> (PPEInput.recipe * PPEInput.group_id) list
+)
+ident(
+  def shape "src/PPE/PPECompletion.ml" 29 946 946 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 17 263 273 "src/PPE/PPECompletion.ml" 17 263 276
+type(
+  PPEInput.group_elem list
+)
+ident(
+  def ges "src/PPE/PPECompletion.ml" 17 263 279 "src/PPE/PPECompletion.ml" 17 263 340
+)
+"src/PPE/PPECompletion.ml" 17 263 279 "src/PPE/PPECompletion.ml" 17 263 284
+type(
+  (PPEInput.group_elem -> PPEInput.recipe * PPEInput.group_id) ->
+  PPEInput.group_elem list -> (PPEInput.recipe * PPEInput.group_id) list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 17 263 290 "src/PPE/PPECompletion.ml" 17 263 292
+type(
+  PPEInput.group_elem
+)
+ident(
+  def ge "src/PPE/PPECompletion.ml" 17 263 296 "src/PPE/PPECompletion.ml" 17 263 335
+)
+"src/PPE/PPECompletion.ml" 17 263 297 "src/PPE/PPECompletion.ml" 17 263 299
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref ge "src/PPE/PPECompletion.ml" 17 263 290 "src/PPE/PPECompletion.ml" 17 263 292
+)
+"src/PPE/PPECompletion.ml" 17 263 297 "src/PPE/PPECompletion.ml" 17 263 305
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 17 263 308 "src/PPE/PPECompletion.ml" 17 263 321
+type(
+  PPEInput.group_id option -> PPEInput.group_id
+)
+ident(
+  ext_ref PPEInput.extract_group
+)
+"src/PPE/PPECompletion.ml" 17 263 322 "src/PPE/PPECompletion.ml" 17 263 324
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref ge "src/PPE/PPECompletion.ml" 17 263 290 "src/PPE/PPECompletion.ml" 17 263 292
+)
+"src/PPE/PPECompletion.ml" 17 263 322 "src/PPE/PPECompletion.ml" 17 263 333
+type(
+  PPEInput.group_id option
+)
+"src/PPE/PPECompletion.ml" 17 263 307 "src/PPE/PPECompletion.ml" 17 263 334
+call(
+  stack
+)
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 17 263 296 "src/PPE/PPECompletion.ml" 17 263 335
+type(
+  PPEInput.recipe * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 17 263 285 "src/PPE/PPECompletion.ml" 17 263 336
+type(
+  PPEInput.group_elem -> PPEInput.recipe * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 17 263 337 "src/PPE/PPECompletion.ml" 17 263 340
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref ges "src/PPE/PPECompletion.ml" 17 263 273 "src/PPE/PPECompletion.ml" 17 263 276
+)
+"src/PPE/PPECompletion.ml" 17 263 279 "src/PPE/PPECompletion.ml" 17 263 340
+call(
+  tail
+)
+type(
+  (PPEInput.recipe * PPEInput.group_id) list
+)
+"src/PPE/PPECompletion.ml" 29 946 995 "src/PPE/PPECompletion.ml" 29 946 1002
+type(
+  'a -> 'a -> int
+)
+ident(
+  def compare "src/PPE/PPECompletion.ml" 29 946 1012 "src/PPE/PPECompletion.ml" 29 946 1016
+)
+"src/PPE/PPECompletion.ml" 29 946 1005 "src/PPE/PPECompletion.ml" 29 946 1012
+type(
+  'a -> 'a -> int
+)
+ident(
+  ext_ref Pervasives.compare
+)
+"src/PPE/PPECompletion.ml" 29 946 962 "src/PPE/PPECompletion.ml" 29 946 1017
+call(
+  stack
+)
+"src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  def fid_map "src/PPE/PPECompletion.ml" 32 1133 1133 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 31 1100 1114 "src/PPE/PPECompletion.ml" 31 1100 1117
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 31 1100 1118 "src/PPE/PPECompletion.ml" 31 1100 1130
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref IntMap.empty
+)
+"src/PPE/PPECompletion.ml" 31 1100 1114 "src/PPE/PPECompletion.ml" 31 1100 1130
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+"src/PPE/PPECompletion.ml" 32 1133 1137 "src/PPE/PPECompletion.ml" 32 1133 1146
+type(
+  IntMap.key -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  def find_poly "src/PPE/PPECompletion.ml" 36 1332 1332 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 32 1133 1147 "src/PPE/PPECompletion.ml" 32 1133 1150
+type(
+  IntMap.key
+)
+ident(
+  def fid "src/PPE/PPECompletion.ml" 32 1133 1153 "src/PPE/PPECompletion.ml" 32 1133 1282
+)
+"src/PPE/PPECompletion.ml" 32 1133 1157 "src/PPE/PPECompletion.ml" 32 1133 1168
+type(
+  IntMap.key ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ->
+  PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  ext_ref IntMap.find
+)
+"src/PPE/PPECompletion.ml" 32 1133 1169 "src/PPE/PPECompletion.ml" 32 1133 1172
+type(
+  IntMap.key
+)
+ident(
+  int_ref fid "src/PPE/PPECompletion.ml" 32 1133 1147 "src/PPE/PPECompletion.ml" 32 1133 1150
+)
+"src/PPE/PPECompletion.ml" 32 1133 1173 "src/PPE/PPECompletion.ml" 32 1133 1174
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 32 1133 1174 "src/PPE/PPECompletion.ml" 32 1133 1181
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 32 1133 1173 "src/PPE/PPECompletion.ml" 32 1133 1181
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+"src/PPE/PPECompletion.ml" 32 1133 1157 "src/PPE/PPECompletion.ml" 32 1133 1181
+call(
+  stack
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 32 1133 1187 "src/PPE/PPECompletion.ml" 32 1133 1196
+type(
+  exn
+)
+"src/PPE/PPECompletion.ml" 32 1133 1201 "src/PPE/PPECompletion.ml" 32 1133 1210
+type(
+  Util.F.formatter -> (unit, Util.F.formatter, unit) format -> unit
+)
+ident(
+  ext_ref Util.F.fprintf
+)
+"src/PPE/PPECompletion.ml" 32 1133 1211 "src/PPE/PPECompletion.ml" 32 1133 1231
+type(
+  Util.F.formatter
+)
+ident(
+  ext_ref Format.std_formatter
+)
+"src/PPE/PPECompletion.ml" 32 1133 1232 "src/PPE/PPECompletion.ml" 32 1133 1263
+type(
+  (unit, Util.F.formatter, unit) format
+)
+"src/PPE/PPECompletion.ml" 32 1133 1201 "src/PPE/PPECompletion.ml" 32 1133 1263
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 32 1133 1266 "src/PPE/PPECompletion.ml" 32 1133 1272
+type(
+  PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.one
+)
+"src/PPE/PPECompletion.ml" 32 1133 1274 "src/PPE/PPECompletion.ml" 32 1133 1280
+type(
+  PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.one
+)
+"src/PPE/PPECompletion.ml" 32 1133 1265 "src/PPE/PPECompletion.ml" 32 1133 1281
+type(
+  PPEInput.RP.t * PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 32 1133 1200 "src/PPE/PPECompletion.ml" 32 1133 1282
+type(
+  PPEInput.RP.t * PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 32 1133 1153 "src/PPE/PPECompletion.ml" 32 1133 1282
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 36 1332 1336 "src/PPE/PPECompletion.ml" 36 1332 1348
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  def apply_recipe "src/PPE/PPECompletion.ml" 56 2137 2137 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 36 1332 1349 "src/PPE/PPECompletion.ml" 36 1332 1355
+type(
+  PPEInput.recipe
+)
+ident(
+  def recip0 "src/PPE/PPECompletion.ml" 36 1332 1356 "src/PPE/PPECompletion.ml" 52 2002 2013
+)
+"src/PPE/PPECompletion.ml" 37 1376 1386 "src/PPE/PPECompletion.ml" 37 1376 1388
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  def go "src/PPE/PPECompletion.ml" 37 1376 1378 "src/PPE/PPECompletion.ml" 52 2002 2013
+)
+"src/PPE/PPECompletion.ml" 37 1376 1389 "src/PPE/PPECompletion.ml" 37 1376 1394
+type(
+  PPEInput.recipe
+)
+ident(
+  def recip "src/PPE/PPECompletion.ml" 37 1376 1395 "src/PPE/PPECompletion.ml" 50 1947 1996
+)
+"src/PPE/PPECompletion.ml" 38 1415 1425 "src/PPE/PPECompletion.ml" 38 1415 1430
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recip "src/PPE/PPECompletion.ml" 37 1376 1389 "src/PPE/PPECompletion.ml" 37 1376 1394
+)
+"src/PPE/PPECompletion.ml" 39 1436 1448 "src/PPE/PPECompletion.ml" 39 1436 1449
+type(
+  int
+)
+ident(
+  def i "src/PPE/PPECompletion.ml" 39 1436 1460 "src/PPE/PPECompletion.ml" 39 1436 1471
+)
+"src/PPE/PPECompletion.ml" 39 1436 1442 "src/PPE/PPECompletion.ml" 39 1436 1449
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 39 1436 1460 "src/PPE/PPECompletion.ml" 39 1436 1469
+type(
+  IntMap.key -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref find_poly "src/PPE/PPECompletion.ml" 32 1133 1137 "src/PPE/PPECompletion.ml" 32 1133 1146
+)
+"src/PPE/PPECompletion.ml" 39 1436 1470 "src/PPE/PPECompletion.ml" 39 1436 1471
+type(
+  IntMap.key
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 39 1436 1448 "src/PPE/PPECompletion.ml" 39 1436 1449
+)
+"src/PPE/PPECompletion.ml" 39 1436 1460 "src/PPE/PPECompletion.ml" 39 1436 1471
+call(
+  tail
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 42 1598 1611 "src/PPE/PPECompletion.ml" 42 1598 1617
+type(
+  PPEInput.recipe
+)
+ident(
+  def recip1 "src/PPE/PPECompletion.ml" 43 1627 1635 "src/PPE/PPECompletion.ml" 44 1668 1699
+)
+"src/PPE/PPECompletion.ml" 42 1598 1619 "src/PPE/PPECompletion.ml" 42 1598 1621
+type(
+  PPEInput.rpoly
+)
+ident(
+  def zp "src/PPE/PPECompletion.ml" 43 1627 1635 "src/PPE/PPECompletion.ml" 44 1668 1699
+)
+"src/PPE/PPECompletion.ml" 42 1598 1604 "src/PPE/PPECompletion.ml" 42 1598 1622
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 43 1627 1640 "src/PPE/PPECompletion.ml" 43 1627 1643
+type(
+  PPEInput.rpoly
+)
+ident(
+  def num "src/PPE/PPECompletion.ml" 44 1668 1676 "src/PPE/PPECompletion.ml" 44 1668 1699
+)
+"src/PPE/PPECompletion.ml" 43 1627 1645 "src/PPE/PPECompletion.ml" 43 1627 1650
+type(
+  PPEInput.rpoly
+)
+ident(
+  def denom "src/PPE/PPECompletion.ml" 44 1668 1676 "src/PPE/PPECompletion.ml" 44 1668 1699
+)
+"src/PPE/PPECompletion.ml" 43 1627 1639 "src/PPE/PPECompletion.ml" 43 1627 1651
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 43 1627 1654 "src/PPE/PPECompletion.ml" 43 1627 1656
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref go "src/PPE/PPECompletion.ml" 37 1376 1386 "src/PPE/PPECompletion.ml" 37 1376 1388
+)
+"src/PPE/PPECompletion.ml" 43 1627 1657 "src/PPE/PPECompletion.ml" 43 1627 1663
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recip1 "src/PPE/PPECompletion.ml" 42 1598 1611 "src/PPE/PPECompletion.ml" 42 1598 1617
+)
+"src/PPE/PPECompletion.ml" 43 1627 1654 "src/PPE/PPECompletion.ml" 43 1627 1663
+call(
+  stack
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 44 1668 1677 "src/PPE/PPECompletion.ml" 44 1668 1684
+type(
+  PPEInput.RP.t -> PPEInput.RP.t -> PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.mult
+)
+"src/PPE/PPECompletion.ml" 44 1668 1685 "src/PPE/PPECompletion.ml" 44 1668 1688
+type(
+  PPEInput.rpoly
+)
+ident(
+  int_ref num "src/PPE/PPECompletion.ml" 43 1627 1640 "src/PPE/PPECompletion.ml" 43 1627 1643
+)
+"src/PPE/PPECompletion.ml" 44 1668 1689 "src/PPE/PPECompletion.ml" 44 1668 1691
+type(
+  PPEInput.rpoly
+)
+ident(
+  int_ref zp "src/PPE/PPECompletion.ml" 42 1598 1619 "src/PPE/PPECompletion.ml" 42 1598 1621
+)
+"src/PPE/PPECompletion.ml" 44 1668 1677 "src/PPE/PPECompletion.ml" 44 1668 1691
+call(
+  stack
+)
+type(
+  PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 44 1668 1693 "src/PPE/PPECompletion.ml" 44 1668 1698
+type(
+  PPEInput.rpoly
+)
+ident(
+  int_ref denom "src/PPE/PPECompletion.ml" 43 1627 1645 "src/PPE/PPECompletion.ml" 43 1627 1650
+)
+"src/PPE/PPECompletion.ml" 44 1668 1676 "src/PPE/PPECompletion.ml" 44 1668 1699
+type(
+  PPEInput.RP.t * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 43 1627 1635 "src/PPE/PPECompletion.ml" 44 1668 1699
+type(
+  PPEInput.RP.t * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 45 1700 1711 "src/PPE/PPECompletion.ml" 45 1700 1712
+type(
+  PPEInput.emap
+)
+"src/PPE/PPECompletion.ml" 45 1700 1713 "src/PPE/PPECompletion.ml" 45 1700 1719
+type(
+  PPEInput.recipe list
+)
+ident(
+  def recips "src/PPE/PPECompletion.ml" 46 1724 1730 "src/PPE/PPECompletion.ml" 47 1760 1887
+)
+"src/PPE/PPECompletion.ml" 45 1700 1706 "src/PPE/PPECompletion.ml" 45 1700 1720
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 46 1724 1734 "src/PPE/PPECompletion.ml" 46 1724 1738
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) list
+)
+ident(
+  def rpss "src/PPE/PPECompletion.ml" 47 1760 1766 "src/PPE/PPECompletion.ml" 47 1760 1887
+)
+"src/PPE/PPECompletion.ml" 46 1724 1741 "src/PPE/PPECompletion.ml" 46 1724 1746
+type(
+  (PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly) ->
+  PPEInput.recipe list -> (PPEInput.rpoly * PPEInput.rpoly) list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 46 1724 1747 "src/PPE/PPECompletion.ml" 46 1724 1749
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref go "src/PPE/PPECompletion.ml" 37 1376 1386 "src/PPE/PPECompletion.ml" 37 1376 1388
+)
+"src/PPE/PPECompletion.ml" 46 1724 1750 "src/PPE/PPECompletion.ml" 46 1724 1756
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref recips "src/PPE/PPECompletion.ml" 45 1700 1713 "src/PPE/PPECompletion.ml" 45 1700 1719
+)
+"src/PPE/PPECompletion.ml" 46 1724 1741 "src/PPE/PPECompletion.ml" 46 1724 1756
+call(
+  stack
+)
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) list
+)
+"src/PPE/PPECompletion.ml" 47 1760 1766 "src/PPE/PPECompletion.ml" 47 1760 1777
+type(
+  (PPEInput.rpoly * PPEInput.rpoly ->
+   PPEInput.rpoly * PPEInput.rpoly -> PPEInput.rpoly * PPEInput.rpoly) ->
+  PPEInput.rpoly * PPEInput.rpoly ->
+  (PPEInput.rpoly * PPEInput.rpoly) list -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  ext_ref Util.L.fold_left
+)
+"src/PPE/PPECompletion.ml" 47 1760 1784 "src/PPE/PPECompletion.ml" 47 1760 1790
+type(
+  PPEInput.RP.t
+)
+ident(
+  def accnum "src/PPE/PPECompletion.ml" 47 1760 1802 "src/PPE/PPECompletion.ml" 47 1760 1864
+)
+"src/PPE/PPECompletion.ml" 47 1760 1792 "src/PPE/PPECompletion.ml" 47 1760 1800
+type(
+  PPEInput.RP.t
+)
+ident(
+  def accdenom "src/PPE/PPECompletion.ml" 47 1760 1802 "src/PPE/PPECompletion.ml" 47 1760 1864
+)
+"src/PPE/PPECompletion.ml" 47 1760 1783 "src/PPE/PPECompletion.ml" 47 1760 1801
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 47 1760 1803 "src/PPE/PPECompletion.ml" 47 1760 1806
+type(
+  PPEInput.RP.t
+)
+ident(
+  def num "src/PPE/PPECompletion.ml" 47 1760 1818 "src/PPE/PPECompletion.ml" 47 1760 1864
+)
+"src/PPE/PPECompletion.ml" 47 1760 1808 "src/PPE/PPECompletion.ml" 47 1760 1813
+type(
+  PPEInput.RP.t
+)
+ident(
+  def denom "src/PPE/PPECompletion.ml" 47 1760 1818 "src/PPE/PPECompletion.ml" 47 1760 1864
+)
+"src/PPE/PPECompletion.ml" 47 1760 1802 "src/PPE/PPECompletion.ml" 47 1760 1814
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 47 1760 1819 "src/PPE/PPECompletion.ml" 47 1760 1826
+type(
+  PPEInput.RP.t -> PPEInput.RP.t -> PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.mult
+)
+"src/PPE/PPECompletion.ml" 47 1760 1827 "src/PPE/PPECompletion.ml" 47 1760 1833
+type(
+  PPEInput.RP.t
+)
+ident(
+  int_ref accnum "src/PPE/PPECompletion.ml" 47 1760 1784 "src/PPE/PPECompletion.ml" 47 1760 1790
+)
+"src/PPE/PPECompletion.ml" 47 1760 1834 "src/PPE/PPECompletion.ml" 47 1760 1837
+type(
+  PPEInput.RP.t
+)
+ident(
+  int_ref num "src/PPE/PPECompletion.ml" 47 1760 1803 "src/PPE/PPECompletion.ml" 47 1760 1806
+)
+"src/PPE/PPECompletion.ml" 47 1760 1818 "src/PPE/PPECompletion.ml" 47 1760 1838
+call(
+  stack
+)
+type(
+  PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 47 1760 1841 "src/PPE/PPECompletion.ml" 47 1760 1848
+type(
+  PPEInput.RP.t -> PPEInput.RP.t -> PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.mult
+)
+"src/PPE/PPECompletion.ml" 47 1760 1849 "src/PPE/PPECompletion.ml" 47 1760 1857
+type(
+  PPEInput.RP.t
+)
+ident(
+  int_ref accdenom "src/PPE/PPECompletion.ml" 47 1760 1792 "src/PPE/PPECompletion.ml" 47 1760 1800
+)
+"src/PPE/PPECompletion.ml" 47 1760 1858 "src/PPE/PPECompletion.ml" 47 1760 1863
+type(
+  PPEInput.RP.t
+)
+ident(
+  int_ref denom "src/PPE/PPECompletion.ml" 47 1760 1808 "src/PPE/PPECompletion.ml" 47 1760 1813
+)
+"src/PPE/PPECompletion.ml" 47 1760 1840 "src/PPE/PPECompletion.ml" 47 1760 1864
+call(
+  stack
+)
+type(
+  PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 47 1760 1818 "src/PPE/PPECompletion.ml" 47 1760 1864
+type(
+  PPEInput.RP.t * PPEInput.RP.t
+)
+"src/PPE/PPECompletion.ml" 47 1760 1778 "src/PPE/PPECompletion.ml" 47 1760 1865
+type(
+  PPEInput.rpoly * PPEInput.rpoly ->
+  PPEInput.rpoly * PPEInput.rpoly -> PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 47 1760 1867 "src/PPE/PPECompletion.ml" 47 1760 1873
+type(
+  PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.one
+)
+"src/PPE/PPECompletion.ml" 47 1760 1875 "src/PPE/PPECompletion.ml" 47 1760 1881
+type(
+  PPEInput.RP.t
+)
+ident(
+  ext_ref PPEInput.RP.one
+)
+"src/PPE/PPECompletion.ml" 47 1760 1866 "src/PPE/PPECompletion.ml" 47 1760 1882
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 47 1760 1883 "src/PPE/PPECompletion.ml" 47 1760 1887
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) list
+)
+ident(
+  int_ref rpss "src/PPE/PPECompletion.ml" 46 1724 1734 "src/PPE/PPECompletion.ml" 46 1724 1738
+)
+"src/PPE/PPECompletion.ml" 47 1760 1766 "src/PPE/PPECompletion.ml" 47 1760 1887
+call(
+  tail
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 46 1724 1730 "src/PPE/PPECompletion.ml" 47 1760 1887
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 49 1914 1924 "src/PPE/PPECompletion.ml" 49 1914 1925
+type(
+  PPEInput.iso
+)
+"src/PPE/PPECompletion.ml" 49 1914 1926 "src/PPE/PPECompletion.ml" 49 1914 1931
+type(
+  PPEInput.recipe
+)
+ident(
+  def recip "src/PPE/PPECompletion.ml" 49 1914 1938 "src/PPE/PPECompletion.ml" 49 1914 1946
+)
+"src/PPE/PPECompletion.ml" 49 1914 1920 "src/PPE/PPECompletion.ml" 49 1914 1932
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 49 1914 1938 "src/PPE/PPECompletion.ml" 49 1914 1940
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref go "src/PPE/PPECompletion.ml" 37 1376 1386 "src/PPE/PPECompletion.ml" 37 1376 1388
+)
+"src/PPE/PPECompletion.ml" 49 1914 1941 "src/PPE/PPECompletion.ml" 49 1914 1946
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recip "src/PPE/PPECompletion.ml" 49 1914 1926 "src/PPE/PPECompletion.ml" 49 1914 1931
+)
+"src/PPE/PPECompletion.ml" 49 1914 1938 "src/PPE/PPECompletion.ml" 49 1914 1946
+call(
+  tail
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 50 1947 1953 "src/PPE/PPECompletion.ml" 50 1947 1954
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 50 1947 1958 "src/PPE/PPECompletion.ml" 50 1947 1967
+type(
+  string -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  ext_ref PPEInput.fail_assm
+)
+"src/PPE/PPECompletion.ml" 50 1947 1968 "src/PPE/PPECompletion.ml" 50 1947 1995
+type(
+  string
+)
+"src/PPE/PPECompletion.ml" 50 1947 1958 "src/PPE/PPECompletion.ml" 50 1947 1996
+call(
+  tail
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 38 1415 1419 "src/PPE/PPECompletion.ml" 50 1947 1996
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 52 2002 2004 "src/PPE/PPECompletion.ml" 52 2002 2006
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref go "src/PPE/PPECompletion.ml" 37 1376 1386 "src/PPE/PPECompletion.ml" 37 1376 1388
+)
+"src/PPE/PPECompletion.ml" 52 2002 2007 "src/PPE/PPECompletion.ml" 52 2002 2013
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recip0 "src/PPE/PPECompletion.ml" 36 1332 1349 "src/PPE/PPECompletion.ml" 36 1332 1355
+)
+"src/PPE/PPECompletion.ml" 52 2002 2004 "src/PPE/PPECompletion.ml" 52 2002 2013
+call(
+  tail
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 37 1376 1378 "src/PPE/PPECompletion.ml" 52 2002 2013
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 58 2181 2187 "src/PPE/PPECompletion.ml" 58 2181 2189
+type(
+  Format.formatter -> int -> unit
+)
+ident(
+  def pp "src/PPE/PPECompletion.ml" 59 2199 2201 "src/PPE/PPECompletion.ml" 61 2241 2244
+)
+"src/PPE/PPECompletion.ml" 58 2181 2192 "src/PPE/PPECompletion.ml" 58 2181 2198
+type(
+  Format.formatter -> int -> unit
+)
+ident(
+  ext_ref Util.pp_int
+)
+"src/PPE/PPECompletion.ml" 59 2199 2205 "src/PPE/PPECompletion.ml" 59 2199 2210
+type(
+  'a -> 'a -> bool
+)
+ident(
+  def equal "src/PPE/PPECompletion.ml" 60 2217 2219 "src/PPE/PPECompletion.ml" 61 2241 2244
+)
+"src/PPE/PPECompletion.ml" 59 2199 2213 "src/PPE/PPECompletion.ml" 59 2199 2216
+type(
+  'a -> 'a -> bool
+)
+ident(
+  ext_ref Pervasives.( = )
+)
+"src/PPE/PPECompletion.ml" 60 2217 2223 "src/PPE/PPECompletion.ml" 60 2217 2230
+type(
+  'b -> 'b -> int
+)
+ident(
+  def compare "src/PPE/PPECompletion.ml" 60 2217 2240 "src/PPE/PPECompletion.ml" 61 2241 2244
+)
+"src/PPE/PPECompletion.ml" 60 2217 2233 "src/PPE/PPECompletion.ml" 60 2217 2240
+type(
+  'b -> 'b -> int
+)
+ident(
+  ext_ref Pervasives.compare
+)
+"src/PPE/PPECompletion.ml" 56 2137 2150 "src/PPE/PPECompletion.ml" 61 2241 2255
+call(
+  stack
+)
+"src/PPE/PPECompletion.ml" 64 2346 2350 "src/PPE/PPECompletion.ml" 64 2346 2370
+type(
+  PPEInput.recipe list -> PPEInput.group_id -> PPEInput.group_elem list
+)
+ident(
+  def apply_completion_ops "src/PPE/PPECompletion.ml" 72 2770 2770 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 64 2346 2371 "src/PPE/PPECompletion.ml" 64 2346 2375
+type(
+  PPEInput.recipe list
+)
+ident(
+  def cops "src/PPE/PPECompletion.ml" 64 2346 2376 "src/PPE/PPECompletion.ml" 69 2720 2728
+)
+"src/PPE/PPECompletion.ml" 64 2346 2376 "src/PPE/PPECompletion.ml" 64 2346 2380
+type(
+  PPEInput.group_id
+)
+ident(
+  def cgid "src/PPE/PPECompletion.ml" 65 2383 2385 "src/PPE/PPECompletion.ml" 69 2720 2728
+)
+"src/PPE/PPECompletion.ml" 65 2383 2389 "src/PPE/PPECompletion.ml" 65 2383 2393
+type(
+  float
+)
+ident(
+  def time "src/PPE/PPECompletion.ml" 66 2419 2421 "src/PPE/PPECompletion.ml" 69 2720 2728
+)
+"src/PPE/PPECompletion.ml" 65 2383 2396 "src/PPE/PPECompletion.ml" 65 2383 2413
+type(
+  unit -> float
+)
+ident(
+  ext_ref Unix.gettimeofday
+)
+"src/PPE/PPECompletion.ml" 65 2383 2413 "src/PPE/PPECompletion.ml" 65 2383 2415
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 65 2383 2396 "src/PPE/PPECompletion.ml" 65 2383 2415
+call(
+  stack
+)
+type(
+  float
+)
+"src/PPE/PPECompletion.ml" 66 2419 2425 "src/PPE/PPECompletion.ml" 66 2419 2431
+type(
+  PPEInput.group_elem list
+)
+ident(
+  def output "src/PPE/PPECompletion.ml" 69 2720 2722 "src/PPE/PPECompletion.ml" 69 2720 2728
+)
+"src/PPE/PPECompletion.ml" 66 2419 2434 "src/PPE/PPECompletion.ml" 66 2419 2439
+type(
+  (PPEInput.recipe -> PPEInput.group_elem) ->
+  PPEInput.recipe list -> PPEInput.group_elem list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 66 2419 2445 "src/PPE/PPECompletion.ml" 66 2419 2448
+type(
+  PPEInput.recipe
+)
+ident(
+  def cop "src/PPE/PPECompletion.ml" 66 2419 2452 "src/PPE/PPECompletion.ml" 67 2492 2570
+)
+"src/PPE/PPECompletion.ml" 66 2419 2457 "src/PPE/PPECompletion.ml" 66 2419 2460
+type(
+  PPEInput.rpoly
+)
+ident(
+  def num "src/PPE/PPECompletion.ml" 67 2492 2500 "src/PPE/PPECompletion.ml" 67 2492 2570
+)
+"src/PPE/PPECompletion.ml" 66 2419 2462 "src/PPE/PPECompletion.ml" 66 2419 2467
+type(
+  PPEInput.rpoly
+)
+ident(
+  def denom "src/PPE/PPECompletion.ml" 67 2492 2500 "src/PPE/PPECompletion.ml" 67 2492 2570
+)
+"src/PPE/PPECompletion.ml" 66 2419 2456 "src/PPE/PPECompletion.ml" 66 2419 2468
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 66 2419 2471 "src/PPE/PPECompletion.ml" 66 2419 2483
+type(
+  PPEInput.recipe -> PPEInput.rpoly * PPEInput.rpoly
+)
+ident(
+  int_ref apply_recipe "src/PPE/PPECompletion.ml" 36 1332 1336 "src/PPE/PPECompletion.ml" 36 1332 1348
+)
+"src/PPE/PPECompletion.ml" 66 2419 2484 "src/PPE/PPECompletion.ml" 66 2419 2487
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref cop "src/PPE/PPECompletion.ml" 66 2419 2445 "src/PPE/PPECompletion.ml" 66 2419 2448
+)
+"src/PPE/PPECompletion.ml" 66 2419 2471 "src/PPE/PPECompletion.ml" 66 2419 2487
+call(
+  stack
+)
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 67 2492 2512 "src/PPE/PPECompletion.ml" 67 2492 2515
+type(
+  PPEInput.rpoly
+)
+ident(
+  int_ref num "src/PPE/PPECompletion.ml" 66 2419 2457 "src/PPE/PPECompletion.ml" 66 2419 2460
+)
+"src/PPE/PPECompletion.ml" 67 2492 2529 "src/PPE/PPECompletion.ml" 67 2492 2534
+type(
+  PPEInput.rpoly
+)
+ident(
+  int_ref denom "src/PPE/PPECompletion.ml" 66 2419 2462 "src/PPE/PPECompletion.ml" 66 2419 2467
+)
+"src/PPE/PPECompletion.ml" 67 2492 2544 "src/PPE/PPECompletion.ml" 67 2492 2547
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref cop "src/PPE/PPECompletion.ml" 66 2419 2445 "src/PPE/PPECompletion.ml" 66 2419 2448
+)
+"src/PPE/PPECompletion.ml" 67 2492 2565 "src/PPE/PPECompletion.ml" 67 2492 2569
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 64 2346 2376 "src/PPE/PPECompletion.ml" 64 2346 2380
+)
+"src/PPE/PPECompletion.ml" 67 2492 2560 "src/PPE/PPECompletion.ml" 67 2492 2569
+type(
+  PPEInput.group_id option
+)
+"src/PPE/PPECompletion.ml" 67 2492 2500 "src/PPE/PPECompletion.ml" 67 2492 2570
+type(
+  PPEInput.group_elem
+)
+"src/PPE/PPECompletion.ml" 66 2419 2452 "src/PPE/PPECompletion.ml" 67 2492 2570
+type(
+  PPEInput.group_elem
+)
+"src/PPE/PPECompletion.ml" 66 2419 2440 "src/PPE/PPECompletion.ml" 67 2492 2571
+type(
+  PPEInput.recipe -> PPEInput.group_elem
+)
+"src/PPE/PPECompletion.ml" 67 2492 2572 "src/PPE/PPECompletion.ml" 67 2492 2576
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref cops "src/PPE/PPECompletion.ml" 64 2346 2371 "src/PPE/PPECompletion.ml" 64 2346 2375
+)
+"src/PPE/PPECompletion.ml" 66 2419 2434 "src/PPE/PPECompletion.ml" 67 2492 2576
+call(
+  stack
+)
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 69 2720 2722 "src/PPE/PPECompletion.ml" 69 2720 2728
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref output "src/PPE/PPECompletion.ml" 66 2419 2425 "src/PPE/PPECompletion.ml" 66 2419 2431
+)
+"src/PPE/PPECompletion.ml" 66 2419 2421 "src/PPE/PPECompletion.ml" 69 2720 2728
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 65 2383 2385 "src/PPE/PPECompletion.ml" 69 2720 2728
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 72 2770 2819 "src/PPE/PPECompletion.ml" 72 2770 2826
+type(
+  ReP.t -> ReP.t -> int
+)
+ident(
+  def compare "src/PPE/PPECompletion.ml" 72 2770 2840 "src/PPE/PPECompletion.ml" 72 2770 2844
+)
+"src/PPE/PPECompletion.ml" 72 2770 2829 "src/PPE/PPECompletion.ml" 72 2770 2840
+type(
+  ReP.t -> ReP.t -> int
+)
+ident(
+  ext_ref ReP.compare
+)
+"src/PPE/PPECompletion.ml" 72 2770 2784 "src/PPE/PPECompletion.ml" 72 2770 2845
+call(
+  stack
+)
+"src/PPE/PPECompletion.ml" 75 2929 2933 "src/PPE/PPECompletion.ml" 75 2929 2945
+type(
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+ident(
+  def srep_add_set "src/PPE/PPECompletion.ml" 78 3048 3048 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 75 2929 2948 "src/PPE/PPECompletion.ml" 75 2929 2955
+type(
+  Srep.t ->
+  (Srep.elt -> Srep.t -> Srep.t) ->
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Util.add_set
+)
+"src/PPE/PPECompletion.ml" 75 2929 2956 "src/PPE/PPECompletion.ml" 75 2929 2966
+type(
+  Srep.t
+)
+ident(
+  ext_ref Srep.empty
+)
+"src/PPE/PPECompletion.ml" 75 2929 2967 "src/PPE/PPECompletion.ml" 75 2929 2975
+type(
+  Srep.elt -> Srep.t -> Srep.t
+)
+ident(
+  ext_ref Srep.add
+)
+"src/PPE/PPECompletion.ml" 75 2929 2948 "src/PPE/PPECompletion.ml" 75 2929 2975
+call(
+  stack
+)
+type(
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 80 3106 3112 "src/PPE/PPECompletion.ml" 80 3106 3119
+type(
+  'a * ReP.t -> 'a * ReP.t -> int
+)
+ident(
+  def compare "src/PPE/PPECompletion.ml" 82 3175 3218 "src/PPE/PPECompletion.ml" 83 3219 3222
+)
+"src/PPE/PPECompletion.ml" 80 3106 3121 "src/PPE/PPECompletion.ml" 80 3106 3125
+type(
+  'a
+)
+ident(
+  def gid1 "src/PPE/PPECompletion.ml" 80 3106 3130 "src/PPE/PPECompletion.ml" 82 3175 3218
+)
+"src/PPE/PPECompletion.ml" 80 3106 3126 "src/PPE/PPECompletion.ml" 80 3106 3128
+type(
+  ReP.t
+)
+ident(
+  def f1 "src/PPE/PPECompletion.ml" 80 3106 3130 "src/PPE/PPECompletion.ml" 82 3175 3218
+)
+"src/PPE/PPECompletion.ml" 80 3106 3120 "src/PPE/PPECompletion.ml" 80 3106 3129
+type(
+  'a * ReP.t
+)
+"src/PPE/PPECompletion.ml" 80 3106 3131 "src/PPE/PPECompletion.ml" 80 3106 3135
+type(
+  'a
+)
+ident(
+  def gid2 "src/PPE/PPECompletion.ml" 81 3142 3146 "src/PPE/PPECompletion.ml" 82 3175 3218
+)
+"src/PPE/PPECompletion.ml" 80 3106 3136 "src/PPE/PPECompletion.ml" 80 3106 3138
+type(
+  ReP.t
+)
+ident(
+  def f2 "src/PPE/PPECompletion.ml" 81 3142 3146 "src/PPE/PPECompletion.ml" 82 3175 3218
+)
+"src/PPE/PPECompletion.ml" 80 3106 3130 "src/PPE/PPECompletion.ml" 80 3106 3139
+type(
+  'a * ReP.t
+)
+"src/PPE/PPECompletion.ml" 81 3142 3150 "src/PPE/PPECompletion.ml" 81 3142 3151
+type(
+  int
+)
+ident(
+  def d "src/PPE/PPECompletion.ml" 82 3175 3179 "src/PPE/PPECompletion.ml" 82 3175 3218
+)
+"src/PPE/PPECompletion.ml" 81 3142 3154 "src/PPE/PPECompletion.ml" 81 3142 3161
+type(
+  'a -> 'a -> int
+)
+ident(
+  ext_ref Pervasives.compare
+)
+"src/PPE/PPECompletion.ml" 81 3142 3162 "src/PPE/PPECompletion.ml" 81 3142 3166
+type(
+  'a
+)
+ident(
+  int_ref gid1 "src/PPE/PPECompletion.ml" 80 3106 3121 "src/PPE/PPECompletion.ml" 80 3106 3125
+)
+"src/PPE/PPECompletion.ml" 81 3142 3167 "src/PPE/PPECompletion.ml" 81 3142 3171
+type(
+  'a
+)
+ident(
+  int_ref gid2 "src/PPE/PPECompletion.ml" 80 3106 3131 "src/PPE/PPECompletion.ml" 80 3106 3135
+)
+"src/PPE/PPECompletion.ml" 81 3142 3154 "src/PPE/PPECompletion.ml" 81 3142 3171
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 82 3175 3182 "src/PPE/PPECompletion.ml" 82 3175 3183
+type(
+  int
+)
+ident(
+  int_ref d "src/PPE/PPECompletion.ml" 81 3142 3150 "src/PPE/PPECompletion.ml" 81 3142 3151
+)
+"src/PPE/PPECompletion.ml" 82 3175 3184 "src/PPE/PPECompletion.ml" 82 3175 3186
+type(
+  int -> int -> bool
+)
+ident(
+  ext_ref Pervasives.( <> )
+)
+"src/PPE/PPECompletion.ml" 82 3175 3187 "src/PPE/PPECompletion.ml" 82 3175 3188
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 82 3175 3182 "src/PPE/PPECompletion.ml" 82 3175 3188
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 82 3175 3194 "src/PPE/PPECompletion.ml" 82 3175 3195
+type(
+  int
+)
+ident(
+  int_ref d "src/PPE/PPECompletion.ml" 81 3142 3150 "src/PPE/PPECompletion.ml" 81 3142 3151
+)
+"src/PPE/PPECompletion.ml" 82 3175 3201 "src/PPE/PPECompletion.ml" 82 3175 3212
+type(
+  ReP.t -> ReP.t -> int
+)
+ident(
+  ext_ref ReP.compare
+)
+"src/PPE/PPECompletion.ml" 82 3175 3213 "src/PPE/PPECompletion.ml" 82 3175 3215
+type(
+  ReP.t
+)
+ident(
+  int_ref f1 "src/PPE/PPECompletion.ml" 80 3106 3126 "src/PPE/PPECompletion.ml" 80 3106 3128
+)
+"src/PPE/PPECompletion.ml" 82 3175 3216 "src/PPE/PPECompletion.ml" 82 3175 3218
+type(
+  ReP.t
+)
+ident(
+  int_ref f2 "src/PPE/PPECompletion.ml" 80 3106 3136 "src/PPE/PPECompletion.ml" 80 3106 3138
+)
+"src/PPE/PPECompletion.ml" 82 3175 3201 "src/PPE/PPECompletion.ml" 82 3175 3218
+call(
+  tail
+)
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 82 3175 3179 "src/PPE/PPECompletion.ml" 82 3175 3218
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 81 3142 3146 "src/PPE/PPECompletion.ml" 82 3175 3218
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 78 3048 3062 "src/PPE/PPECompletion.ml" 83 3219 3223
+call(
+  stack
+)
+"src/PPE/PPECompletion.ml" 97 3868 3872 "src/PPE/PPECompletion.ml" 97 3868 3886
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  (PPEInput.recipe * string) list -> PPEInput.recipe list
+)
+ident(
+  def completion_ops "src/PPE/PPECompletion.ml" 170 6736 6736 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 97 3868 3887 "src/PPE/PPECompletion.ml" 97 3868 3890
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  def cgs "src/PPE/PPECompletion.ml" 97 3868 3891 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 97 3868 3891 "src/PPE/PPECompletion.ml" 97 3868 3895
+type(
+  PPEInput.group_id
+)
+ident(
+  def cgid "src/PPE/PPECompletion.ml" 97 3868 3896 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 97 3868 3896 "src/PPE/PPECompletion.ml" 97 3868 3904
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  def inp_gids "src/PPE/PPECompletion.ml" 100 3979 3981 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 100 3979 3985 "src/PPE/PPECompletion.ml" 100 3979 3992
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  def m_known "src/PPE/PPECompletion.ml" 101 4011 4013 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 100 3979 3995 "src/PPE/PPECompletion.ml" 100 3979 3998
+type(
+  Srep.t Util.Ms.t -> Srep.t Util.Ms.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 100 3979 3999 "src/PPE/PPECompletion.ml" 100 3979 4007
+type(
+  Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Util.Ms.empty
+)
+"src/PPE/PPECompletion.ml" 100 3979 3995 "src/PPE/PPECompletion.ml" 100 3979 4007
+type(
+  Srep.t Util.Ms.t ref
+)
+"src/PPE/PPECompletion.ml" 101 4011 4017 "src/PPE/PPECompletion.ml" 101 4011 4027
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  def find_known "src/PPE/PPECompletion.ml" 104 4167 4169 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 101 4011 4028 "src/PPE/PPECompletion.ml" 101 4011 4031
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 101 4011 4034 "src/PPE/PPECompletion.ml" 101 4011 4087
+)
+"src/PPE/PPECompletion.ml" 101 4011 4038 "src/PPE/PPECompletion.ml" 101 4011 4045
+type(
+  Util.Ms.key -> Srep.t Util.Ms.t -> Srep.t
+)
+ident(
+  ext_ref Util.Ms.find
+)
+"src/PPE/PPECompletion.ml" 101 4011 4046 "src/PPE/PPECompletion.ml" 101 4011 4049
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 101 4011 4028 "src/PPE/PPECompletion.ml" 101 4011 4031
+)
+"src/PPE/PPECompletion.ml" 101 4011 4050 "src/PPE/PPECompletion.ml" 101 4011 4051
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 101 4011 4051 "src/PPE/PPECompletion.ml" 101 4011 4058
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 100 3979 3985 "src/PPE/PPECompletion.ml" 100 3979 3992
+)
+"src/PPE/PPECompletion.ml" 101 4011 4050 "src/PPE/PPECompletion.ml" 101 4011 4058
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 101 4011 4038 "src/PPE/PPECompletion.ml" 101 4011 4058
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 101 4011 4064 "src/PPE/PPECompletion.ml" 101 4011 4073
+type(
+  exn
+)
+"src/PPE/PPECompletion.ml" 101 4011 4077 "src/PPE/PPECompletion.ml" 101 4011 4087
+type(
+  Srep.t
+)
+ident(
+  ext_ref Srep.empty
+)
+"src/PPE/PPECompletion.ml" 101 4011 4034 "src/PPE/PPECompletion.ml" 101 4011 4087
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 104 4167 4173 "src/PPE/PPECompletion.ml" 104 4167 4182
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  def m_recipes "src/PPE/PPECompletion.ml" 105 4203 4205 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 104 4167 4185 "src/PPE/PPECompletion.ml" 104 4167 4188
+type(
+  PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 104 4167 4189 "src/PPE/PPECompletion.ml" 104 4167 4199
+type(
+  PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.empty
+)
+"src/PPE/PPECompletion.ml" 104 4167 4185 "src/PPE/PPECompletion.ml" 104 4167 4199
+type(
+  PPEInput.recipe Mrep.t ref
+)
+"src/PPE/PPECompletion.ml" 105 4203 4209 "src/PPE/PPECompletion.ml" 105 4203 4220
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  def find_recipe "src/PPE/PPECompletion.ml" 110 4552 4554 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 105 4203 4221 "src/PPE/PPECompletion.ml" 105 4203 4224
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 105 4203 4225 "src/PPE/PPECompletion.ml" 105 4203 4259
+)
+"src/PPE/PPECompletion.ml" 105 4203 4225 "src/PPE/PPECompletion.ml" 105 4203 4227
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 105 4203 4230 "src/PPE/PPECompletion.ml" 105 4203 4259
+)
+"src/PPE/PPECompletion.ml" 105 4203 4230 "src/PPE/PPECompletion.ml" 105 4203 4239
+type(
+  Mrep.key -> PPEInput.recipe Mrep.t -> PPEInput.recipe
+)
+ident(
+  ext_ref Mrep.find
+)
+"src/PPE/PPECompletion.ml" 105 4203 4241 "src/PPE/PPECompletion.ml" 105 4203 4244
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 105 4203 4221 "src/PPE/PPECompletion.ml" 105 4203 4224
+)
+"src/PPE/PPECompletion.ml" 105 4203 4245 "src/PPE/PPECompletion.ml" 105 4203 4247
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 105 4203 4225 "src/PPE/PPECompletion.ml" 105 4203 4227
+)
+"src/PPE/PPECompletion.ml" 105 4203 4240 "src/PPE/PPECompletion.ml" 105 4203 4248
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 105 4203 4249 "src/PPE/PPECompletion.ml" 105 4203 4250
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 105 4203 4250 "src/PPE/PPECompletion.ml" 105 4203 4259
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 104 4167 4173 "src/PPE/PPECompletion.ml" 104 4167 4182
+)
+"src/PPE/PPECompletion.ml" 105 4203 4249 "src/PPE/PPECompletion.ml" 105 4203 4259
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 105 4203 4230 "src/PPE/PPECompletion.ml" 105 4203 4259
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 110 4552 4558 "src/PPE/PPECompletion.ml" 110 4552 4565
+type(
+  bool ref
+)
+ident(
+  def changed "src/PPE/PPECompletion.ml" 111 4581 4583 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 110 4552 4568 "src/PPE/PPECompletion.ml" 110 4552 4571
+type(
+  bool -> bool ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 110 4552 4572 "src/PPE/PPECompletion.ml" 110 4552 4577
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 110 4552 4568 "src/PPE/PPECompletion.ml" 110 4552 4577
+type(
+  bool ref
+)
+"src/PPE/PPECompletion.ml" 111 4581 4587 "src/PPE/PPECompletion.ml" 111 4581 4590
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  def add "src/PPE/PPECompletion.ml" 124 5066 5068 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 111 4581 4592 "src/PPE/PPECompletion.ml" 111 4581 4594
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 111 4581 4604 "src/PPE/PPECompletion.ml" 118 4842 4847
+)
+"src/PPE/PPECompletion.ml" 111 4581 4605 "src/PPE/PPECompletion.ml" 111 4581 4611
+type(
+  PPEInput.recipe
+)
+ident(
+  def recipe "src/PPE/PPECompletion.ml" 111 4581 4622 "src/PPE/PPECompletion.ml" 118 4842 4847
+)
+"src/PPE/PPECompletion.ml" 111 4581 4623 "src/PPE/PPECompletion.ml" 111 4581 4626
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 112 4639 4643 "src/PPE/PPECompletion.ml" 118 4842 4847
+)
+"src/PPE/PPECompletion.ml" 112 4639 4647 "src/PPE/PPECompletion.ml" 112 4639 4652
+type(
+  Srep.t
+)
+ident(
+  def known "src/PPE/PPECompletion.ml" 113 4673 4677 "src/PPE/PPECompletion.ml" 118 4842 4847
+)
+"src/PPE/PPECompletion.ml" 112 4639 4655 "src/PPE/PPECompletion.ml" 112 4639 4665
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 101 4011 4017 "src/PPE/PPECompletion.ml" 101 4011 4027
+)
+"src/PPE/PPECompletion.ml" 112 4639 4666 "src/PPE/PPECompletion.ml" 112 4639 4669
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 111 4581 4623 "src/PPE/PPECompletion.ml" 111 4581 4626
+)
+"src/PPE/PPECompletion.ml" 112 4639 4655 "src/PPE/PPECompletion.ml" 112 4639 4669
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 113 4673 4680 "src/PPE/PPECompletion.ml" 113 4673 4688
+type(
+  Srep.elt -> Srep.t -> bool
+)
+ident(
+  ext_ref Srep.mem
+)
+"src/PPE/PPECompletion.ml" 113 4673 4689 "src/PPE/PPECompletion.ml" 113 4673 4691
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 111 4581 4592 "src/PPE/PPECompletion.ml" 111 4581 4594
+)
+"src/PPE/PPECompletion.ml" 113 4673 4692 "src/PPE/PPECompletion.ml" 113 4673 4697
+type(
+  Srep.t
+)
+ident(
+  int_ref known "src/PPE/PPECompletion.ml" 112 4639 4647 "src/PPE/PPECompletion.ml" 112 4639 4652
+)
+"src/PPE/PPECompletion.ml" 113 4673 4680 "src/PPE/PPECompletion.ml" 113 4673 4697
+call(
+  stack
+)
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 113 4673 4703 "src/PPE/PPECompletion.ml" 113 4673 4705
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 115 4717 4723 "src/PPE/PPECompletion.ml" 115 4717 4730
+type(
+  bool ref
+)
+ident(
+  int_ref changed "src/PPE/PPECompletion.ml" 110 4552 4558 "src/PPE/PPECompletion.ml" 110 4552 4565
+)
+"src/PPE/PPECompletion.ml" 115 4717 4731 "src/PPE/PPECompletion.ml" 115 4717 4733
+type(
+  bool ref -> bool -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 115 4717 4734 "src/PPE/PPECompletion.ml" 115 4717 4738
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 115 4717 4723 "src/PPE/PPECompletion.ml" 115 4717 4738
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 116 4740 4746 "src/PPE/PPECompletion.ml" 116 4740 4753
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 100 3979 3985 "src/PPE/PPECompletion.ml" 100 3979 3992
+)
+"src/PPE/PPECompletion.ml" 116 4740 4754 "src/PPE/PPECompletion.ml" 116 4740 4756
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 116 4740 4757 "src/PPE/PPECompletion.ml" 116 4740 4769
+type(
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+ident(
+  int_ref srep_add_set "src/PPE/PPECompletion.ml" 75 2929 2933 "src/PPE/PPECompletion.ml" 75 2929 2945
+)
+"src/PPE/PPECompletion.ml" 116 4740 4770 "src/PPE/PPECompletion.ml" 116 4740 4773
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 111 4581 4623 "src/PPE/PPECompletion.ml" 111 4581 4626
+)
+"src/PPE/PPECompletion.ml" 116 4740 4774 "src/PPE/PPECompletion.ml" 116 4740 4776
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 111 4581 4592 "src/PPE/PPECompletion.ml" 111 4581 4594
+)
+"src/PPE/PPECompletion.ml" 116 4740 4777 "src/PPE/PPECompletion.ml" 116 4740 4778
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 116 4740 4778 "src/PPE/PPECompletion.ml" 116 4740 4785
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 100 3979 3985 "src/PPE/PPECompletion.ml" 100 3979 3992
+)
+"src/PPE/PPECompletion.ml" 116 4740 4777 "src/PPE/PPECompletion.ml" 116 4740 4785
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 116 4740 4757 "src/PPE/PPECompletion.ml" 116 4740 4785
+call(
+  stack
+)
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 116 4740 4746 "src/PPE/PPECompletion.ml" 116 4740 4785
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 117 4787 4793 "src/PPE/PPECompletion.ml" 117 4787 4802
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 104 4167 4173 "src/PPE/PPECompletion.ml" 104 4167 4182
+)
+"src/PPE/PPECompletion.ml" 117 4787 4803 "src/PPE/PPECompletion.ml" 117 4787 4805
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 117 4787 4806 "src/PPE/PPECompletion.ml" 117 4787 4814
+type(
+  Mrep.key ->
+  PPEInput.recipe -> PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.add
+)
+"src/PPE/PPECompletion.ml" 117 4787 4816 "src/PPE/PPECompletion.ml" 117 4787 4819
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 111 4581 4623 "src/PPE/PPECompletion.ml" 111 4581 4626
+)
+"src/PPE/PPECompletion.ml" 117 4787 4820 "src/PPE/PPECompletion.ml" 117 4787 4822
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 111 4581 4592 "src/PPE/PPECompletion.ml" 111 4581 4594
+)
+"src/PPE/PPECompletion.ml" 117 4787 4815 "src/PPE/PPECompletion.ml" 117 4787 4823
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 117 4787 4824 "src/PPE/PPECompletion.ml" 117 4787 4830
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recipe "src/PPE/PPECompletion.ml" 111 4581 4605 "src/PPE/PPECompletion.ml" 111 4581 4611
+)
+"src/PPE/PPECompletion.ml" 117 4787 4831 "src/PPE/PPECompletion.ml" 117 4787 4832
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 117 4787 4832 "src/PPE/PPECompletion.ml" 117 4787 4841
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 104 4167 4173 "src/PPE/PPECompletion.ml" 104 4167 4182
+)
+"src/PPE/PPECompletion.ml" 117 4787 4831 "src/PPE/PPECompletion.ml" 117 4787 4841
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 117 4787 4806 "src/PPE/PPECompletion.ml" 117 4787 4841
+call(
+  stack
+)
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 117 4787 4793 "src/PPE/PPECompletion.ml" 117 4787 4841
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 116 4740 4746 "src/PPE/PPECompletion.ml" 117 4787 4841
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 114 4706 4715 "src/PPE/PPECompletion.ml" 118 4842 4847
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 113 4673 4677 "src/PPE/PPECompletion.ml" 118 4842 4847
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 112 4639 4643 "src/PPE/PPECompletion.ml" 118 4842 4847
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 124 5066 5072 "src/PPE/PPECompletion.ml" 124 5066 5083
+type(
+  ReP.var ref
+)
+ident(
+  def var_counter "src/PPE/PPECompletion.ml" 125 5095 5097 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 124 5066 5086 "src/PPE/PPECompletion.ml" 124 5066 5089
+type(
+  ReP.var -> ReP.var ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 124 5066 5090 "src/PPE/PPECompletion.ml" 124 5066 5091
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 124 5066 5086 "src/PPE/PPECompletion.ml" 124 5066 5091
+type(
+  ReP.var ref
+)
+"src/PPE/PPECompletion.ml" 125 5095 5097 "src/PPE/PPECompletion.ml" 125 5095 5103
+type(
+  (PPEInput.recipe * string -> unit) ->
+  (PPEInput.recipe * string) list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 126 5104 5114 "src/PPE/PPECompletion.ml" 126 5104 5123
+type(
+  PPEInput.recipe
+)
+ident(
+  def inprecipe "src/PPE/PPECompletion.ml" 126 5104 5132 "src/PPE/PPECompletion.ml" 126 5104 5204
+)
+"src/PPE/PPECompletion.ml" 126 5104 5124 "src/PPE/PPECompletion.ml" 126 5104 5127
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 126 5104 5132 "src/PPE/PPECompletion.ml" 126 5104 5204
+)
+"src/PPE/PPECompletion.ml" 126 5104 5113 "src/PPE/PPECompletion.ml" 126 5104 5128
+type(
+  PPEInput.recipe * string
+)
+"src/PPE/PPECompletion.ml" 126 5104 5132 "src/PPE/PPECompletion.ml" 126 5104 5135
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 111 4581 4587 "src/PPE/PPECompletion.ml" 111 4581 4590
+)
+"src/PPE/PPECompletion.ml" 126 5104 5137 "src/PPE/PPECompletion.ml" 126 5104 5144
+type(
+  ReP.var -> ReP.t
+)
+ident(
+  ext_ref ReP.var
+)
+"src/PPE/PPECompletion.ml" 126 5104 5145 "src/PPE/PPECompletion.ml" 126 5104 5146
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 126 5104 5146 "src/PPE/PPECompletion.ml" 126 5104 5157
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 124 5066 5072 "src/PPE/PPECompletion.ml" 124 5066 5083
+)
+"src/PPE/PPECompletion.ml" 126 5104 5145 "src/PPE/PPECompletion.ml" 126 5104 5157
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 126 5104 5136 "src/PPE/PPECompletion.ml" 126 5104 5158
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 126 5104 5159 "src/PPE/PPECompletion.ml" 126 5104 5168
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref inprecipe "src/PPE/PPECompletion.ml" 126 5104 5114 "src/PPE/PPECompletion.ml" 126 5104 5123
+)
+"src/PPE/PPECompletion.ml" 126 5104 5169 "src/PPE/PPECompletion.ml" 126 5104 5172
+type(
+  string
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 126 5104 5124 "src/PPE/PPECompletion.ml" 126 5104 5127
+)
+"src/PPE/PPECompletion.ml" 126 5104 5132 "src/PPE/PPECompletion.ml" 126 5104 5172
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 126 5104 5174 "src/PPE/PPECompletion.ml" 126 5104 5185
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 124 5066 5072 "src/PPE/PPECompletion.ml" 124 5066 5083
+)
+"src/PPE/PPECompletion.ml" 126 5104 5186 "src/PPE/PPECompletion.ml" 126 5104 5188
+type(
+  ReP.var ref -> ReP.var -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 126 5104 5189 "src/PPE/PPECompletion.ml" 126 5104 5190
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 126 5104 5190 "src/PPE/PPECompletion.ml" 126 5104 5201
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 124 5066 5072 "src/PPE/PPECompletion.ml" 124 5066 5083
+)
+"src/PPE/PPECompletion.ml" 126 5104 5189 "src/PPE/PPECompletion.ml" 126 5104 5201
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 126 5104 5202 "src/PPE/PPECompletion.ml" 126 5104 5203
+type(
+  ReP.var -> int -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( + )
+)
+"src/PPE/PPECompletion.ml" 126 5104 5203 "src/PPE/PPECompletion.ml" 126 5104 5204
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 126 5104 5189 "src/PPE/PPECompletion.ml" 126 5104 5204
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 126 5104 5174 "src/PPE/PPECompletion.ml" 126 5104 5204
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 126 5104 5132 "src/PPE/PPECompletion.ml" 126 5104 5204
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 126 5104 5108 "src/PPE/PPECompletion.ml" 126 5104 5205
+type(
+  PPEInput.recipe * string -> unit
+)
+"src/PPE/PPECompletion.ml" 126 5104 5206 "src/PPE/PPECompletion.ml" 126 5104 5214
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  int_ref inp_gids "src/PPE/PPECompletion.ml" 97 3868 3896 "src/PPE/PPECompletion.ml" 97 3868 3904
+)
+"src/PPE/PPECompletion.ml" 125 5095 5097 "src/PPE/PPECompletion.ml" 126 5104 5214
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 130 5329 5339 "src/PPE/PPECompletion.ml" 130 5329 5347
+type(
+  unit -> PPEInput.recipe list
+)
+ident(
+  def complete "src/PPE/PPECompletion.ml" 130 5329 5331 "src/PPE/PPECompletion.ml" 167 6720 6733
+)
+"src/PPE/PPECompletion.ml" 130 5329 5348 "src/PPE/PPECompletion.ml" 130 5329 5350
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 131 5353 5357 "src/PPE/PPECompletion.ml" 131 5353 5364
+type(
+  bool ref
+)
+ident(
+  int_ref changed "src/PPE/PPECompletion.ml" 110 4552 4558 "src/PPE/PPECompletion.ml" 110 4552 4565
+)
+"src/PPE/PPECompletion.ml" 131 5353 5365 "src/PPE/PPECompletion.ml" 131 5353 5367
+type(
+  bool ref -> bool -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 131 5353 5368 "src/PPE/PPECompletion.ml" 131 5353 5373
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 131 5353 5357 "src/PPE/PPECompletion.ml" 131 5353 5373
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 136 5545 5549 "src/PPE/PPECompletion.ml" 136 5545 5555
+type(
+  (PPEInput.iso -> unit) -> PPEInput.iso list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 137 5556 5567 "src/PPE/PPECompletion.ml" 137 5556 5568
+type(
+  PPEInput.iso
+)
+ident(
+  def i "src/PPE/PPECompletion.ml" 138 5572 5581 "src/PPE/PPECompletion.ml" 141 5705 5732
+)
+"src/PPE/PPECompletion.ml" 138 5572 5585 "src/PPE/PPECompletion.ml" 138 5572 5588
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 139 5623 5632 "src/PPE/PPECompletion.ml" 141 5705 5732
+)
+"src/PPE/PPECompletion.ml" 138 5572 5590 "src/PPE/PPECompletion.ml" 138 5572 5594
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 139 5623 5632 "src/PPE/PPECompletion.ml" 141 5705 5732
+)
+"src/PPE/PPECompletion.ml" 138 5572 5585 "src/PPE/PPECompletion.ml" 138 5572 5594
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 138 5572 5597 "src/PPE/PPECompletion.ml" 138 5572 5598
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 137 5556 5567 "src/PPE/PPECompletion.ml" 137 5556 5568
+)
+"src/PPE/PPECompletion.ml" 138 5572 5597 "src/PPE/PPECompletion.ml" 138 5572 5606
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 138 5572 5608 "src/PPE/PPECompletion.ml" 138 5572 5609
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 137 5556 5567 "src/PPE/PPECompletion.ml" 137 5556 5568
+)
+"src/PPE/PPECompletion.ml" 138 5572 5608 "src/PPE/PPECompletion.ml" 138 5572 5619
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 138 5572 5597 "src/PPE/PPECompletion.ml" 138 5572 5619
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 139 5623 5632 "src/PPE/PPECompletion.ml" 139 5623 5641
+type(
+  (Srep.elt -> unit) -> Srep.t -> unit
+)
+ident(
+  ext_ref Srep.iter
+)
+"src/PPE/PPECompletion.ml" 140 5642 5658 "src/PPE/PPECompletion.ml" 140 5642 5660
+type(
+  Srep.elt
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 140 5642 5664 "src/PPE/PPECompletion.ml" 140 5642 5703
+)
+"src/PPE/PPECompletion.ml" 140 5642 5664 "src/PPE/PPECompletion.ml" 140 5642 5667
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 111 4581 4587 "src/PPE/PPECompletion.ml" 111 4581 4590
+)
+"src/PPE/PPECompletion.ml" 140 5642 5668 "src/PPE/PPECompletion.ml" 140 5642 5670
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 140 5642 5658 "src/PPE/PPECompletion.ml" 140 5642 5660
+)
+"src/PPE/PPECompletion.ml" 140 5642 5676 "src/PPE/PPECompletion.ml" 140 5642 5677
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 137 5556 5567 "src/PPE/PPECompletion.ml" 137 5556 5568
+)
+"src/PPE/PPECompletion.ml" 140 5642 5678 "src/PPE/PPECompletion.ml" 140 5642 5689
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 105 4203 4209 "src/PPE/PPECompletion.ml" 105 4203 4220
+)
+"src/PPE/PPECompletion.ml" 140 5642 5690 "src/PPE/PPECompletion.ml" 140 5642 5693
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 138 5572 5585 "src/PPE/PPECompletion.ml" 138 5572 5588
+)
+"src/PPE/PPECompletion.ml" 140 5642 5694 "src/PPE/PPECompletion.ml" 140 5642 5696
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 140 5642 5658 "src/PPE/PPECompletion.ml" 140 5642 5660
+)
+"src/PPE/PPECompletion.ml" 140 5642 5678 "src/PPE/PPECompletion.ml" 140 5642 5696
+call(
+  stack
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 140 5642 5671 "src/PPE/PPECompletion.ml" 140 5642 5698
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 140 5642 5699 "src/PPE/PPECompletion.ml" 140 5642 5703
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 138 5572 5590 "src/PPE/PPECompletion.ml" 138 5572 5594
+)
+"src/PPE/PPECompletion.ml" 140 5642 5664 "src/PPE/PPECompletion.ml" 140 5642 5703
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 140 5642 5653 "src/PPE/PPECompletion.ml" 140 5642 5704
+type(
+  Srep.elt -> unit
+)
+"src/PPE/PPECompletion.ml" 141 5705 5717 "src/PPE/PPECompletion.ml" 141 5705 5727
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 101 4011 4017 "src/PPE/PPECompletion.ml" 101 4011 4027
+)
+"src/PPE/PPECompletion.ml" 141 5705 5728 "src/PPE/PPECompletion.ml" 141 5705 5731
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 138 5572 5585 "src/PPE/PPECompletion.ml" 138 5572 5588
+)
+"src/PPE/PPECompletion.ml" 141 5705 5716 "src/PPE/PPECompletion.ml" 141 5705 5732
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 139 5623 5632 "src/PPE/PPECompletion.ml" 141 5705 5732
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 138 5572 5581 "src/PPE/PPECompletion.ml" 141 5705 5732
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 137 5556 5562 "src/PPE/PPECompletion.ml" 141 5705 5733
+type(
+  PPEInput.iso -> unit
+)
+"src/PPE/PPECompletion.ml" 142 5734 5740 "src/PPE/PPECompletion.ml" 142 5734 5743
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 97 3868 3887 "src/PPE/PPECompletion.ml" 97 3868 3890
+)
+"src/PPE/PPECompletion.ml" 142 5734 5740 "src/PPE/PPECompletion.ml" 142 5734 5752
+type(
+  PPEInput.iso list
+)
+"src/PPE/PPECompletion.ml" 136 5545 5549 "src/PPE/PPECompletion.ml" 142 5734 5752
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 149 6067 6071 "src/PPE/PPECompletion.ml" 149 6067 6077
+type(
+  (PPEInput.emap -> unit) -> PPEInput.emap list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 150 6078 6089 "src/PPE/PPECompletion.ml" 150 6078 6090
+type(
+  PPEInput.emap
+)
+ident(
+  def e "src/PPE/PPECompletion.ml" 151 6094 6103 "src/PPE/PPECompletion.ml" 157 6404 6436
+)
+"src/PPE/PPECompletion.ml" 151 6094 6107 "src/PPE/PPECompletion.ml" 151 6094 6111
+type(
+  PPEInput.group_id list
+)
+ident(
+  def gids "src/PPE/PPECompletion.ml" 152 6144 6153 "src/PPE/PPECompletion.ml" 157 6404 6436
+)
+"src/PPE/PPECompletion.ml" 151 6094 6113 "src/PPE/PPECompletion.ml" 151 6094 6117
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 152 6144 6153 "src/PPE/PPECompletion.ml" 157 6404 6436
+)
+"src/PPE/PPECompletion.ml" 151 6094 6107 "src/PPE/PPECompletion.ml" 151 6094 6117
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 151 6094 6120 "src/PPE/PPECompletion.ml" 151 6094 6121
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 150 6078 6089 "src/PPE/PPECompletion.ml" 150 6078 6090
+)
+"src/PPE/PPECompletion.ml" 151 6094 6120 "src/PPE/PPECompletion.ml" 151 6094 6128
+type(
+  PPEInput.group_id list
+)
+"src/PPE/PPECompletion.ml" 151 6094 6130 "src/PPE/PPECompletion.ml" 151 6094 6131
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 150 6078 6089 "src/PPE/PPECompletion.ml" 150 6078 6090
+)
+"src/PPE/PPECompletion.ml" 151 6094 6130 "src/PPE/PPECompletion.ml" 151 6094 6140
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 151 6094 6120 "src/PPE/PPECompletion.ml" 151 6094 6140
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 152 6144 6157 "src/PPE/PPECompletion.ml" 152 6144 6166
+type(
+  Srep.elt list list
+)
+ident(
+  def known_rps "src/PPE/PPECompletion.ml" 153 6227 6236 "src/PPE/PPECompletion.ml" 157 6404 6436
+)
+"src/PPE/PPECompletion.ml" 152 6144 6169 "src/PPE/PPECompletion.ml" 152 6144 6174
+type(
+  (Util.Ms.key -> Srep.elt list) -> Util.Ms.key list -> Srep.elt list list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 152 6144 6180 "src/PPE/PPECompletion.ml" 152 6144 6183
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 152 6144 6187 "src/PPE/PPECompletion.ml" 152 6144 6217
+)
+"src/PPE/PPECompletion.ml" 152 6144 6187 "src/PPE/PPECompletion.ml" 152 6144 6200
+type(
+  Srep.t -> Srep.elt list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 152 6144 6202 "src/PPE/PPECompletion.ml" 152 6144 6212
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 101 4011 4017 "src/PPE/PPECompletion.ml" 101 4011 4027
+)
+"src/PPE/PPECompletion.ml" 152 6144 6213 "src/PPE/PPECompletion.ml" 152 6144 6216
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 152 6144 6180 "src/PPE/PPECompletion.ml" 152 6144 6183
+)
+"src/PPE/PPECompletion.ml" 152 6144 6201 "src/PPE/PPECompletion.ml" 152 6144 6217
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 152 6144 6187 "src/PPE/PPECompletion.ml" 152 6144 6217
+call(
+  tail
+)
+type(
+  Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 152 6144 6175 "src/PPE/PPECompletion.ml" 152 6144 6218
+type(
+  Util.Ms.key -> Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 152 6144 6219 "src/PPE/PPECompletion.ml" 152 6144 6223
+type(
+  Util.Ms.key list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 151 6094 6107 "src/PPE/PPECompletion.ml" 151 6094 6111
+)
+"src/PPE/PPECompletion.ml" 152 6144 6169 "src/PPE/PPECompletion.ml" 152 6144 6223
+call(
+  stack
+)
+type(
+  Srep.elt list list
+)
+"src/PPE/PPECompletion.ml" 153 6227 6236 "src/PPE/PPECompletion.ml" 153 6227 6242
+type(
+  (ReP.t list -> unit) -> ReP.t list list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 154 6243 6259 "src/PPE/PPECompletion.ml" 154 6243 6262
+type(
+  ReP.t list
+)
+ident(
+  def rps "src/PPE/PPECompletion.ml" 155 6266 6280 "src/PPE/PPECompletion.ml" 156 6347 6402
+)
+"src/PPE/PPECompletion.ml" 155 6266 6284 "src/PPE/PPECompletion.ml" 155 6266 6290
+type(
+  PPEInput.recipe list
+)
+ident(
+  def recips "src/PPE/PPECompletion.ml" 156 6347 6361 "src/PPE/PPECompletion.ml" 156 6347 6402
+)
+"src/PPE/PPECompletion.ml" 155 6266 6293 "src/PPE/PPECompletion.ml" 155 6266 6299
+type(
+  (PPEInput.group_id -> ReP.t -> PPEInput.recipe) ->
+  PPEInput.group_id list -> ReP.t list -> PPEInput.recipe list
+)
+ident(
+  ext_ref Util.L.map2
+)
+"src/PPE/PPECompletion.ml" 155 6266 6305 "src/PPE/PPECompletion.ml" 155 6266 6308
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 155 6266 6309 "src/PPE/PPECompletion.ml" 155 6266 6333
+)
+"src/PPE/PPECompletion.ml" 155 6266 6309 "src/PPE/PPECompletion.ml" 155 6266 6311
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 155 6266 6315 "src/PPE/PPECompletion.ml" 155 6266 6333
+)
+"src/PPE/PPECompletion.ml" 155 6266 6315 "src/PPE/PPECompletion.ml" 155 6266 6326
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 105 4203 4209 "src/PPE/PPECompletion.ml" 105 4203 4220
+)
+"src/PPE/PPECompletion.ml" 155 6266 6327 "src/PPE/PPECompletion.ml" 155 6266 6330
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 155 6266 6305 "src/PPE/PPECompletion.ml" 155 6266 6308
+)
+"src/PPE/PPECompletion.ml" 155 6266 6331 "src/PPE/PPECompletion.ml" 155 6266 6333
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 155 6266 6309 "src/PPE/PPECompletion.ml" 155 6266 6311
+)
+"src/PPE/PPECompletion.ml" 155 6266 6315 "src/PPE/PPECompletion.ml" 155 6266 6333
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 155 6266 6300 "src/PPE/PPECompletion.ml" 155 6266 6334
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 155 6266 6335 "src/PPE/PPECompletion.ml" 155 6266 6339
+type(
+  PPEInput.group_id list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 151 6094 6107 "src/PPE/PPECompletion.ml" 151 6094 6111
+)
+"src/PPE/PPECompletion.ml" 155 6266 6340 "src/PPE/PPECompletion.ml" 155 6266 6343
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 154 6243 6259 "src/PPE/PPECompletion.ml" 154 6243 6262
+)
+"src/PPE/PPECompletion.ml" 155 6266 6293 "src/PPE/PPECompletion.ml" 155 6266 6343
+call(
+  stack
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 156 6347 6361 "src/PPE/PPECompletion.ml" 156 6347 6364
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 111 4581 4587 "src/PPE/PPECompletion.ml" 111 4581 4590
+)
+"src/PPE/PPECompletion.ml" 156 6347 6366 "src/PPE/PPECompletion.ml" 156 6347 6375
+type(
+  ReP.t list -> ReP.t
+)
+ident(
+  ext_ref ReP.lmult
+)
+"src/PPE/PPECompletion.ml" 156 6347 6376 "src/PPE/PPECompletion.ml" 156 6347 6379
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 154 6243 6259 "src/PPE/PPECompletion.ml" 154 6243 6262
+)
+"src/PPE/PPECompletion.ml" 156 6347 6365 "src/PPE/PPECompletion.ml" 156 6347 6380
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 156 6347 6387 "src/PPE/PPECompletion.ml" 156 6347 6388
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 150 6078 6089 "src/PPE/PPECompletion.ml" 150 6078 6090
+)
+"src/PPE/PPECompletion.ml" 156 6347 6389 "src/PPE/PPECompletion.ml" 156 6347 6395
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref recips "src/PPE/PPECompletion.ml" 155 6266 6284 "src/PPE/PPECompletion.ml" 155 6266 6290
+)
+"src/PPE/PPECompletion.ml" 156 6347 6381 "src/PPE/PPECompletion.ml" 156 6347 6397
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 156 6347 6398 "src/PPE/PPECompletion.ml" 156 6347 6402
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 151 6094 6113 "src/PPE/PPECompletion.ml" 151 6094 6117
+)
+"src/PPE/PPECompletion.ml" 156 6347 6361 "src/PPE/PPECompletion.ml" 156 6347 6402
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 155 6266 6280 "src/PPE/PPECompletion.ml" 156 6347 6402
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 154 6243 6254 "src/PPE/PPECompletion.ml" 156 6347 6403
+type(
+  ReP.t list -> unit
+)
+"src/PPE/PPECompletion.ml" 157 6404 6416 "src/PPE/PPECompletion.ml" 157 6404 6425
+type(
+  Srep.elt list list -> ReP.t list list
+)
+ident(
+  ext_ref Util.cart_prod
+)
+"src/PPE/PPECompletion.ml" 157 6404 6426 "src/PPE/PPECompletion.ml" 157 6404 6435
+type(
+  Srep.elt list list
+)
+ident(
+  int_ref known_rps "src/PPE/PPECompletion.ml" 152 6144 6157 "src/PPE/PPECompletion.ml" 152 6144 6166
+)
+"src/PPE/PPECompletion.ml" 157 6404 6415 "src/PPE/PPECompletion.ml" 157 6404 6436
+call(
+  stack
+)
+type(
+  ReP.t list list
+)
+"src/PPE/PPECompletion.ml" 153 6227 6236 "src/PPE/PPECompletion.ml" 157 6404 6436
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 152 6144 6153 "src/PPE/PPECompletion.ml" 157 6404 6436
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 151 6094 6103 "src/PPE/PPECompletion.ml" 157 6404 6436
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 150 6078 6084 "src/PPE/PPECompletion.ml" 157 6404 6437
+type(
+  PPEInput.emap -> unit
+)
+"src/PPE/PPECompletion.ml" 158 6438 6444 "src/PPE/PPECompletion.ml" 158 6438 6447
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 97 3868 3887 "src/PPE/PPECompletion.ml" 97 3868 3890
+)
+"src/PPE/PPECompletion.ml" 158 6438 6444 "src/PPE/PPECompletion.ml" 158 6438 6457
+type(
+  PPEInput.emap list
+)
+"src/PPE/PPECompletion.ml" 149 6067 6071 "src/PPE/PPECompletion.ml" 158 6438 6457
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 162 6573 6580 "src/PPE/PPECompletion.ml" 162 6573 6581
+type(
+  bool ref -> bool
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 162 6573 6581 "src/PPE/PPECompletion.ml" 162 6573 6588
+type(
+  bool ref
+)
+ident(
+  int_ref changed "src/PPE/PPECompletion.ml" 110 4552 4558 "src/PPE/PPECompletion.ml" 110 4552 4565
+)
+"src/PPE/PPECompletion.ml" 162 6573 6580 "src/PPE/PPECompletion.ml" 162 6573 6588
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 162 6573 6594 "src/PPE/PPECompletion.ml" 162 6573 6602
+type(
+  unit -> PPEInput.recipe list
+)
+ident(
+  int_ref complete "src/PPE/PPECompletion.ml" 130 5329 5339 "src/PPE/PPECompletion.ml" 130 5329 5347
+)
+"src/PPE/PPECompletion.ml" 162 6573 6603 "src/PPE/PPECompletion.ml" 162 6573 6605
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 162 6573 6594 "src/PPE/PPECompletion.ml" 162 6573 6605
+call(
+  tail
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 163 6606 6615 "src/PPE/PPECompletion.ml" 163 6606 6620
+type(
+  (ReP.t -> PPEInput.recipe) -> ReP.t list -> PPEInput.recipe list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 164 6621 6637 "src/PPE/PPECompletion.ml" 164 6621 6639
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 164 6621 6643 "src/PPE/PPECompletion.ml" 164 6621 6662
+)
+"src/PPE/PPECompletion.ml" 164 6621 6643 "src/PPE/PPECompletion.ml" 164 6621 6654
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 105 4203 4209 "src/PPE/PPECompletion.ml" 105 4203 4220
+)
+"src/PPE/PPECompletion.ml" 164 6621 6655 "src/PPE/PPECompletion.ml" 164 6621 6659
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 97 3868 3891 "src/PPE/PPECompletion.ml" 97 3868 3895
+)
+"src/PPE/PPECompletion.ml" 164 6621 6660 "src/PPE/PPECompletion.ml" 164 6621 6662
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 164 6621 6637 "src/PPE/PPECompletion.ml" 164 6621 6639
+)
+"src/PPE/PPECompletion.ml" 164 6621 6643 "src/PPE/PPECompletion.ml" 164 6621 6662
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 164 6621 6632 "src/PPE/PPECompletion.ml" 164 6621 6663
+type(
+  ReP.t -> PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 165 6664 6676 "src/PPE/PPECompletion.ml" 165 6664 6689
+type(
+  Srep.t -> ReP.t list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 165 6664 6691 "src/PPE/PPECompletion.ml" 165 6664 6698
+type(
+  Util.Ms.key -> Srep.t Util.Ms.t -> Srep.t
+)
+ident(
+  ext_ref Util.Ms.find
+)
+"src/PPE/PPECompletion.ml" 165 6664 6699 "src/PPE/PPECompletion.ml" 165 6664 6703
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 97 3868 3891 "src/PPE/PPECompletion.ml" 97 3868 3895
+)
+"src/PPE/PPECompletion.ml" 165 6664 6704 "src/PPE/PPECompletion.ml" 165 6664 6705
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 165 6664 6705 "src/PPE/PPECompletion.ml" 165 6664 6712
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 100 3979 3985 "src/PPE/PPECompletion.ml" 100 3979 3992
+)
+"src/PPE/PPECompletion.ml" 165 6664 6704 "src/PPE/PPECompletion.ml" 165 6664 6712
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 165 6664 6690 "src/PPE/PPECompletion.ml" 165 6664 6713
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 165 6664 6675 "src/PPE/PPECompletion.ml" 165 6664 6714
+call(
+  stack
+)
+type(
+  ReP.t list
+)
+"src/PPE/PPECompletion.ml" 163 6606 6615 "src/PPE/PPECompletion.ml" 165 6664 6714
+call(
+  tail
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 162 6573 6577 "src/PPE/PPECompletion.ml" 165 6664 6714
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 149 6067 6071 "src/PPE/PPECompletion.ml" 165 6664 6714
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 136 5545 5549 "src/PPE/PPECompletion.ml" 165 6664 6714
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 131 5353 5357 "src/PPE/PPECompletion.ml" 165 6664 6714
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 167 6720 6722 "src/PPE/PPECompletion.ml" 167 6720 6730
+type(
+  unit -> PPEInput.recipe list
+)
+ident(
+  int_ref complete "src/PPE/PPECompletion.ml" 130 5329 5339 "src/PPE/PPECompletion.ml" 130 5329 5347
+)
+"src/PPE/PPECompletion.ml" 167 6720 6731 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 167 6720 6722 "src/PPE/PPECompletion.ml" 167 6720 6733
+call(
+  tail
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 130 5329 5331 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 125 5095 5097 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 124 5066 5068 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 111 4581 4583 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 110 4552 4554 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 105 4203 4205 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 104 4167 4169 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 101 4011 4013 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 100 3979 3981 "src/PPE/PPECompletion.ml" 167 6720 6733
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 170 6736 6740 "src/PPE/PPECompletion.ml" 170 6736 6755
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  (PPEInput.recipe * string) list ->
+  (PPEInput.recipe * string) list -> PPEInput.recipe list
+)
+ident(
+  def completion_ops2 "src/PPE/PPECompletion.ml" 294 11967 11967 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 170 6736 6756 "src/PPE/PPECompletion.ml" 170 6736 6759
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  def cgs "src/PPE/PPECompletion.ml" 170 6736 6760 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 170 6736 6760 "src/PPE/PPECompletion.ml" 170 6736 6764
+type(
+  PPEInput.group_id
+)
+ident(
+  def cgid "src/PPE/PPECompletion.ml" 170 6736 6765 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 170 6736 6765 "src/PPE/PPECompletion.ml" 170 6736 6774
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  def inp_gids1 "src/PPE/PPECompletion.ml" 170 6736 6775 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 170 6736 6775 "src/PPE/PPECompletion.ml" 170 6736 6784
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  def inp_gids2 "src/PPE/PPECompletion.ml" 173 6859 6861 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 173 6859 6865 "src/PPE/PPECompletion.ml" 173 6859 6872
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  def m_known "src/PPE/PPECompletion.ml" 174 6891 6893 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 173 6859 6875 "src/PPE/PPECompletion.ml" 173 6859 6878
+type(
+  Srep.t Util.Ms.t -> Srep.t Util.Ms.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 173 6859 6879 "src/PPE/PPECompletion.ml" 173 6859 6887
+type(
+  Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Util.Ms.empty
+)
+"src/PPE/PPECompletion.ml" 173 6859 6875 "src/PPE/PPECompletion.ml" 173 6859 6887
+type(
+  Srep.t Util.Ms.t ref
+)
+"src/PPE/PPECompletion.ml" 174 6891 6897 "src/PPE/PPECompletion.ml" 174 6891 6905
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  def m_known2 "src/PPE/PPECompletion.ml" 175 6924 6926 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 174 6891 6908 "src/PPE/PPECompletion.ml" 174 6891 6911
+type(
+  Srep.t Util.Ms.t -> Srep.t Util.Ms.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 174 6891 6912 "src/PPE/PPECompletion.ml" 174 6891 6920
+type(
+  Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Util.Ms.empty
+)
+"src/PPE/PPECompletion.ml" 174 6891 6908 "src/PPE/PPECompletion.ml" 174 6891 6920
+type(
+  Srep.t Util.Ms.t ref
+)
+"src/PPE/PPECompletion.ml" 175 6924 6930 "src/PPE/PPECompletion.ml" 175 6924 6940
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  def find_known "src/PPE/PPECompletion.ml" 176 7004 7006 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 175 6924 6941 "src/PPE/PPECompletion.ml" 175 6924 6944
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 175 6924 6947 "src/PPE/PPECompletion.ml" 175 6924 7000
+)
+"src/PPE/PPECompletion.ml" 175 6924 6951 "src/PPE/PPECompletion.ml" 175 6924 6958
+type(
+  Util.Ms.key -> Srep.t Util.Ms.t -> Srep.t
+)
+ident(
+  ext_ref Util.Ms.find
+)
+"src/PPE/PPECompletion.ml" 175 6924 6959 "src/PPE/PPECompletion.ml" 175 6924 6962
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 175 6924 6941 "src/PPE/PPECompletion.ml" 175 6924 6944
+)
+"src/PPE/PPECompletion.ml" 175 6924 6963 "src/PPE/PPECompletion.ml" 175 6924 6964
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 175 6924 6964 "src/PPE/PPECompletion.ml" 175 6924 6971
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 173 6859 6865 "src/PPE/PPECompletion.ml" 173 6859 6872
+)
+"src/PPE/PPECompletion.ml" 175 6924 6963 "src/PPE/PPECompletion.ml" 175 6924 6971
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 175 6924 6951 "src/PPE/PPECompletion.ml" 175 6924 6971
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 175 6924 6977 "src/PPE/PPECompletion.ml" 175 6924 6986
+type(
+  exn
+)
+"src/PPE/PPECompletion.ml" 175 6924 6990 "src/PPE/PPECompletion.ml" 175 6924 7000
+type(
+  Srep.t
+)
+ident(
+  ext_ref Srep.empty
+)
+"src/PPE/PPECompletion.ml" 175 6924 6947 "src/PPE/PPECompletion.ml" 175 6924 7000
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 176 7004 7010 "src/PPE/PPECompletion.ml" 176 7004 7021
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  def find_known2 "src/PPE/PPECompletion.ml" 180 7163 7165 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 176 7004 7022 "src/PPE/PPECompletion.ml" 176 7004 7025
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 176 7004 7028 "src/PPE/PPECompletion.ml" 176 7004 7082
+)
+"src/PPE/PPECompletion.ml" 176 7004 7032 "src/PPE/PPECompletion.ml" 176 7004 7039
+type(
+  Util.Ms.key -> Srep.t Util.Ms.t -> Srep.t
+)
+ident(
+  ext_ref Util.Ms.find
+)
+"src/PPE/PPECompletion.ml" 176 7004 7040 "src/PPE/PPECompletion.ml" 176 7004 7043
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 176 7004 7022 "src/PPE/PPECompletion.ml" 176 7004 7025
+)
+"src/PPE/PPECompletion.ml" 176 7004 7044 "src/PPE/PPECompletion.ml" 176 7004 7045
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 176 7004 7045 "src/PPE/PPECompletion.ml" 176 7004 7053
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known2 "src/PPE/PPECompletion.ml" 174 6891 6897 "src/PPE/PPECompletion.ml" 174 6891 6905
+)
+"src/PPE/PPECompletion.ml" 176 7004 7044 "src/PPE/PPECompletion.ml" 176 7004 7053
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 176 7004 7032 "src/PPE/PPECompletion.ml" 176 7004 7053
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 176 7004 7059 "src/PPE/PPECompletion.ml" 176 7004 7068
+type(
+  exn
+)
+"src/PPE/PPECompletion.ml" 176 7004 7072 "src/PPE/PPECompletion.ml" 176 7004 7082
+type(
+  Srep.t
+)
+ident(
+  ext_ref Srep.empty
+)
+"src/PPE/PPECompletion.ml" 176 7004 7028 "src/PPE/PPECompletion.ml" 176 7004 7082
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 180 7163 7169 "src/PPE/PPECompletion.ml" 180 7163 7178
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  def m_recipes "src/PPE/PPECompletion.ml" 181 7199 7201 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 180 7163 7181 "src/PPE/PPECompletion.ml" 180 7163 7184
+type(
+  PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 180 7163 7185 "src/PPE/PPECompletion.ml" 180 7163 7195
+type(
+  PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.empty
+)
+"src/PPE/PPECompletion.ml" 180 7163 7181 "src/PPE/PPECompletion.ml" 180 7163 7195
+type(
+  PPEInput.recipe Mrep.t ref
+)
+"src/PPE/PPECompletion.ml" 181 7199 7205 "src/PPE/PPECompletion.ml" 181 7199 7215
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  def m_recipes2 "src/PPE/PPECompletion.ml" 182 7236 7238 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 181 7199 7218 "src/PPE/PPECompletion.ml" 181 7199 7221
+type(
+  PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 181 7199 7222 "src/PPE/PPECompletion.ml" 181 7199 7232
+type(
+  PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.empty
+)
+"src/PPE/PPECompletion.ml" 181 7199 7218 "src/PPE/PPECompletion.ml" 181 7199 7232
+type(
+  PPEInput.recipe Mrep.t ref
+)
+"src/PPE/PPECompletion.ml" 182 7236 7242 "src/PPE/PPECompletion.ml" 182 7236 7253
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  def find_recipe "src/PPE/PPECompletion.ml" 183 7296 7298 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 182 7236 7254 "src/PPE/PPECompletion.ml" 182 7236 7257
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 182 7236 7258 "src/PPE/PPECompletion.ml" 182 7236 7292
+)
+"src/PPE/PPECompletion.ml" 182 7236 7258 "src/PPE/PPECompletion.ml" 182 7236 7260
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 182 7236 7263 "src/PPE/PPECompletion.ml" 182 7236 7292
+)
+"src/PPE/PPECompletion.ml" 182 7236 7263 "src/PPE/PPECompletion.ml" 182 7236 7272
+type(
+  Mrep.key -> PPEInput.recipe Mrep.t -> PPEInput.recipe
+)
+ident(
+  ext_ref Mrep.find
+)
+"src/PPE/PPECompletion.ml" 182 7236 7274 "src/PPE/PPECompletion.ml" 182 7236 7277
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 182 7236 7254 "src/PPE/PPECompletion.ml" 182 7236 7257
+)
+"src/PPE/PPECompletion.ml" 182 7236 7278 "src/PPE/PPECompletion.ml" 182 7236 7280
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 182 7236 7258 "src/PPE/PPECompletion.ml" 182 7236 7260
+)
+"src/PPE/PPECompletion.ml" 182 7236 7273 "src/PPE/PPECompletion.ml" 182 7236 7281
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 182 7236 7282 "src/PPE/PPECompletion.ml" 182 7236 7283
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 182 7236 7283 "src/PPE/PPECompletion.ml" 182 7236 7292
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 180 7163 7169 "src/PPE/PPECompletion.ml" 180 7163 7178
+)
+"src/PPE/PPECompletion.ml" 182 7236 7282 "src/PPE/PPECompletion.ml" 182 7236 7292
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 182 7236 7263 "src/PPE/PPECompletion.ml" 182 7236 7292
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 183 7296 7302 "src/PPE/PPECompletion.ml" 183 7296 7314
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  def find_recipe2 "src/PPE/PPECompletion.ml" 187 7497 7499 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 183 7296 7315 "src/PPE/PPECompletion.ml" 183 7296 7318
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 183 7296 7319 "src/PPE/PPECompletion.ml" 183 7296 7354
+)
+"src/PPE/PPECompletion.ml" 183 7296 7319 "src/PPE/PPECompletion.ml" 183 7296 7321
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 183 7296 7324 "src/PPE/PPECompletion.ml" 183 7296 7354
+)
+"src/PPE/PPECompletion.ml" 183 7296 7324 "src/PPE/PPECompletion.ml" 183 7296 7333
+type(
+  Mrep.key -> PPEInput.recipe Mrep.t -> PPEInput.recipe
+)
+ident(
+  ext_ref Mrep.find
+)
+"src/PPE/PPECompletion.ml" 183 7296 7335 "src/PPE/PPECompletion.ml" 183 7296 7338
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 183 7296 7315 "src/PPE/PPECompletion.ml" 183 7296 7318
+)
+"src/PPE/PPECompletion.ml" 183 7296 7339 "src/PPE/PPECompletion.ml" 183 7296 7341
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 183 7296 7319 "src/PPE/PPECompletion.ml" 183 7296 7321
+)
+"src/PPE/PPECompletion.ml" 183 7296 7334 "src/PPE/PPECompletion.ml" 183 7296 7342
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 183 7296 7343 "src/PPE/PPECompletion.ml" 183 7296 7344
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 183 7296 7344 "src/PPE/PPECompletion.ml" 183 7296 7354
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes2 "src/PPE/PPECompletion.ml" 181 7199 7205 "src/PPE/PPECompletion.ml" 181 7199 7215
+)
+"src/PPE/PPECompletion.ml" 183 7296 7343 "src/PPE/PPECompletion.ml" 183 7296 7354
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 183 7296 7324 "src/PPE/PPECompletion.ml" 183 7296 7354
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 187 7497 7503 "src/PPE/PPECompletion.ml" 187 7497 7510
+type(
+  bool ref
+)
+ident(
+  def changed "src/PPE/PPECompletion.ml" 188 7526 7528 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 187 7497 7513 "src/PPE/PPECompletion.ml" 187 7497 7516
+type(
+  bool -> bool ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 187 7497 7517 "src/PPE/PPECompletion.ml" 187 7497 7522
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 187 7497 7513 "src/PPE/PPECompletion.ml" 187 7497 7522
+type(
+  bool ref
+)
+"src/PPE/PPECompletion.ml" 188 7526 7532 "src/PPE/PPECompletion.ml" 188 7526 7535
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  def add "src/PPE/PPECompletion.ml" 198 7799 7801 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 188 7526 7537 "src/PPE/PPECompletion.ml" 188 7526 7539
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 188 7526 7549 "src/PPE/PPECompletion.ml" 195 7787 7792
+)
+"src/PPE/PPECompletion.ml" 188 7526 7550 "src/PPE/PPECompletion.ml" 188 7526 7556
+type(
+  PPEInput.recipe
+)
+ident(
+  def recipe "src/PPE/PPECompletion.ml" 188 7526 7567 "src/PPE/PPECompletion.ml" 195 7787 7792
+)
+"src/PPE/PPECompletion.ml" 188 7526 7568 "src/PPE/PPECompletion.ml" 188 7526 7571
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 189 7584 7588 "src/PPE/PPECompletion.ml" 195 7787 7792
+)
+"src/PPE/PPECompletion.ml" 189 7584 7592 "src/PPE/PPECompletion.ml" 189 7584 7597
+type(
+  Srep.t
+)
+ident(
+  def known "src/PPE/PPECompletion.ml" 190 7618 7622 "src/PPE/PPECompletion.ml" 195 7787 7792
+)
+"src/PPE/PPECompletion.ml" 189 7584 7600 "src/PPE/PPECompletion.ml" 189 7584 7610
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 175 6924 6930 "src/PPE/PPECompletion.ml" 175 6924 6940
+)
+"src/PPE/PPECompletion.ml" 189 7584 7611 "src/PPE/PPECompletion.ml" 189 7584 7614
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 188 7526 7568 "src/PPE/PPECompletion.ml" 188 7526 7571
+)
+"src/PPE/PPECompletion.ml" 189 7584 7600 "src/PPE/PPECompletion.ml" 189 7584 7614
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 190 7618 7625 "src/PPE/PPECompletion.ml" 190 7618 7633
+type(
+  Srep.elt -> Srep.t -> bool
+)
+ident(
+  ext_ref Srep.mem
+)
+"src/PPE/PPECompletion.ml" 190 7618 7634 "src/PPE/PPECompletion.ml" 190 7618 7636
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 188 7526 7537 "src/PPE/PPECompletion.ml" 188 7526 7539
+)
+"src/PPE/PPECompletion.ml" 190 7618 7637 "src/PPE/PPECompletion.ml" 190 7618 7642
+type(
+  Srep.t
+)
+ident(
+  int_ref known "src/PPE/PPECompletion.ml" 189 7584 7592 "src/PPE/PPECompletion.ml" 189 7584 7597
+)
+"src/PPE/PPECompletion.ml" 190 7618 7625 "src/PPE/PPECompletion.ml" 190 7618 7642
+call(
+  stack
+)
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 190 7618 7648 "src/PPE/PPECompletion.ml" 190 7618 7650
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 192 7662 7668 "src/PPE/PPECompletion.ml" 192 7662 7675
+type(
+  bool ref
+)
+ident(
+  int_ref changed "src/PPE/PPECompletion.ml" 187 7497 7503 "src/PPE/PPECompletion.ml" 187 7497 7510
+)
+"src/PPE/PPECompletion.ml" 192 7662 7676 "src/PPE/PPECompletion.ml" 192 7662 7678
+type(
+  bool ref -> bool -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 192 7662 7679 "src/PPE/PPECompletion.ml" 192 7662 7683
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 192 7662 7668 "src/PPE/PPECompletion.ml" 192 7662 7683
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 193 7685 7691 "src/PPE/PPECompletion.ml" 193 7685 7698
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 173 6859 6865 "src/PPE/PPECompletion.ml" 173 6859 6872
+)
+"src/PPE/PPECompletion.ml" 193 7685 7699 "src/PPE/PPECompletion.ml" 193 7685 7701
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 193 7685 7702 "src/PPE/PPECompletion.ml" 193 7685 7714
+type(
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+ident(
+  int_ref srep_add_set "src/PPE/PPECompletion.ml" 75 2929 2933 "src/PPE/PPECompletion.ml" 75 2929 2945
+)
+"src/PPE/PPECompletion.ml" 193 7685 7715 "src/PPE/PPECompletion.ml" 193 7685 7718
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 188 7526 7568 "src/PPE/PPECompletion.ml" 188 7526 7571
+)
+"src/PPE/PPECompletion.ml" 193 7685 7719 "src/PPE/PPECompletion.ml" 193 7685 7721
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 188 7526 7537 "src/PPE/PPECompletion.ml" 188 7526 7539
+)
+"src/PPE/PPECompletion.ml" 193 7685 7722 "src/PPE/PPECompletion.ml" 193 7685 7723
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 193 7685 7723 "src/PPE/PPECompletion.ml" 193 7685 7730
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 173 6859 6865 "src/PPE/PPECompletion.ml" 173 6859 6872
+)
+"src/PPE/PPECompletion.ml" 193 7685 7722 "src/PPE/PPECompletion.ml" 193 7685 7730
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 193 7685 7702 "src/PPE/PPECompletion.ml" 193 7685 7730
+call(
+  stack
+)
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 193 7685 7691 "src/PPE/PPECompletion.ml" 193 7685 7730
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 194 7732 7738 "src/PPE/PPECompletion.ml" 194 7732 7747
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 180 7163 7169 "src/PPE/PPECompletion.ml" 180 7163 7178
+)
+"src/PPE/PPECompletion.ml" 194 7732 7748 "src/PPE/PPECompletion.ml" 194 7732 7750
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 194 7732 7751 "src/PPE/PPECompletion.ml" 194 7732 7759
+type(
+  Mrep.key ->
+  PPEInput.recipe -> PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.add
+)
+"src/PPE/PPECompletion.ml" 194 7732 7761 "src/PPE/PPECompletion.ml" 194 7732 7764
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 188 7526 7568 "src/PPE/PPECompletion.ml" 188 7526 7571
+)
+"src/PPE/PPECompletion.ml" 194 7732 7765 "src/PPE/PPECompletion.ml" 194 7732 7767
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 188 7526 7537 "src/PPE/PPECompletion.ml" 188 7526 7539
+)
+"src/PPE/PPECompletion.ml" 194 7732 7760 "src/PPE/PPECompletion.ml" 194 7732 7768
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 194 7732 7769 "src/PPE/PPECompletion.ml" 194 7732 7775
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recipe "src/PPE/PPECompletion.ml" 188 7526 7550 "src/PPE/PPECompletion.ml" 188 7526 7556
+)
+"src/PPE/PPECompletion.ml" 194 7732 7776 "src/PPE/PPECompletion.ml" 194 7732 7777
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 194 7732 7777 "src/PPE/PPECompletion.ml" 194 7732 7786
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 180 7163 7169 "src/PPE/PPECompletion.ml" 180 7163 7178
+)
+"src/PPE/PPECompletion.ml" 194 7732 7776 "src/PPE/PPECompletion.ml" 194 7732 7786
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 194 7732 7751 "src/PPE/PPECompletion.ml" 194 7732 7786
+call(
+  stack
+)
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 194 7732 7738 "src/PPE/PPECompletion.ml" 194 7732 7786
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 193 7685 7691 "src/PPE/PPECompletion.ml" 194 7732 7786
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 191 7651 7660 "src/PPE/PPECompletion.ml" 195 7787 7792
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 190 7618 7622 "src/PPE/PPECompletion.ml" 195 7787 7792
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 189 7584 7588 "src/PPE/PPECompletion.ml" 195 7787 7792
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 198 7799 7805 "src/PPE/PPECompletion.ml" 198 7799 7809
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  def add2 "src/PPE/PPECompletion.ml" 211 8290 8292 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 198 7799 7811 "src/PPE/PPECompletion.ml" 198 7799 7813
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 198 7799 7823 "src/PPE/PPECompletion.ml" 205 8066 8071
+)
+"src/PPE/PPECompletion.ml" 198 7799 7824 "src/PPE/PPECompletion.ml" 198 7799 7830
+type(
+  PPEInput.recipe
+)
+ident(
+  def recipe "src/PPE/PPECompletion.ml" 198 7799 7841 "src/PPE/PPECompletion.ml" 205 8066 8071
+)
+"src/PPE/PPECompletion.ml" 198 7799 7842 "src/PPE/PPECompletion.ml" 198 7799 7845
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 199 7858 7862 "src/PPE/PPECompletion.ml" 205 8066 8071
+)
+"src/PPE/PPECompletion.ml" 199 7858 7866 "src/PPE/PPECompletion.ml" 199 7858 7871
+type(
+  Srep.t
+)
+ident(
+  def known "src/PPE/PPECompletion.ml" 200 7893 7897 "src/PPE/PPECompletion.ml" 205 8066 8071
+)
+"src/PPE/PPECompletion.ml" 199 7858 7874 "src/PPE/PPECompletion.ml" 199 7858 7885
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known2 "src/PPE/PPECompletion.ml" 176 7004 7010 "src/PPE/PPECompletion.ml" 176 7004 7021
+)
+"src/PPE/PPECompletion.ml" 199 7858 7886 "src/PPE/PPECompletion.ml" 199 7858 7889
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 198 7799 7842 "src/PPE/PPECompletion.ml" 198 7799 7845
+)
+"src/PPE/PPECompletion.ml" 199 7858 7874 "src/PPE/PPECompletion.ml" 199 7858 7889
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 200 7893 7900 "src/PPE/PPECompletion.ml" 200 7893 7908
+type(
+  Srep.elt -> Srep.t -> bool
+)
+ident(
+  ext_ref Srep.mem
+)
+"src/PPE/PPECompletion.ml" 200 7893 7909 "src/PPE/PPECompletion.ml" 200 7893 7911
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 198 7799 7811 "src/PPE/PPECompletion.ml" 198 7799 7813
+)
+"src/PPE/PPECompletion.ml" 200 7893 7912 "src/PPE/PPECompletion.ml" 200 7893 7917
+type(
+  Srep.t
+)
+ident(
+  int_ref known "src/PPE/PPECompletion.ml" 199 7858 7866 "src/PPE/PPECompletion.ml" 199 7858 7871
+)
+"src/PPE/PPECompletion.ml" 200 7893 7900 "src/PPE/PPECompletion.ml" 200 7893 7917
+call(
+  stack
+)
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 200 7893 7923 "src/PPE/PPECompletion.ml" 200 7893 7925
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 202 7937 7943 "src/PPE/PPECompletion.ml" 202 7937 7950
+type(
+  bool ref
+)
+ident(
+  int_ref changed "src/PPE/PPECompletion.ml" 187 7497 7503 "src/PPE/PPECompletion.ml" 187 7497 7510
+)
+"src/PPE/PPECompletion.ml" 202 7937 7951 "src/PPE/PPECompletion.ml" 202 7937 7953
+type(
+  bool ref -> bool -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 202 7937 7954 "src/PPE/PPECompletion.ml" 202 7937 7958
+type(
+  bool
+)
+"src/PPE/PPECompletion.ml" 202 7937 7943 "src/PPE/PPECompletion.ml" 202 7937 7958
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 203 7960 7966 "src/PPE/PPECompletion.ml" 203 7960 7974
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known2 "src/PPE/PPECompletion.ml" 174 6891 6897 "src/PPE/PPECompletion.ml" 174 6891 6905
+)
+"src/PPE/PPECompletion.ml" 203 7960 7975 "src/PPE/PPECompletion.ml" 203 7960 7977
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 203 7960 7978 "src/PPE/PPECompletion.ml" 203 7960 7990
+type(
+  Util.Ms.key -> Srep.elt -> Srep.t Util.Ms.t -> Srep.t Util.Ms.t
+)
+ident(
+  int_ref srep_add_set "src/PPE/PPECompletion.ml" 75 2929 2933 "src/PPE/PPECompletion.ml" 75 2929 2945
+)
+"src/PPE/PPECompletion.ml" 203 7960 7991 "src/PPE/PPECompletion.ml" 203 7960 7994
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 198 7799 7842 "src/PPE/PPECompletion.ml" 198 7799 7845
+)
+"src/PPE/PPECompletion.ml" 203 7960 7995 "src/PPE/PPECompletion.ml" 203 7960 7997
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 198 7799 7811 "src/PPE/PPECompletion.ml" 198 7799 7813
+)
+"src/PPE/PPECompletion.ml" 203 7960 7998 "src/PPE/PPECompletion.ml" 203 7960 7999
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 203 7960 7999 "src/PPE/PPECompletion.ml" 203 7960 8007
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known2 "src/PPE/PPECompletion.ml" 174 6891 6897 "src/PPE/PPECompletion.ml" 174 6891 6905
+)
+"src/PPE/PPECompletion.ml" 203 7960 7998 "src/PPE/PPECompletion.ml" 203 7960 8007
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 203 7960 7978 "src/PPE/PPECompletion.ml" 203 7960 8007
+call(
+  stack
+)
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 203 7960 7966 "src/PPE/PPECompletion.ml" 203 7960 8007
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 204 8009 8015 "src/PPE/PPECompletion.ml" 204 8009 8025
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes2 "src/PPE/PPECompletion.ml" 181 7199 7205 "src/PPE/PPECompletion.ml" 181 7199 7215
+)
+"src/PPE/PPECompletion.ml" 204 8009 8026 "src/PPE/PPECompletion.ml" 204 8009 8028
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 204 8009 8029 "src/PPE/PPECompletion.ml" 204 8009 8037
+type(
+  Mrep.key ->
+  PPEInput.recipe -> PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.add
+)
+"src/PPE/PPECompletion.ml" 204 8009 8039 "src/PPE/PPECompletion.ml" 204 8009 8042
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 198 7799 7842 "src/PPE/PPECompletion.ml" 198 7799 7845
+)
+"src/PPE/PPECompletion.ml" 204 8009 8043 "src/PPE/PPECompletion.ml" 204 8009 8045
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 198 7799 7811 "src/PPE/PPECompletion.ml" 198 7799 7813
+)
+"src/PPE/PPECompletion.ml" 204 8009 8038 "src/PPE/PPECompletion.ml" 204 8009 8046
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 204 8009 8047 "src/PPE/PPECompletion.ml" 204 8009 8053
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref recipe "src/PPE/PPECompletion.ml" 198 7799 7824 "src/PPE/PPECompletion.ml" 198 7799 7830
+)
+"src/PPE/PPECompletion.ml" 204 8009 8054 "src/PPE/PPECompletion.ml" 204 8009 8055
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 204 8009 8055 "src/PPE/PPECompletion.ml" 204 8009 8065
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes2 "src/PPE/PPECompletion.ml" 181 7199 7205 "src/PPE/PPECompletion.ml" 181 7199 7215
+)
+"src/PPE/PPECompletion.ml" 204 8009 8054 "src/PPE/PPECompletion.ml" 204 8009 8065
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 204 8009 8029 "src/PPE/PPECompletion.ml" 204 8009 8065
+call(
+  stack
+)
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 204 8009 8015 "src/PPE/PPECompletion.ml" 204 8009 8065
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 203 7960 7966 "src/PPE/PPECompletion.ml" 204 8009 8065
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 201 7926 7935 "src/PPE/PPECompletion.ml" 205 8066 8071
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 200 7893 7897 "src/PPE/PPECompletion.ml" 205 8066 8071
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 199 7858 7862 "src/PPE/PPECompletion.ml" 205 8066 8071
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+type(
+  ReP.var ref
+)
+ident(
+  def var_counter "src/PPE/PPECompletion.ml" 212 8319 8321 "src/PPE/PPECompletion.ml" 289 11889 11939
+)
+"src/PPE/PPECompletion.ml" 211 8290 8310 "src/PPE/PPECompletion.ml" 211 8290 8313
+type(
+  ReP.var -> ReP.var ref
+)
+ident(
+  ext_ref Pervasives.ref
+)
+"src/PPE/PPECompletion.ml" 211 8290 8314 "src/PPE/PPECompletion.ml" 211 8290 8315
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 211 8290 8310 "src/PPE/PPECompletion.ml" 211 8290 8315
+type(
+  ReP.var ref
+)
+"src/PPE/PPECompletion.ml" 212 8319 8321 "src/PPE/PPECompletion.ml" 212 8319 8327
+type(
+  (PPEInput.recipe * string -> unit) ->
+  (PPEInput.recipe * string) list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 213 8328 8338 "src/PPE/PPECompletion.ml" 213 8328 8347
+type(
+  PPEInput.recipe
+)
+ident(
+  def inprecipe "src/PPE/PPECompletion.ml" 213 8328 8356 "src/PPE/PPECompletion.ml" 213 8328 8429
+)
+"src/PPE/PPECompletion.ml" 213 8328 8348 "src/PPE/PPECompletion.ml" 213 8328 8351
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 213 8328 8356 "src/PPE/PPECompletion.ml" 213 8328 8429
+)
+"src/PPE/PPECompletion.ml" 213 8328 8337 "src/PPE/PPECompletion.ml" 213 8328 8352
+type(
+  PPEInput.recipe * string
+)
+"src/PPE/PPECompletion.ml" 213 8328 8356 "src/PPE/PPECompletion.ml" 213 8328 8359
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 188 7526 7532 "src/PPE/PPECompletion.ml" 188 7526 7535
+)
+"src/PPE/PPECompletion.ml" 213 8328 8361 "src/PPE/PPECompletion.ml" 213 8328 8368
+type(
+  ReP.var -> ReP.t
+)
+ident(
+  ext_ref ReP.var
+)
+"src/PPE/PPECompletion.ml" 213 8328 8369 "src/PPE/PPECompletion.ml" 213 8328 8370
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 213 8328 8370 "src/PPE/PPECompletion.ml" 213 8328 8381
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 213 8328 8369 "src/PPE/PPECompletion.ml" 213 8328 8381
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 213 8328 8360 "src/PPE/PPECompletion.ml" 213 8328 8382
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 213 8328 8383 "src/PPE/PPECompletion.ml" 213 8328 8392
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref inprecipe "src/PPE/PPECompletion.ml" 213 8328 8338 "src/PPE/PPECompletion.ml" 213 8328 8347
+)
+"src/PPE/PPECompletion.ml" 213 8328 8393 "src/PPE/PPECompletion.ml" 213 8328 8396
+type(
+  string
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 213 8328 8348 "src/PPE/PPECompletion.ml" 213 8328 8351
+)
+"src/PPE/PPECompletion.ml" 213 8328 8356 "src/PPE/PPECompletion.ml" 213 8328 8396
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 213 8328 8398 "src/PPE/PPECompletion.ml" 213 8328 8409
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 213 8328 8410 "src/PPE/PPECompletion.ml" 213 8328 8412
+type(
+  ReP.var ref -> ReP.var -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 213 8328 8413 "src/PPE/PPECompletion.ml" 213 8328 8414
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 213 8328 8414 "src/PPE/PPECompletion.ml" 213 8328 8425
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 213 8328 8413 "src/PPE/PPECompletion.ml" 213 8328 8425
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 213 8328 8426 "src/PPE/PPECompletion.ml" 213 8328 8427
+type(
+  ReP.var -> int -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( + )
+)
+"src/PPE/PPECompletion.ml" 213 8328 8428 "src/PPE/PPECompletion.ml" 213 8328 8429
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 213 8328 8413 "src/PPE/PPECompletion.ml" 213 8328 8429
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 213 8328 8398 "src/PPE/PPECompletion.ml" 213 8328 8429
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 213 8328 8356 "src/PPE/PPECompletion.ml" 213 8328 8429
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 213 8328 8332 "src/PPE/PPECompletion.ml" 213 8328 8430
+type(
+  PPEInput.recipe * string -> unit
+)
+"src/PPE/PPECompletion.ml" 213 8328 8431 "src/PPE/PPECompletion.ml" 213 8328 8440
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  int_ref inp_gids1 "src/PPE/PPECompletion.ml" 170 6736 6765 "src/PPE/PPECompletion.ml" 170 6736 6774
+)
+"src/PPE/PPECompletion.ml" 212 8319 8321 "src/PPE/PPECompletion.ml" 213 8328 8440
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 214 8442 8444 "src/PPE/PPECompletion.ml" 214 8442 8450
+type(
+  (PPEInput.recipe * string -> unit) ->
+  (PPEInput.recipe * string) list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 215 8451 8461 "src/PPE/PPECompletion.ml" 215 8451 8470
+type(
+  PPEInput.recipe
+)
+ident(
+  def inprecipe "src/PPE/PPECompletion.ml" 215 8451 8479 "src/PPE/PPECompletion.ml" 215 8451 8553
+)
+"src/PPE/PPECompletion.ml" 215 8451 8471 "src/PPE/PPECompletion.ml" 215 8451 8474
+type(
+  string
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 215 8451 8479 "src/PPE/PPECompletion.ml" 215 8451 8553
+)
+"src/PPE/PPECompletion.ml" 215 8451 8460 "src/PPE/PPECompletion.ml" 215 8451 8475
+type(
+  PPEInput.recipe * string
+)
+"src/PPE/PPECompletion.ml" 215 8451 8479 "src/PPE/PPECompletion.ml" 215 8451 8483
+type(
+  ReP.t -> PPEInput.recipe -> string -> unit
+)
+ident(
+  int_ref add2 "src/PPE/PPECompletion.ml" 198 7799 7805 "src/PPE/PPECompletion.ml" 198 7799 7809
+)
+"src/PPE/PPECompletion.ml" 215 8451 8485 "src/PPE/PPECompletion.ml" 215 8451 8492
+type(
+  ReP.var -> ReP.t
+)
+ident(
+  ext_ref ReP.var
+)
+"src/PPE/PPECompletion.ml" 215 8451 8493 "src/PPE/PPECompletion.ml" 215 8451 8494
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 215 8451 8494 "src/PPE/PPECompletion.ml" 215 8451 8505
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 215 8451 8493 "src/PPE/PPECompletion.ml" 215 8451 8505
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 215 8451 8484 "src/PPE/PPECompletion.ml" 215 8451 8506
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 215 8451 8507 "src/PPE/PPECompletion.ml" 215 8451 8516
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref inprecipe "src/PPE/PPECompletion.ml" 215 8451 8461 "src/PPE/PPECompletion.ml" 215 8451 8470
+)
+"src/PPE/PPECompletion.ml" 215 8451 8517 "src/PPE/PPECompletion.ml" 215 8451 8520
+type(
+  string
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 215 8451 8471 "src/PPE/PPECompletion.ml" 215 8451 8474
+)
+"src/PPE/PPECompletion.ml" 215 8451 8479 "src/PPE/PPECompletion.ml" 215 8451 8520
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 215 8451 8522 "src/PPE/PPECompletion.ml" 215 8451 8533
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 215 8451 8534 "src/PPE/PPECompletion.ml" 215 8451 8536
+type(
+  ReP.var ref -> ReP.var -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 215 8451 8537 "src/PPE/PPECompletion.ml" 215 8451 8538
+type(
+  ReP.var ref -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 215 8451 8538 "src/PPE/PPECompletion.ml" 215 8451 8549
+type(
+  ReP.var ref
+)
+ident(
+  int_ref var_counter "src/PPE/PPECompletion.ml" 211 8290 8296 "src/PPE/PPECompletion.ml" 211 8290 8307
+)
+"src/PPE/PPECompletion.ml" 215 8451 8537 "src/PPE/PPECompletion.ml" 215 8451 8549
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 215 8451 8550 "src/PPE/PPECompletion.ml" 215 8451 8551
+type(
+  ReP.var -> int -> ReP.var
+)
+ident(
+  ext_ref Pervasives.( + )
+)
+"src/PPE/PPECompletion.ml" 215 8451 8552 "src/PPE/PPECompletion.ml" 215 8451 8553
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 215 8451 8537 "src/PPE/PPECompletion.ml" 215 8451 8553
+type(
+  ReP.var
+)
+"src/PPE/PPECompletion.ml" 215 8451 8522 "src/PPE/PPECompletion.ml" 215 8451 8553
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 215 8451 8479 "src/PPE/PPECompletion.ml" 215 8451 8553
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 215 8451 8455 "src/PPE/PPECompletion.ml" 215 8451 8554
+type(
+  PPEInput.recipe * string -> unit
+)
+"src/PPE/PPECompletion.ml" 215 8451 8555 "src/PPE/PPECompletion.ml" 215 8451 8564
+type(
+  (PPEInput.recipe * string) list
+)
+ident(
+  int_ref inp_gids2 "src/PPE/PPECompletion.ml" 170 6736 6775 "src/PPE/PPECompletion.ml" 170 6736 6784
+)
+"src/PPE/PPECompletion.ml" 214 8442 8444 "src/PPE/PPECompletion.ml" 215 8451 8564
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 226 9018 9022 "src/PPE/PPECompletion.ml" 226 9018 9028
+type(
+  (PPEInput.iso -> unit) -> PPEInput.iso list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 227 9029 9040 "src/PPE/PPECompletion.ml" 227 9029 9041
+type(
+  PPEInput.iso
+)
+ident(
+  def i "src/PPE/PPECompletion.ml" 228 9045 9054 "src/PPE/PPECompletion.ml" 231 9178 9205
+)
+"src/PPE/PPECompletion.ml" 228 9045 9058 "src/PPE/PPECompletion.ml" 228 9045 9061
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 229 9096 9105 "src/PPE/PPECompletion.ml" 231 9178 9205
+)
+"src/PPE/PPECompletion.ml" 228 9045 9063 "src/PPE/PPECompletion.ml" 228 9045 9067
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 229 9096 9105 "src/PPE/PPECompletion.ml" 231 9178 9205
+)
+"src/PPE/PPECompletion.ml" 228 9045 9058 "src/PPE/PPECompletion.ml" 228 9045 9067
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 228 9045 9070 "src/PPE/PPECompletion.ml" 228 9045 9071
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 227 9029 9040 "src/PPE/PPECompletion.ml" 227 9029 9041
+)
+"src/PPE/PPECompletion.ml" 228 9045 9070 "src/PPE/PPECompletion.ml" 228 9045 9079
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 228 9045 9081 "src/PPE/PPECompletion.ml" 228 9045 9082
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 227 9029 9040 "src/PPE/PPECompletion.ml" 227 9029 9041
+)
+"src/PPE/PPECompletion.ml" 228 9045 9081 "src/PPE/PPECompletion.ml" 228 9045 9092
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 228 9045 9070 "src/PPE/PPECompletion.ml" 228 9045 9092
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 229 9096 9105 "src/PPE/PPECompletion.ml" 229 9096 9114
+type(
+  (Srep.elt -> unit) -> Srep.t -> unit
+)
+ident(
+  ext_ref Srep.iter
+)
+"src/PPE/PPECompletion.ml" 230 9115 9131 "src/PPE/PPECompletion.ml" 230 9115 9133
+type(
+  Srep.elt
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 230 9115 9137 "src/PPE/PPECompletion.ml" 230 9115 9176
+)
+"src/PPE/PPECompletion.ml" 230 9115 9137 "src/PPE/PPECompletion.ml" 230 9115 9140
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 188 7526 7532 "src/PPE/PPECompletion.ml" 188 7526 7535
+)
+"src/PPE/PPECompletion.ml" 230 9115 9141 "src/PPE/PPECompletion.ml" 230 9115 9143
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 230 9115 9131 "src/PPE/PPECompletion.ml" 230 9115 9133
+)
+"src/PPE/PPECompletion.ml" 230 9115 9149 "src/PPE/PPECompletion.ml" 230 9115 9150
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 227 9029 9040 "src/PPE/PPECompletion.ml" 227 9029 9041
+)
+"src/PPE/PPECompletion.ml" 230 9115 9151 "src/PPE/PPECompletion.ml" 230 9115 9162
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 182 7236 7242 "src/PPE/PPECompletion.ml" 182 7236 7253
+)
+"src/PPE/PPECompletion.ml" 230 9115 9163 "src/PPE/PPECompletion.ml" 230 9115 9166
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 228 9045 9058 "src/PPE/PPECompletion.ml" 228 9045 9061
+)
+"src/PPE/PPECompletion.ml" 230 9115 9167 "src/PPE/PPECompletion.ml" 230 9115 9169
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 230 9115 9131 "src/PPE/PPECompletion.ml" 230 9115 9133
+)
+"src/PPE/PPECompletion.ml" 230 9115 9151 "src/PPE/PPECompletion.ml" 230 9115 9169
+call(
+  stack
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 230 9115 9144 "src/PPE/PPECompletion.ml" 230 9115 9171
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 230 9115 9172 "src/PPE/PPECompletion.ml" 230 9115 9176
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 228 9045 9063 "src/PPE/PPECompletion.ml" 228 9045 9067
+)
+"src/PPE/PPECompletion.ml" 230 9115 9137 "src/PPE/PPECompletion.ml" 230 9115 9176
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 230 9115 9126 "src/PPE/PPECompletion.ml" 230 9115 9177
+type(
+  Srep.elt -> unit
+)
+"src/PPE/PPECompletion.ml" 231 9178 9190 "src/PPE/PPECompletion.ml" 231 9178 9200
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 175 6924 6930 "src/PPE/PPECompletion.ml" 175 6924 6940
+)
+"src/PPE/PPECompletion.ml" 231 9178 9201 "src/PPE/PPECompletion.ml" 231 9178 9204
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 228 9045 9058 "src/PPE/PPECompletion.ml" 228 9045 9061
+)
+"src/PPE/PPECompletion.ml" 231 9178 9189 "src/PPE/PPECompletion.ml" 231 9178 9205
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 229 9096 9105 "src/PPE/PPECompletion.ml" 231 9178 9205
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 228 9045 9054 "src/PPE/PPECompletion.ml" 231 9178 9205
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 227 9029 9035 "src/PPE/PPECompletion.ml" 231 9178 9206
+type(
+  PPEInput.iso -> unit
+)
+"src/PPE/PPECompletion.ml" 232 9207 9213 "src/PPE/PPECompletion.ml" 232 9207 9216
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 170 6736 6756 "src/PPE/PPECompletion.ml" 170 6736 6759
+)
+"src/PPE/PPECompletion.ml" 232 9207 9213 "src/PPE/PPECompletion.ml" 232 9207 9225
+type(
+  PPEInput.iso list
+)
+"src/PPE/PPECompletion.ml" 226 9018 9022 "src/PPE/PPECompletion.ml" 232 9207 9225
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 239 9540 9544 "src/PPE/PPECompletion.ml" 239 9540 9550
+type(
+  (PPEInput.emap -> unit) -> PPEInput.emap list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 240 9551 9562 "src/PPE/PPECompletion.ml" 240 9551 9563
+type(
+  PPEInput.emap
+)
+ident(
+  def e "src/PPE/PPECompletion.ml" 241 9567 9576 "src/PPE/PPECompletion.ml" 247 9877 9909
+)
+"src/PPE/PPECompletion.ml" 241 9567 9580 "src/PPE/PPECompletion.ml" 241 9567 9584
+type(
+  PPEInput.group_id list
+)
+ident(
+  def gids "src/PPE/PPECompletion.ml" 242 9617 9626 "src/PPE/PPECompletion.ml" 247 9877 9909
+)
+"src/PPE/PPECompletion.ml" 241 9567 9586 "src/PPE/PPECompletion.ml" 241 9567 9590
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 242 9617 9626 "src/PPE/PPECompletion.ml" 247 9877 9909
+)
+"src/PPE/PPECompletion.ml" 241 9567 9580 "src/PPE/PPECompletion.ml" 241 9567 9590
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 241 9567 9593 "src/PPE/PPECompletion.ml" 241 9567 9594
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 240 9551 9562 "src/PPE/PPECompletion.ml" 240 9551 9563
+)
+"src/PPE/PPECompletion.ml" 241 9567 9593 "src/PPE/PPECompletion.ml" 241 9567 9601
+type(
+  PPEInput.group_id list
+)
+"src/PPE/PPECompletion.ml" 241 9567 9603 "src/PPE/PPECompletion.ml" 241 9567 9604
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 240 9551 9562 "src/PPE/PPECompletion.ml" 240 9551 9563
+)
+"src/PPE/PPECompletion.ml" 241 9567 9603 "src/PPE/PPECompletion.ml" 241 9567 9613
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 241 9567 9593 "src/PPE/PPECompletion.ml" 241 9567 9613
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 242 9617 9630 "src/PPE/PPECompletion.ml" 242 9617 9639
+type(
+  Srep.elt list list
+)
+ident(
+  def known_rps "src/PPE/PPECompletion.ml" 243 9700 9709 "src/PPE/PPECompletion.ml" 247 9877 9909
+)
+"src/PPE/PPECompletion.ml" 242 9617 9642 "src/PPE/PPECompletion.ml" 242 9617 9647
+type(
+  (Util.Ms.key -> Srep.elt list) -> Util.Ms.key list -> Srep.elt list list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 242 9617 9653 "src/PPE/PPECompletion.ml" 242 9617 9656
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 242 9617 9660 "src/PPE/PPECompletion.ml" 242 9617 9690
+)
+"src/PPE/PPECompletion.ml" 242 9617 9660 "src/PPE/PPECompletion.ml" 242 9617 9673
+type(
+  Srep.t -> Srep.elt list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 242 9617 9675 "src/PPE/PPECompletion.ml" 242 9617 9685
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 175 6924 6930 "src/PPE/PPECompletion.ml" 175 6924 6940
+)
+"src/PPE/PPECompletion.ml" 242 9617 9686 "src/PPE/PPECompletion.ml" 242 9617 9689
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 242 9617 9653 "src/PPE/PPECompletion.ml" 242 9617 9656
+)
+"src/PPE/PPECompletion.ml" 242 9617 9674 "src/PPE/PPECompletion.ml" 242 9617 9690
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 242 9617 9660 "src/PPE/PPECompletion.ml" 242 9617 9690
+call(
+  tail
+)
+type(
+  Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 242 9617 9648 "src/PPE/PPECompletion.ml" 242 9617 9691
+type(
+  Util.Ms.key -> Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 242 9617 9692 "src/PPE/PPECompletion.ml" 242 9617 9696
+type(
+  Util.Ms.key list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 241 9567 9580 "src/PPE/PPECompletion.ml" 241 9567 9584
+)
+"src/PPE/PPECompletion.ml" 242 9617 9642 "src/PPE/PPECompletion.ml" 242 9617 9696
+call(
+  stack
+)
+type(
+  Srep.elt list list
+)
+"src/PPE/PPECompletion.ml" 243 9700 9709 "src/PPE/PPECompletion.ml" 243 9700 9715
+type(
+  (ReP.t list -> unit) -> ReP.t list list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 244 9716 9732 "src/PPE/PPECompletion.ml" 244 9716 9735
+type(
+  ReP.t list
+)
+ident(
+  def rps "src/PPE/PPECompletion.ml" 245 9739 9753 "src/PPE/PPECompletion.ml" 246 9820 9875
+)
+"src/PPE/PPECompletion.ml" 245 9739 9757 "src/PPE/PPECompletion.ml" 245 9739 9763
+type(
+  PPEInput.recipe list
+)
+ident(
+  def recips "src/PPE/PPECompletion.ml" 246 9820 9834 "src/PPE/PPECompletion.ml" 246 9820 9875
+)
+"src/PPE/PPECompletion.ml" 245 9739 9766 "src/PPE/PPECompletion.ml" 245 9739 9772
+type(
+  (PPEInput.group_id -> ReP.t -> PPEInput.recipe) ->
+  PPEInput.group_id list -> ReP.t list -> PPEInput.recipe list
+)
+ident(
+  ext_ref Util.L.map2
+)
+"src/PPE/PPECompletion.ml" 245 9739 9778 "src/PPE/PPECompletion.ml" 245 9739 9781
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 245 9739 9782 "src/PPE/PPECompletion.ml" 245 9739 9806
+)
+"src/PPE/PPECompletion.ml" 245 9739 9782 "src/PPE/PPECompletion.ml" 245 9739 9784
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 245 9739 9788 "src/PPE/PPECompletion.ml" 245 9739 9806
+)
+"src/PPE/PPECompletion.ml" 245 9739 9788 "src/PPE/PPECompletion.ml" 245 9739 9799
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 182 7236 7242 "src/PPE/PPECompletion.ml" 182 7236 7253
+)
+"src/PPE/PPECompletion.ml" 245 9739 9800 "src/PPE/PPECompletion.ml" 245 9739 9803
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 245 9739 9778 "src/PPE/PPECompletion.ml" 245 9739 9781
+)
+"src/PPE/PPECompletion.ml" 245 9739 9804 "src/PPE/PPECompletion.ml" 245 9739 9806
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 245 9739 9782 "src/PPE/PPECompletion.ml" 245 9739 9784
+)
+"src/PPE/PPECompletion.ml" 245 9739 9788 "src/PPE/PPECompletion.ml" 245 9739 9806
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 245 9739 9773 "src/PPE/PPECompletion.ml" 245 9739 9807
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 245 9739 9808 "src/PPE/PPECompletion.ml" 245 9739 9812
+type(
+  PPEInput.group_id list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 241 9567 9580 "src/PPE/PPECompletion.ml" 241 9567 9584
+)
+"src/PPE/PPECompletion.ml" 245 9739 9813 "src/PPE/PPECompletion.ml" 245 9739 9816
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 244 9716 9732 "src/PPE/PPECompletion.ml" 244 9716 9735
+)
+"src/PPE/PPECompletion.ml" 245 9739 9766 "src/PPE/PPECompletion.ml" 245 9739 9816
+call(
+  stack
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 246 9820 9834 "src/PPE/PPECompletion.ml" 246 9820 9837
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 188 7526 7532 "src/PPE/PPECompletion.ml" 188 7526 7535
+)
+"src/PPE/PPECompletion.ml" 246 9820 9839 "src/PPE/PPECompletion.ml" 246 9820 9848
+type(
+  ReP.t list -> ReP.t
+)
+ident(
+  ext_ref ReP.lmult
+)
+"src/PPE/PPECompletion.ml" 246 9820 9849 "src/PPE/PPECompletion.ml" 246 9820 9852
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 244 9716 9732 "src/PPE/PPECompletion.ml" 244 9716 9735
+)
+"src/PPE/PPECompletion.ml" 246 9820 9838 "src/PPE/PPECompletion.ml" 246 9820 9853
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 246 9820 9860 "src/PPE/PPECompletion.ml" 246 9820 9861
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 240 9551 9562 "src/PPE/PPECompletion.ml" 240 9551 9563
+)
+"src/PPE/PPECompletion.ml" 246 9820 9862 "src/PPE/PPECompletion.ml" 246 9820 9868
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref recips "src/PPE/PPECompletion.ml" 245 9739 9757 "src/PPE/PPECompletion.ml" 245 9739 9763
+)
+"src/PPE/PPECompletion.ml" 246 9820 9854 "src/PPE/PPECompletion.ml" 246 9820 9870
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 246 9820 9871 "src/PPE/PPECompletion.ml" 246 9820 9875
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 241 9567 9586 "src/PPE/PPECompletion.ml" 241 9567 9590
+)
+"src/PPE/PPECompletion.ml" 246 9820 9834 "src/PPE/PPECompletion.ml" 246 9820 9875
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 245 9739 9753 "src/PPE/PPECompletion.ml" 246 9820 9875
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 244 9716 9727 "src/PPE/PPECompletion.ml" 246 9820 9876
+type(
+  ReP.t list -> unit
+)
+"src/PPE/PPECompletion.ml" 247 9877 9889 "src/PPE/PPECompletion.ml" 247 9877 9898
+type(
+  Srep.elt list list -> ReP.t list list
+)
+ident(
+  ext_ref Util.cart_prod
+)
+"src/PPE/PPECompletion.ml" 247 9877 9899 "src/PPE/PPECompletion.ml" 247 9877 9908
+type(
+  Srep.elt list list
+)
+ident(
+  int_ref known_rps "src/PPE/PPECompletion.ml" 242 9617 9630 "src/PPE/PPECompletion.ml" 242 9617 9639
+)
+"src/PPE/PPECompletion.ml" 247 9877 9888 "src/PPE/PPECompletion.ml" 247 9877 9909
+call(
+  stack
+)
+type(
+  ReP.t list list
+)
+"src/PPE/PPECompletion.ml" 243 9700 9709 "src/PPE/PPECompletion.ml" 247 9877 9909
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 242 9617 9626 "src/PPE/PPECompletion.ml" 247 9877 9909
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 241 9567 9576 "src/PPE/PPECompletion.ml" 247 9877 9909
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 240 9551 9557 "src/PPE/PPECompletion.ml" 247 9877 9910
+type(
+  PPEInput.emap -> unit
+)
+"src/PPE/PPECompletion.ml" 248 9911 9917 "src/PPE/PPECompletion.ml" 248 9911 9920
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 170 6736 6756 "src/PPE/PPECompletion.ml" 170 6736 6759
+)
+"src/PPE/PPECompletion.ml" 248 9911 9917 "src/PPE/PPECompletion.ml" 248 9911 9930
+type(
+  PPEInput.emap list
+)
+"src/PPE/PPECompletion.ml" 239 9540 9544 "src/PPE/PPECompletion.ml" 248 9911 9930
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 253 10025 10029 "src/PPE/PPECompletion.ml" 253 10025 10035
+type(
+  (PPEInput.iso -> unit) -> PPEInput.iso list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 254 10036 10047 "src/PPE/PPECompletion.ml" 254 10036 10048
+type(
+  PPEInput.iso
+)
+ident(
+  def i "src/PPE/PPECompletion.ml" 255 10052 10061 "src/PPE/PPECompletion.ml" 258 10187 10215
+)
+"src/PPE/PPECompletion.ml" 255 10052 10065 "src/PPE/PPECompletion.ml" 255 10052 10068
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 256 10103 10112 "src/PPE/PPECompletion.ml" 258 10187 10215
+)
+"src/PPE/PPECompletion.ml" 255 10052 10070 "src/PPE/PPECompletion.ml" 255 10052 10074
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 256 10103 10112 "src/PPE/PPECompletion.ml" 258 10187 10215
+)
+"src/PPE/PPECompletion.ml" 255 10052 10065 "src/PPE/PPECompletion.ml" 255 10052 10074
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 255 10052 10077 "src/PPE/PPECompletion.ml" 255 10052 10078
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 254 10036 10047 "src/PPE/PPECompletion.ml" 254 10036 10048
+)
+"src/PPE/PPECompletion.ml" 255 10052 10077 "src/PPE/PPECompletion.ml" 255 10052 10086
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 255 10052 10088 "src/PPE/PPECompletion.ml" 255 10052 10089
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 254 10036 10047 "src/PPE/PPECompletion.ml" 254 10036 10048
+)
+"src/PPE/PPECompletion.ml" 255 10052 10088 "src/PPE/PPECompletion.ml" 255 10052 10099
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 255 10052 10077 "src/PPE/PPECompletion.ml" 255 10052 10099
+type(
+  PPEInput.group_id * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 256 10103 10112 "src/PPE/PPECompletion.ml" 256 10103 10121
+type(
+  (Srep.elt -> unit) -> Srep.t -> unit
+)
+ident(
+  ext_ref Srep.iter
+)
+"src/PPE/PPECompletion.ml" 257 10122 10138 "src/PPE/PPECompletion.ml" 257 10122 10140
+type(
+  Srep.elt
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 257 10122 10144 "src/PPE/PPECompletion.ml" 257 10122 10185
+)
+"src/PPE/PPECompletion.ml" 257 10122 10144 "src/PPE/PPECompletion.ml" 257 10122 10148
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add2 "src/PPE/PPECompletion.ml" 198 7799 7805 "src/PPE/PPECompletion.ml" 198 7799 7809
+)
+"src/PPE/PPECompletion.ml" 257 10122 10149 "src/PPE/PPECompletion.ml" 257 10122 10151
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 257 10122 10138 "src/PPE/PPECompletion.ml" 257 10122 10140
+)
+"src/PPE/PPECompletion.ml" 257 10122 10157 "src/PPE/PPECompletion.ml" 257 10122 10158
+type(
+  PPEInput.iso
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 254 10036 10047 "src/PPE/PPECompletion.ml" 254 10036 10048
+)
+"src/PPE/PPECompletion.ml" 257 10122 10159 "src/PPE/PPECompletion.ml" 257 10122 10171
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe2 "src/PPE/PPECompletion.ml" 183 7296 7302 "src/PPE/PPECompletion.ml" 183 7296 7314
+)
+"src/PPE/PPECompletion.ml" 257 10122 10172 "src/PPE/PPECompletion.ml" 257 10122 10175
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 255 10052 10065 "src/PPE/PPECompletion.ml" 255 10052 10068
+)
+"src/PPE/PPECompletion.ml" 257 10122 10176 "src/PPE/PPECompletion.ml" 257 10122 10178
+type(
+  Srep.elt
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 257 10122 10138 "src/PPE/PPECompletion.ml" 257 10122 10140
+)
+"src/PPE/PPECompletion.ml" 257 10122 10159 "src/PPE/PPECompletion.ml" 257 10122 10178
+call(
+  stack
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 257 10122 10152 "src/PPE/PPECompletion.ml" 257 10122 10180
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 257 10122 10181 "src/PPE/PPECompletion.ml" 257 10122 10185
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 255 10052 10070 "src/PPE/PPECompletion.ml" 255 10052 10074
+)
+"src/PPE/PPECompletion.ml" 257 10122 10144 "src/PPE/PPECompletion.ml" 257 10122 10185
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 257 10122 10133 "src/PPE/PPECompletion.ml" 257 10122 10186
+type(
+  Srep.elt -> unit
+)
+"src/PPE/PPECompletion.ml" 258 10187 10199 "src/PPE/PPECompletion.ml" 258 10187 10210
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known2 "src/PPE/PPECompletion.ml" 176 7004 7010 "src/PPE/PPECompletion.ml" 176 7004 7021
+)
+"src/PPE/PPECompletion.ml" 258 10187 10211 "src/PPE/PPECompletion.ml" 258 10187 10214
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 255 10052 10065 "src/PPE/PPECompletion.ml" 255 10052 10068
+)
+"src/PPE/PPECompletion.ml" 258 10187 10198 "src/PPE/PPECompletion.ml" 258 10187 10215
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 256 10103 10112 "src/PPE/PPECompletion.ml" 258 10187 10215
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 255 10052 10061 "src/PPE/PPECompletion.ml" 258 10187 10215
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 254 10036 10042 "src/PPE/PPECompletion.ml" 258 10187 10216
+type(
+  PPEInput.iso -> unit
+)
+"src/PPE/PPECompletion.ml" 259 10217 10223 "src/PPE/PPECompletion.ml" 259 10217 10226
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 170 6736 6756 "src/PPE/PPECompletion.ml" 170 6736 6759
+)
+"src/PPE/PPECompletion.ml" 259 10217 10223 "src/PPE/PPECompletion.ml" 259 10217 10235
+type(
+  PPEInput.iso list
+)
+"src/PPE/PPECompletion.ml" 253 10025 10029 "src/PPE/PPECompletion.ml" 259 10217 10235
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 262 10239 10243 "src/PPE/PPECompletion.ml" 262 10239 10249
+type(
+  (PPEInput.emap -> unit) -> PPEInput.emap list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 263 10250 10261 "src/PPE/PPECompletion.ml" 263 10250 10262
+type(
+  PPEInput.emap
+)
+ident(
+  def e "src/PPE/PPECompletion.ml" 264 10266 10275 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 264 10266 10279 "src/PPE/PPECompletion.ml" 264 10266 10283
+type(
+  PPEInput.group_id list
+)
+ident(
+  def gids "src/PPE/PPECompletion.ml" 265 10316 10325 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 264 10266 10285 "src/PPE/PPECompletion.ml" 264 10266 10289
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid' "src/PPE/PPECompletion.ml" 265 10316 10325 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 264 10266 10279 "src/PPE/PPECompletion.ml" 264 10266 10289
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 264 10266 10292 "src/PPE/PPECompletion.ml" 264 10266 10293
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 263 10250 10261 "src/PPE/PPECompletion.ml" 263 10250 10262
+)
+"src/PPE/PPECompletion.ml" 264 10266 10292 "src/PPE/PPECompletion.ml" 264 10266 10300
+type(
+  PPEInput.group_id list
+)
+"src/PPE/PPECompletion.ml" 264 10266 10302 "src/PPE/PPECompletion.ml" 264 10266 10303
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 263 10250 10261 "src/PPE/PPECompletion.ml" 263 10250 10262
+)
+"src/PPE/PPECompletion.ml" 264 10266 10302 "src/PPE/PPECompletion.ml" 264 10266 10312
+type(
+  PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 264 10266 10292 "src/PPE/PPECompletion.ml" 264 10266 10312
+type(
+  PPEInput.group_id list * PPEInput.group_id
+)
+"src/PPE/PPECompletion.ml" 265 10316 10329 "src/PPE/PPECompletion.ml" 265 10316 10339
+type(
+  Srep.elt list list
+)
+ident(
+  def known_rps1 "src/PPE/PPECompletion.ml" 266 10400 10409 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 265 10316 10342 "src/PPE/PPECompletion.ml" 265 10316 10347
+type(
+  (Util.Ms.key -> Srep.elt list) -> Util.Ms.key list -> Srep.elt list list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 265 10316 10353 "src/PPE/PPECompletion.ml" 265 10316 10356
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 265 10316 10360 "src/PPE/PPECompletion.ml" 265 10316 10390
+)
+"src/PPE/PPECompletion.ml" 265 10316 10360 "src/PPE/PPECompletion.ml" 265 10316 10373
+type(
+  Srep.t -> Srep.elt list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 265 10316 10375 "src/PPE/PPECompletion.ml" 265 10316 10385
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known "src/PPE/PPECompletion.ml" 175 6924 6930 "src/PPE/PPECompletion.ml" 175 6924 6940
+)
+"src/PPE/PPECompletion.ml" 265 10316 10386 "src/PPE/PPECompletion.ml" 265 10316 10389
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 265 10316 10353 "src/PPE/PPECompletion.ml" 265 10316 10356
+)
+"src/PPE/PPECompletion.ml" 265 10316 10374 "src/PPE/PPECompletion.ml" 265 10316 10390
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 265 10316 10360 "src/PPE/PPECompletion.ml" 265 10316 10390
+call(
+  tail
+)
+type(
+  Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 265 10316 10348 "src/PPE/PPECompletion.ml" 265 10316 10391
+type(
+  Util.Ms.key -> Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 265 10316 10392 "src/PPE/PPECompletion.ml" 265 10316 10396
+type(
+  Util.Ms.key list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 264 10266 10279 "src/PPE/PPECompletion.ml" 264 10266 10283
+)
+"src/PPE/PPECompletion.ml" 265 10316 10342 "src/PPE/PPECompletion.ml" 265 10316 10396
+call(
+  stack
+)
+type(
+  Srep.elt list list
+)
+"src/PPE/PPECompletion.ml" 266 10400 10413 "src/PPE/PPECompletion.ml" 266 10400 10423
+type(
+  Srep.elt list list
+)
+ident(
+  def known_rps2 "src/PPE/PPECompletion.ml" 268 10692 10701 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 266 10400 10426 "src/PPE/PPECompletion.ml" 266 10400 10431
+type(
+  (Util.Ms.key -> Srep.elt list) -> Util.Ms.key list -> Srep.elt list list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 266 10400 10437 "src/PPE/PPECompletion.ml" 266 10400 10440
+type(
+  Util.Ms.key
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 266 10400 10444 "src/PPE/PPECompletion.ml" 266 10400 10475
+)
+"src/PPE/PPECompletion.ml" 266 10400 10444 "src/PPE/PPECompletion.ml" 266 10400 10457
+type(
+  Srep.t -> Srep.elt list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 266 10400 10459 "src/PPE/PPECompletion.ml" 266 10400 10470
+type(
+  Util.Ms.key -> Srep.t
+)
+ident(
+  int_ref find_known2 "src/PPE/PPECompletion.ml" 176 7004 7010 "src/PPE/PPECompletion.ml" 176 7004 7021
+)
+"src/PPE/PPECompletion.ml" 266 10400 10471 "src/PPE/PPECompletion.ml" 266 10400 10474
+type(
+  Util.Ms.key
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 266 10400 10437 "src/PPE/PPECompletion.ml" 266 10400 10440
+)
+"src/PPE/PPECompletion.ml" 266 10400 10458 "src/PPE/PPECompletion.ml" 266 10400 10475
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 266 10400 10444 "src/PPE/PPECompletion.ml" 266 10400 10475
+call(
+  tail
+)
+type(
+  Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 266 10400 10432 "src/PPE/PPECompletion.ml" 266 10400 10476
+type(
+  Util.Ms.key -> Srep.elt list
+)
+"src/PPE/PPECompletion.ml" 266 10400 10477 "src/PPE/PPECompletion.ml" 266 10400 10481
+type(
+  Util.Ms.key list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 264 10266 10279 "src/PPE/PPECompletion.ml" 264 10266 10283
+)
+"src/PPE/PPECompletion.ml" 266 10400 10426 "src/PPE/PPECompletion.ml" 266 10400 10481
+call(
+  stack
+)
+type(
+  Srep.elt list list
+)
+"src/PPE/PPECompletion.ml" 268 10692 10705 "src/PPE/PPECompletion.ml" 268 10692 10711
+type(
+  Srep.elt list list
+)
+ident(
+  def tuples "src/PPE/PPECompletion.ml" 270 10866 10875 "src/PPE/PPECompletion.ml" 280 11571 11588
+)
+"src/PPE/PPECompletion.ml" 268 10692 10715 "src/PPE/PPECompletion.ml" 268 10692 10725
+type(
+  Srep.elt list list -> Srep.elt list list -> Srep.elt list list
+)
+ident(
+  ext_ref Util.cart_prod2
+)
+"src/PPE/PPECompletion.ml" 268 10692 10726 "src/PPE/PPECompletion.ml" 268 10692 10736
+type(
+  Srep.elt list list
+)
+ident(
+  int_ref known_rps1 "src/PPE/PPECompletion.ml" 265 10316 10329 "src/PPE/PPECompletion.ml" 265 10316 10339
+)
+"src/PPE/PPECompletion.ml" 268 10692 10737 "src/PPE/PPECompletion.ml" 268 10692 10747
+type(
+  Srep.elt list list
+)
+ident(
+  int_ref known_rps2 "src/PPE/PPECompletion.ml" 266 10400 10413 "src/PPE/PPECompletion.ml" 266 10400 10423
+)
+"src/PPE/PPECompletion.ml" 268 10692 10714 "src/PPE/PPECompletion.ml" 268 10692 10748
+call(
+  stack
+)
+type(
+  Srep.elt list list
+)
+"src/PPE/PPECompletion.ml" 270 10866 10875 "src/PPE/PPECompletion.ml" 270 10866 10881
+type(
+  (ReP.t list -> unit) -> ReP.t list list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 271 10882 10898 "src/PPE/PPECompletion.ml" 271 10882 10901
+type(
+  ReP.t list
+)
+ident(
+  def rps "src/PPE/PPECompletion.ml" 273 11010 11024 "src/PPE/PPECompletion.ml" 278 11502 11557
+)
+"src/PPE/PPECompletion.ml" 273 11010 11028 "src/PPE/PPECompletion.ml" 273 11010 11038
+type(
+  PPEInput.recipe Mrep.t
+)
+ident(
+  def m_recipes3 "src/PPE/PPECompletion.ml" 277 11410 11424 "src/PPE/PPECompletion.ml" 278 11502 11557
+)
+"src/PPE/PPECompletion.ml" 273 11010 11041 "src/PPE/PPECompletion.ml" 273 11010 11051
+type(
+  (Mrep.key ->
+   PPEInput.recipe option -> PPEInput.recipe option -> PPEInput.recipe option) ->
+  PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Mrep.merge
+)
+"src/PPE/PPECompletion.ml" 273 11010 11057 "src/PPE/PPECompletion.ml" 273 11010 11060
+type(
+  Mrep.key
+)
+ident(
+  def key "src/PPE/PPECompletion.ml" 273 11010 11061 "src/PPE/PPECompletion.ml" 276 11273 11382
+)
+"src/PPE/PPECompletion.ml" 273 11010 11061 "src/PPE/PPECompletion.ml" 273 11010 11065
+type(
+  PPEInput.recipe option
+)
+ident(
+  def val1 "src/PPE/PPECompletion.ml" 273 11010 11066 "src/PPE/PPECompletion.ml" 276 11273 11382
+)
+"src/PPE/PPECompletion.ml" 273 11010 11066 "src/PPE/PPECompletion.ml" 273 11010 11070
+type(
+  PPEInput.recipe option
+)
+ident(
+  def val2 "src/PPE/PPECompletion.ml" 273 11010 11074 "src/PPE/PPECompletion.ml" 276 11273 11382
+)
+"src/PPE/PPECompletion.ml" 273 11010 11080 "src/PPE/PPECompletion.ml" 273 11010 11084
+type(
+  PPEInput.recipe option
+)
+ident(
+  int_ref val1 "src/PPE/PPECompletion.ml" 273 11010 11061 "src/PPE/PPECompletion.ml" 273 11010 11065
+)
+"src/PPE/PPECompletion.ml" 273 11010 11086 "src/PPE/PPECompletion.ml" 273 11010 11090
+type(
+  PPEInput.recipe option
+)
+ident(
+  int_ref val2 "src/PPE/PPECompletion.ml" 273 11010 11066 "src/PPE/PPECompletion.ml" 273 11010 11070
+)
+"src/PPE/PPECompletion.ml" 273 11010 11080 "src/PPE/PPECompletion.ml" 273 11010 11090
+type(
+  PPEInput.recipe option * PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 274 11097 11167 "src/PPE/PPECompletion.ml" 274 11097 11168
+type(
+  PPEInput.recipe
+)
+ident(
+  def x "src/PPE/PPECompletion.ml" 274 11097 11178 "src/PPE/PPECompletion.ml" 274 11097 11184
+)
+"src/PPE/PPECompletion.ml" 274 11097 11162 "src/PPE/PPECompletion.ml" 274 11097 11168
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 274 11097 11170 "src/PPE/PPECompletion.ml" 274 11097 11174
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 274 11097 11162 "src/PPE/PPECompletion.ml" 274 11097 11174
+type(
+  PPEInput.recipe option * PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 274 11097 11183 "src/PPE/PPECompletion.ml" 274 11097 11184
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref x "src/PPE/PPECompletion.ml" 274 11097 11167 "src/PPE/PPECompletion.ml" 274 11097 11168
+)
+"src/PPE/PPECompletion.ml" 274 11097 11178 "src/PPE/PPECompletion.ml" 274 11097 11184
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 275 11185 11250 "src/PPE/PPECompletion.ml" 275 11185 11254
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 275 11185 11261 "src/PPE/PPECompletion.ml" 275 11185 11262
+type(
+  PPEInput.recipe
+)
+ident(
+  def x "src/PPE/PPECompletion.ml" 275 11185 11266 "src/PPE/PPECompletion.ml" 275 11185 11272
+)
+"src/PPE/PPECompletion.ml" 275 11185 11256 "src/PPE/PPECompletion.ml" 275 11185 11262
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 275 11185 11250 "src/PPE/PPECompletion.ml" 275 11185 11262
+type(
+  PPEInput.recipe option * PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 275 11185 11271 "src/PPE/PPECompletion.ml" 275 11185 11272
+type(
+  PPEInput.recipe
+)
+ident(
+  int_ref x "src/PPE/PPECompletion.ml" 275 11185 11261 "src/PPE/PPECompletion.ml" 275 11185 11262
+)
+"src/PPE/PPECompletion.ml" 275 11185 11266 "src/PPE/PPECompletion.ml" 275 11185 11272
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 276 11273 11338 "src/PPE/PPECompletion.ml" 276 11273 11339
+type(
+  PPEInput.recipe option * PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 276 11273 11343 "src/PPE/PPECompletion.ml" 276 11273 11352
+type(
+  string -> PPEInput.recipe option
+)
+ident(
+  ext_ref PPEInput.fail_assm
+)
+"src/PPE/PPECompletion.ml" 276 11273 11353 "src/PPE/PPECompletion.ml" 276 11273 11382
+type(
+  string
+)
+"src/PPE/PPECompletion.ml" 276 11273 11343 "src/PPE/PPECompletion.ml" 276 11273 11382
+call(
+  tail
+)
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 273 11010 11074 "src/PPE/PPECompletion.ml" 276 11273 11382
+type(
+  PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 273 11010 11052 "src/PPE/PPECompletion.ml" 276 11273 11383
+type(
+  Mrep.key ->
+  PPEInput.recipe option -> PPEInput.recipe option -> PPEInput.recipe option
+)
+"src/PPE/PPECompletion.ml" 276 11273 11384 "src/PPE/PPECompletion.ml" 276 11273 11385
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 276 11273 11385 "src/PPE/PPECompletion.ml" 276 11273 11394
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes "src/PPE/PPECompletion.ml" 180 7163 7169 "src/PPE/PPECompletion.ml" 180 7163 7178
+)
+"src/PPE/PPECompletion.ml" 276 11273 11384 "src/PPE/PPECompletion.ml" 276 11273 11394
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 276 11273 11395 "src/PPE/PPECompletion.ml" 276 11273 11396
+type(
+  PPEInput.recipe Mrep.t ref -> PPEInput.recipe Mrep.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 276 11273 11396 "src/PPE/PPECompletion.ml" 276 11273 11406
+type(
+  PPEInput.recipe Mrep.t ref
+)
+ident(
+  int_ref m_recipes2 "src/PPE/PPECompletion.ml" 181 7199 7205 "src/PPE/PPECompletion.ml" 181 7199 7215
+)
+"src/PPE/PPECompletion.ml" 276 11273 11395 "src/PPE/PPECompletion.ml" 276 11273 11406
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 273 11010 11041 "src/PPE/PPECompletion.ml" 276 11273 11406
+call(
+  stack
+)
+type(
+  PPEInput.recipe Mrep.t
+)
+"src/PPE/PPECompletion.ml" 277 11410 11428 "src/PPE/PPECompletion.ml" 277 11410 11434
+type(
+  PPEInput.recipe list
+)
+ident(
+  def recips "src/PPE/PPECompletion.ml" 278 11502 11516 "src/PPE/PPECompletion.ml" 278 11502 11557
+)
+"src/PPE/PPECompletion.ml" 277 11410 11437 "src/PPE/PPECompletion.ml" 277 11410 11443
+type(
+  (PPEInput.group_id -> ReP.t -> PPEInput.recipe) ->
+  PPEInput.group_id list -> ReP.t list -> PPEInput.recipe list
+)
+ident(
+  ext_ref Util.L.map2
+)
+"src/PPE/PPECompletion.ml" 277 11410 11449 "src/PPE/PPECompletion.ml" 277 11410 11452
+type(
+  PPEInput.group_id
+)
+ident(
+  def gid "src/PPE/PPECompletion.ml" 277 11410 11453 "src/PPE/PPECompletion.ml" 277 11410 11488
+)
+"src/PPE/PPECompletion.ml" 277 11410 11453 "src/PPE/PPECompletion.ml" 277 11410 11455
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 277 11410 11459 "src/PPE/PPECompletion.ml" 277 11410 11488
+)
+"src/PPE/PPECompletion.ml" 277 11410 11459 "src/PPE/PPECompletion.ml" 277 11410 11468
+type(
+  Mrep.key -> PPEInput.recipe Mrep.t -> PPEInput.recipe
+)
+ident(
+  ext_ref Mrep.find
+)
+"src/PPE/PPECompletion.ml" 277 11410 11470 "src/PPE/PPECompletion.ml" 277 11410 11473
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid "src/PPE/PPECompletion.ml" 277 11410 11449 "src/PPE/PPECompletion.ml" 277 11410 11452
+)
+"src/PPE/PPECompletion.ml" 277 11410 11474 "src/PPE/PPECompletion.ml" 277 11410 11476
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 277 11410 11453 "src/PPE/PPECompletion.ml" 277 11410 11455
+)
+"src/PPE/PPECompletion.ml" 277 11410 11469 "src/PPE/PPECompletion.ml" 277 11410 11477
+type(
+  Mrep.key
+)
+"src/PPE/PPECompletion.ml" 277 11410 11478 "src/PPE/PPECompletion.ml" 277 11410 11488
+type(
+  PPEInput.recipe Mrep.t
+)
+ident(
+  int_ref m_recipes3 "src/PPE/PPECompletion.ml" 273 11010 11028 "src/PPE/PPECompletion.ml" 273 11010 11038
+)
+"src/PPE/PPECompletion.ml" 277 11410 11459 "src/PPE/PPECompletion.ml" 277 11410 11488
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 277 11410 11444 "src/PPE/PPECompletion.ml" 277 11410 11489
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 277 11410 11490 "src/PPE/PPECompletion.ml" 277 11410 11494
+type(
+  PPEInput.group_id list
+)
+ident(
+  int_ref gids "src/PPE/PPECompletion.ml" 264 10266 10279 "src/PPE/PPECompletion.ml" 264 10266 10283
+)
+"src/PPE/PPECompletion.ml" 277 11410 11495 "src/PPE/PPECompletion.ml" 277 11410 11498
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 271 10882 10898 "src/PPE/PPECompletion.ml" 271 10882 10901
+)
+"src/PPE/PPECompletion.ml" 277 11410 11437 "src/PPE/PPECompletion.ml" 277 11410 11498
+call(
+  stack
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 278 11502 11516 "src/PPE/PPECompletion.ml" 278 11502 11519
+type(
+  ReP.t -> PPEInput.recipe -> PPEInput.group_id -> unit
+)
+ident(
+  int_ref add "src/PPE/PPECompletion.ml" 188 7526 7532 "src/PPE/PPECompletion.ml" 188 7526 7535
+)
+"src/PPE/PPECompletion.ml" 278 11502 11521 "src/PPE/PPECompletion.ml" 278 11502 11530
+type(
+  ReP.t list -> ReP.t
+)
+ident(
+  ext_ref ReP.lmult
+)
+"src/PPE/PPECompletion.ml" 278 11502 11531 "src/PPE/PPECompletion.ml" 278 11502 11534
+type(
+  ReP.t list
+)
+ident(
+  int_ref rps "src/PPE/PPECompletion.ml" 271 10882 10898 "src/PPE/PPECompletion.ml" 271 10882 10901
+)
+"src/PPE/PPECompletion.ml" 278 11502 11520 "src/PPE/PPECompletion.ml" 278 11502 11535
+call(
+  stack
+)
+type(
+  ReP.t
+)
+"src/PPE/PPECompletion.ml" 278 11502 11542 "src/PPE/PPECompletion.ml" 278 11502 11543
+type(
+  PPEInput.emap
+)
+ident(
+  int_ref e "src/PPE/PPECompletion.ml" 263 10250 10261 "src/PPE/PPECompletion.ml" 263 10250 10262
+)
+"src/PPE/PPECompletion.ml" 278 11502 11544 "src/PPE/PPECompletion.ml" 278 11502 11550
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref recips "src/PPE/PPECompletion.ml" 277 11410 11428 "src/PPE/PPECompletion.ml" 277 11410 11434
+)
+"src/PPE/PPECompletion.ml" 278 11502 11536 "src/PPE/PPECompletion.ml" 278 11502 11552
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 278 11502 11553 "src/PPE/PPECompletion.ml" 278 11502 11557
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref gid' "src/PPE/PPECompletion.ml" 264 10266 10285 "src/PPE/PPECompletion.ml" 264 10266 10289
+)
+"src/PPE/PPECompletion.ml" 278 11502 11516 "src/PPE/PPECompletion.ml" 278 11502 11557
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 277 11410 11424 "src/PPE/PPECompletion.ml" 278 11502 11557
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 273 11010 11024 "src/PPE/PPECompletion.ml" 278 11502 11557
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 271 10882 10893 "src/PPE/PPECompletion.ml" 279 11558 11570
+type(
+  ReP.t list -> unit
+)
+"src/PPE/PPECompletion.ml" 280 11571 11582 "src/PPE/PPECompletion.ml" 280 11571 11588
+type(
+  ReP.t list list
+)
+ident(
+  int_ref tuples "src/PPE/PPECompletion.ml" 268 10692 10705 "src/PPE/PPECompletion.ml" 268 10692 10711
+)
+"src/PPE/PPECompletion.ml" 270 10866 10875 "src/PPE/PPECompletion.ml" 280 11571 11588
+call(
+  tail
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 268 10692 10701 "src/PPE/PPECompletion.ml" 280 11571 11588
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 266 10400 10409 "src/PPE/PPECompletion.ml" 280 11571 11588
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 265 10316 10325 "src/PPE/PPECompletion.ml" 280 11571 11588
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 264 10266 10275 "src/PPE/PPECompletion.ml" 280 11571 11588
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 263 10250 10256 "src/PPE/PPECompletion.ml" 280 11571 11589
+type(
+  PPEInput.emap -> unit
+)
+"src/PPE/PPECompletion.ml" 281 11590 11596 "src/PPE/PPECompletion.ml" 281 11590 11599
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref cgs "src/PPE/PPECompletion.ml" 170 6736 6756 "src/PPE/PPECompletion.ml" 170 6736 6759
+)
+"src/PPE/PPECompletion.ml" 281 11590 11596 "src/PPE/PPECompletion.ml" 281 11590 11609
+type(
+  PPEInput.emap list
+)
+"src/PPE/PPECompletion.ml" 262 10239 10243 "src/PPE/PPECompletion.ml" 281 11590 11609
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 287 11836 11840 "src/PPE/PPECompletion.ml" 287 11836 11845
+type(
+  (ReP.t -> PPEInput.recipe) -> ReP.t list -> PPEInput.recipe list
+)
+ident(
+  ext_ref Util.L.map
+)
+"src/PPE/PPECompletion.ml" 288 11846 11862 "src/PPE/PPECompletion.ml" 288 11846 11864
+type(
+  ReP.t
+)
+ident(
+  def rp "src/PPE/PPECompletion.ml" 288 11846 11868 "src/PPE/PPECompletion.ml" 288 11846 11887
+)
+"src/PPE/PPECompletion.ml" 288 11846 11868 "src/PPE/PPECompletion.ml" 288 11846 11879
+type(
+  PPEInput.group_id -> ReP.t -> PPEInput.recipe
+)
+ident(
+  int_ref find_recipe "src/PPE/PPECompletion.ml" 182 7236 7242 "src/PPE/PPECompletion.ml" 182 7236 7253
+)
+"src/PPE/PPECompletion.ml" 288 11846 11880 "src/PPE/PPECompletion.ml" 288 11846 11884
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 170 6736 6760 "src/PPE/PPECompletion.ml" 170 6736 6764
+)
+"src/PPE/PPECompletion.ml" 288 11846 11885 "src/PPE/PPECompletion.ml" 288 11846 11887
+type(
+  ReP.t
+)
+ident(
+  int_ref rp "src/PPE/PPECompletion.ml" 288 11846 11862 "src/PPE/PPECompletion.ml" 288 11846 11864
+)
+"src/PPE/PPECompletion.ml" 288 11846 11868 "src/PPE/PPECompletion.ml" 288 11846 11887
+call(
+  tail
+)
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 288 11846 11857 "src/PPE/PPECompletion.ml" 288 11846 11888
+type(
+  ReP.t -> PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 289 11889 11901 "src/PPE/PPECompletion.ml" 289 11889 11914
+type(
+  Srep.t -> ReP.t list
+)
+ident(
+  ext_ref Srep.elements
+)
+"src/PPE/PPECompletion.ml" 289 11889 11916 "src/PPE/PPECompletion.ml" 289 11889 11923
+type(
+  Util.Ms.key -> Srep.t Util.Ms.t -> Srep.t
+)
+ident(
+  ext_ref Util.Ms.find
+)
+"src/PPE/PPECompletion.ml" 289 11889 11924 "src/PPE/PPECompletion.ml" 289 11889 11928
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 170 6736 6760 "src/PPE/PPECompletion.ml" 170 6736 6764
+)
+"src/PPE/PPECompletion.ml" 289 11889 11929 "src/PPE/PPECompletion.ml" 289 11889 11930
+type(
+  Srep.t Util.Ms.t ref -> Srep.t Util.Ms.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 289 11889 11930 "src/PPE/PPECompletion.ml" 289 11889 11937
+type(
+  Srep.t Util.Ms.t ref
+)
+ident(
+  int_ref m_known "src/PPE/PPECompletion.ml" 173 6859 6865 "src/PPE/PPECompletion.ml" 173 6859 6872
+)
+"src/PPE/PPECompletion.ml" 289 11889 11929 "src/PPE/PPECompletion.ml" 289 11889 11937
+type(
+  Srep.t Util.Ms.t
+)
+"src/PPE/PPECompletion.ml" 289 11889 11915 "src/PPE/PPECompletion.ml" 289 11889 11938
+call(
+  stack
+)
+type(
+  Srep.t
+)
+"src/PPE/PPECompletion.ml" 289 11889 11900 "src/PPE/PPECompletion.ml" 289 11889 11939
+call(
+  stack
+)
+type(
+  ReP.t list
+)
+"src/PPE/PPECompletion.ml" 287 11836 11840 "src/PPE/PPECompletion.ml" 289 11889 11939
+call(
+  tail
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 262 10239 10243 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 253 10025 10029 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 239 9540 9544 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 226 9018 9022 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 214 8442 8444 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 212 8319 8321 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 211 8290 8292 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 198 7799 7801 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 188 7526 7528 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 187 7497 7499 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 183 7296 7298 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 182 7236 7238 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 181 7199 7201 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 180 7163 7165 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 176 7004 7006 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 175 6924 6926 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 174 6891 6893 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 173 6859 6861 "src/PPE/PPECompletion.ml" 289 11889 11939
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 294 11967 11971 "src/PPE/PPECompletion.ml" 294 11967 11991
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  PPEInput.group_elem list -> PPEInput.group_elem list * PPEInput.recipe list
+)
+ident(
+  def completion_for_group "src/PPE/PPECompletion.ml" 308 12738 12738 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 294 11967 11992 "src/PPE/PPECompletion.ml" 294 11967 11994
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  def gs "src/PPE/PPECompletion.ml" 294 11967 11995 "src/PPE/PPECompletion.ml" 306 12696 12736
+)
+"src/PPE/PPECompletion.ml" 294 11967 11995 "src/PPE/PPECompletion.ml" 294 11967 11999
+type(
+  PPEInput.group_id
+)
+ident(
+  def cgid "src/PPE/PPECompletion.ml" 294 11967 12000 "src/PPE/PPECompletion.ml" 306 12696 12736
+)
+"src/PPE/PPECompletion.ml" 294 11967 12001 "src/PPE/PPECompletion.ml" 294 11967 12007
+type(
+  PPEInput.group_elem list
+)
+ident(
+  def inputs "src/PPE/PPECompletion.ml" 296 12096 12098 "src/PPE/PPECompletion.ml" 306 12696 12736
+)
+"src/PPE/PPECompletion.ml" 296 12096 12098 "src/PPE/PPECompletion.ml" 296 12096 12105
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 296 12096 12106 "src/PPE/PPECompletion.ml" 296 12096 12108
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 296 12096 12109 "src/PPE/PPECompletion.ml" 296 12096 12121
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref IntMap.empty
+)
+"src/PPE/PPECompletion.ml" 296 12096 12098 "src/PPE/PPECompletion.ml" 296 12096 12121
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 298 12222 12224 "src/PPE/PPECompletion.ml" 298 12222 12230
+type(
+  (PPEInput.group_elem -> unit) -> PPEInput.group_elem list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 298 12222 12236 "src/PPE/PPECompletion.ml" 298 12222 12237
+type(
+  PPEInput.group_elem
+)
+ident(
+  def f "src/PPE/PPECompletion.ml" 298 12222 12242 "src/PPE/PPECompletion.ml" 300 12356 12385
+)
+"src/PPE/PPECompletion.ml" 298 12222 12248 "src/PPE/PPECompletion.ml" 298 12222 12249
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 298 12222 12236 "src/PPE/PPECompletion.ml" 298 12222 12237
+)
+"src/PPE/PPECompletion.ml" 298 12222 12248 "src/PPE/PPECompletion.ml" 298 12222 12255
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 299 12262 12290 "src/PPE/PPECompletion.ml" 299 12262 12291
+ident(
+  def i "src/PPE/PPECompletion.ml" 299 12262 12296 "src/PPE/PPECompletion.ml" 299 12262 12355
+)
+"src/PPE/PPECompletion.ml" 299 12262 12289 "src/PPE/PPECompletion.ml" 299 12262 12292
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 299 12262 12284 "src/PPE/PPECompletion.ml" 299 12262 12292
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 299 12262 12296 "src/PPE/PPECompletion.ml" 299 12262 12303
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 299 12262 12304 "src/PPE/PPECompletion.ml" 299 12262 12306
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 299 12262 12307 "src/PPE/PPECompletion.ml" 299 12262 12317
+type(
+  IntMap.key ->
+  PPEInput.rpoly * PPEInput.rpoly ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref IntMap.add
+)
+"src/PPE/PPECompletion.ml" 299 12262 12318 "src/PPE/PPECompletion.ml" 299 12262 12319
+type(
+  IntMap.key
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 299 12262 12289 "src/PPE/PPECompletion.ml" 299 12262 12292
+)
+"src/PPE/PPECompletion.ml" 299 12262 12321 "src/PPE/PPECompletion.ml" 299 12262 12322
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 298 12222 12236 "src/PPE/PPECompletion.ml" 298 12222 12237
+)
+"src/PPE/PPECompletion.ml" 299 12262 12321 "src/PPE/PPECompletion.ml" 299 12262 12331
+type(
+  PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 299 12262 12333 "src/PPE/PPECompletion.ml" 299 12262 12334
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 298 12222 12236 "src/PPE/PPECompletion.ml" 298 12222 12237
+)
+"src/PPE/PPECompletion.ml" 299 12262 12333 "src/PPE/PPECompletion.ml" 299 12262 12344
+type(
+  PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 299 12262 12320 "src/PPE/PPECompletion.ml" 299 12262 12345
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 299 12262 12346 "src/PPE/PPECompletion.ml" 299 12262 12347
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 299 12262 12347 "src/PPE/PPECompletion.ml" 299 12262 12354
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 299 12262 12346 "src/PPE/PPECompletion.ml" 299 12262 12354
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+"src/PPE/PPECompletion.ml" 299 12262 12307 "src/PPE/PPECompletion.ml" 299 12262 12354
+call(
+  stack
+)
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+"src/PPE/PPECompletion.ml" 299 12262 12296 "src/PPE/PPECompletion.ml" 299 12262 12355
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 300 12356 12378 "src/PPE/PPECompletion.ml" 300 12356 12379
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 300 12356 12383 "src/PPE/PPECompletion.ml" 300 12356 12385
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 298 12222 12242 "src/PPE/PPECompletion.ml" 300 12356 12385
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 298 12222 12231 "src/PPE/PPECompletion.ml" 300 12356 12387
+type(
+  PPEInput.group_elem -> unit
+)
+"src/PPE/PPECompletion.ml" 300 12356 12388 "src/PPE/PPECompletion.ml" 300 12356 12394
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs "src/PPE/PPECompletion.ml" 294 11967 12001 "src/PPE/PPECompletion.ml" 294 11967 12007
+)
+"src/PPE/PPECompletion.ml" 298 12222 12224 "src/PPE/PPECompletion.ml" 300 12356 12394
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 301 12396 12402 "src/PPE/PPECompletion.ml" 301 12396 12406
+type(
+  float
+)
+ident(
+  def time "src/PPE/PPECompletion.ml" 302 12432 12434 "src/PPE/PPECompletion.ml" 306 12696 12736
+)
+"src/PPE/PPECompletion.ml" 301 12396 12409 "src/PPE/PPECompletion.ml" 301 12396 12426
+type(
+  unit -> float
+)
+ident(
+  ext_ref Unix.gettimeofday
+)
+"src/PPE/PPECompletion.ml" 301 12396 12426 "src/PPE/PPECompletion.ml" 301 12396 12428
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 301 12396 12409 "src/PPE/PPECompletion.ml" 301 12396 12428
+call(
+  stack
+)
+type(
+  float
+)
+"src/PPE/PPECompletion.ml" 302 12432 12438 "src/PPE/PPECompletion.ml" 302 12432 12442
+type(
+  PPEInput.recipe list
+)
+ident(
+  def cops "src/PPE/PPECompletion.ml" 306 12696 12698 "src/PPE/PPECompletion.ml" 306 12696 12736
+)
+"src/PPE/PPECompletion.ml" 302 12432 12445 "src/PPE/PPECompletion.ml" 302 12432 12459
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  (PPEInput.recipe * PPEInput.group_id) list -> PPEInput.recipe list
+)
+ident(
+  int_ref completion_ops "src/PPE/PPECompletion.ml" 97 3868 3872 "src/PPE/PPECompletion.ml" 97 3868 3886
+)
+"src/PPE/PPECompletion.ml" 302 12432 12460 "src/PPE/PPECompletion.ml" 302 12432 12462
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref gs "src/PPE/PPECompletion.ml" 294 11967 11992 "src/PPE/PPECompletion.ml" 294 11967 11994
+)
+"src/PPE/PPECompletion.ml" 302 12432 12463 "src/PPE/PPECompletion.ml" 302 12432 12467
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 294 11967 11995 "src/PPE/PPECompletion.ml" 294 11967 11999
+)
+"src/PPE/PPECompletion.ml" 302 12432 12469 "src/PPE/PPECompletion.ml" 302 12432 12474
+type(
+  PPEInput.group_elem list -> (PPEInput.recipe * PPEInput.group_id) list
+)
+ident(
+  int_ref shape "src/PPE/PPECompletion.ml" 17 263 267 "src/PPE/PPECompletion.ml" 17 263 272
+)
+"src/PPE/PPECompletion.ml" 302 12432 12475 "src/PPE/PPECompletion.ml" 302 12432 12481
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs "src/PPE/PPECompletion.ml" 294 11967 12001 "src/PPE/PPECompletion.ml" 294 11967 12007
+)
+"src/PPE/PPECompletion.ml" 302 12432 12468 "src/PPE/PPECompletion.ml" 302 12432 12482
+call(
+  stack
+)
+type(
+  (PPEInput.recipe * PPEInput.group_id) list
+)
+"src/PPE/PPECompletion.ml" 302 12432 12445 "src/PPE/PPECompletion.ml" 302 12432 12482
+call(
+  stack
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 306 12696 12699 "src/PPE/PPECompletion.ml" 306 12696 12719
+type(
+  PPEInput.recipe list -> PPEInput.group_id -> PPEInput.group_elem list
+)
+ident(
+  int_ref apply_completion_ops "src/PPE/PPECompletion.ml" 64 2346 2350 "src/PPE/PPECompletion.ml" 64 2346 2370
+)
+"src/PPE/PPECompletion.ml" 306 12696 12720 "src/PPE/PPECompletion.ml" 306 12696 12724
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref cops "src/PPE/PPECompletion.ml" 302 12432 12438 "src/PPE/PPECompletion.ml" 302 12432 12442
+)
+"src/PPE/PPECompletion.ml" 306 12696 12725 "src/PPE/PPECompletion.ml" 306 12696 12729
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 294 11967 11995 "src/PPE/PPECompletion.ml" 294 11967 11999
+)
+"src/PPE/PPECompletion.ml" 306 12696 12699 "src/PPE/PPECompletion.ml" 306 12696 12729
+call(
+  stack
+)
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 306 12696 12731 "src/PPE/PPECompletion.ml" 306 12696 12735
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref cops "src/PPE/PPECompletion.ml" 302 12432 12438 "src/PPE/PPECompletion.ml" 302 12432 12442
+)
+"src/PPE/PPECompletion.ml" 306 12696 12698 "src/PPE/PPECompletion.ml" 306 12696 12736
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 302 12432 12434 "src/PPE/PPECompletion.ml" 306 12696 12736
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 301 12396 12398 "src/PPE/PPECompletion.ml" 306 12696 12736
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 298 12222 12224 "src/PPE/PPECompletion.ml" 306 12696 12736
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 296 12096 12098 "src/PPE/PPECompletion.ml" 306 12696 12736
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 308 12738 12742 "src/PPE/PPECompletion.ml" 308 12738 12766
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  PPEInput.group_elem list ->
+  PPEInput.group_elem list -> PPEInput.group_elem list * PPEInput.recipe list
+)
+ident(
+  def new_completion_for_group "src/PPE/PPECompletion.ml" 321 13681 13721 "src/PPE/PPECompletion.ml" 1 0 -1
+)
+"src/PPE/PPECompletion.ml" 308 12738 12767 "src/PPE/PPECompletion.ml" 308 12738 12769
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  def gs "src/PPE/PPECompletion.ml" 308 12738 12770 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 308 12738 12770 "src/PPE/PPECompletion.ml" 308 12738 12774
+type(
+  PPEInput.group_id
+)
+ident(
+  def cgid "src/PPE/PPECompletion.ml" 308 12738 12775 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 308 12738 12775 "src/PPE/PPECompletion.ml" 308 12738 12782
+type(
+  PPEInput.group_elem list
+)
+ident(
+  def inputs1 "src/PPE/PPECompletion.ml" 308 12738 12783 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 308 12738 12783 "src/PPE/PPECompletion.ml" 308 12738 12790
+type(
+  PPEInput.group_elem list
+)
+ident(
+  def inputs2 "src/PPE/PPECompletion.ml" 311 13034 13036 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 311 13034 13036 "src/PPE/PPECompletion.ml" 311 13034 13043
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 311 13034 13044 "src/PPE/PPECompletion.ml" 311 13034 13046
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 311 13034 13047 "src/PPE/PPECompletion.ml" 311 13034 13059
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref IntMap.empty
+)
+"src/PPE/PPECompletion.ml" 311 13034 13036 "src/PPE/PPECompletion.ml" 311 13034 13059
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 314 13255 13257 "src/PPE/PPECompletion.ml" 314 13255 13263
+type(
+  (PPEInput.group_elem -> unit) -> PPEInput.group_elem list -> unit
+)
+ident(
+  ext_ref Util.L.iter
+)
+"src/PPE/PPECompletion.ml" 314 13255 13269 "src/PPE/PPECompletion.ml" 314 13255 13270
+type(
+  PPEInput.group_elem
+)
+ident(
+  def f "src/PPE/PPECompletion.ml" 314 13255 13275 "src/PPE/PPECompletion.ml" 316 13390 13419
+)
+"src/PPE/PPECompletion.ml" 314 13255 13281 "src/PPE/PPECompletion.ml" 314 13255 13282
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 314 13255 13269 "src/PPE/PPECompletion.ml" 314 13255 13270
+)
+"src/PPE/PPECompletion.ml" 314 13255 13281 "src/PPE/PPECompletion.ml" 314 13255 13288
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 315 13295 13323 "src/PPE/PPECompletion.ml" 315 13295 13324
+ident(
+  def i "src/PPE/PPECompletion.ml" 315 13295 13329 "src/PPE/PPECompletion.ml" 315 13295 13388
+)
+"src/PPE/PPECompletion.ml" 315 13295 13322 "src/PPE/PPECompletion.ml" 315 13295 13325
+type(
+  int
+)
+"src/PPE/PPECompletion.ml" 315 13295 13317 "src/PPE/PPECompletion.ml" 315 13295 13325
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 315 13295 13329 "src/PPE/PPECompletion.ml" 315 13295 13336
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 315 13295 13337 "src/PPE/PPECompletion.ml" 315 13295 13339
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t -> unit
+)
+ident(
+  ext_ref Pervasives.( := )
+)
+"src/PPE/PPECompletion.ml" 315 13295 13340 "src/PPE/PPECompletion.ml" 315 13295 13350
+type(
+  IntMap.key ->
+  PPEInput.rpoly * PPEInput.rpoly ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref IntMap.add
+)
+"src/PPE/PPECompletion.ml" 315 13295 13351 "src/PPE/PPECompletion.ml" 315 13295 13352
+type(
+  IntMap.key
+)
+ident(
+  int_ref i "src/PPE/PPECompletion.ml" 315 13295 13322 "src/PPE/PPECompletion.ml" 315 13295 13325
+)
+"src/PPE/PPECompletion.ml" 315 13295 13354 "src/PPE/PPECompletion.ml" 315 13295 13355
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 314 13255 13269 "src/PPE/PPECompletion.ml" 314 13255 13270
+)
+"src/PPE/PPECompletion.ml" 315 13295 13354 "src/PPE/PPECompletion.ml" 315 13295 13364
+type(
+  PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 315 13295 13366 "src/PPE/PPECompletion.ml" 315 13295 13367
+type(
+  PPEInput.group_elem
+)
+ident(
+  int_ref f "src/PPE/PPECompletion.ml" 314 13255 13269 "src/PPE/PPECompletion.ml" 314 13255 13270
+)
+"src/PPE/PPECompletion.ml" 315 13295 13366 "src/PPE/PPECompletion.ml" 315 13295 13377
+type(
+  PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 315 13295 13353 "src/PPE/PPECompletion.ml" 315 13295 13378
+type(
+  PPEInput.rpoly * PPEInput.rpoly
+)
+"src/PPE/PPECompletion.ml" 315 13295 13379 "src/PPE/PPECompletion.ml" 315 13295 13380
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref ->
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+ident(
+  ext_ref Pervasives.( ! )
+)
+"src/PPE/PPECompletion.ml" 315 13295 13380 "src/PPE/PPECompletion.ml" 315 13295 13387
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t ref
+)
+ident(
+  int_ref fid_map "src/PPE/PPECompletion.ml" 31 1100 1104 "src/PPE/PPECompletion.ml" 31 1100 1111
+)
+"src/PPE/PPECompletion.ml" 315 13295 13379 "src/PPE/PPECompletion.ml" 315 13295 13387
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+"src/PPE/PPECompletion.ml" 315 13295 13340 "src/PPE/PPECompletion.ml" 315 13295 13387
+call(
+  stack
+)
+type(
+  (PPEInput.rpoly * PPEInput.rpoly) IntMap.t
+)
+"src/PPE/PPECompletion.ml" 315 13295 13329 "src/PPE/PPECompletion.ml" 315 13295 13388
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 316 13390 13412 "src/PPE/PPECompletion.ml" 316 13390 13413
+type(
+  PPEInput.recipe
+)
+"src/PPE/PPECompletion.ml" 316 13390 13417 "src/PPE/PPECompletion.ml" 316 13390 13419
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 314 13255 13275 "src/PPE/PPECompletion.ml" 316 13390 13419
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 314 13255 13264 "src/PPE/PPECompletion.ml" 316 13390 13421
+type(
+  PPEInput.group_elem -> unit
+)
+"src/PPE/PPECompletion.ml" 316 13390 13423 "src/PPE/PPECompletion.ml" 316 13390 13430
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs1 "src/PPE/PPECompletion.ml" 308 12738 12775 "src/PPE/PPECompletion.ml" 308 12738 12782
+)
+"src/PPE/PPECompletion.ml" 316 13390 13430 "src/PPE/PPECompletion.ml" 316 13390 13431
+type(
+  PPEInput.group_elem list ->
+  PPEInput.group_elem list -> PPEInput.group_elem list
+)
+ident(
+  ext_ref Pervasives.( @ )
+)
+"src/PPE/PPECompletion.ml" 316 13390 13431 "src/PPE/PPECompletion.ml" 316 13390 13438
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs2 "src/PPE/PPECompletion.ml" 308 12738 12783 "src/PPE/PPECompletion.ml" 308 12738 12790
+)
+"src/PPE/PPECompletion.ml" 316 13390 13422 "src/PPE/PPECompletion.ml" 316 13390 13439
+call(
+  stack
+)
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 314 13255 13257 "src/PPE/PPECompletion.ml" 316 13390 13439
+call(
+  stack
+)
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 317 13441 13447 "src/PPE/PPECompletion.ml" 317 13441 13451
+type(
+  float
+)
+ident(
+  def time "src/PPE/PPECompletion.ml" 318 13477 13479 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 317 13441 13454 "src/PPE/PPECompletion.ml" 317 13441 13471
+type(
+  unit -> float
+)
+ident(
+  ext_ref Unix.gettimeofday
+)
+"src/PPE/PPECompletion.ml" 317 13441 13471 "src/PPE/PPECompletion.ml" 317 13441 13473
+type(
+  unit
+)
+"src/PPE/PPECompletion.ml" 317 13441 13454 "src/PPE/PPECompletion.ml" 317 13441 13473
+call(
+  stack
+)
+type(
+  float
+)
+"src/PPE/PPECompletion.ml" 318 13477 13483 "src/PPE/PPECompletion.ml" 318 13477 13487
+type(
+  PPEInput.recipe list
+)
+ident(
+  def cops "src/PPE/PPECompletion.ml" 321 13681 13683 "src/PPE/PPECompletion.ml" 321 13681 13721
+)
+"src/PPE/PPECompletion.ml" 318 13477 13490 "src/PPE/PPECompletion.ml" 318 13477 13505
+type(
+  PPEInput.closed_group_setting ->
+  PPEInput.group_id ->
+  (PPEInput.recipe * PPEInput.group_id) list ->
+  (PPEInput.recipe * PPEInput.group_id) list -> PPEInput.recipe list
+)
+ident(
+  int_ref completion_ops2 "src/PPE/PPECompletion.ml" 170 6736 6740 "src/PPE/PPECompletion.ml" 170 6736 6755
+)
+"src/PPE/PPECompletion.ml" 318 13477 13506 "src/PPE/PPECompletion.ml" 318 13477 13508
+type(
+  PPEInput.closed_group_setting
+)
+ident(
+  int_ref gs "src/PPE/PPECompletion.ml" 308 12738 12767 "src/PPE/PPECompletion.ml" 308 12738 12769
+)
+"src/PPE/PPECompletion.ml" 318 13477 13509 "src/PPE/PPECompletion.ml" 318 13477 13513
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 308 12738 12770 "src/PPE/PPECompletion.ml" 308 12738 12774
+)
+"src/PPE/PPECompletion.ml" 318 13477 13515 "src/PPE/PPECompletion.ml" 318 13477 13520
+type(
+  PPEInput.group_elem list -> (PPEInput.recipe * PPEInput.group_id) list
+)
+ident(
+  int_ref shape "src/PPE/PPECompletion.ml" 17 263 267 "src/PPE/PPECompletion.ml" 17 263 272
+)
+"src/PPE/PPECompletion.ml" 318 13477 13521 "src/PPE/PPECompletion.ml" 318 13477 13528
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs1 "src/PPE/PPECompletion.ml" 308 12738 12775 "src/PPE/PPECompletion.ml" 308 12738 12782
+)
+"src/PPE/PPECompletion.ml" 318 13477 13514 "src/PPE/PPECompletion.ml" 318 13477 13529
+call(
+  stack
+)
+type(
+  (PPEInput.recipe * PPEInput.group_id) list
+)
+"src/PPE/PPECompletion.ml" 318 13477 13531 "src/PPE/PPECompletion.ml" 318 13477 13536
+type(
+  PPEInput.group_elem list -> (PPEInput.recipe * PPEInput.group_id) list
+)
+ident(
+  int_ref shape "src/PPE/PPECompletion.ml" 17 263 267 "src/PPE/PPECompletion.ml" 17 263 272
+)
+"src/PPE/PPECompletion.ml" 318 13477 13537 "src/PPE/PPECompletion.ml" 318 13477 13544
+type(
+  PPEInput.group_elem list
+)
+ident(
+  int_ref inputs2 "src/PPE/PPECompletion.ml" 308 12738 12783 "src/PPE/PPECompletion.ml" 308 12738 12790
+)
+"src/PPE/PPECompletion.ml" 318 13477 13530 "src/PPE/PPECompletion.ml" 318 13477 13545
+call(
+  stack
+)
+type(
+  (PPEInput.recipe * PPEInput.group_id) list
+)
+"src/PPE/PPECompletion.ml" 318 13477 13490 "src/PPE/PPECompletion.ml" 318 13477 13545
+call(
+  stack
+)
+type(
+  PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 321 13681 13684 "src/PPE/PPECompletion.ml" 321 13681 13704
+type(
+  PPEInput.recipe list -> PPEInput.group_id -> PPEInput.group_elem list
+)
+ident(
+  int_ref apply_completion_ops "src/PPE/PPECompletion.ml" 64 2346 2350 "src/PPE/PPECompletion.ml" 64 2346 2370
+)
+"src/PPE/PPECompletion.ml" 321 13681 13705 "src/PPE/PPECompletion.ml" 321 13681 13709
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref cops "src/PPE/PPECompletion.ml" 318 13477 13483 "src/PPE/PPECompletion.ml" 318 13477 13487
+)
+"src/PPE/PPECompletion.ml" 321 13681 13710 "src/PPE/PPECompletion.ml" 321 13681 13714
+type(
+  PPEInput.group_id
+)
+ident(
+  int_ref cgid "src/PPE/PPECompletion.ml" 308 12738 12770 "src/PPE/PPECompletion.ml" 308 12738 12774
+)
+"src/PPE/PPECompletion.ml" 321 13681 13684 "src/PPE/PPECompletion.ml" 321 13681 13714
+call(
+  stack
+)
+type(
+  PPEInput.group_elem list
+)
+"src/PPE/PPECompletion.ml" 321 13681 13716 "src/PPE/PPECompletion.ml" 321 13681 13720
+type(
+  PPEInput.recipe list
+)
+ident(
+  int_ref cops "src/PPE/PPECompletion.ml" 318 13477 13483 "src/PPE/PPECompletion.ml" 318 13477 13487
+)
+"src/PPE/PPECompletion.ml" 321 13681 13683 "src/PPE/PPECompletion.ml" 321 13681 13721
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 318 13477 13479 "src/PPE/PPECompletion.ml" 321 13681 13721
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 317 13441 13443 "src/PPE/PPECompletion.ml" 321 13681 13721
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 314 13255 13257 "src/PPE/PPECompletion.ml" 321 13681 13721
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)
+"src/PPE/PPECompletion.ml" 311 13034 13036 "src/PPE/PPECompletion.ml" 321 13681 13721
+type(
+  PPEInput.group_elem list * PPEInput.recipe list
+)

@@ -1,0 +1,10 @@
+
+(*Gentry 06 IBE scheme 
+ https://www.iacr.org/archive/eurocrypt2006/40040451/40040451.pdf 
+*)
+
+maps G1 * G1 -> GT.
+
+Zp_vars [r, id].
+trusted_polys [F1 = alpha, F2 = h] in G1.
+untrusted_polys [F3 = (h-r)/(alpha-id)] in G1.

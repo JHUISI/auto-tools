@@ -1,0 +1,29 @@
+
+maps G1 * G1 -> GT.
+
+(*gk = (g, c, f, u1, u2)*)
+
+
+(*public key, k = 4 *)
+trusted_polys [F1 = c * wz, F2 = c * wr, F3 = c * mz, F4 = c * ms, F5 = c * tau1, F6 = c * tau2] in G1. 
+
+(*Gi in public key*)
+trusted_polys [F7 = c * wz * xi1 + c * wr * gam1, F8 = c * wz * xi2 + c * wr * gam2, F9 = c * wz * xi3 + c * wr * gam3, F10 = c * wz * xi4 + c * wr * gam4] in G1. 
+
+(*Hi in public key*)
+trusted_polys [F11 = c * mz * xi1 + c * ms * del1, F12 = c * mz * xi2 + c * ms * del2, F13 = c * mz * xi3 + c * ms * del3, F14 = c * mz * xi4 + c * ms * del4] in G1. 
+
+(*msg*)
+trusted_polys [F15 = m1, F16 = m2, F17 = m3, F18 = m4] in G1. 
+
+(*normal mode tag*)
+trusted_polys [F19 = c*t1, F20 = c*t2] in G1. 
+
+(*gk*)
+trusted_polys [F21 = c] in G1.
+
+(*signature*)
+untrusted_polys [F25 = c * zeta - m1 * xi1 - m2 * xi2 - m3 * xi3 - m4 * xi4] in G1. 
+untrusted_polys [F26 = (c*t1*tau1 - c*wz*zeta - m1*gam1*wr - m2*gam2*wr - m3*gam3*wr - m4*gam4*wr)/wr] in G1. 
+untrusted_polys [F27 = (c*t2*tau2 - c*mz*zeta - m1*del1*ms - m2*del2*ms - m3*del3*ms - m4*del4*ms)/ms] in G1.
+
