@@ -1,8 +1,8 @@
-# AutoCircuitPPE
-Here is the implementation of our tool AutoCircuitPPE. 
+# AutoRationalPPE
+Here is the implementation of our tool AutoRationalPPE. 
 
 ### Installation
-The code of AutoCircuitPPE is written in OCAML language. In order to compile OCAML files, please install OPAM. In MacOS, run
+The code of AutoRationalPPE is written in OCAML language. In order to compile OCAML files, please install OPAM. In MacOS, run
 ~~~~~
 $ brew install opam
 ~~~~~
@@ -11,12 +11,12 @@ In ubuntu, run
 $ sudo apt-get install opam
 ~~~~~
 
-We use OCAML version 4.02.3 for AutoCircuitPPE project. The code does not compile with latest version of OCAML. Install 4.02.3 version of OCAML with the following command.
+We use OCAML version 4.02.3 for AutoRationalPPE project. The code does not compile with latest version of OCAML. Install 4.02.3 version of OCAML with the following command.
 ~~~~~
-$ opam switch autocircuitppe --alias-of 4.02.3
+$ opam switch autorationalppe --alias-of 4.02.3
 $ eval `opam config env`
 ~~~~~
-Here, autocircuitppe could be replaced with any name. When you check the ocaml version, you should get 4.02.3
+Here, autorationalppe could be replaced with any name. When you check the ocaml version, you should get 4.02.3
 ~~~~~
 $ ocaml -version
 4.02.3
@@ -26,10 +26,10 @@ Install OCAML packages using the following command.
 ~~~~~
 $ opam install ocamlfind yojson.1.3.2 ctypes-foreign.0.4.0 ctypes.0.4.1 cryptokit.1.10 menhir
 ~~~~~
-Here is the list of packages that will be installed after you run the above command. Many of the packages are not backward compatible. AutoCircuitPPE code many not work with latest version of the packages. In case you installed the latest version of any package, please consider downgrading the package to the version below. 
+Here is the list of packages that will be installed after you run the above command. Many of the packages are not backward compatible. AutoRationalPPE code many not work with latest version of the packages. In case you installed the latest version of any package, please consider downgrading the package to the version below. 
 ~~~~~
 $ opam list
-# Installed packages for autocircuitppe:
+# Installed packages for autorationalppe:
 base-bigarray          base  Bigarray library distributed with the OCaml compiler
 base-bytes             base  Bytes library distributed with the OCaml compiler
 base-num               base  Num library distributed with the OCaml compiler
@@ -62,21 +62,21 @@ $ brew cask install sage
 ~~~~
 
 ### Compilation
-To compile AutoCircuitPPE code, cd to the main folder of AutoCircuitPPE and run
+To compile AutoRationalPPE code, cd to the main folder of AutoRationalPPE and run
 ~~~~~
 $ make
 ~~~~~
 
 The example files are present in examples directory. To run example  examples/type1/BW.txt, run
 ~~~~~
-$ ./autocircuitppe.native examples/type1/BW.txt
+$ ./autorationalppe.native examples/type1/BW.txt
 ~~~~~
 
 ### Possible Errors
-When compiling AutoCircuitPPE code, in case you get an error of type 
+When compiling AutoRationalPPE code, in case you get an error of type 
 ~~~~~
 	Error: Files src/Util/Util.cmx
-       and /Users/satya/.opam/autocircuitppe/lib/yojson/yojson.cmx
+       and /Users/satya/.opam/autorationalppe/lib/yojson/yojson.cmx
        make inconsistent assumptions over implementation Yojson
 ~~~~~
 it means the code is compiled against an outdated version of an interface. Simply run,
@@ -93,6 +93,6 @@ It seems to be for an older version of OCaml.
 ~~~~~
 In such a case, switch to OCAML version 4.02.3 with the following command. Run make command.
 ~~~~~
-$ opam switch autocircuitppe
+$ opam switch autorationalppe
 $ eval `opam config env`
 ~~~~~
